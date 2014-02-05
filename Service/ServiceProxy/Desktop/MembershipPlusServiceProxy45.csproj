@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D82D6395-46F5-C4F3-A6E2-329B4496E5BD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CryptoGateway.RDB.Data.MembershipPlus</RootNamespace>
+    <AssemblyName>MembershipPlusServiceProxy</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug45\</OutputPath>
+    <IntermediateOutputPath>obj\Debug45\</IntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE;SUPPORT_ASYNC</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug45\MembershipPlusServiceProxy.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release45\</OutputPath>
+    <IntermediateOutputPath>obj\Release45\</IntermediateOutputPath>
+    <DefineConstants>TRACE;SUPPORT_ASYNC</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release45\MembershipPlusServiceProxy.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MembershipPlusService.cs" />
+    <Compile Include="AnnouncementDatabase.cs" />
+    <Compile Include="Application_Database.cs" />
+    <Compile Include="CommunicationDatabase.cs" />
+    <Compile Include="CommunicationTypeDatabase.cs" />
+    <Compile Include="EventCalendarDatabase.cs" />
+    <Compile Include="EventCalendarShareCircleDatabase.cs" />
+    <Compile Include="EventTypeDatabase.cs" />
+    <Compile Include="RoleDatabase.cs" />
+    <Compile Include="UserAppMemberDatabase.cs" />
+    <Compile Include="UserAssociationDatabase.cs" />
+    <Compile Include="UserAssociationTypeDatabase.cs" />
+    <Compile Include="UserAssocInvitationDatabase.cs" />
+    <Compile Include="UserDetailDatabase.cs" />
+    <Compile Include="UserGroupAdminRoleDatabase.cs" />
+    <Compile Include="UserGroupMemberDatabase.cs" />
+    <Compile Include="UserGroupDatabase.cs" />
+    <Compile Include="UserGroupTypeDatabase.cs" />
+    <Compile Include="UserProfileDatabase.cs" />
+    <Compile Include="UserProfileTypeDatabase.cs" />
+    <Compile Include="UserDatabase.cs" />
+    <Compile Include="UsersInRoleDatabase.cs" />
+    <Compile Include="UsersRoleHistoryDatabase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\MembershipPlusShared45.csproj">
+      <Project>{eee1e75e-4659-9523-a06b-6b7ff308dcb0}</Project>
+      <Name>MembershipPlusShared45</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

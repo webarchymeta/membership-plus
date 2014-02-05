@@ -1,0 +1,345 @@
+﻿@import "..\bootstrap\bootstrap.less";
+
+.dropdown-submenu
+{
+    position:relative;
+}
+ 
+.dropdown-submenu>.dropdown-menu
+{
+    top:0;
+    left:100%;
+    margin-top:2px;
+    margin-left:0px;
+    -webkit-border-radius:0 6px 6px 6px;
+    -moz-border-radius:0 6px 6px 6px;
+    border-radius:0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu
+{
+    display:block;
+}
+
+.dropdown-submenu>a:after
+{
+    display:block;
+    content:" ";
+    float:right;
+    width:0;height:0;
+    border-color:transparent;
+    border-style:solid;
+    border-width:5px 0 5px 5px;
+    border-left-color:@gray;
+    margin-top:5px;
+    margin-right:-10px;
+}
+
+.dropdown-submenu:hover>a:after
+{
+    border-left-color:@gray-darker;
+}
+
+.dropdown-submenu.pull-left
+{
+    float:none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu
+{
+    left:-100%;
+    margin-left:10px;
+    -webkit-border-radius:6px 0 6px 6px;
+    -moz-border-radius:6px 0 6px 6px;
+    border-radius:6px 0 6px 6px;
+}
+
+html 
+{
+    height: 100%;
+}
+
+body 
+{
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background: linear-gradient(lighten(@gray, 10%), white) no-repeat white;
+    //background-color: @gray-light;
+    height: calc(100%);
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-container 
+{
+    .container;
+    min-height: calc(100%-@footer-height);
+}
+
+@footer-height: 30px;
+
+.body-content 
+{
+    margin-top: 10px;
+    border-radius:15px;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: white;
+    min-height: calc(~"100% -"@footer-height);
+    box-shadow: 0 3px 3px 0 @gray;
+}
+
+.footer
+{
+    p
+    {
+        padding: 10px 0;
+    }
+    position: relative;
+    height: @footer-height;
+    clear:both;
+} 
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea 
+{
+    max-width: 280px;
+}
+
+.text-logo-container
+{
+   text-align:center;
+}
+
+h1.text-logo
+{
+   font-size:520px; 
+   padding: 0 75px; 
+   margin:0;
+   text-shadow: 15px 15px @gray-darker;
+}
+
+.application-name 
+{
+   padding: 1px 2px;
+}
+/* query composer */
+
+@queryPanelLineHeight: 25px;
+
+#SetInfoBar 
+{
+    span 
+    {
+	  line-height: @queryPanelLineHeight;
+	}
+    padding: 1px 5px;
+    margin-bottom: 5px;
+	font-size: 14px;
+}
+ 
+.QueryInput 
+{
+    span 
+    {
+	  line-height: 25px;
+	}
+	input 
+    {
+ 	   font-size: 13px;
+	   border: 1px solid #cccccc;
+	   padding: 1px 2px;
+	   vertical-align: middle;
+	   margin-top: 2px;
+	}
+    padding: 3px 5px;
+    border-radius: 3px 3px;
+    border: 0.8px solid #5C9CCC;
+    margin-bottom: 5px;
+	font-size: 14px;
+}
+
+.QueryInput .sortlabel, .QueryInput .filterlabel
+{
+    font-weight:bold;
+    text-align:right;
+    padding-top: 8px;
+}
+
+/*
+.QueryInput .sortOps, .QueryInput .filterOps
+{
+    padding-top: 2px;
+}
+
+.QueryInput .sorterexpr, .QueryInput .filterexpr
+{
+    margin:3px 2px;
+    padding: 1px 1px;
+    position:relative;
+    border-radius: 3px 3px;
+    border: 0.8px solid #5C9CCC;
+    min-height: 20px;
+
+}
+*/
+
+.QueryInput .sorterexpr, .QueryInput .filterexpr
+{
+   height: auto;
+}
+
+.QueryInput .sorterexpr .sortnode, .QueryInput .filterexpr .filternode
+{
+    display:inline-block;
+    margin: 2px 0 3px 0;
+    padding: 0 0 0 5px;
+	line-height: @queryPanelLineHeight;
+}
+
+.QueryInput .sorterexpr .thisnode
+{
+    display:inline-block;
+    margin: 0 0 3px 0;
+    padding: 0 0 0 5px;
+    color: Blue;
+}
+
+.QueryInput .sorterexpr .dotnode
+{
+    display:inline-block;
+    margin: 0 -3px 3px 0;
+    padding: 0 0 2px 1px;
+}
+
+.QueryInput .sorterexpr .dirnode
+{
+    display:inline-block;
+    margin: 0 0 3px 0;
+    padding: 0;
+}
+
+.Param 
+{
+    color: Blue;
+}
+
+.Op
+{
+    color: Green;
+}
+
+.LogicOp
+{
+    color: firebrick;
+	font-weight: bold;
+}
+
+.StringValue
+{
+    color:#FF4F0B;
+    font-style:oblique;
+    font-size:12px;
+    white-space:pre;
+}
+
+.BeginGroup, .EndGroup
+{
+    font-weight:bold;
+    font-size: 13px;
+}
+
+.QueryInput td .sorterexpr #sortExec, .QueryInput td .filterexpr #filterExec
+{
+    height: 19.5px;
+    vertical-align:top;
+}
+
+.QueryInput td .sorterexpr .sortnode img
+{
+    width: 12px;
+}
+
+.QueryInput td #sortOpts, .QueryInput td #filterOpts
+{
+    width: 80px;
+    border: 1px solid #dddddd;
+}
+
+.EntityListPanel
+{
+  table {
+    width: 100%;
+  }
+  clear: both;
+}
+
+.smaller-font 
+{
+  font-size: smaller;
+  bottom: -15px;
+}
+ 
+table.figure-frame 
+{
+   td {
+   }
+   border: 0 solid white;
+   margin: 15px;
+}
+
+.tabs dd {
+   border-bottom: 1px solid #dddddd;
+}
+
+.Instructions {
+   margin: 10px 0 0 0;
+   padding: 10px 0;
+   //border: 1px #dddddd solid;
+   //radius: 5px;
+}
+
+.breadcrumbs .menu 
+{
+    .f-dropdown {
+	   padding: 3.5px;
+	   white-space: nowrap;
+	   width: auto;
+	}
+    .f-dropdown li a.menu-link {
+       display: inline;
+       text-transform: none;
+       text-decoration: none;
+    }
+
+    .f-dropdown li a.menu-link:active, .f-dropdown li a.menu-link:hover, .f-dropdown li a.menu-link:focus {
+       outline: 0;
+       text-decoration: none;
+    }
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
