@@ -1,9 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Archymeta.Web.Security.Resources
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - @ResourceUtils.GetString("2b5ca6c9ca99b01ad5c5b2ca6ac7ec71", "Membership+ Administration System")</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/ionicons")
@@ -18,7 +19,7 @@
     <div class="container">
         <footer class="footer">
             <p style="text-align:center;">
-                &copy; @DateTime.Now.Year - <a href="http://www.archymeta.com">Archymeta Information Techenologies Co., Ltd.</a>, All rights reserved
+                &copy; @DateTime.Now.Year - @Html.Raw(ResourceUtils.GetString("5eab1b11c48a0f997c644f3162d9c2c7", @"<a href=""http://www.archymeta.com"">Archymeta Information Techenologies Co., Ltd.</a>, All rights reserved"))
             </p>
         </footer>
     </div>

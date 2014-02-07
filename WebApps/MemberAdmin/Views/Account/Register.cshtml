@@ -1,70 +1,53 @@
 ﻿@model MemberAdminMvc5.Models.RegisterViewModel
+@using Archymeta.Web.Security.Resources;
+
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = ResourceUtils.GetString("0ba7583639a274c434bbe6ef797115a5", "Register");
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 <div class="row">
     <div class="col-md-7">
         @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            <h4>Create a new account.</h4>
+            <h4>@ResourceUtils.GetString("fe1f636b83baeffd7a2ec09518a81ab9", "Create a new account")</h4>
             <hr />
             @Html.ValidationSummary()
             <div class="form-group">
-                @Html.LabelFor(m => m.UserName, new { @class = "col-md-3 control-label" })
+                <label class="col-md-3 control-label" for="Username">@ResourceUtils.GetString("987dce661afca3372aa3e05702fb1d07", "User name")</label>
                 <div class="col-md-9">
                     @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.Password, new { @class = "col-md-3 control-label" })
+                <label class="col-md-3 control-label" for="Password">@ResourceUtils.GetString("dc647eb65e6711e155375218212b3965", "Password")</label>
                 <div class="col-md-9">
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-3 control-label" })
+                <label class="col-md-3 control-label" for="ConfirmPassword">@ResourceUtils.GetString("4c231e0da3eaaa6a9752174f7f9cfb32", "Confirm password")</label>
                 <div class="col-md-9">
                     @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
+                <label class="col-md-3 control-label" for="Email">@ResourceUtils.GetString("ce8ae9da5b7cd6c3df2929543a9af92e", "Email")</label>
                 <div class="col-md-9">
                     @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
-                    <input type="submit" class="btn btn-default" value="Register" />
+                    <input type="submit" class="btn btn-default" value="@ResourceUtils.GetString("0ba7583639a274c434bbe6ef797115a5", "Register")" />
                 </div>
             </div>
         }
     </div>
+    <!-- remove the following after demo -->
     <div class="col-md-5">
-        <section>
-            <p>Existing users:</p>
-            <ol>
-                <li>
-                    <b>System Administrator</b>:
-                    <ul>
-                        <li>Username: "sysadmin"</li>
-                        <li>Password: "abcdef"</li>
-                        <li>Role: "Administrators &gt; System" </li>
-                    </ul>
-                </li>
-                <li>
-                    <b>A General Administrator</b>:
-                    <ul>
-                        <li>Username: "demo-user-a"</li>
-                        <li>Password: "abcdef"</li>
-                        <li>Role: "Administrators" </li>
-                    </ul>
-                </li>
-            </ol>
-        </section>
+        @Html.Partial("_SampleUsersInfo")
     </div>
 </div>
 @section Scripts {

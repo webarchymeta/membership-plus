@@ -1,4 +1,5 @@
-﻿<div class="container">
+﻿@using Archymeta.Web.Security.Resources
+<div class="container">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
@@ -9,10 +10,10 @@
     </div>
     <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+            <li>@Html.ActionLink(ResourceUtils.GetString("8cf04a9734132302f96da8e113e80ce6", "Home"), "Index", "Home")</li>
             @if (Request.IsAuthenticated)
             {
-                <li class="dropdown">
+                @*<li class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">Organizers<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-submenu">
@@ -23,36 +24,36 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li>*@
                 <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Settings<b class="caret"></b></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("f4f70727dc34561dfde1a3c529b6205d", "Settings")<b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu">
                         <li class="dropdown-submenu">
-                            <a href="#">Account</a>
+                            <a href="#">@ResourceUtils.GetString("08bd40c7543007ad06e4fce31618f6ed", "Account")</a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>@Html.ActionLink("Change account info", "ChangeAccountInfo", "Account")</li>
-                                <li>@Html.ActionLink("Change preferences", "EditUserPreferences", "Account")</li>
-                                <li>@Html.ActionLink("Add/Change profile", "UserDetails", "Account")</li>
+                                <li>@Html.ActionLink(ResourceUtils.GetString("fe7fc019efd9d8c63caa40b65a987050", "Change account info"), "ChangeAccountInfo", "Account")</li>
+                                <li>@Html.ActionLink(ResourceUtils.GetString("f72266dfa1417973778513c0a254c779", "Change preferences"), "EditUserPreferences", "Account")</li>
+                                <li>@Html.ActionLink(ResourceUtils.GetString("19ea043ac4635abf9e611b26e847eda2", "Maintain profile"), "UserDetails", "Account")</li>
                             </ul>
                         </li>
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle">Admin<b class="caret"></b></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle">@ResourceUtils.GetString("e3afed0047b08059d0fada10f400c1e6", "Admin")<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("Admin Users", "UserAdmin", "Admin")</li>
-                        <li>@Html.ActionLink("Admin Roles", "RoleAdmin", "Admin")</li>
+                        <li>@Html.ActionLink(ResourceUtils.GetString("f9aae5fda8d810a29f12d1e61b4ab260", "Users"), "UserAdmin", "Admin")</li>
+                        <li>@Html.ActionLink(ResourceUtils.GetString("a5cd3ed116608dac017f14c046ea56c0", "Roles"), "RoleAdmin", "Admin")</li>
                         <li class="dropdown-submenu">
-                            <a href="#">Statistics</a>
+                            <a href="#">@ResourceUtils.GetString("c33e404a441c6ba9648f88af3c68a1cb", "Statistics")</a>
                             <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Online Users", "OnlineUsers", "Admin")</li>
+                                <li>@Html.ActionLink(ResourceUtils.GetString("6252099885d35731bcdb935fb4582e7a", "Online Users"), "OnlineUsers", "Admin")</li>
                             </ul>
                         </li>
                     </ul>
                 </li>
             }
-            <li>@Html.ActionLink("About", "About", "Home")</li>
-            @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+            <li>@Html.ActionLink(ResourceUtils.GetString("bbaff12800505b22a853e8b7f4eb6a23", "Contact"), "Contact", "Home")</li>
+            <li>@Html.ActionLink(ResourceUtils.GetString("8f7f4c1ce7a4f933663d10543562b097", "About"), "About", "Home")</li>
         </ul>
         @Html.Partial("_LoginPartial")
     </div>

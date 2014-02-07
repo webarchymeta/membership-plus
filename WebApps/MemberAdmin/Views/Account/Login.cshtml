@@ -1,28 +1,28 @@
 ﻿@model MemberAdminMvc5.Models.LoginViewModel
+@using Archymeta.Web.Security.Resources;
 
 @{
-    ViewBag.Title = "Log in";
+    ViewBag.Title = ResourceUtils.GetString("bffe9a3c9a7e00ba00a11749e022d912", "Log in");
 }
-
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 <div class="row">
     <div class="col-md-6">
         <section id="loginForm">
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                <h4>Use a local account to log in.</h4>
+                <h4>@ResourceUtils.GetString("b40ad46c25c153a3d2fde078c0e1b0f9", "Please identify yourself")</h4>
                 <hr />
                 @Html.ValidationSummary(true)
                 <div class="form-group">
-                    @Html.LabelFor(m => m.UserName, new { @class = "col-md-3 control-label" })
+                    <label class="col-md-3 control-label" for="Username">@ResourceUtils.GetString("987dce661afca3372aa3e05702fb1d07", "User name")</label>
                     <div class="col-md-9">
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.UserName)
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.UserName)
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-3 control-label" })
+                    <label class="col-md-3 control-label" for="Password">@ResourceUtils.GetString("dc647eb65e6711e155375218212b3965", "Password")</label>
                     <div class="col-md-9">
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Password)
@@ -32,43 +32,24 @@
                     <div class="col-md-offset-3 col-md-9">
                         <div class="checkbox">
                             @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
+                            <label for="RememberMe">@ResourceUtils.GetString("fbbfd5343cb5a55e3af406dc4dd0c466", "Save them for quick login later.")</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-3 col-md-9">
-                        <input type="submit" value="Log in" class="btn btn-default" />
+                        <input type="submit" value="@ResourceUtils.GetString("bffe9a3c9a7e00ba00a11749e022d912", "Log in")" class="btn btn-default" />
                     </div>
                 </div>
                 <p>
-                    @Html.ActionLink("Register", "Register") if you don't have a local account.
+                    @Html.Raw(string.Format(ResourceUtils.GetString("034edf1bc06357b5e8f592d28c1254ed", "{0} if you don't have a local account."), Html.ActionLink(ResourceUtils.GetString("0ba7583639a274c434bbe6ef797115a5", "Register"), "Register")))
                 </p>
             }
         </section>
     </div>
+    <!-- remove the following after demo -->
     <div class="col-md-6">
-        <section>
-            <p>Existing users:</p>
-            <ol>
-                <li>
-                    <b>System Administrator</b>:
-                    <ul>
-                        <li>Username: "sysadmin"</li>
-                        <li>Password: "abcdef"</li>
-                        <li>Role: "Administrators &gt; System" </li>
-                    </ul>
-                </li>
-                <li>
-                    <b>A General Administrator</b>:
-                    <ul>
-                        <li>Username: "demo-user-a"</li>
-                        <li>Password: "abcdef"</li>
-                        <li>Role: "Administrators" </li>
-                    </ul>
-                </li>
-            </ol>
-        </section>
+        @Html.Partial("_SampleUsersInfo")
     </div>
 </div>
 @section Scripts {

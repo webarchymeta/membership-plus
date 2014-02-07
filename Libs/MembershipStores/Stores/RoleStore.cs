@@ -14,6 +14,7 @@ using CryptoGateway.RDB.Data.MembershipPlus;
 #else
 using CryptoGateway.RDB.Data.AspNetMember;
 #endif
+using Archymeta.Web.Security.Resources;
 
 namespace Archymeta.Web.Security
 {
@@ -63,6 +64,15 @@ namespace Archymeta.Web.Security
             }
         }
         private bool? _throwOnPopulatedRole = default(bool?);
+
+        private Exception getException(string id, string err, Exception e = null)
+        {
+#if MemberPlus
+            return new Exception(ResourceUtils.GetString(id, err), e);
+#else
+            return new Exception(err, e);
+#endif
+        }
 
         public RoleStore(CallContext clientContext, Application_ app)
         {
@@ -118,7 +128,7 @@ namespace Archymeta.Web.Security
                 {
                     WriteToEventLog(e, "CreateRole");
                 }
-                throw new Exception("error", e);
+                throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
             {
@@ -144,7 +154,7 @@ namespace Archymeta.Web.Security
                         if (rus == null || rus.Length == 0)
                             rsvc.DeleteEntities(cctx, new RoleSet(), new Role[] { r });
                         else
-                            throw new Exception("Cannot delete a populated role.");
+                            throw getException("6de8c40a93b3d0c36fb4b5daa73d7db5", "Cannot delete a populated role.");
                     }
                 }
             }
@@ -154,7 +164,7 @@ namespace Archymeta.Web.Security
                 {
                     WriteToEventLog(e, "DeleteRole");
                 }
-                throw new Exception("error", e);
+                throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
             {

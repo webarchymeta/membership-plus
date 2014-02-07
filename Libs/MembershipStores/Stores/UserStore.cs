@@ -11,9 +11,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 #if MemberPlus
 using CryptoGateway.RDB.Data.MembershipPlus;
+using Archymeta.Web.Security.Resources;
 #else
 using CryptoGateway.RDB.Data.AspNetMember;
 #endif
+
 
 namespace Archymeta.Web.Security
 {
@@ -208,6 +210,15 @@ namespace Archymeta.Web.Security
         public bool AutoSaveChanges { get; set; }
         public bool DisposeContext { get; set; }
 
+        private Exception getException(string id, string err, Exception e = null)
+        {
+#if MemberPlus
+            return new Exception(ResourceUtils.GetString(id, err), e);
+#else
+            return new Exception(err, e);
+#endif
+        }
+
         public async Task CreateAsync(TUser user)
         {
             CallContext cctx = _cctx.CreateCopy();
@@ -222,12 +233,12 @@ namespace Archymeta.Web.Security
                 {
                     string id = user.Id;
                     if (id != null && await usvc.LoadEntityByKeyAsync(cctx, id) != null)
-                        throw new Exception("Duplicate user ID found.");
+                        throw getException("fccd73d6fd2dec420710fd32dbe11527", "Duplicate user ID found.");
                     if (RequiresUniqueEmail)
                     {
                         var x = await GetUserNameByEmailAsync(user.Email);
                         if (!string.IsNullOrEmpty(x))
-                            throw new Exception("User email exists.");
+                            throw getException("22e97c1c4ffde9ff3283a88153d80e0a", "User email exists.");
                     }
                     DateTime createDate = DateTime.UtcNow;
                     if (id == null)
@@ -238,7 +249,7 @@ namespace Archymeta.Web.Security
                     {
                         Guid guid;
                         if (!Guid.TryParse(id, out guid))
-                            throw new Exception("Invalid user ID found.");
+                            throw getException("7e4ec0669ebc17dc36870699c309c56b", "Invalid user ID found.");
                     }
                     udata = new User();
                     udata.IsPersisted = false;
@@ -274,7 +285,7 @@ namespace Archymeta.Web.Security
                         user.UpdateInstance(v.ChangedEntities[0].UpdatedItem);
                         return;
                     }
-                    throw new Exception("Add user failed!");
+                    throw getException("7546b51813a82246cd88f6c9c8ff5997", "Add user failed!");
                 }
                 else if ((user as User).Password == lu[0].Password)
                 {
@@ -307,7 +318,7 @@ namespace Archymeta.Web.Security
                             user.UpdateInstance(udata);
                             return;
                         }
-                        throw new Exception("Add user membership failed!");
+                        throw getException("c12be7bc5f311f434ad4df9fc6774d5c", "Add user membership failed!");
                     }
 #if MemberPlus
                     else
@@ -321,18 +332,19 @@ namespace Archymeta.Web.Security
                                 //
                                 QueryExpresion qexpr = new QueryExpresion();
                                 qexpr.OrderTks = new List<QToken>(new QToken[] { 
-                                new QToken { TkName = "UserID" },
-                                new QToken { TkName = "asc" }
-                            });
+                                    new QToken { TkName = "UserID" },
+                                    new QToken { TkName = "asc" }
+                                });
                                 qexpr.FilterTks = new List<QToken>(new QToken[] { 
-                                new QToken { TkName = "UserRef.Username != \"" + user.Username + "\"" },
-                                new QToken { TkName = "&&" },
-                                new QToken { TkName = "Email == \"" + user.Email + "\"" }
-                            });
+                                    new QToken { TkName = "UserRef.Username != \"" + user.Username + "\"" },
+                                    new QToken { TkName = "&&" },
+                                    new QToken { TkName = "Email == \"" + user.Email + "\"" }
+                                });
                                 var ul = await membsvc.QueryDatabaseAsync(cctx, ums, qexpr);
                                 if (ul != null && ul.Count() > 0)
                                 {
-                                    throw new NotSupportedException("The email address \"" + user.Email + "\" is used by other user under a different user name.");
+                                    string err = string.Format(ResourceUtils.GetString("6e3b27059a51ececb2d27a763d1ad639", "The email address \"{0}\" is used by other user under a different user name."), user.Email);
+                                    throw new NotSupportedException(err);
                                 }
                             }
                             memb.Email = user.Email;
@@ -345,7 +357,7 @@ namespace Archymeta.Web.Security
                 }
                 else
                 {
-                    throw new Exception("User name exists!");
+                    throw getException("06f02a9ab4a25c494ef92dbf3c35a16d", "User name exists!");
                 }
             }
             catch (Exception e)
@@ -354,7 +366,7 @@ namespace Archymeta.Web.Security
                 {
                     WriteToEventLog(e, "CreateUser");
                 }
-                throw new Exception("error", e);
+                throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
             {
@@ -414,7 +426,7 @@ namespace Archymeta.Web.Security
                 {
                     WriteToEventLog(e, "DeleteUser");
                 }
-                throw new Exception("error", e);
+                throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
             {
@@ -622,7 +634,7 @@ namespace Archymeta.Web.Security
                 {
                     WriteToEventLog(e, "UpdateFailureCount");
                 }
-                throw new Exception("error", e);
+                throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
             {
@@ -640,7 +652,13 @@ namespace Archymeta.Web.Security
                 UsersInRoleServiceProxy ursvc = new UsersInRoleServiceProxy();
                 List<User> ul = await usvc.LoadEntityByNatureAsync(cctx, user.UserName);
                 if (ul == null || ul.Count == 0)
+                {
+#if MemberPlus
+                    throw new ArgumentException(string.Format(ResourceUtils.GetString("b66098049404e4de1356242e8aa6444a", "User \"{0}\" is not found."), user.UserName));
+#else
                     throw new ArgumentException("User '" + user.UserName + "' is not found.");
+#endif
+                }
                 User u = ul[0];
                 user.UpdateInstance(u);
                 Role r = await findRoleAsync(role);
@@ -685,7 +703,13 @@ namespace Archymeta.Web.Security
                 l.Add(uir);
                 var result = await ursvc.AddOrUpdateEntitiesAsync(cctx, new UsersInRoleSet(), l.ToArray());
                 if (result.ChangedEntities.Length != 1 || !IsValidUpdate(result.ChangedEntities[0].OpStatus))
+                {
+#if MemberPlus
+                    throw new Exception(string.Format(ResourceUtils.GetString("990248539c7ca97e045c440fbec05bf3", "Add role: \"{0}\" to user: \"{1}\" failed."), role, user.Username));
+#else
                     throw new Exception("Add role: \"" + role + "\" to user: " + user.UserName + " failed.");
+#endif
+                }
                 // cleanup, delete more general roles to make them implicit
             }
             catch (Exception e)
@@ -694,7 +718,7 @@ namespace Archymeta.Web.Security
                 {
                     WriteToEventLog(e, "AddUsersToRoles");
                 }
-                throw new Exception("error", e);
+                throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
             {
@@ -710,7 +734,7 @@ namespace Archymeta.Web.Security
         private async Task<Dictionary<Role, string>> _getRolesAsync(TUser user)
         {
             CallContext cctx = _cctx.CreateCopy();
-            Dictionary<Role,string> list = new Dictionary<Role,string>();
+            Dictionary<Role, string> list = new Dictionary<Role, string>();
             try
             {
                 UserServiceProxy usvc = new UserServiceProxy();
@@ -848,7 +872,7 @@ namespace Archymeta.Web.Security
                 {
                     WriteToEventLog(e, "RemoveUsersFromRoles");
                 }
-                throw new Exception("error", e);
+                throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
             {
@@ -892,11 +916,12 @@ namespace Archymeta.Web.Security
                                 new QToken { TkName = "UserRef.Username != \"" + user.Username + "\"" },
                                 new QToken { TkName = "&&" },
                                 new QToken { TkName = "Email == \"" + user.Email + "\"" }
-                            }); 
+                            });
                             var ul = await mbsvc.QueryDatabaseAsync(cctx, mbset, qexpr);
                             if (ul != null && ul.Count() > 0)
                             {
-                                throw new NotSupportedException("The email address \"" + user.Email + "\" is used by other user under a different user name.");
+                                string err = string.Format(ResourceUtils.GetString("6e3b27059a51ececb2d27a763d1ad639", "The email address \"{0}\" is used by other user under a different user name."), user.Email);
+                                throw new NotSupportedException(err);
                             }
                         }
                         memb.Email = user.Email;
@@ -991,7 +1016,7 @@ namespace Archymeta.Web.Security
                 {
                     WriteToEventLog(e, "UpdateUser");
                 }
-                throw new Exception("error", e);
+                throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
             {

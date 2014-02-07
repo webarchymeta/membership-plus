@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Archymeta.Web.Security;
+using Archymeta.Web.Security.Resources;
 using MemberAdminMvc5.Models;
 
 namespace MemberAdminMvc5.Controllers
@@ -54,7 +55,7 @@ namespace MemberAdminMvc5.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid username or password.");
+                    ModelState.AddModelError("", ResourceUtils.GetString("3a2a06b3a1f05cde765219211bf2e9be", "Invalid username or password."));
                 }
             }
             // If we got this far, something failed, redisplay form
@@ -100,10 +101,10 @@ namespace MemberAdminMvc5.Controllers
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.Error ? "An error has occurred."
+                message == ManageMessageId.ChangePasswordSuccess ? ResourceUtils.GetString("9bc75a1c6d94e70e8b96d8d59115c0c0", "Your password has been changed.")
+                : message == ManageMessageId.SetPasswordSuccess ? ResourceUtils.GetString("9ad4e391b8ba2faf5177dcfa6dcee143", "Your password has been set.")
+                : message == ManageMessageId.RemoveLoginSuccess ? ResourceUtils.GetString("9d813b903dbe8155105d3b5c4e6a04ed", "The external login was removed.")
+                : message == ManageMessageId.Error ? ResourceUtils.GetString("c69732cc923305ac0684ac8fc05a4bcb", "An error has occurred.")
                 : "";
             ViewBag.HasLocalPassword = HasPassword();
             ViewBag.ReturnUrl = Url.Action("Manage");

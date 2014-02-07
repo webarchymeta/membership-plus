@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Archymeta.Web.Security</RootNamespace>
     <AssemblyName>Archymeta.MembershipPlusStores</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,11 +49,18 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UniResources">
+      <HintPath>..\..\Assemblies\UniResources.dll</HintPath>
+    </Reference>
+    <Reference Include="UniResourceShared">
+      <HintPath>..\..\Assemblies\UniResourceShared.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModels.cs" />
     <Compile Include="IApplicationRole.cs" />
     <Compile Include="IApplicationUser.cs" />
+    <Compile Include="Resources\ResourceUtils.cs" />
     <Compile Include="RoleStore.cs" />
     <Compile Include="UserManagerEx.cs" />
     <Compile Include="UserStore.cs" />
@@ -73,6 +81,7 @@
       <Name>MembershipPlusShared45</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

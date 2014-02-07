@@ -1,9 +1,10 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@using Archymeta.Web.Security.Resources
+@{
+    ViewBag.Title = ResourceUtils.GetString("cfe6e34a4c7f24aad32aa4299562f5b2", "Home Page");
 }
 
 <div class="jumbotron text-logo-container">
     <h1 class="ion-ios7-people text-logo"></h1>
-    <h2>Membership <span class="glyphicon glyphicon-plus-sign" style="font-size:smaller;"></span> administration</h2>
+    <h2>@Html.Raw(string.Format(ResourceUtils.GetString("466d1cb57138a10d96638d1ce258bf7e", @"Membership {0} administration"), @"<span class=""glyphicon glyphicon-plus-sign"" style=""font-size:smaller;""></span>"))</h2>
 </div>
 
