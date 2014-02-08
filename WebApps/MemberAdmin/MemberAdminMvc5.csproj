@@ -331,6 +331,8 @@
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Content\less\Site.less" />
     <Content Include="Views\Shared\_TopbarPartial.cshtml" />
+    <Content Include="Views\Account\_SampleUsersInfo.cshtml" />
+    <Content Include="Views\Account\_UserIconPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
