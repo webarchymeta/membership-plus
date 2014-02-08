@@ -19,6 +19,14 @@ using CryptoGateway.RDB.Data.AspNetMember;
 
 namespace Archymeta.Web.Security
 {
+    public class CustomClaims
+    {
+        public static string HasIcon
+        {
+            get { return Microsoft.IdentityModel.Claims.ClaimTypes.ClaimType2009Namespace + "/Archymeta/HasIcon"; }
+        }
+    }
+
     public class UserValidator<TUser> : IIdentityValidator<TUser>
     {
         public async Task<IdentityResult> ValidateAsync(TUser user)
@@ -454,6 +462,14 @@ namespace Archymeta.Web.Security
                     foreach (var r in roles)
                         user.Claims.Add(CreateClaim(Microsoft.IdentityModel.Claims.ClaimTypes.Role, r));
                 }
+#if MemberPlus
+                user.Email = memb.Email;
+                if (!string.IsNullOrEmpty(user.Email))
+                    user.Claims.Add(UserStore<ApplicationUser>.CreateClaim(Microsoft.IdentityModel.Claims.ClaimTypes.Email, user.Email));
+                user.HasIcon = (!string.IsNullOrEmpty(memb.IconMime));
+                if (user.HasIcon)
+                    user.Claims.Add(UserStore<ApplicationUser>.CreateClaim(CustomClaims.HasIcon, true.ToString()));
+#endif
             }
             return user;
         }
@@ -479,6 +495,14 @@ namespace Archymeta.Web.Security
                     foreach (var r in roles)
                         user.Claims.Add(CreateClaim(Microsoft.IdentityModel.Claims.ClaimTypes.Role, r));
                 }
+#if MemberPlus
+                user.Email = memb.Email;
+                if (!string.IsNullOrEmpty(user.Email))
+                    user.Claims.Add(UserStore<ApplicationUser>.CreateClaim(Microsoft.IdentityModel.Claims.ClaimTypes.Email, user.Email));
+                user.HasIcon = (!string.IsNullOrEmpty(memb.IconMime));
+                if (user.HasIcon)
+                    user.Claims.Add(UserStore<ApplicationUser>.CreateClaim(CustomClaims.HasIcon, true.ToString()));
+#endif
             }
             return user;
         }

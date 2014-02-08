@@ -1,5 +1,6 @@
-﻿@using Microsoft.AspNet.Identity
-@using Archymeta.Web.Security.Resources
+﻿@using Microsoft.AspNet.Identity;
+@using Archymeta.Web.Security.Resources;
+
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -8,7 +9,9 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink(User.Identity.GetUserName(), "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+            <a title="@ResourceUtils.GetString("fe7fc019efd9d8c63caa40b65a987050", "Change account info")" href="@Url.Content("~/Account/Manage")">
+                @{ Html.RenderAction("GenerateUserIcon", "Account"); }
+            </a>
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">@ResourceUtils.GetString("99f01e14b21162806142bace835e81c3", "Log off")</a></li>
     </ul>

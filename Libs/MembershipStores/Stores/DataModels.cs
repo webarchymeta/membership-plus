@@ -59,6 +59,12 @@ namespace Archymeta.Web.Security
             get;
             set;
         }
+
+        public bool HasIcon
+        {
+            get;
+            set;
+        }
 #endif
 
         public ICollection<Claim> Claims

@@ -14,6 +14,7 @@ namespace Archymeta.Web.Security
     public interface IApplicationUser : Microsoft.AspNet.Identity.IUser
     {
         string Email { get; set; }
+        bool HasIcon { get; set; }
         string AppMemberStatus { get; set; }
         string PasswordQuestion { get; set; }
         string PasswordAnswer { get; set; }

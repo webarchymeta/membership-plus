@@ -7,6 +7,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using CryptoGateway.RDB.Data.MembershipPlus;
+using Archymeta.Web.MembershipPlus.AppLayer;
 
 namespace MemberAdminMvc5
 {
@@ -14,14 +15,14 @@ namespace MemberAdminMvc5
     {
         internal static CallContext ClientContext
         {
-            get;
-            set;
+            get { return ApplicationContext.ClientContext; }
+            set { ApplicationContext.ClientContext = value; }
         }
 
         internal static Application_ App
         {
-            get;
-            set;
+            get { return ApplicationContext.App; }
+            set { ApplicationContext.App = value; }
         }
 
         internal static bool MemberInitSuccess = false;

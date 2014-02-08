@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading;
+using System.Security.Principal;
+using Microsoft.IdentityModel;
+//using Microsoft.IdentityModel.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Archymeta.Web.Security;
 using Archymeta.Web.Security.Resources;
+using Archymeta.Web.MembershipPlus.AppLayer;
 using MemberAdminMvc5.Models;
 
 namespace MemberAdminMvc5.Controllers
@@ -170,6 +174,44 @@ namespace MemberAdminMvc5.Controllers
         {
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
+        }
+
+        [ChildActionOnly]
+        public ActionResult GenerateUserIcon()
+        {
+            var m = new Models.UserIconModel();
+            m.Greetings = User.Identity.GetUserName();
+            var ci = User.Identity as System.Security.Claims.ClaimsIdentity;
+            string strIcon = (from d in ci.Claims where d.Type == CustomClaims.HasIcon select d.Value).SingleOrDefault();
+            bool hasIcon;
+            if (!string.IsNullOrEmpty(strIcon) && bool.TryParse(strIcon, out hasIcon))
+                m.IconUrl = "Account/GetMemberIcon?id=" + User.Identity.GetUserId();
+            return PartialView("_UserIconPartial", m);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetMemberIcon(string id)
+        {
+            var rec = await MembershipContext.GetMemberIconById(id);
+            if (rec == null)
+                return new HttpStatusCodeResult(404, "Not Found");
+            int status;
+            string statusstr;
+            bool bcache = CheckClientCache(rec.LastModified, null, out status, out statusstr);
+            SetClientCacheHeader(rec.LastModified, null, HttpCacheability.Public);
+            if (!bcache)
+            {
+                if (!string.IsNullOrEmpty(rec.MimeType))
+                    return File(rec.Data, rec.MimeType);
+                else
+                    return new HttpStatusCodeResult(404, "Not Found");
+            }
+            else
+            {
+                Response.StatusCode = status;
+                Response.StatusDescription = statusstr;
+                return Content("");
+            }
         }
 
         #region Helpers

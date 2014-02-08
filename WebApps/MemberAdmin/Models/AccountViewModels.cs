@@ -58,4 +58,19 @@ namespace MemberAdminMvc5.Models
         [Display(Name = "Email address")]
         public string Email { get; set; }
     }
+
+    public class UserIconModel
+    {
+        public string Greetings
+        {
+            get;
+            set;
+        }
+
+        public string IconUrl
+        {
+            get;
+            set;
+        }
+    }
 }
