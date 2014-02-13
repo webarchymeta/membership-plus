@@ -1,0 +1,88 @@
+﻿@model MemberAdminMvc5.Models.ChangeAccountInfoModel
+@using Microsoft.AspNet.Identity;
+@using Archymeta.Web.Security.Resources;
+@{
+    ViewBag.Title = ResourceUtils.GetString("fe7fc019efd9d8c63caa40b65a987050", "Change account info");
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#personal-info" data-toggle="tab">@ResourceUtils.GetString("61f1667518c8516a8a4fe18686a4e6fd", "Personal Information")</a></li>
+    <li><a href="#password-panel" data-toggle="tab">@ResourceUtils.GetString("721a34ed25406bae7c1f598b004df39f", "Manage Password")</a></li>
+</ul>
+<div class="tab-content">
+    <div id="personal-info" class="tab-pane active">
+        <div class="row">
+            <div class="col-md-8">
+                <h3>@ResourceUtils.GetString("5275dc3e37bdaf3fce398b8cf4ebfa6f", "Real Name")</h3>
+                <hr />
+                @using (Html.BeginForm("ChangeRealName", "Account", new { returnUrl = ViewBag.ReturnUrl }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="FirstName">@ResourceUtils.GetString("bc910f8bdf70f29374f496f05be0330d", "First Name")</label>
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = ResourceUtils.GetString("70b690c9a4ad55582f19ddb42dfc8a89", "enter your first name") })
+                        </div>
+                        <div class="col-md-6">
+                            <label for="LastName">@ResourceUtils.GetString("77587239bf4c54ea493c7033e1dbf637", "Last Name")</label>
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = ResourceUtils.GetString("6101bd0e0d37830195aa1fab4cfb7b2b", "enter your last name") })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-6 col-md-5">
+                            <input type="submit" value="@ResourceUtils.GetString("06933067aafd48425d67bcb01bba5cb7", "Update")" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-4">
+                <h3>@ResourceUtils.GetString("5729cd73033fc4e0990aa86e7f815e52", "Personal Icon")</h3>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <img alt="my-icon" src="@Url.Content("~/Account/GetMemberIcon?id="+User.Identity.GetUserId())" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.ActionLink(ResourceUtils.GetString("22e410471fbd0dcc04039ffa715008ca", "Update Icon"), "UpdateMemberIcon", new { returnUrl = Url.Content("~/Account/ChangeAccountInfo?returnUrl=" + ViewBag.ReturnUrl) })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="password-panel" class="tab-pane">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>@ResourceUtils.GetString("721a34ed25406bae7c1f598b004df39f", "Manage Password")</h3>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <p class="text-success">@ViewBag.StatusMessage</p>
+            <div class="col-md-12">
+                @if (ViewBag.HasLocalPassword)
+                {
+                    @Html.Partial("_ChangePasswordPartial")
+                }
+                else
+                {
+                    @Html.Partial("_SetPasswordPartial")
+                }
+            </div>
+        </div>
+    </div>
+</div>

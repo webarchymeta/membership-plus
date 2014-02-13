@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Archymeta.Web.Security.Resources;
+@{
+    ViewBag.Title = ResourceUtils.GetString("66f012374e14ca81763ebd417b383089", "Update User Photo");
+}
+<div class="row">
+    <div class="col-md-12">
+        &nbsp;
+    </div>
+</div>
+@using (Html.BeginForm("UpdateUserPhotoAsync", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="LastModified" name="LastModified" />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-10">
+            <div style="display:inline-block">
+                <label for="IconImg">
+                    @ResourceUtils.GetString("242033d27ef9f83d3453354516fbe24b", "Local Picture File:")
+                </label>
+                <input type="file" id="UserPhoto" name="UserPhoto" />
+                <div>&nbsp;</div>
+                <input type="submit" name="submit" id="submit" class="btn btn-default" value="@ResourceUtils.GetString("91412465ea9169dfd901dd5e7c96dd9a", "Upload")" />
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-12">
+        <img id="imgPreview" src="@Url.Content("~/Account/UserPhoto?id="+User.Identity.GetUserId())" style="vertical-align:bottom; margin:20px;" />
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            $("#submit").prop("disabled", true);
+            if (window.File && window.FileReader && window.FileList && window.Blob) {
+                $('#UserPhoto')[0].addEventListener('change', function (evt) {
+                    var file = evt.target.files[0];
+                    $('#LastModified').val(file.lastModifiedDate.toUTCString());
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imgPreview').attr('src', e.target.result);
+                        $("#submit").prop("disabled", false);
+                    }
+                    reader.readAsDataURL(file);
+                }, false);
+            } else {
+                alert('@ResourceUtils.GetString("0274e2eeb63505510d4baab9f70dc418", "The File APIs are not fully supported in this browser.")');
+            }
+        });
+    </script>
+}

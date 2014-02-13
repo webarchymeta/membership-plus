@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Archymeta.Web.Security.Resources;
+@{
+    ViewBag.Title = ResourceUtils.GetString("a11249b2e553b45f53a9d1f5d0ac89ba", "Update User Membership Icon");
+}
+@section scripts {
+    <script>
+        $(function () {
+            $("#submit").prop("disabled", true);
+            if (window.File && window.FileReader && window.FileList && window.Blob) {
+                $('#IconImg')[0].addEventListener('change', function (evt) {
+                    var file = evt.target.files[0];
+                    $('#IconLastModified').val(file.lastModifiedDate.toUTCString());
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imgPreview').attr('src', e.target.result);
+                        $("#submit").prop("disabled", false);
+                    }
+                    reader.readAsDataURL(file);
+                }, false);
+            } else {
+                alert('@ResourceUtils.GetString("0274e2eeb63505510d4baab9f70dc418", "The File APIs are not fully supported in this browser.")');
+            }
+        });
+    </script>
+}
+<div class="row">
+    <div class="col-md-12">
+        &nbsp;
+    </div>
+</div>
+@using (Html.BeginForm("UpdateMemberIconAsync", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="IconLastModified" name="IconLastModified" />
+    <div class="row">
+        <div class="col-md-offset-2 col-md-10">
+            <div style="display:inline-block">
+                <label for="IconImg">
+                    @ResourceUtils.GetString("4673637028866e44d46b7c9760bf3a4c", "Local Icon File:")
+                </label>
+                <input type="file" id="IconImg" name="IconImg" class="form-control" />
+                <div>&nbsp;</div>
+                <input type="submit" name="submit" id="submit" class="btn btn-default" value="@ResourceUtils.GetString("91412465ea9169dfd901dd5e7c96dd9a", "Upload")" />
+            </div>
+            <div style="display:inline-block; margin-left:20px;">
+                <img id="imgPreview" src="@Url.Content("~/Account/GetMemberIcon?id="+User.Identity.GetUserId())" style="vertical-align:bottom;" />
+            </div>
+        </div>
+    </div>
+}
+

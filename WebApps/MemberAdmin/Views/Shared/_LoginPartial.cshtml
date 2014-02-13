@@ -6,10 +6,9 @@
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
-
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <a title="@ResourceUtils.GetString("fe7fc019efd9d8c63caa40b65a987050", "Change account info")" href="@Url.Content("~/Account/Manage")">
+            <a title="@ResourceUtils.GetString("fe7fc019efd9d8c63caa40b65a987050", "Change account info")" href="@Url.Content("~/Account/ChangeAccountInfo")">
                 @{ Html.RenderAction("GenerateUserIcon", "Account"); }
             </a>
         </li>

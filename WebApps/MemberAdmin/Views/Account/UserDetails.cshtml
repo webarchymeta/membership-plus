@@ -1,0 +1,226 @@
+﻿@model Archymeta.Web.MembershipPlus.AppLayer.Models.UserDetailsVM
+@using Microsoft.AspNet.Identity;
+@using Archymeta.Web.MembershipPlus.AppLayer;
+@using Archymeta.Web.Security.Resources;
+@{
+    ViewBag.Title = ResourceUtils.GetString("e1cfb236408d5d6532542694beece77e", "Add or Update User Details");
+}
+@section styles {
+    @Styles.Render("~/Content/themes/base/css")
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/knockout")
+    <script src="@Url.Content("~/Scripts/DataService/UserDetailsPage.js")"></script>
+    <script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+    <script>
+        appRoot = '@Url.Content("~/")';
+        $(function () {
+            var vm = new UserDetails();
+            @foreach (var m in Model.ChannelTypes)
+            {
+            <text>vm.channelTypes.push(new ChannelType(@m.ID, '@m.TypeName'));</text>
+            }
+            @if (Model.Details != null)
+            {
+                foreach (var c in Model.Channels)
+                {
+            <text>vm.Channels.push(new Channel(JSON.parse('@Html.Raw(Utils.GetDynamicJson(c))')));</text>
+                }
+            }
+            $('#BirthDate').datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+            ko.applyBindings(vm, $('#channels')[0]);
+        });
+    </script>
+}
+@if (Model.Details == null)
+{
+    <h2>@ResourceUtils.GetString("00ea52149c09160b3d3350466e25b1df", "Add User Details")</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <h3>@ResourceUtils.GetString("159ee966ac2343b9452a38397c3291bd", "Create Profile")</h3>
+            <p>
+                @ResourceUtils.GetString("03766c5ade969bbf0a2641fc4946cff4", "You do not have a detail profile at present.")
+                @Html.ActionLink(ResourceUtils.GetString("7a4a50a3bb06f8e1ed56dbc3bee2168c", "Create it now."), "CreateUserDetails", null, new { @class = "btn btn-default"  })
+            </p>
+        </div>
+    </div>
+}
+else
+{
+    <h2>@ResourceUtils.GetString("fc4561951b2f4588df47a14938b5e208", "Update User Details")</h2>
+    <hr />
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#personal-details" data-toggle="tab">@ResourceUtils.GetString("ee7dad31fea478292f8e2dd24133c6aa", "Personal Details")</a></li>
+        <li><a href="#personal-description" data-toggle="tab">@ResourceUtils.GetString("b5a7adde1af5c87d7fd797b6245c2a3a", "Description")</a></li>
+        <li><a href="#personal-channels" data-toggle="tab">@ResourceUtils.GetString("beec9a0ee9fd7d00ed56a27c2c181adc", "Communication Channels")</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="personal-details" class="tab-pane active">
+            @using (Html.BeginForm("UpdateUserProperties", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>@ResourceUtils.GetString("9d2903f6b6d8a25576605c2593bdaa54", "Personal Attributes")</h3>
+                        <table class="table table-bordered personal-properties">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @ResourceUtils.GetString("caa5b7a48ce4b1c1492c445446433fb6", "Gender:")
+                                    </td>
+                                    <td>
+                                        <select id="Gender" name="Gender">
+                                            @foreach (var g in Model.Genders)
+                                            {
+                                                if (g == Model.Gender)
+                                                {
+                                                    <option value="@g" selected>@g</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@g">@g</option>
+                                                }
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @ResourceUtils.GetString("350f645bb2c8435f20d5d88c8681251b", "Birth Date:")
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(m => m.BirthDate)
+                                    </td>
+                                </tr>
+                                <tr><td></td><td></td></tr>
+                                <tr><td></td><td></td></tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td><input type="submit" name="submit" id="submit" class="btn btn-default" value="@ResourceUtils.GetString("91412465ea9169dfd901dd5e7c96dd9a", "Upload")" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>@ResourceUtils.GetString("c03d53b70feba4ea842510abecd6c45f", "Photo")</h3>
+                        <div class="personal-photo">
+                            @if (Model.IsPhotoAvailable)
+                            {
+                                <img alt="photo" src="@Url.Content("~/Account/UserPhoto?id="+User.Identity.GetUserId())" />
+                            }
+                            else
+                            {
+                                <span class="ion-ios7-contact"></span>
+                            }
+                        </div>
+                        <table class="table table-bordered personal-properties">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink(ResourceUtils.GetString("89bc50f6eaaa91c639ee08c3891f28e6", "Update Photo"), "UpdateUserPhoto", new { returnUrl = Url.Content("~/Account/UserDetails") })
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+        <div id="personal-description" class="tab-pane">
+            @using (Html.BeginForm("UpdateUserDescription", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#edit-panel" data-toggle="tab">@ResourceUtils.GetString("7dce122004969d56ae2e0245cb754d36", "Edit")</a></li>
+                            <li><a href="#display-panel" data-toggle="tab">@ResourceUtils.GetString("c5991c888eea1a43c8cbdacfa5c5468d", "Saved View")</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="edit-panel" class="tab-pane active">
+                                <table class="table table-bordered personal-properties">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                @Html.TextAreaFor(m => m.Description, new { @class = "ckeditor" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="submit" name="submit" id="submit" class="btn btn-default" value="@ResourceUtils.GetString("91412465ea9169dfd901dd5e7c96dd9a", "Upload")" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="display-panel" class="tab-pane">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        @Html.Raw(Model.Description)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div id="personal-channels" class="tab-pane">
+            <div id="channels" class="row">
+                <div class="col-md-12">
+                    <table class="table personal-channels">
+                        <thead>
+                            <tr>
+                                <th>@ResourceUtils.GetString("a1fa27779242b4902f7ae3bdd5c6d509", "Type")</th>
+                                <th>@ResourceUtils.GetString("dd7bf230fde8d4836917806aff6a6b28", "Address")</th>
+                                <th>@ResourceUtils.GetString("0be8406951cdfda82f00f79328cf4efd", "Comment")</th>
+                                <th colspan="2" style="width:1px; white-space:nowrap;">@ResourceUtils.GetString("456d0deba6a86c9585590550c797502e", "Operations")</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: Channels">
+                            <tr>
+                                <td>
+                                    <span data-bind="text: selectedType"></span>
+                                </td>
+                                <td><div><input data-bind="value: addr" /></div></td>
+                                <td><div><input data-bind="value: comment" /></div></td>
+                                <td style="width:1px;text-align:center;">
+                                    <!-- ko if: isModified -->
+                                    <button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _updateChannel(data, event) }" title="@ResourceUtils.GetString("76a5bc64d4a32c6801b92c9f3da2eeff", "update the channel ...")">
+                                        <span class="ion-arrow-up-a"></span>
+                                    </button>
+                                    <!-- /ko -->
+                                    <!-- ko ifnot: isModified -->
+                                    &nbsp;
+                                    <!-- /ko -->
+                                </td>
+                                <td style="width:1px;text-align:center;"><button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _deleteChannel($parent, data, event) }" title="@ResourceUtils.GetString("2615d6ad2ae10dd5cdc817aa63d39767", "delete the channel ...")"><span class="ion-close" style="color:Red"></span></button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>
+                                    <select data-bind="options: channelTypes, optionsValue: 'id', optionsText: 'name', value: selectedType, optionsCaption: '@ResourceUtils.GetString("b6b88ee1e62f43428e703ea033113368", "select a type ...")'"></select>
+                                </td>
+                                <td><div><input data-bind="value: newChannel.addr" /></div></td>
+                                <td><div><input data-bind="value: newChannel.comment" /></div></td>
+                                <td style="width:1px;text-align:center;">
+                                    <button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _addNewChannel(data, event, '@ResourceUtils.GetString("ffcd3143a0693feca9f4b5162f9c6a5c", "Please select a type")', '@ResourceUtils.GetString("9af2b612a5a9a256d1bd25b919ff06de", "Please enter an address")')}"
+                                            title="@ResourceUtils.GetString("132fe2e9c1fba92c5b38d2cbec4cecfc", "add the new channel ...")">
+                                        <span class="ion-plus"></span>
+                                    </button>
+                                </td>
+                                <td style="width:1px;text-align:center;">&nbsp;</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

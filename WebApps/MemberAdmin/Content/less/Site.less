@@ -112,6 +112,11 @@ textarea
    text-align:center;
 }
 
+hr
+{
+    border-color: @gray-light;
+}
+
 h1.text-logo
 {
    font-size:520px; 
@@ -135,6 +140,67 @@ h1.text-logo
    }
    position:relative;
 
+}
+
+table.personal-properties
+{
+    width:100%;
+    margin: 5px 2px;
+    tr td {
+        border-width: 0px;
+    }
+    td:first-of-type {
+       width: 1px;
+       white-space: nowrap;
+    }
+    tr:last-of-type td:last-of-type {
+        text-align:right;
+    }
+}
+
+table.personal-channels {
+    width: 100%;
+    margin: 5px 2px;
+
+    tr > th {
+        background-color: lighten(@gray-light, 3%);
+        border-color: lighten(@gray, 15%);
+    }
+
+    tr > td {
+        border-color: @gray-light;
+        div {
+            padding: 0 3px;
+        }
+        div > input {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    tr > td:first-of-type {
+        width:1px;
+    }
+    tfoot > tr > td {
+        background-color: lighten(@gray-light, 7%);
+        input {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+}
+
+.personal-photo 
+{
+    text-align: center;
+
+    img {
+        max-width: 100%;
+    }
+
+    span {
+        font-size: 400px;
+    }
 }
 
 /* query composer */

@@ -10,9 +10,11 @@ using Microsoft.IdentityModel;
 //using Microsoft.IdentityModel.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using CryptoGateway.RDB.Data.MembershipPlus;
 using Archymeta.Web.Security;
 using Archymeta.Web.Security.Resources;
 using Archymeta.Web.MembershipPlus.AppLayer;
+using Archymeta.Web.MembershipPlus.AppLayer.Models;
 using MemberAdminMvc5.Models;
 
 namespace MemberAdminMvc5.Controllers
@@ -30,6 +32,8 @@ namespace MemberAdminMvc5.Controllers
         {
             UserManager = userManager;
         }
+
+        #region Login/Logoff
 
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
@@ -67,6 +71,16 @@ namespace MemberAdminMvc5.Controllers
         }
 
         //
+        // POST: /Account/LogOff
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            AuthenticationManager.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
+
+        //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -100,9 +114,28 @@ namespace MemberAdminMvc5.Controllers
             return View(model);
         }
 
-        //
-        // GET: /Account/Manage
-        public ActionResult Manage(ManageMessageId? message)
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
+
+        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+        }
+
+        #endregion
+
+        #region Personal account related
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> ChangeAccountInfo(string returnUrl, ManageMessageId? message)
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? ResourceUtils.GetString("9bc75a1c6d94e70e8b96d8d59115c0c0", "Your password has been changed.")
@@ -111,27 +144,50 @@ namespace MemberAdminMvc5.Controllers
                 : message == ManageMessageId.Error ? ResourceUtils.GetString("c69732cc923305ac0684ac8fc05a4bcb", "An error has occurred.")
                 : "";
             ViewBag.HasLocalPassword = HasPassword();
-            ViewBag.ReturnUrl = Url.Action("Manage");
-            return View();
+            ViewBag.ReturnUrl = string.IsNullOrEmpty(returnUrl) ? Url.Action("ChangeAccountInfo") : returnUrl;
+            ChangeAccountInfoModel model = new ChangeAccountInfoModel();
+            UserServiceProxy usvc = new UserServiceProxy();
+            var cntx = Startup.ClientContext.CreateCopy();
+            cntx.DirectDataAccess = true;
+            var u = await usvc.LoadEntityByKeyAsync(cntx, User.Identity.GetUserId());
+            model.FirstName = u.FirstName;
+            model.LastName = u.LastName;
+            return View(model);
         }
 
-        //
-        // POST: /Account/Manage
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Manage(ManageUserViewModel model)
+        [OutputCache(NoStore = true, Duration = 0)]
+        public async Task<ActionResult> ChangeRealName(ChangeAccountInfoModel model, string returnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                await MembershipContext.ChangeRealName(User.Identity.GetUserId(), model.FirstName, model.LastName);
+            }
+            if (string.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Index", "Home");
+            else
+                return Redirect(returnUrl);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [OutputCache(NoStore = true, Duration = 0)]
+        public async Task<ActionResult> ChangePassword(ChangeAccountInfoModel model, string returnUrl)
         {
             bool hasPassword = HasPassword();
             ViewBag.HasLocalPassword = hasPassword;
-            ViewBag.ReturnUrl = Url.Action("Manage");
+            ViewBag.ReturnUrl = string.IsNullOrEmpty(returnUrl) ? Url.Action("ChangeAccountInfo") : returnUrl;
             if (hasPassword)
             {
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.Password);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+                        return RedirectToAction("ChangeAccountInfo", new { returnUrl = ViewBag.ReturnUrl, Message = ManageMessageId.ChangePasswordSuccess });
                     }
                     else
                     {
@@ -150,10 +206,10 @@ namespace MemberAdminMvc5.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.Password);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
+                        return RedirectToAction("ChangeAccountInfo", new { returnUrl = ViewBag.ReturnUrl, Message = ManageMessageId.SetPasswordSuccess });
                     }
                     else
                     {
@@ -164,16 +220,6 @@ namespace MemberAdminMvc5.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
-        }
-
-        //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
-        {
-            AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
         }
 
         [ChildActionOnly]
@@ -192,13 +238,19 @@ namespace MemberAdminMvc5.Controllers
         [HttpGet]
         public async Task<ActionResult> GetMemberIcon(string id)
         {
-            var rec = await MembershipContext.GetMemberIconById(id);
+            if (string.IsNullOrEmpty(id))
+            {
+                if (!Request.IsAuthenticated)
+                    return new HttpStatusCodeResult(404, "Not Found");
+                id = User.Identity.GetUserId();
+            }
+            var rec = await MembershipContext.GetMemberIcon(id);
             if (rec == null)
                 return new HttpStatusCodeResult(404, "Not Found");
             int status;
             string statusstr;
-            bool bcache = CheckClientCache(rec.LastModified, null, out status, out statusstr);
-            SetClientCacheHeader(rec.LastModified, null, HttpCacheability.Public);
+            bool bcache = CheckClientCache(rec.LastModified, rec.ETag, out status, out statusstr);
+            SetClientCacheHeader(rec.LastModified, rec.ETag, HttpCacheability.Public);
             if (!bcache)
             {
                 if (!string.IsNullOrEmpty(rec.MimeType))
@@ -214,22 +266,178 @@ namespace MemberAdminMvc5.Controllers
             }
         }
 
-        #region Helpers
-
-        private IAuthenticationManager AuthenticationManager
+        [HttpGet]
+        [Authorize]
+        public ActionResult UpdateMemberIcon(string returnUrl)
         {
-            get
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [OutputCache(NoStore = true, Duration = 0)]
+        public async Task<ActionResult> UpdateMemberIconAsync(string returnUrl)
+        {
+            if (Request.Files != null && Request.Files.Count > 0)
             {
-                return HttpContext.GetOwinContext().Authentication;
+                if (!Request.Files[0].ContentType.StartsWith("image"))
+                    throw new Exception("content mismatch!");
+                string IconMime = Request.Files[0].ContentType;
+                System.Nullable<DateTime> IconLastModified = default(System.Nullable<DateTime>);
+                if (Request.Form.AllKeys.Contains("IconLastModified"))
+                    IconLastModified = DateTime.Parse(Request.Form["IconLastModified"]);
+                System.IO.Stream strm = Request.Files[0].InputStream;
+                int size = Request.Files[0].ContentLength;
+                byte[] data = new byte[size];
+                strm.Read(data, 0, size);
+                if (await MembershipContext.UpdateMemeberIcon(User.Identity.GetUserId(), IconMime, IconLastModified.Value, data))
+                {
+                    if (string.IsNullOrEmpty(returnUrl))
+                        return RedirectToAction("Index", "Home");
+                    else
+                        return Redirect(returnUrl);
+                }
+            }
+            return View();
+        }
+
+        #endregion
+
+        #region User Details
+
+        [HttpGet]
+        public async Task<ActionResult> UserDetails(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = User.Identity.GetUserId();
+            var m = await MembershipContext.GetUserDetails(id);
+            return View(m);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> UserPhoto(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = User.Identity.GetUserId();
+            var rec = await MembershipContext.GetUserPhoto(id);
+            if (rec == null)
+                return new HttpStatusCodeResult(404, "Not found");
+            int status;
+            string statusstr;
+            bool bcache = CheckClientCache(rec.LastModified, rec.ETag, out status, out statusstr);
+            SetClientCacheHeader(rec.LastModified, rec.ETag, HttpCacheability.Public);
+            if (bcache)
+            {
+                Response.StatusCode = status;
+                Response.StatusDescription = statusstr;
+                return Content("");
+            }
+            else
+            {
+                return File(rec.Data, rec.MimeType);
             }
         }
 
-        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> CreateUserDetails()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+            await MembershipContext.CreateUserDetails(User.Identity.GetUserId());
+            return RedirectToAction("UserDetails", "Account");
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> UpdateUserProperties(UserDetailsVM m)
+        {
+            m = await MembershipContext.UpdateUserProperties(User.Identity.GetUserId(), m);
+            return View("UserDetails", m);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateInput(false)]
+        public async Task<ActionResult> UpdateUserDescription(UserDetailsVM m)
+        {
+            // custom validator here ...
+
+            m = await MembershipContext.UpdateUserDescription(User.Identity.GetUserId(), m);
+            return View("UserDetails", m);
+        }
+
+        [Authorize]
+        public ActionResult UpdateUserPhoto(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [OutputCache(NoStore = true, Duration = 0)]
+        public async Task<ActionResult> UpdateUserPhotoAsync(string returnUrl)
+        {
+            if (Request.Files != null && Request.Files.Count > 0)
+            {
+                if (!Request.Files[0].ContentType.StartsWith("image"))
+                    throw new Exception("content mismatch!");
+                string IconMime = Request.Files[0].ContentType;
+                System.Nullable<DateTime> LastModified = default(System.Nullable<DateTime>);
+                if (Request.Form.AllKeys.Contains("LastModified"))
+                    LastModified = DateTime.Parse(Request.Form["LastModified"]);
+                System.IO.Stream strm = Request.Files[0].InputStream;
+                int size = Request.Files[0].ContentLength;
+                byte[] data = new byte[size];
+                strm.Read(data, 0, size);
+                if (await MembershipContext.UpdateUserPhoto(User.Identity.GetUserId(), IconMime, LastModified.Value, data))
+                {
+                    if (string.IsNullOrEmpty(returnUrl))
+                        return RedirectToAction("Index", "Home");
+                    else
+                        return Redirect(returnUrl);
+                }
+            }
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        #endregion
+
+        #region User Comm Channels
+
+        [HttpPost]
+        [Authorize]
+        [OutputCache(NoStore = true, Duration = 0)]
+        public async Task<ActionResult> AddChannel(int typeId, string address, string comment)
+        {
+            var data = await MembershipContext.AddChannel(User.Identity.GetUserId(), typeId, address, comment);
+            return Json(data);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [OutputCache(NoStore = true, Duration = 0)]
+        public async Task<ActionResult> UpdateChannel(string id, string address, string comment)
+        {
+            var data = await MembershipContext.UpdateChannel(id, address, comment);
+            return Json(data);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [OutputCache(NoStore = true, Duration = 0)]
+        public async Task<ActionResult> DeleteChannel(string id)
+        {
+            var data = await MembershipContext.DeleteChannel(id);
+            return Json(data);
+        }
+
+        #endregion
+
+        #region Helpers
 
         private void AddErrors(IdentityResult result)
         {
