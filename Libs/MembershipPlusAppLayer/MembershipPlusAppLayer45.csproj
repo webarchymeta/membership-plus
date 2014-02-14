@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationContext.cs" />
+    <Compile Include="MemberAdminContext.cs" />
     <Compile Include="MembershipContext.cs" />
     <Compile Include="Models\BinaryRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
