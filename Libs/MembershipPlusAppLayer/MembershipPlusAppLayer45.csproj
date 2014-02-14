@@ -52,7 +52,8 @@
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="MemberAdminContext.cs" />
     <Compile Include="MembershipContext.cs" />
-    <Compile Include="Models\BinaryRecord.cs" />
+    <Compile Include="Models\ContentRecord.cs" />
+    <Compile Include="Models\UserDetailsVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +68,10 @@
     <ProjectReference Include="..\..\Service\Shared\MembershipPlusShared45.csproj">
       <Project>{eee1e75e-4659-9523-a06b-6b7ff308dcb0}</Project>
       <Name>MembershipPlusShared45</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MembershipStores\Stores\ArchymetaMembershipPlusStores.csproj">
+      <Project>{b462f29e-410b-e948-a6f9-047dd6b104dd}</Project>
+      <Name>ArchymetaMembershipPlusStores</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
