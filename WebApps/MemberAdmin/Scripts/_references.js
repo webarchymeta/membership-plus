@@ -213,3 +213,6 @@
 /// <reference path="ckeditor/plugins/a11yhelp/dialogs/lang/zh-cn.js" />
 /// <reference path="ckeditor/plugins/a11yhelp/dialogs/lang/zh.js" />
 /// <reference path="dataservice/userdetailspage.js" />
+/// <reference path="dataservice/custommembershipplus.js" />
+/// <reference path="dataservice/useradminpage.js" />
+/// <reference path="dataservice/roleadminpage.js" />

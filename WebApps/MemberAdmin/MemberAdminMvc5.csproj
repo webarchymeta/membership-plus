@@ -334,6 +334,7 @@
     <Content Include="Views\Shared\_TopbarPartial.cshtml" />
     <Content Include="Views\Account\_SampleUsersInfo.cshtml" />
     <Content Include="Views\Account\_UserIconPartial.cshtml" />
+    <Content Include="Views\Shared\_QueryComposerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\MemberAdmin\" />
