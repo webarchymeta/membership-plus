@@ -1,0 +1,14 @@
+﻿@model MemberAdminMvc5.Models.UserIconModel
+@using Microsoft.AspNet.Identity
+@using Archymeta.Web.Security.Resources
+<div class="UserSmallIcon">
+    @if (!string.IsNullOrEmpty(Model.IconUrl))
+    {
+        <img src="@Url.Content("~/" + Model.IconUrl)" />
+    }
+    else
+    {
+        <span class="ion-android-contact"></span>
+    }
+    <span>@Model.UserLabel</span>
+</div>

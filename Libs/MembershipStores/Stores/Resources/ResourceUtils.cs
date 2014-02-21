@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Caching;
 using System.Threading;
 using System.Globalization;
+using System.Configuration;
 using CryptoGateway.Resources.Shared;
 using CryptoGateway.Resources.Storage;
 
@@ -28,26 +29,35 @@ namespace Archymeta.Web.Security.Resources
             if (string.IsNullOrEmpty(strlan))
                 return null;
             string[] lans = strlan.Split(',');
-            List<CultureInfo> lc = new List<CultureInfo>();
+            List<Tuple<float, CultureInfo>> lc = new List<Tuple<float, CultureInfo>>();
             foreach (string lan in lans)
             {
-                CultureInfo ci = GetCultureInfo(lan);
+                float weight;
+                CultureInfo ci = MapCultureInfo(lan, out weight);
                 if (ci != null)
-                    lc.Add(ci);
+                    lc.Add(new Tuple<float, CultureInfo>(weight, ci));
             }
-            return lc.ToArray();
+            return (from d in lc orderby d.Item1 descending select d.Item2).ToArray();
         }
 
-        private static CultureInfo GetCultureInfo(string lan)
+        private static CultureInfo MapCultureInfo(string lan, out float weight)
         {
-            string cn = lan.IndexOf(';') == -1 ? lan.Trim() : lan.Substring(0, lan.IndexOf(';')).Trim();
+            int ipos = lan.IndexOf(';');
+            string cn = ipos == -1 ? lan.Trim() : lan.Substring(0, ipos).Trim();
+            if (ipos == -1)
+                weight = 1.0f;
+            else
+            {
+                if (!float.TryParse(lan.Substring(ipos + 1).Trim(), out weight))
+                    weight = 0.0f;
+            }
             CultureInfo ci = null;
             if (cn == "zh" || cn == "zh-chs" || cn == "zh-hans" || cn == "zh-cn")
                 ci = new CultureInfo("zh-Hans");
             else if (cn == "zh-cht" || cn == "zh-hant" || cn == "zh-tw" || cn == "zh-hk" || cn == "zh-sg" || cn == "zh-mo")
                 ci = new CultureInfo("zh-Hant");
             else if (cn.StartsWith("zh-"))
-                ci = new CultureInfo("zh-CHS");
+                ci = new CultureInfo("zh-Hans");
             else
             {
                 bool fail = false;
@@ -76,38 +86,35 @@ namespace Archymeta.Web.Security.Resources
 
         private static object reader_init_lock = new object();
 
+        private static string[] SupportedLanguages
+        {
+            get
+            {
+                if (_supportedLanguages == null)
+                {
+                    if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["SupportedLanguages"]))
+                        _supportedLanguages = (from d in ConfigurationManager.AppSettings["SupportedLanguages"].Split(",;".ToCharArray()) select d.Trim()).ToArray();
+                    else
+                        _supportedLanguages = new string[] { };
+                }
+                return _supportedLanguages;
+            }
+        }
+        private static string[] _supportedLanguages = null;
+
         public static CultureInfo GetEffective()
         {
-            CultureInfo oci = null;
             CultureInfo[] culs = GetAcceptLanguages();
             if (culs != null)
             {
                 foreach (CultureInfo ci in culs)
                 {
                     string cn = ci.Name.ToLower();
-                    CultureInfo _ci = null;
-                    if (cn == "zh" || cn == "zh-chs" || cn == "zh-hans" || cn == "zh-cn")
-                    {
-                        _ci = new CultureInfo("zh-CHS");
-                    }
-                    else if (cn == "zh-cht" || cn == "zh-hant" || cn == "zh-tw" || cn == "zh-hk" || cn == "zh-sg" || cn == "zh-mo")
-                    {
-                        _ci = new CultureInfo("zh-CHT");
-                    }
-                    else if (cn.StartsWith("zh-"))
-                    {
-                        _ci = new CultureInfo("zh-CHS");
-                    }
-                    else
-                        _ci = ci;
-                    if (_ci != null)
-                    {
-                        oci = _ci;
-                        break;
-                    }
+                    if (SupportedLanguages.Contains(cn))
+                        return ci;
                 }
             }
-            return oci == null ? new CultureInfo("en") : oci;
+            return new CultureInfo("en");
         }
 
         public static UniResStoreLiteReader Get_URL_Reader(string store = "ShortResources")
@@ -139,12 +146,12 @@ namespace Archymeta.Web.Security.Resources
             reader.ShutDown();
         }
 
-        public static string GetString(string cacheId, string defval = null)
+        public static string GetString(string resId, string defval = null)
         {
-            return GetString(StoreTypes.CommonShortResources, cacheId, defval);
+            return GetString(StoreTypes.CommonShortResources, resId, defval);
         }
 
-        public static string GetString(StoreTypes type, string cacheId, string defval = null)
+        public static string GetString(StoreTypes type, string resId, string defval = null)
         {
             DateTime dt;
             IUniResStore reader = null;
@@ -166,10 +173,10 @@ namespace Archymeta.Web.Security.Resources
                     reader = Get_URL_Reader();
                     break;
             }
-            return GetString(reader, cacheId, out dt, defval);
+            return GetString(reader, resId, out dt, defval);
         }
 
-        public static string GetString(IUniResStore reader, string cacheId, out DateTime LastModified, string defval = null)
+        public static string GetString(IUniResStore reader, string resId, out DateTime LastModified, string defval = null)
         {
             LastModified = DateTime.MinValue;
             if (reader == null)
@@ -177,7 +184,7 @@ namespace Archymeta.Web.Security.Resources
             int lcid = GetEffective().LCID;
             ResStrItem itm = null;
             ResStrItem ritm = new ResStrItem();
-            ritm.ID = cacheId;
+            ritm.ID = resId;
             do
             {
                 if (lcid != -1)

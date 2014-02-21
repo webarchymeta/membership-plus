@@ -152,6 +152,8 @@ namespace MemberAdminMvc5.Controllers
             var u = await usvc.LoadEntityByKeyAsync(cntx, User.Identity.GetUserId());
             model.FirstName = u.FirstName;
             model.LastName = u.LastName;
+            var ci = User.Identity as System.Security.Claims.ClaimsIdentity;
+            model.Email = (from d in ci.Claims where d.Type == Microsoft.IdentityModel.Claims.ClaimTypes.Email select d.Value).SingleOrDefault();
             return View(model);
         }
 
@@ -159,11 +161,14 @@ namespace MemberAdminMvc5.Controllers
         [Authorize]
         [ValidateAntiForgeryToken]
         [OutputCache(NoStore = true, Duration = 0)]
-        public async Task<ActionResult> ChangeRealName(ChangeAccountInfoModel model, string returnUrl)
+        public async Task<ActionResult> ChangeAccountInfo(ChangeAccountInfoModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-                await MembershipContext.ChangeRealName(User.Identity.GetUserId(), model.FirstName, model.LastName);
+                ApplicationUser user = new ApplicationUser { FirstName = model.FirstName, LastName = model.LastName };
+                if (!string.IsNullOrEmpty(model.Email))
+                    user.Email = model.Email;
+                await MembershipContext.ChangeAccountInfo(User.Identity.GetUserId(), user);
             }
             if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Home");
@@ -227,10 +232,11 @@ namespace MemberAdminMvc5.Controllers
         {
             var m = new Models.UserIconModel();
             m.Greetings = User.Identity.GetUserName();
+            m.UserLabel = m.Greetings;
             var ci = User.Identity as System.Security.Claims.ClaimsIdentity;
             string strIcon = (from d in ci.Claims where d.Type == CustomClaims.HasIcon select d.Value).SingleOrDefault();
             bool hasIcon;
-            if (!string.IsNullOrEmpty(strIcon) && bool.TryParse(strIcon, out hasIcon))
+            if (!string.IsNullOrEmpty(strIcon) && bool.TryParse(strIcon, out hasIcon) && hasIcon)
                 m.IconUrl = "Account/GetMemberIcon?id=" + User.Identity.GetUserId();
             return PartialView("_UserIconPartial", m);
         }
@@ -245,19 +251,14 @@ namespace MemberAdminMvc5.Controllers
                 id = User.Identity.GetUserId();
             }
             var rec = await MembershipContext.GetMemberIcon(id);
-            if (rec == null)
+            if (rec == null || string.IsNullOrEmpty(rec.MimeType))
                 return new HttpStatusCodeResult(404, "Not Found");
             int status;
             string statusstr;
             bool bcache = CheckClientCache(rec.LastModified, rec.ETag, out status, out statusstr);
             SetClientCacheHeader(rec.LastModified, rec.ETag, HttpCacheability.Public);
             if (!bcache)
-            {
-                if (!string.IsNullOrEmpty(rec.MimeType))
-                    return File(rec.Data, rec.MimeType);
-                else
-                    return new HttpStatusCodeResult(404, "Not Found");
-            }
+                return File(rec.Data, rec.MimeType);
             else
             {
                 Response.StatusCode = status;
@@ -322,7 +323,7 @@ namespace MemberAdminMvc5.Controllers
             if (string.IsNullOrEmpty(id))
                 id = User.Identity.GetUserId();
             var rec = await MembershipContext.GetUserPhoto(id);
-            if (rec == null)
+            if (rec == null || string.IsNullOrEmpty(rec.MimeType))
                 return new HttpStatusCodeResult(404, "Not found");
             int status;
             string statusstr;
@@ -359,6 +360,7 @@ namespace MemberAdminMvc5.Controllers
         [HttpPost]
         [Authorize]
         [ValidateInput(false)]
+        [OutputCache(NoStore = true, Duration = 0)]
         public async Task<ActionResult> UpdateUserDescription(UserDetailsVM m)
         {
             // custom validator here ...
