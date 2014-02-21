@@ -636,6 +636,9 @@
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\DataService\CustomMembershipPlus.js" />
+    <Content Include="Scripts\DataService\RoleAdminPage.js" />
+    <Content Include="Scripts\DataService\UserAdminPage.js" />
     <Content Include="Scripts\DataService\UserDetailsPage.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />
@@ -686,6 +689,7 @@
     <Content Include="Views\Shared\_QueryComposerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Services\DataService\" />
     <Folder Include="Views\MemberAdmin\" />
   </ItemGroup>
   <ItemGroup>

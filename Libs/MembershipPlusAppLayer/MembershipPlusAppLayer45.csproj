@@ -55,6 +55,7 @@
     <Compile Include="Models\ContentRecord.cs" />
     <Compile Include="Models\UserDetailsVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IServiceProxy\IDataServiceProxy45.csproj">
@@ -73,6 +74,9 @@
       <Project>{b462f29e-410b-e948-a6f9-047dd6b104dd}</Project>
       <Name>ArchymetaMembershipPlusStores</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Proxies\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
