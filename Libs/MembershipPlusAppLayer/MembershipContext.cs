@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CryptoGateway.RDB.Data.MembershipPlus;
 using Archymeta.Web.MembershipPlus.AppLayer.Models;
+using Archymeta.Web.Security;
 using Archymeta.Web.Security.Resources;
 
 namespace Archymeta.Web.MembershipPlus.AppLayer
@@ -42,25 +43,33 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             um.IsIconImgLoaded = true;
             um.IsIconImgModified = true;
             um.IconMime = mineType;
-            um.IsIconMimeModified = true;
             um.IconLastModified = lastModified;
-            um.IsIconLastModifiedModified = true;
             var result = await umsvc.AddOrUpdateEntitiesAsync(Cntx, new UserAppMemberSet(), new UserAppMember[] { um });
             return (result.ChangedEntities[0].OpStatus & (int)EntityOpStatus.Updated) > 0;
         }
 
-        public static async Task ChangeRealName(string id, string FirstName, string LastName)
+        public static async Task ChangeAccountInfo(string id, ApplicationUser user)
         {
+            var cntx = Cntx;
             UserServiceProxy usvc = new UserServiceProxy();
-            var u = await usvc.LoadEntityByKeyAsync(Cntx, id);
+            var u = await usvc.LoadEntityByKeyAsync(cntx, id);
             if (u == null)
                 return;
-            u.FirstName = FirstName;
-            u.IsFirstNameModified = true;
-            u.LastName = LastName;
-            u.IsLastNameModified = true;
-            var cntx = Cntx;
-            usvc.AddOrUpdateEntities(cntx, new UserSet(), new User[] { u });
+            u.FirstName = user.FirstName;
+            u.LastName = user.LastName;
+            if (u.IsFirstNameModified || u.IsLastNameModified)
+                await usvc.AddOrUpdateEntitiesAsync(cntx, new UserSet(), new User[] { u });
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
+                var mb = await mbsvc.LoadEntityByKeyAsync(cntx, ApplicationContext.App.ID, id);
+                if (mb != null)
+                {
+                    mb.Email = user.Email;
+                    if (mb.IsEmailModified)
+                        await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { mb });
+                }
+            }
         }
 
         public static async Task<UserDetailsVM> GetUserDetails(string id, bool direct = false)
@@ -95,22 +104,29 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             CommunicationTypeServiceProxy ctsvc = new CommunicationTypeServiceProxy();
             var lct = await ctsvc.QueryDatabaseAsync(Cntx, new CommunicationTypeSet(), qexpr);
             m.ChannelTypes = lct.ToArray();
-            qexpr = new QueryExpresion();
-            qexpr.OrderTks = new List<QToken>(new QToken[] { 
-                new QToken { TkName = "TypeID" },
-                new QToken { TkName = "asc" }
-            });
-            qexpr.FilterTks = new List<QToken>(new QToken[] { 
-                new QToken { TkName = "UserID" },
-                new QToken { TkName = "==" },
-                new QToken { TkName = "\"" + id + "\"" },
-                new QToken { TkName = "&&" },
-                new QToken { TkName = "ApplicationID" },
-                new QToken { TkName = "==" },
-                new QToken { TkName = "\"" + ApplicationContext.App.ID + "\"" }
-            });
             CommunicationServiceProxy csvc = new CommunicationServiceProxy();
-            var lc = await csvc.QueryDatabaseAsync(Cntx, new CommunicationSet(), qexpr);
+            //qexpr = new QueryExpresion();
+            //qexpr.OrderTks = new List<QToken>(new QToken[] { 
+            //    new QToken { TkName = "TypeID" },
+            //    new QToken { TkName = "asc" }
+            //});
+            //qexpr.FilterTks = new List<QToken>(new QToken[] { 
+            //    new QToken { TkName = "UserID" },
+            //    new QToken { TkName = "==" },
+            //    new QToken { TkName = "\"" + id + "\"" },
+            //    new QToken { TkName = "&&" },
+            //    new QToken { TkName = "ApplicationID" },
+            //    new QToken { TkName = "==" },
+            //    new QToken { TkName = "\"" + ApplicationContext.App.ID + "\"" }
+            //});
+            //var lc = await csvc.QueryDatabaseAsync(Cntx, new CommunicationSet(), qexpr);
+            var fkeys = new CommunicationSetConstraints
+            {
+                ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = ApplicationContext.App.ID },
+                TypeIDWrap = null, // no restriction on types
+                UserIDWrap = new ForeignKeyData<string> { KeyValue = id }
+            };
+            var lc = await csvc.ConstraintQueryAsync(Cntx, new CommunicationSet(), fkeys, null);
             foreach (var c in lc)
             {
                 c.Comment = await csvc.LoadEntityCommentAsync(Cntx, c.ID);

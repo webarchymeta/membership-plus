@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Archymeta.Web.Security.Resources;
 
 namespace MemberAdminMvc5.Controllers
 {
@@ -19,6 +20,19 @@ namespace MemberAdminMvc5.Controllers
                     return false;
                 else
                     return bval;
+            }
+        }
+
+        protected int MaxClientCacheAgeInHours
+        {
+            get
+            {
+                string sval = ConfigurationManager.AppSettings["MaxClientCacheAgeInHours"];
+                int ival;
+                if (string.IsNullOrEmpty(sval) || !int.TryParse(sval, out ival))
+                    return 1;
+                else
+                    return ival;
             }
         }
 
@@ -76,7 +90,7 @@ namespace MemberAdminMvc5.Controllers
             if (!EnableClientCache || LastModified == null && Etag == null)
                 return;
             HttpCachePolicyBase cp = Response.Cache;
-            cp.AppendCacheExtension("max-age=3600");
+            cp.AppendCacheExtension("max-age=" + 3600 * MaxClientCacheAgeInHours);
             if (ReValidate)
             {
                 cp.AppendCacheExtension("must-revalidate");
@@ -86,7 +100,7 @@ namespace MemberAdminMvc5.Controllers
             cp.SetOmitVaryStar(false);
             if (LastModified != null)
                 cp.SetLastModified(LastModified.Value);
-            cp.SetExpires(DateTime.UtcNow.AddSeconds(3600));
+            cp.SetExpires(DateTime.UtcNow.AddHours(MaxClientCacheAgeInHours));
             if (Etag != null)
                 cp.SetETag(Etag);
         }
@@ -98,8 +112,8 @@ namespace MemberAdminMvc5.Controllers
             else
             {
                 ModelState err = new System.Web.Mvc.ModelState();
-                err.Errors.Add("The membership data service is not setup or is not configured correctly!");
-                ModelState.Add(new KeyValuePair<string, ModelState>("Member Service Failed", err));
+                err.Errors.Add(ResourceUtils.GetString("8dde84756da744ecb1b23ecc193e8b25", "The membership data service is not setup or is not configured correctly!"));
+                ModelState.Add(new KeyValuePair<string, ModelState>(ResourceUtils.GetString("cd4f3b92a1bfec06df534f9f6e65059a", "Member Service Failed"), err));
                 return false;
             }
         }

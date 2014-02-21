@@ -15,9 +15,9 @@
     <div id="personal-info" class="tab-pane active">
         <div class="row">
             <div class="col-md-8">
-                <h3>@ResourceUtils.GetString("5275dc3e37bdaf3fce398b8cf4ebfa6f", "Real Name")</h3>
+                <h3>@ResourceUtils.GetString("6647aaa5aa21f02ecdb174cdea5ae9f8", "Account Information")</h3>
                 <hr />
-                @using (Html.BeginForm("ChangeRealName", "Account", new { returnUrl = ViewBag.ReturnUrl }))
+                @using (Html.BeginForm("ChangeAccountInfo", "Account", new { returnUrl = ViewBag.ReturnUrl }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary()
@@ -29,6 +29,17 @@
                         <div class="col-md-6">
                             <label for="LastName">@ResourceUtils.GetString("77587239bf4c54ea493c7033e1dbf637", "Last Name")</label>
                             @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = ResourceUtils.GetString("6101bd0e0d37830195aa1fab4cfb7b2b", "enter your last name") })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="Email">@ResourceUtils.GetString("39f929b11ddc39ee84f991546ba9d82a", "Primary Email")</label>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = ResourceUtils.GetString("a451831e5901420008d37fed9c5ccd06", "enter your primary email address") })
                         </div>
                     </div>
                     <div class="row">

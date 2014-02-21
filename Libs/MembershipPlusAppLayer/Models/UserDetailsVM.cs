@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using CryptoGateway.RDB.Data.MembershipPlus;
 
 namespace Archymeta.Web.MembershipPlus.AppLayer.Models
@@ -41,6 +42,8 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Models
             set;
         }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? BirthDate
         {
             get;

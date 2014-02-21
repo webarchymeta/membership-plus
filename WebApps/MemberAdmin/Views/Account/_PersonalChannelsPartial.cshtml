@@ -1,0 +1,56 @@
+﻿@model Archymeta.Web.MembershipPlus.AppLayer.Models.UserDetailsVM
+@using Microsoft.AspNet.Identity;
+@using Archymeta.Web.MembershipPlus.AppLayer;
+@using Archymeta.Web.Security.Resources;
+<table id="channels" class="table personal-channels">
+    <thead>
+        <tr>
+            <th>@ResourceUtils.GetString("a1fa27779242b4902f7ae3bdd5c6d509", "Type")</th>
+            <th>@ResourceUtils.GetString("dd7bf230fde8d4836917806aff6a6b28", "Address")</th>
+            <th>@ResourceUtils.GetString("0be8406951cdfda82f00f79328cf4efd", "Comment")</th>
+            <th colspan="2" style="width:1px; white-space:nowrap;">@ResourceUtils.GetString("456d0deba6a86c9585590550c797502e", "Operations")</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: Channels">
+        <tr>
+            <td>
+                <span data-bind="text: selectedType"></span>
+            </td>
+            <td><div><input data-bind="value: addr" class="form-control" /></div></td>
+            <td><div><input data-bind="value: comment" class="form-control" /></div></td>
+            <td style="width:1px;text-align:center;">
+                <!-- ko if: isModified -->
+                <button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _updateChannel(data, event) }" title="@ResourceUtils.GetString("76a5bc64d4a32c6801b92c9f3da2eeff", "update the channel ...")">
+                    <span class="ion-arrow-up-a"></span>
+                </button>
+                <!-- /ko -->
+                <!-- ko ifnot: isModified -->
+                &nbsp;
+                <!-- /ko -->
+            </td>
+            <td style="width:1px;text-align:center;">
+                <button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _deleteChannel($parent, data, event) }" title="@ResourceUtils.GetString("2615d6ad2ae10dd5cdc817aa63d39767", "delete the channel ...")">
+                    <span class="ion-close" style="color:Red"></span>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>
+                <select class="form-control" style="min-width:100px;" data-bind="options: channelTypes, optionsValue: 'id', optionsText: 'name', value: selectedType, optionsCaption: '@ResourceUtils.GetString("b6b88ee1e62f43428e703ea033113368", "select a type ...")'"></select>
+            </td>
+            <td><div><input data-bind="value: newChannel.addr" class="form-control" /></div></td>
+            <td><div><input data-bind="value: newChannel.comment" class="form-control" /></div></td>
+            <td style="width:1px;text-align:center;">
+                <button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _addNewChannel(data, event, '@ResourceUtils.GetString("ffcd3143a0693feca9f4b5162f9c6a5c", "Please select a type")', '@ResourceUtils.GetString("9af2b612a5a9a256d1bd25b919ff06de", "Please enter an address")')}"
+                        title="@ResourceUtils.GetString("132fe2e9c1fba92c5b38d2cbec4cecfc", "add the new channel ...")">
+                    <span class="ion-plus"></span>
+                </button>
+            </td>
+            <td style="width:1px;text-align:center;">&nbsp;</td>
+        </tr>
+    </tfoot>
+</table>
+
+
