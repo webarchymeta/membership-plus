@@ -42,6 +42,12 @@ namespace MemberAdminMvc5.Models
 
     public class UserIconModel
     {
+        public string UserLabel
+        {
+            get;
+            set;
+        }
+
         public string Greetings
         {
             get;
@@ -62,6 +68,10 @@ namespace MemberAdminMvc5.Models
 
         [Display(Name = "Last name")]
         public string LastName { get; set; }
+
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email address")]
+        public string Email { get; set; }
 
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]

@@ -40,13 +40,28 @@
 {
     <h2>@ResourceUtils.GetString("00ea52149c09160b3d3350466e25b1df", "Add User Details")</h2>
     <hr />
-    <div class="row">
-        <div class="col-md-12">
-            <h3>@ResourceUtils.GetString("159ee966ac2343b9452a38397c3291bd", "Create Profile")</h3>
-            <p>
-                @ResourceUtils.GetString("03766c5ade969bbf0a2641fc4946cff4", "You do not have a detail profile at present.")
-                @Html.ActionLink(ResourceUtils.GetString("7a4a50a3bb06f8e1ed56dbc3bee2168c", "Create it now."), "CreateUserDetails", null, new { @class = "btn btn-default"  })
-            </p>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#personal-details" data-toggle="tab">@ResourceUtils.GetString("ee7dad31fea478292f8e2dd24133c6aa", "Personal Details")</a></li>
+        <li><a href="#personal-channels" data-toggle="tab">@ResourceUtils.GetString("beec9a0ee9fd7d00ed56a27c2c181adc", "Communication Channels")</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="personal-details" class="tab-pane active">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>@ResourceUtils.GetString("159ee966ac2343b9452a38397c3291bd", "Create Profile")</h3>
+                    <p>
+                        @ResourceUtils.GetString("03766c5ade969bbf0a2641fc4946cff4", "You do not have a detail profile at present.")
+                        @Html.ActionLink(ResourceUtils.GetString("7a4a50a3bb06f8e1ed56dbc3bee2168c", "Create it now."), "CreateUserDetails", null, new { @class = "btn btn-default" })
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="personal-channels" class="tab-pane">
+            <div class="row">
+                <div class="col-md-12">
+                    @Html.Partial("_PersonalChannelsPartial")
+                </div>
+            </div>
         </div>
     </div>
 }
@@ -73,7 +88,7 @@ else
                                         @ResourceUtils.GetString("caa5b7a48ce4b1c1492c445446433fb6", "Gender:")
                                     </td>
                                     <td>
-                                        <select id="Gender" name="Gender">
+                                        <select id="Gender" name="Gender" class="form-control">
                                             @foreach (var g in Model.Genders)
                                             {
                                                 if (g == Model.Gender)
@@ -93,7 +108,7 @@ else
                                         @ResourceUtils.GetString("350f645bb2c8435f20d5d88c8681251b", "Birth Date:")
                                     </td>
                                     <td>
-                                        @Html.TextBoxFor(m => m.BirthDate)
+                                        @Html.TextBoxFor(m => m.BirthDate, "{0:yyyy-MM-dd}", new { @class = "form-control" })
                                     </td>
                                 </tr>
                                 <tr><td></td><td></td></tr>
@@ -169,58 +184,11 @@ else
             }
         </div>
         <div id="personal-channels" class="tab-pane">
-            <div id="channels" class="row">
+            <div class="row">
                 <div class="col-md-12">
-                    <table class="table personal-channels">
-                        <thead>
-                            <tr>
-                                <th>@ResourceUtils.GetString("a1fa27779242b4902f7ae3bdd5c6d509", "Type")</th>
-                                <th>@ResourceUtils.GetString("dd7bf230fde8d4836917806aff6a6b28", "Address")</th>
-                                <th>@ResourceUtils.GetString("0be8406951cdfda82f00f79328cf4efd", "Comment")</th>
-                                <th colspan="2" style="width:1px; white-space:nowrap;">@ResourceUtils.GetString("456d0deba6a86c9585590550c797502e", "Operations")</th>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="foreach: Channels">
-                            <tr>
-                                <td>
-                                    <span data-bind="text: selectedType"></span>
-                                </td>
-                                <td><div><input data-bind="value: addr" /></div></td>
-                                <td><div><input data-bind="value: comment" /></div></td>
-                                <td style="width:1px;text-align:center;">
-                                    <!-- ko if: isModified -->
-                                    <button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _updateChannel(data, event) }" title="@ResourceUtils.GetString("76a5bc64d4a32c6801b92c9f3da2eeff", "update the channel ...")">
-                                        <span class="ion-arrow-up-a"></span>
-                                    </button>
-                                    <!-- /ko -->
-                                    <!-- ko ifnot: isModified -->
-                                    &nbsp;
-                                    <!-- /ko -->
-                                </td>
-                                <td style="width:1px;text-align:center;"><button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _deleteChannel($parent, data, event) }" title="@ResourceUtils.GetString("2615d6ad2ae10dd5cdc817aa63d39767", "delete the channel ...")"><span class="ion-close" style="color:Red"></span></button></td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td>
-                                    <select data-bind="options: channelTypes, optionsValue: 'id', optionsText: 'name', value: selectedType, optionsCaption: '@ResourceUtils.GetString("b6b88ee1e62f43428e703ea033113368", "select a type ...")'"></select>
-                                </td>
-                                <td><div><input data-bind="value: newChannel.addr" /></div></td>
-                                <td><div><input data-bind="value: newChannel.comment" /></div></td>
-                                <td style="width:1px;text-align:center;">
-                                    <button class="btn btn-default btn-xs" data-bind="click: function(data, event) { _addNewChannel(data, event, '@ResourceUtils.GetString("ffcd3143a0693feca9f4b5162f9c6a5c", "Please select a type")', '@ResourceUtils.GetString("9af2b612a5a9a256d1bd25b919ff06de", "Please enter an address")')}"
-                                            title="@ResourceUtils.GetString("132fe2e9c1fba92c5b38d2cbec4cecfc", "add the new channel ...")">
-                                        <span class="ion-plus"></span>
-                                    </button>
-                                </td>
-                                <td style="width:1px;text-align:center;">&nbsp;</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    @Html.Partial("_PersonalChannelsPartial")
                 </div>
             </div>
         </div>
     </div>
 }
-
-

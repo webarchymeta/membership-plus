@@ -682,6 +682,12 @@
     <Content Include="Views\Shared\_TopbarPartial.cshtml" />
     <Content Include="Views\Account\_SampleUsersInfo.cshtml" />
     <Content Include="Views\Account\_UserIconPartial.cshtml" />
+    <Content Include="Views\Home\_UserIconPartial.cshtml" />
+    <Content Include="Views\Account\ChangeAccountInfo.cshtml" />
+    <Content Include="Views\Account\UpdateMemberIcon.cshtml" />
+    <Content Include="Views\Account\UpdateUserPhoto.cshtml" />
+    <Content Include="Views\Account\UserDetails.cshtml" />
+    <Content Include="Views\Account\_PersonalChannelsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
