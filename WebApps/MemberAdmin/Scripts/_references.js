@@ -215,3 +215,4 @@
 /// <reference path="dataservice/custommembershipplus.js" />
 /// <reference path="dataservice/roleadminpage.js" />
 /// <reference path="dataservice/useradminpage.js" />
+/// <reference path="knockout-bindinghandlers.js" />

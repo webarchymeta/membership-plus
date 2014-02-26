@@ -652,6 +652,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-3.0.0.debug.js" />
     <Content Include="Scripts\knockout-3.0.0.js" />
+    <Content Include="Scripts\knockout-bindinghandlers.js" />
     <Content Include="Scripts\less-1.5.1.js" />
     <Content Include="Scripts\less-1.5.1.min.js" />
     <Content Include="Scripts\modernizr-2.7.1.js" />
@@ -695,8 +696,10 @@
     <Content Include="Views\Account\_PersonalChannelsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Images\" />
     <Folder Include="Services\DataService\" />
     <Folder Include="Views\MemberAdmin\" />
+    <Folder Include="Views\RoleAdmin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
