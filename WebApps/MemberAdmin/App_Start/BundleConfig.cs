@@ -12,7 +12,8 @@ namespace MemberAdminMvc5
                         "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                        "~/Scripts/jquery-ui-{version}.js"));
+                        "~/Scripts/jquery-ui-{version}.js",
+                        "~/Scripts/qTip/jquery.qtip.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -51,7 +52,8 @@ namespace MemberAdminMvc5
                       "~/Content/themes/base/jquery.ui.tabs.css",
                       "~/Content/themes/base/jquery.ui.datepicker.css",
                       "~/Content/themes/base/jquery.ui.progressbar.css",
-                      "~/Content/themes/base/jquery.ui.theme.css"));
+                      "~/Content/themes/base/jquery.ui.theme.css",
+                      "~/Scripts/qTip/jquery.qtip.css"));
 
         }
     }

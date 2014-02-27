@@ -207,6 +207,34 @@ table.personal-channels {
 
 @queryPanelLineHeight: 25px;
 
+table.QueryHead
+{
+    .table;
+    > tbody > tr > td {
+        border-width:0;
+        padding: 2px 0;
+    }
+    td:last-child {
+        width:1px;
+        white-space:nowrap;
+        vertical-align:middle;
+        table td {
+            padding: 0 5px;
+            input {
+                .form-control;
+                max-width: 60px;
+                min-width: 45px;
+                border-color: @gray-light;
+                border-width: 0.8px;
+                height: 25px; 
+                margin: 1px 0; 
+                padding: 3px;
+            }
+        }
+    }
+    margin-bottom: 0;
+}
+
 #SetInfoBar 
 {
     span 
@@ -222,21 +250,45 @@ table.personal-channels {
 {
     span 
     {
-	  line-height: 25px;
+ 	  line-height: 25px;
 	}
 	input 
     {
  	   font-size: 13px;
-	   border: 1px solid #cccccc;
+	   border: 1px solid @gray-light;
 	   padding: 1px 2px;
 	   vertical-align: middle;
 	   margin-top: 2px;
 	}
+    table
+    {
+       width:100%;
+       td {
+           padding:2px;
+           input {
+               .form-control;
+                height: 25px; 
+                margin: 1px 0; 
+                padding: 3px;
+                display:inline-block;
+           }
+       }
+       td:first-child {
+           width:1px;
+           white-space:nowrap;
+       }
+    }
     padding: 3px 5px;
     border-radius: 3px 3px;
-    border: 0.8px solid #5C9CCC;
-    margin-bottom: 5px;
+    border: 0.8px solid lighten(@gray, 15%);
+    margin: 5px 0;
 	font-size: 14px;
+}
+
+.AutoCompleteMenu
+{
+    .dropdown-menu();
+    font-size: @font-size-small;
 }
 
 .QueryInput .sortlabel, .QueryInput .filterlabel
@@ -246,24 +298,6 @@ table.personal-channels {
     padding-top: 8px;
 }
 
-/*
-.QueryInput .sortOps, .QueryInput .filterOps
-{
-    padding-top: 2px;
-}
-
-.QueryInput .sorterexpr, .QueryInput .filterexpr
-{
-    margin:3px 2px;
-    padding: 1px 1px;
-    position:relative;
-    border-radius: 3px 3px;
-    border: 0.8px solid #5C9CCC;
-    min-height: 20px;
-
-}
-*/
-
 .QueryInput .sorterexpr, .QueryInput .filterexpr
 {
    height: auto;
@@ -272,9 +306,6 @@ table.personal-channels {
 .QueryInput .sorterexpr .sortnode, .QueryInput .filterexpr .filternode
 {
     display:inline-block;
-    margin: 2px 0 3px 0;
-    padding: 0 0 0 5px;
-	line-height: @queryPanelLineHeight;
 }
 
 .QueryInput .sorterexpr .thisnode
@@ -348,10 +379,15 @@ table.personal-channels {
 
 .EntityListPanel
 {
-  table {
-    width: 100%;
-  }
-  clear: both;
+    clear: both;
+}
+
+table.gridview
+{
+    .table();
+    thead {
+        background-color: @gray-light;
+    }
 }
 
 .smaller-font 
@@ -377,6 +413,149 @@ table.figure-frame
    padding: 10px 0;
    //border: 1px #dddddd solid;
    //radius: 5px;
+}
+
+.treeview
+{
+    margin-top: 1px;
+	ul {
+       border-left: 1px dotted #aaaaaa;
+       margin: 0;
+	   margin-left: 7px;
+       padding: 0;
+  	   li {
+          margin-left: 5px;
+	      list-style: none;
+	   }
+	}
+	ul.root {
+       border: 0 solid #dddddd;
+	   padding: 7px 0;
+	}
+    .selected {
+       background: #a0d7ff;
+    }
+	.treenode {
+	   position: relative;
+	   height: 25px;
+	   .nodeeditor {
+	      position: absolute;
+		  left: 18px;
+		  white-space: nowrap;
+   	      .delete {
+              display:inline-block;
+              font-size: @font-size-small;
+              color:red;
+		      /*margin: 3px 0 -3px 0;
+              width: 16px;
+              height: 16px;
+              border-right: 1px solid rgba(255,255,255,0);
+              border-bottom: 1px solid rgba(255,255,255,0);
+              background-image: url('themes/base/images/ui-icons_cd0a0a_256x240.png');
+              background-position: -80px -128px;*/
+	      }
+		  .submit {
+              display:inline-block;
+              font-size:@font-size-small;
+		      /*margin: 3px 0 -3px 0;
+              width: 16px;
+              height: 16px;
+              border-right: 1px solid rgba(255,255,255,0);
+              border-bottom: 1px solid rgba(255,255,255,0);
+              background-image: url('themes/base/images/ui-icons_2e83ff_256x240.png');
+              background-position: 0px -48px;*/
+		  }
+		  input {
+		     padding: 0;
+			 margin: 0;
+   		     height: 20px;
+             display:inline-block;
+			 font-size: @font-size-base;
+		  }
+		  input.invalid {
+		     border: 1px solid red;
+			 color: Red;
+		  }
+	   }
+	   .nodeeditor:hover {
+	      background: #f0f8ff;
+	   }
+	   .newnode {
+	      position: absolute;
+		  left: 18px;
+		  white-space: nowrap;
+		  span {
+		     font-size: @font-size-base;
+		  }
+		  input {
+		     padding: 0;
+			 margin: 0;
+   		     height: 20px;
+             display:inline-block;
+			 font-size: @font-size-base;
+		  }
+		  input.invalid {
+		     border: 1px solid red;
+			 color: Red;
+		  }
+	   }
+	   .closed, .opened, .empty, .new { 
+           width: 16px;
+           height: 16px;
+           display:inline-block;
+           border-right: 1px solid rgba(255,255,255,0);
+           border-bottom: 1px solid rgba(255,255,255,0);
+		   position: absolute;
+		   top: 5px;
+           font-size:@font-size-small;
+	   }
+	   .closed {
+           /*background-position: -32px -16px;
+           background-image: url('themes/base/images/ui-icons_2e83ff_256x240.png');*/
+	   }
+	   .opened {
+           /*background-position: -48px -16px;
+           background-image: url('themes/base/images/ui-icons_2e83ff_256x240.png');*/
+           -webkit-transform: rotate(45deg);
+           -moz-transform: rotate(45deg);
+           -o-transform: rotate(45deg);
+		   top: 7px;
+	   }
+	   .empty {
+           /*background-position: -208px -48px;
+           background-image: url('themes/base/images/ui-icons_888888_256x240.png');*/
+	   }
+	   .new {
+           /*background-position: -16px -128px;
+           background-image: url('themes/base/images/ui-icons_2e83ff_256x240.png');*/
+	   }
+	   .closed:hover, .opened:hover, .new:hover, .delete:hover, .submit:hover {
+           border-right: 1px solid #cccccc;
+           border-bottom: 1px solid #cccccc;
+           background-color: @gray-light;
+	   }
+	   span { 
+           display:inline-block;
+           vertical-align:middle;
+		   font-size: @font-size-base;
+	   }
+	}
+}
+
+.role-path {
+   margin: 10px 0;
+   font-size: @font-size-base;
+}
+.path-node {
+}
+.path-separator {
+   color: @gray-dark;
+   font-weight: bold;
+   margin: 0 3px;
+}
+
+.tabs-content > .content {
+   width: 100%;
 }
 
 .breadcrumbs .menu 

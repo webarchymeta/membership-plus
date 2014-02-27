@@ -1,0 +1,298 @@
+﻿@using Archymeta.Web.MembershipPlus.AppLayer;
+@using Archymeta.Web.Security.Resources;
+@model List<dynamic>
+@{
+    ViewBag.Title = ResourceUtils.GetString("7d939ddc17b88fcae1fb8cd57bca6cba", "Role Administration");
+}
+@section prestyles {
+    @Styles.Render("~/Content/themes/base/css")
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/knockout")
+    <script src="@Url.Content("~/Scripts/DataService/RoleAdminPage.js")"></script>
+    <script src="@Url.Content("~/JavaScript/QueryCustomization")"></script>
+    <script src="@Url.Content("~/Scripts/DataService/UserAdminPage.js")"></script>
+    <script type="text/javascript">
+        appRoot = '@Url.Content("~/")';
+        appName = '@ViewBag.AppName';
+        adminMaxPriority = @ViewBag.AdminMaxPriority;
+        adminRoleIds = @ViewBag.AdminRoleIds;
+        serviceUrl = appRoot + 'Services/DataService/DataServiceProxy.svc';
+        dataSourceId = '';
+        setName = 'User';
+        $(function () {
+            window.onerror = function () {
+                window.status = '@ResourceUtils.GetString("f4df67025ce1852c05bc18cb1a9d27df", "There were errors getting this page. Try refreshing this page.")';
+                return true;
+            };
+            roleSet = new RoleSet();
+            roleSet.SetFilter = 'Application_Ref.Name == "' + appName + '"';
+            ko.applyBindings(roleSet, $("#roleRow")[0]);
+            @{
+            foreach (var role in Model)
+            {
+                @Html.Raw("roleSet.HierarchyRoots.push(new RoleAbs(JSON.parse('" + Utils.GetDynamicJson(role) + "')));");
+            }
+            }
+            userSet = new UserSet(serviceUrl);
+            userSet.IsRoleSelected = ko.observable(false);
+            userSet.CurrentSelectedRole = ko.observable();
+            userSet.SetFilter = 'UserAppMember.Application_Ref.Name == "' + appName + '"';
+            userSet.IsUserInCurrentRole = function(u) {
+                if (userSet.roleUsers) {
+                    for (var i=0;i < userSet.roleUsers.length;i++) {
+                        if (userSet.roleUsers[i].uid == u.data.ID) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+            userSet.GetSetInfo();
+            ko.applyBindings(userSet, $("#userRow")[0]);
+            initsortinput(userSet);
+            initfilterinput(userSet);
+            $('.ui-autocomplete').addClass('AutoCompleteMenu');
+        });
+    </script>
+}
+<div id="roleRow" class="row">
+    <div class="col-md-5">
+        <script id="hierarchytempl" type="text/html">
+            <!-- ko ifnot: IsPlaceHolder -->
+            <li>
+                <div class="treenode" data-bind="css: { selected: IsNodeSelected }">
+                    <!-- ko if: IsNodeExpanded -->
+                    <div class="glyphicon glyphicon-chevron-right opened" data-bind="click: function(data, event) { data.IsNodeExpanded(false); } " />
+                    <!-- /ko -->
+                    <!-- ko ifnot: IsNodeExpanded -->
+                    <div class="glyphicon glyphicon-chevron-right closed" data-bind="click: function(data, event) { _loadChildNodes(data, event); } " />
+                    <!-- /ko -->
+                    <div class="nodeeditor">
+                        <a data-bind="click: function(data, event) { _selectRole(data, event); }" href="#">
+                            <span data-bind="text: RoleName"></span>
+                        </a>
+                        (
+                        <!-- ko if: CanOp -->
+                        <!-- ko if: IsChangeValid -->
+                        <input class="valid form-control" type="text" data-bind="value: RolePriority" style="max-width: 50px" title="@ResourceUtils.GetString("fdf501834bd3d9c49632440ce289617d", "Role level ...")" />
+                        <!-- /ko -->
+                        <!-- ko ifnot: IsChangeValid -->
+                        <input class="invalid form-control" type="text" data-bind="value: RolePriority" style="max-width: 50px" title="@ResourceUtils.GetString("612b98a282976379eb1b74fd9700aa30", "Invalid value ...")" />
+                        <!-- /ko -->
+                        <!-- ko if: IsDirty() && IsChangeValid() -->
+                        <div class="glyphicon glyphicon-save submit" data-bind="click: function(data, event) { _updateRole(data, event); }" title="@ResourceUtils.GetString("c604203d2c1d50126120d6b94717107c", "Update the change ...")" />
+                        <!-- /ko -->
+                        <!-- /ko -->
+                        <!-- ko ifnot: CanOp -->
+                        <span data-bind="text: RolePriority"></span>
+                        <!-- /ko -->
+                        )
+                        <!-- ko if: CanDelete -->
+                        <div class="glyphicon glyphicon-remove delete" data-bind="click: function(data, event) { _deleteRole(data, event); } " title="@ResourceUtils.GetString("45bac67f06df3b313560fffc147eb626", "Delete this role ...")" />
+                        <!-- /ko -->
+                    </div>
+                </div>
+                <ul data-bind="template: { name: 'hierarchytempl', foreach: ChildEntities }, visible: IsNodeExpanded "></ul>
+            </li>
+            <!-- /ko -->
+            <!-- ko if: CanAdd -->
+            <li>
+                <div class="treenode">
+                    <!-- ko if: $parent.NewChild().IsNewValid -->
+                    <div class="glyphicon glyphicon-plus new" data-bind="click: function(data, event) { _createNewRole($parent, event); } " title="@ResourceUtils.GetString("436adc9dc773c00c163a07f0e6bd4631", "Create this new sibling role ...")" />
+                    <!-- /ko -->
+                    <!-- ko ifnot: $parent.NewChild().IsNewValid -->
+                    <div class="glyphicon glyphicon-hand-right empty" title="@ResourceUtils.GetString("ec4d9aab815f510244a030df77ba8a6e", "Enter role name to create a new sibling one ...")" />
+                    <!-- /ko -->
+                    <div class="newnode">
+                        <input type="text" class="form-control" data-bind="value: $parent.NewChild().RoleName" style="max-width: 120px" title="@ResourceUtils.GetString("3bed10ab78b676d71bf28a64660f8868", "Enter name for the new role ...")" />
+                        <!-- ko if: $parent.NewChild().IsChangeValid -->
+                        <input class="valid form-control" type="text" data-bind="value: $parent.NewChild().RolePriority" style="max-width: 50px" title="@ResourceUtils.GetString("fdf501834bd3d9c49632440ce289617d", "Role level ...")" />
+                        <!-- /ko -->
+                        <!-- ko ifnot: $parent.NewChild().IsChangeValid -->
+                        <input class="invalid form-control" type="text" data-bind="value: $parent.NewChild().RolePriority" style="max-width: 50px" title="@ResourceUtils.GetString("612b98a282976379eb1b74fd9700aa30", "Invalid value ...")" />
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </li>
+            <!-- /ko -->
+        </script>
+        <fieldset>
+            <legend><span class="ion-star"></span>&nbsp;<span>@ResourceUtils.GetString("a5cd3ed116608dac017f14c046ea56c0", "Roles")</span></legend>
+            <div class="treeview">
+                <ul data-bind="template: { name: 'hierarchytempl', foreach: HierarchyRoots }" class="root"></ul>
+            </div>
+        </fieldset>
+    </div>
+    <div class="col-md-7">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="role-path">
+                    <span>@ResourceUtils.GetString("5203364cd4233b27773085ecd11ce805", "Current Selected Role:") </span>
+                    <!-- ko if: CurrentSelectedRole() != null -->
+                    <div data-bind="html: CurrentSelectedRole().DistinctString" style="display:inline"></div>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+        <fieldset>
+            <legend>@ResourceUtils.GetString("492edbd0d20bbf2c209abace459a67c2", "Users in the Role")</legend>
+            <!-- ko if: CurrentSelectedRole() != null -->
+            <!-- ko with: CurrentSelectedRole -->
+            <table>
+                <tbody data-bind="foreach: UsersInRole">
+                    <tr>
+                        <td><span class="ion-person"></span>&nbsp;<span data-bind="text: data.username"></span></td>
+                        <td>
+                            <!-- ko if: op -->
+                            <input type="text" data-bind="value: level" class="form-control" style="margin:0; padding: 0 5px; height:20px; min-width: 50px; " />
+                            <!-- /ko -->
+                            <!-- ko ifnot: op -->
+                            <span data-bind="text: level"></span>
+                            <!-- /ko -->
+                        </td>
+                        <td>
+                            <!-- ko if: modified -->
+                            &nbsp;<a href="#" data-bind="click: function(data, event) { data.AdjustThisRoleLevel(); }" title="@ResourceUtils.GetString("ca31e4b1c64b9e6ca98ed89121509f29", "Update level ...")">
+                                <span class="glyphicon glyphicon-save"></span>
+                            </a>
+                            <!-- /ko -->
+                            <!-- ko ifnot: modified -->
+                            &nbsp;
+                            <!-- /ko -->
+                        </td>
+                        <!-- ko if: op -->
+                        <td>
+                            &nbsp;<a href="#" data-bind="click: function(data, event) { data.RemoveFromUser($parent); }" title="@ResourceUtils.GetString("f4f1a73faaee9731768056552f1a43c2", "Remove this role ...")">
+                                <span class="glyphicon glyphicon-remove" style="color:Red"></span>
+                            </a>
+                        </td>
+                        <!-- /ko -->
+                    </tr>
+                </tbody>
+            </table>
+            <!-- /ko -->
+            <!-- /ko -->
+        </fieldset>
+    </div>
+</div>
+<div id="userRow" class="row">
+    <div class="col-md-12">
+        <fieldset>
+            <legend><span class="ion-search"></span>&nbsp;<span>@ResourceUtils.GetString("71f6f567ff937458f756b87672c7fb49", "Find Users")</span></legend>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="QueryHead">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <button id="queryExec" onclick="showlist()" class="btn btn-default">
+                                        @ResourceUtils.GetString("9b569c28e72a27376d286d6f72c67fdd", "Start querying")
+                                    </button>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <label for="pageBlockSize">@ResourceUtils.GetString("0974d2c2f4c6420089275c2a41c4b41d", "Pages:")</label>
+                                            </td>
+                                            <td>
+                                                <input id="pageBlockSize" type="text" data-bind="value: PageBlockSize" />
+                                            </td>
+                                            <td>
+                                                <label for="pageSize">@ResourceUtils.GetString("a5a9679d8e8ef2c129aa9f4480f09dbd", "User No.:")</label>
+                                            </td>
+                                            <td>
+                                                <input id="pageSize" type="text" data-bind="value: PageSize_" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @Html.Partial("~/Views/Shared/_QueryComposerPartial.cshtml")
+            <!-- ko if: IsQueryInitialized() -->
+            <div class="EntityListPanel">
+                <table class="gridview table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                @ResourceUtils.GetString("987dce661afca3372aa3e05702fb1d07", "User name")
+                            </th>
+                            <th>
+                                @ResourceUtils.GetString("a5cd3ed116608dac017f14c046ea56c0", "Roles")
+                            </th>
+                            <th>
+                                @ResourceUtils.GetString("456d0deba6a86c9585590550c797502e", "Operations")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: CurrentPage().Items">
+                        <tr>
+                            <td>
+                                <a href="#" data-bind="click: function(data, event) { selectUser(data, event); }"><span class="ion-person"></span>&nbsp;<span data-bind="text: data.Username"></span></a>
+                            </td>
+                            <td>
+                                <ul class="list-group" data-bind="foreach: roles">
+                                    <li class="list-group-item">
+                                        <div data-bind="html: path"></div>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+                                <!-- ko if: edit && $root.IsRoleSelected() && !$root.IsUserInCurrentRole($data) -->
+                                <a href="#" data-bind="click: function(data, event) { _addUserToCurrentRole(data, event); }" title="@ResourceUtils.GetString("41e0cbcd07bbdacf0951d6a76e884a9e", "Add to current role ...")">
+                                    <span>@ResourceUtils.GetString("ec211f7c20af43e742bf2570c3cb84fa", "Add")</span>&nbsp;<span class="ion-arrow-up-a"></span>
+                                </a>
+                                <!-- /ko -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="pagelist">
+                    <div class="list">
+                        <ul class="pagination">
+                            <!-- ko if: PrevBlock() != null -->
+                            <li>
+                                <a href="javascript:prevPageBlock()" title="@ResourceUtils.GetString("a1e906e40a6b90e76e960f4d236bbccf", "Load previous page block ...")">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                </a>
+                            </li>
+                            <!-- /ko -->
+                            <!-- ko foreach: PagesWindow -->
+                            <!-- ko if: IsPageSelected() -->
+                            <li class="active">
+                                <span class="selected"
+                                      data-bind="text: PageNumber"></span>
+                            </li>
+                            <!-- /ko -->
+                            <!-- ko ifnot: IsPageSelected() -->
+                            <li>
+                                <a data-bind="attr: {href: PageLink}">
+                                    <span data-bind="text: PageNumber"></span>
+                                </a>
+                            </li>
+                            <!-- /ko -->
+                            <!-- /ko -->
+                            <!-- ko if: MoreNextBlock() -->
+                            <li>
+                                <a href="javascript:nextPageBlock()" title="@ResourceUtils.GetString("4eeaea99bac9d050ef5cdd42fe603d7e", "Load next page block ...")">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            </li>
+                            <!-- /ko -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+        </fieldset>
+    </div>
+</div>

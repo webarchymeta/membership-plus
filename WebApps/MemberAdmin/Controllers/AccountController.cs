@@ -176,6 +176,13 @@ namespace MemberAdminMvc5.Controllers
                 return Redirect(returnUrl);
         }
 
+        [HttpGet]
+        public ActionResult GeneratePassword()
+        {
+            PasswordGenerator pgen = new PasswordGenerator();
+            return Json(pgen.Generate());
+        }
+
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]

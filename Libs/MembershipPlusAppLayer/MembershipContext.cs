@@ -10,6 +10,25 @@ using Archymeta.Web.Security.Resources;
 
 namespace Archymeta.Web.MembershipPlus.AppLayer
 {
+    public class RolePriority
+    {
+        public int Major { get; set; }
+        public int Minor { get; set; }
+
+        public int[] RoleIds { get; set; }
+        public Role MaxRole { get; set; }
+
+        public bool IsLowerOrEqual(RolePriority r)
+        {
+            if (r.Major < 1)
+                return false;
+            else if (Major < 1)
+                return true;
+            else
+                return Major < r.Major || Major == r.Major && Minor <= r.Minor;
+        }
+    }
+
     public class MembershipContext
     {
         internal static CallContext Cntx
@@ -43,7 +62,9 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             um.IsIconImgLoaded = true;
             um.IsIconImgModified = true;
             um.IconMime = mineType;
+            um.IsIconMimeModified = true;
             um.IconLastModified = lastModified;
+            um.IsIconLastModifiedModified = true;
             var result = await umsvc.AddOrUpdateEntitiesAsync(Cntx, new UserAppMemberSet(), new UserAppMember[] { um });
             return (result.ChangedEntities[0].OpStatus & (int)EntityOpStatus.Updated) > 0;
         }

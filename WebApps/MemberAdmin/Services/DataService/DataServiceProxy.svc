@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Service="Archymeta.Web.MembershipPlus.AppLayer.Proxies.DataServiceProxy" %>

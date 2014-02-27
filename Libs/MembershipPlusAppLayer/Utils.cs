@@ -26,5 +26,15 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             JavaScriptSerializer ser = new JavaScriptSerializer();
             return ser.Serialize(obj);
         }
+
+        public static string GetHtmlRolePath(string strpath)
+        {
+            string[] pnodes = strpath.Split('.');
+            string path = "";
+            foreach (var pn in pnodes)
+                path += (path == "" ? "" : "<span class='ion-star path-separator'></span>") + "<span class='path-node'>" + pn + "</span>";
+            return path;
+        }
+
     }
 }

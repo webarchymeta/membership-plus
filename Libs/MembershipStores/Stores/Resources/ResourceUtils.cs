@@ -17,6 +17,7 @@ namespace Archymeta.Web.Security.Resources
         CommonShortResources,
         CommonBlockResources,
         ShortResources,
+        QueryResources,
         BlockResources
     }
 
@@ -159,6 +160,9 @@ namespace Archymeta.Web.Security.Resources
             {
                 case StoreTypes.CommonShortResources:
                     reader = Get_URL_Reader();
+                    break;
+                case StoreTypes.QueryResources:
+                    reader = Get_URL_Reader("QueryResources");
                     break;
                 case StoreTypes.CommonBlockResources:
                     reader = Get_URL_Reader("BlockResources");

@@ -1,62 +1,65 @@
-﻿<div class="QueryInput">
-    <div class="row collapse">
-        <div class="col-sm-2 sortlabel">
-            <label for="sortOpts">Sorted by:</label>
-        </div>
-        <div class="col-sm-10 sorterexpr">
-            <div class="sortnode">&nbsp;</div>
-            <!-- ko foreach: SorterPath -->
-            <!-- ko ifnot: IsExternal || DisplayAs == "this" -->
-            <div class="sortnode" data-bind="text: DisplayAs">
-            </div>
-            <!-- ko if: IsEntityAccess -->
-            <div class="dotnode">
-                <img src="@Url.Content("~/Images/node_green.png")" alt="." />
-            </div>
-            <!-- /ko -->
-            <!-- /ko -->
-            <!-- ko ifnot:IsExternal || DisplayAs != "this" -->
-            <div class="thisnode" data-bind="text: DisplayAs">
-            </div>
-            <!-- ko if: IsEntityAccess -->
-            <div class="dotnode">
-                <img src="@Url.Content("~/Images/node_green.png")" alt="." />
-            </div>
-            <!-- /ko -->
-            <!-- /ko -->
-            <!-- ko if: IsExternal -->
-            <div class="dirnode">
-                <img data-bind="attr: {src: ImgSrc, alt: DisplayAs, title: DisplayAs}" />
-            </div>
-            <!-- /ko -->
-            <!-- /ko -->
-            <input id="sortOpts" />
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="col-sm-2 filterlabel">
-            <label for="filterOpts">Filtered by:</label>
-        </div>
-        <div class="col-sm-10 filterexpr">
-            <div class="filternode">&nbsp;</div>
-            <!-- ko foreach: FilterPath -->
-            <div data-bind="text: DisplayAs, css: TkClass">
-            </div>
-            <!-- /ko -->
-            <input id="filterOpts" />
-        </div>
-    </div>
+﻿@using Archymeta.Web.Security.Resources;
+<div class="QueryInput">
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <label for="sortOpts">@ResourceUtils.GetString("6549f41e489efc896d2ce1e7a3e7df98", "Sorted by:")</label>
+                </td>
+                <td class="sorterexpr">
+                    <div class="sortnode">&nbsp;</div>
+                    <!-- ko foreach: SorterPath -->
+                    <!-- ko ifnot: IsExternal || DisplayAs == "this" -->
+                    <div class="sortnode" data-bind="text: DisplayAs">
+                    </div>
+                    <!-- ko if: IsEntityAccess -->
+                    <div class="dotnode">
+                        <img src="@Url.Content("~/Images/node_green.png")" alt="." />
+                    </div>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <!-- ko ifnot:IsExternal || DisplayAs != "this" -->
+                    <div class="thisnode" data-bind="text: DisplayAs">
+                    </div>
+                    <!-- ko if: IsEntityAccess -->
+                    <div class="dotnode">
+                        <img src="@Url.Content("~/Images/node_green.png")" alt="." />
+                    </div>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <!-- ko if: IsExternal -->
+                    <div class="dirnode">
+                        <span data-bind="attr: { class: ImgSrc, title: DisplayAs }" />
+                        @*<img data-bind="attr: {src: ImgSrc, alt: DisplayAs, title: DisplayAs}" />*@
+                    </div>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <input id="sortOpts" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="filterOpts">@ResourceUtils.GetString("9bc9d2baa9a21cb5c8336f12260a2190", "Filtered by:")</label>
+                </td>
+                <td class="filterexpr">
+                    <div class="filternode">&nbsp;</div>
+                    <!-- ko foreach: FilterPath -->
+                    <div data-bind="text: DisplayAs, css: TkClass">
+                    </div>
+                    <!-- /ko -->
+                    <input id="filterOpts" />
+                </td>
+            </tr>
+            <tr>
+                <td><label>@ResourceUtils.GetString("aafc06e1c4ee34e108c35f226456bea1", "which means:")</label></td>
+                <td class="filterexpr">
+                    <p>
+                        <!-- ko if: CurrentFilters() != null -->
+                        <span data-bind="text: CurrentFilters().CurrentExpr "></span>
+                        <!-- /ko -->
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-<div id="SetInfoBar">
-    <div class="row">
-        <div class="large-2 columns" style="text-align:right">
-            <span><strong>which means:</strong></span>
-        </div>
-        <div class="large-10 columns">
-            <!-- ko if: CurrentFilters() != null -->
-            <span data-bind="text: CurrentFilters().CurrentExpr "></span>
-            <!-- /ko -->
-        </div>
-    </div>
-</div>
-

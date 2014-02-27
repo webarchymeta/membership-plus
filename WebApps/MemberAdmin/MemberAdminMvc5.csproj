@@ -151,7 +151,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\JavaScriptController.cs" />
     <Compile Include="Controllers\MemberAdminController.cs" />
+    <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -285,6 +287,7 @@
     <Content Include="Content\fonts\ionicons.woff" />
     <Content Include="App_Data\ShortResources.datal" />
     <Content Include="App_Data\ShortResources.didxl" />
+    <Content Include="Images\node_green.png" />
     <Content Include="Scripts\ckeditor\adapters\jquery.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
@@ -633,6 +636,8 @@
     <Content Include="Scripts\ckeditor\plugins\scayt\LICENSE.md" />
     <Content Include="Scripts\ckeditor\LICENSE.md" />
     <Content Include="Scripts\ckeditor\CHANGES.md" />
+    <Content Include="App_Data\QueryResources.datal" />
+    <Content Include="App_Data\QueryResources.didxl" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -663,6 +668,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Services\DataService\DataServiceProxy.svc" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -679,7 +685,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
@@ -694,12 +699,12 @@
     <Content Include="Views\Account\UpdateUserPhoto.cshtml" />
     <Content Include="Views\Account\UserDetails.cshtml" />
     <Content Include="Views\Account\_PersonalChannelsPartial.cshtml" />
+    <Content Include="Views\MemberAdmin\OnlineUsers.cshtml" />
+    <Content Include="Views\MemberAdmin\UserAdmin.cshtml" />
+    <Content Include="Views\RoleAdmin\RoleAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Images\" />
-    <Folder Include="Services\DataService\" />
-    <Folder Include="Views\MemberAdmin\" />
-    <Folder Include="Views\RoleAdmin\" />
+    <Folder Include="Views\JavaScript\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

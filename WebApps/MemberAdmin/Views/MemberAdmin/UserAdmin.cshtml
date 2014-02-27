@@ -1,6 +1,486 @@
-﻿@{
-    ViewBag.Title = "UserAdmin";
+﻿@using Archymeta.Web.Security.Resources;
+@{
+    ViewBag.Title = ResourceUtils.GetString("09a217db8a8b322f55c4a03507b93896", "User Administration");
 }
-
-<h2>UserAdmin</h2>
-
+@section prestyles
+{
+    @Styles.Render("~/Content/themes/base/css")
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/knockout")
+    <script src="@Url.Content("~/JavaScript/QueryCustomization")"></script>
+    <script src="@Url.Content("~/Scripts/DataService/UserAdminPage.js")"></script>
+    <script type="text/javascript">
+        appRoot = '@Url.Content("~/")';
+        serviceUrl = appRoot + 'Services/DataService/DataServiceProxy.svc';
+        dataSourceId = '';
+        setName = 'User';
+        appName = '@ViewBag.AppName';
+        $(function () {
+            window.onerror = function () {
+                window.status = '@ResourceUtils.GetString("f4df67025ce1852c05bc18cb1a9d27df", "There were errors getting this page. Try refreshing this page.")';
+                return true;
+            }
+            userSet = new UserSet(serviceUrl);
+            userSet.SetFilter = 'UserAppMember.Application_Ref.Name == "' + appName + '"';
+            userSet.GetSetInfo();
+            ko.applyBindings(userSet);
+            initsortinput(userSet);
+            initfilterinput(userSet);
+            $('.ui-autocomplete').addClass('AutoCompleteMenu');
+        });
+    </script>
+}
+<div class="row">
+    <div class="col-md-12">
+        <h3><span class="ion-android-contacts"></span>&nbsp;@ResourceUtils.GetString("31fc5c1ba4a0c871af8d9dc52c647824", "User list")</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="QueryHead">
+            <tbody>
+                <tr>
+                    <td>
+                        <button id="queryExec" onclick="showlist()" class="btn btn-default">
+                            @ResourceUtils.GetString("9b569c28e72a27376d286d6f72c67fdd", "Start querying")
+                        </button>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    <label for="pageBlockSize">@ResourceUtils.GetString("0974d2c2f4c6420089275c2a41c4b41d", "Pages:")</label>
+                                </td>
+                                <td>
+                                    <input id="pageBlockSize" type="text" data-bind="value: PageBlockSize" />
+                                </td>
+                                <td>
+                                    <label for="pageSize">@ResourceUtils.GetString("a5a9679d8e8ef2c129aa9f4480f09dbd", "User No.:")</label>
+                                </td>
+                                <td>
+                                    <input id="pageSize" type="text" data-bind="value: PageSize_" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        @Html.Partial("~/Views/Shared/_QueryComposerPartial.cshtml")
+    </div>
+</div>
+<!-- ko if: IsQueryInitialized() -->
+<div class="EntityListPanel">
+    <table class="gridview table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                   @ResourceUtils.GetString("987dce661afca3372aa3e05702fb1d07", "User name")
+                </th>
+                <th>
+                    <span class="ion-android-mail"></span>&nbsp;@ResourceUtils.GetString("ce8ae9da5b7cd6c3df2929543a9af92e", "Email")
+                </th>
+                <th>
+                    @ResourceUtils.GetString("136494b7688c10b70cd6126c93d375df", "Member Status")
+                </th>
+                <th>
+                    @ResourceUtils.GetString("a5cd3ed116608dac017f14c046ea56c0", "Roles")
+                </th>
+                <th>
+                    @ResourceUtils.GetString("32829ce3587fc0e82056bc8f6b971605", "Last Login")
+                </th>
+                <th>
+                    @ResourceUtils.GetString("b32a44eacdc49c3939c6a61405d25651", "Last Active")
+                </th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: CurrentPage().Items">
+            <tr>
+                <td>
+                    <span class="ion-person"></span>&nbsp;<span data-bind="text: data.Username"></span>
+                </td>
+                <td style="width:1px;white-space:nowrap;">
+                    <a href="#" data-bind="click: function(data, event) { ShowUser(data, event); }" title="@ResourceUtils.GetString("348fcc78fbf38f4ac0d7fa3e31000ed0", "Show user attributes ...")"><span class="ion-navicon"></span></a>
+                    <!-- ko if: edit -->
+                    <a href="#" data-bind="click: function(data, event) { EditUser(data, event); }" title="@ResourceUtils.GetString("af3a8ce8344cfa96959a09753895f214", "Manage user roles ...")"><span class="ion-compose"></span></a>
+                    <!-- /ko -->
+                </td>
+                <td>
+                    <span data-bind="text: data.Email"></span>
+                </td>
+                <td>
+                    <span data-bind="text: CurrentMemberStatus"></span>
+                </td>
+                <td>
+                    <table>
+                        <tbody data-bind="foreach: roles">
+                            <tr>
+                                <td>
+                                    <div data-bind="html: path"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <span data-bind="localdatetime: data.LastLoginDate"></span>
+                </td>
+                <td>
+                    <span data-bind="localdatetime: member.LastActivityDate"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="pagelist">
+        <div class="list">
+            <ul class="pagination">
+                <!-- ko if: PrevBlock() != null -->
+                <li>
+                    <a href="javascript:prevPageBlock()" title="@ResourceUtils.GetString("a1e906e40a6b90e76e960f4d236bbccf", "Load previous page block ...")">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                </li>
+                <!-- /ko -->
+                <!-- ko foreach: PagesWindow -->
+                <!-- ko if: IsPageSelected() -->
+                <li class="active">
+                    <span class="selected"
+                          data-bind="text: PageNumber"></span>
+                </li>
+                <!-- /ko -->
+                <!-- ko ifnot: IsPageSelected() -->
+                <li>
+                    <a data-bind="attr: {href: PageLink}">
+                        <span data-bind="text: PageNumber"></span>
+                    </a>
+                </li>
+                <!-- /ko -->
+                <!-- /ko -->
+                <!-- ko if: MoreNextBlock() -->
+                <li>
+                    <a href="javascript:nextPageBlock()" title="@ResourceUtils.GetString("4eeaea99bac9d050ef5cdd42fe603d7e", "Load next page block ...")">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    </div>
+    <!-- ko foreach: CurrentPage().Items -->
+    <!-- ko if: edit -->
+    <div data-bind="attr: { id: op_id }" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">
+                         @ResourceUtils.GetString("0757ff2706f42f60f935a54e832553e3", "User name:")&nbsp;<span data-bind="text: data.Username" />
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>@ResourceUtils.GetString("456d0deba6a86c9585590550c797502e", "Operations")</h3>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>@ResourceUtils.GetString("dc647eb65e6711e155375218212b3965", "Password")</td>
+                                        <td><a href="#" data-bind="click: ResetPassword">@ResourceUtils.GetString("526d688f37a86d3c3f27d0c5016eb71e", "Reset")</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>@ResourceUtils.GetString("136494b7688c10b70cd6126c93d375df", "Member Status")</td>
+                                        <td>
+                                            <select class="form-control" data-bind="options: MemberStatusValues, optionsText: 'action', optionsValue: 'value', optionsCaption: '', value: CurrentMemberStatus, event: { change: function(data, event) { ChangeMemberStatus(data, event); } }"></select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>@ResourceUtils.GetString("bc3ed1a139d11fc12b5b2ddce4dfa4d9", "Available Roles")</td>
+                                        <td>
+                                            <ul class="list-group" data-bind="foreach: availableRoles">
+                                                <li class="list-group-item">
+                                                    <div data-bind="html: path" style="display:inline"></div>
+                                                    <!-- ko if: op -->
+                                                    <a title="@ResourceUtils.GetString("69aa3bb15b17397b9b81ab2da2045b32", "Add to the user ...")" href="#" data-bind="click: function(data, event) { $parent.AddToRole(data, event); }">
+                                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                                    </a>
+                                                    <!-- /ko -->
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h3>@ResourceUtils.GetString("deb57a2134b3e462e1fb9b988b351601", "Current Roles")</h3>
+                            <!-- ko foreach: roles -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div data-bind="html: path" style="display:inline"></div>
+                                    <!-- ko if: op -->
+                                    <a title="@ResourceUtils.GetString("48e3c60256fe13046737526ac75fc9d9", "Remove it from the user ...")" href="#" data-bind="click: function(data, event) { $parent.RemoveFromRole(data, event); }">
+                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                    </a>
+                                    <!-- /ko -->
+                                </div>
+                                <div class="panel-body">
+                                    <label for="rolelevel">
+                                        @ResourceUtils.GetString("90e124964e4aee435ebf0e742493b33e", "Relative level")
+                                    </label>
+                                    <!-- ko if: op -->
+                                    <div>
+                                        <input id="rolelevel" class="form-control" style="display:inline-block;" data-bind="value: level" title="@ResourceUtils.GetString("84c4cc56e3a508b1a8272e2b141b87cb", "Relative priority within members having the same role ...")" />&nbsp;
+                                        <a href="#" data-bind="click: function(data, event) { AdjustRoleLevel($parent, event); }">@ResourceUtils.GetString("06933067aafd48425d67bcb01bba5cb7", "Update")</a>
+                                    </div>
+                                    <!-- /ko -->
+                                    <!-- ko ifnot: op -->
+                                    <span data-bind="text: level"></span>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@ResourceUtils.GetString("d3d2e617335f08df83599665eef8a419", "Close")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+    <div data-bind="attr: { id: view_id }" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">
+                        @ResourceUtils.GetString("0757ff2706f42f60f935a54e832553e3", "User name:")&nbsp;<span data-bind="text: data.Username" />
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <h3>Attributes</h3>
+                    <style>
+                        td {
+                            overflow: hidden;
+                        }
+                    </style>
+                    <table class="table-condensed">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Email:
+                                </td>
+                                <td>
+                                    <span data-bind="text: data.Email "></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    FirstName:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.FirstName != null -->
+                                    <span data-bind="text: data.FirstName "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.FirstName == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    LastName:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.LastName != null -->
+                                    <span data-bind="text: data.LastName "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.LastName == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    CreateOn:
+                                </td>
+                                <td>
+                                    <span data-bind="localdatetime: data.CreateOn "></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    IsApproved:
+                                </td>
+                                <td>
+                                    <span data-bind="text: data.IsApproved "></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Status:
+                                </td>
+                                <td>
+                                    <span data-bind="text: CurrentMemberStatus "></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    PasswordFormat:
+                                </td>
+                                <td>
+                                    <span data-bind="text: data.PasswordFormat "></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    PasswordQuestion:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.PasswordQuestion != null -->
+                                    <span data-bind="text: data.PasswordQuestion "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.PasswordQuestion == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    PasswordAnswer:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.PasswordAnswer != null -->
+                                    <span data-bind="text: data.PasswordAnswer "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.PasswordAnswer == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    PasswordSalt:
+                                </td>
+                                <td>
+                                    <span data-bind="text: data.PasswordSalt "></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    IsAnonymous:
+                                </td>
+                                <td>
+                                    <span data-bind="text: data.IsAnonymous "></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    TimeZone:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.TimeZone != null -->
+                                    <span data-bind="text: data.TimeZone "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.TimeZone == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    FailedPasswordAnswerAttemptCount:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.FailedPasswordAnswerAttemptCount != null -->
+                                    <span data-bind="text: data.FailedPasswordAnswerAttemptCount "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.FailedPasswordAnswerAttemptCount == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    FailedPasswordAnswerAttemptWindowStart:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.FailedPasswordAnswerAttemptWindowStart != null -->
+                                    <span data-bind="localdatetime: data.FailedPasswordAnswerAttemptWindowStart "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.FailedPasswordAnswerAttemptWindowStart == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    FailedPasswordAttemptCount:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.FailedPasswordAttemptCount != null -->
+                                    <span data-bind="text: data.FailedPasswordAttemptCount "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.FailedPasswordAttemptCount == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    FailedPasswordAttemptWindowStart:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.FailedPasswordAttemptWindowStart != null -->
+                                    <span data-bind="localdatetime: data.FailedPasswordAttemptWindowStart "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.FailedPasswordAttemptWindowStart == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    LastLoginDate:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.LastLoginDate != null -->
+                                    <span data-bind="localdatetime: data.LastLoginDate "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.LastLoginDate == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    LastPasswordChangedDate:
+                                </td>
+                                <td>
+                                    <!-- ko if: data.LastPasswordChangedDate != null -->
+                                    <span data-bind="localdatetime: data.LastPasswordChangedDate "></span>
+                                    <!-- /ko -->
+                                    <!-- ko if: data.LastPasswordChangedDate == null -->
+                                    <span>null</span>
+                                    <!-- /ko -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@ResourceUtils.GetString("d3d2e617335f08df83599665eef8a419", "Close")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
+<!-- /ko -->

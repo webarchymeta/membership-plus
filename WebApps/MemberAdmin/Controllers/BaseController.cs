@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Text;
+using System.Security.Cryptography;
 using Archymeta.Web.Security.Resources;
 
 namespace MemberAdminMvc5.Controllers
@@ -115,6 +117,24 @@ namespace MemberAdminMvc5.Controllers
                 err.Errors.Add(ResourceUtils.GetString("8dde84756da744ecb1b23ecc193e8b25", "The membership data service is not setup or is not configured correctly!"));
                 ModelState.Add(new KeyValuePair<string, ModelState>(ResourceUtils.GetString("cd4f3b92a1bfec06df534f9f6e65059a", "Member Service Failed"), err));
                 return false;
+            }
+        }
+
+        protected virtual ActionResult ReturnJavascript(string script)
+        {
+            int status;
+            string statusstr;
+            string etag = "";
+            var h = HashAlgorithm.Create("MD5");
+            etag = Convert.ToBase64String(h.ComputeHash(Encoding.UTF8.GetBytes(script)));
+            bool bcache = CheckClientCache(null, etag, out status, out statusstr);
+            SetClientCacheHeader(null, etag, HttpCacheability.Public);
+            if (!bcache)
+                return JavaScript(script);
+            {
+                Response.StatusCode = status;
+                Response.StatusDescription = statusstr;
+                return Content("");
             }
         }
     }

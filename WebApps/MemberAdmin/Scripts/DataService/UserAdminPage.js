@@ -163,6 +163,8 @@ function User(data) {
     var self = this;
     self.Initializing = true;
     self.data = data.data;
+    self.op_id = 'op_' + data.data.ID;
+    self.view_id = 'view_' + data.data.ID;
     self.member = data.member;
     self.edit = data.CanEdit;
     self.roles = ko.observableArray();
@@ -189,14 +191,17 @@ function User(data) {
             return;
         }
         $.ajax({
-            url: appRoot + "Admin/ResetUserPassword",
+            url: appRoot + "MemberAdmin/ResetUserPassword",
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ userName: data.data.Username }),
+            data: JSON.stringify({ userId: data.data.ID }),
             success: function (content) {
-                var newpassword = content;
-                alert('New password is: ' + newpassword);
+                if (!content.ok) {
+                    alert(content.msg);
+                    return;
+                }
+                alert('New password is: ' + content.newpwd);
                 self.IsPasswordReset(true);
             },
             error: function (jqxhr, textStatus) {
@@ -214,7 +219,7 @@ function User(data) {
                 return;
             }
             $.ajax({
-                url: appRoot + "Admin/ChangeMemberStatus",
+                url: appRoot + "MemberAdmin/ChangeMemberStatus",
                 type: "POST",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
@@ -222,6 +227,7 @@ function User(data) {
                 success: function (content) {
                     if (!content.ok) {
                         alert(content.msg);
+                        return;
                     }
                     self.MemberStatusValues.removeAll();
                     if (content.ok) {
@@ -368,7 +374,7 @@ function UserPage() {
             }
         }
         $.ajax({
-            url: appRoot + "Admin/GetManagedUsers",
+            url: appRoot + "MemberAdmin/GetManagedUsers",
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
@@ -506,7 +512,7 @@ function UserSet(dataServiceUrl) {
 
     self.GetSetInfo = function () {
         $.ajax({
-            url: appRoot + "Admin/GetSetInfo",
+            url: appRoot + "MemberAdmin/GetSetInfo",
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
@@ -775,8 +781,8 @@ function initsortinput(s) {
                     if (ok) {
                         iobj.removeAttr("disabled");
                         if (s.CurrentSorters().Options.length == 2 && s.CurrentSorters().Options[0].IsExternal) {
-                            s.CurrentSorters().Options[0].ImgSrc = appRoot + 'Images/control_up.png';
-                            s.CurrentSorters().Options[1].ImgSrc = appRoot + 'Images/control_down.png';
+                            s.CurrentSorters().Options[0].ImgSrc = "glyphicon glyphicon-chevron-up"; //appRoot + 'Images/control_up.png';
+                            s.CurrentSorters().Options[1].ImgSrc = "glyphicon glyphicon-chevron-down"; //appRoot + 'Images/control_down.png';
                         }
                         if (s.CurrentSorters().CanBeClosed && s.CurrentSorters().CurrentExpr() != null && s.CurrentSorters().CurrentExpr() != "") {
                             $('.sortlabel').qtip({
@@ -828,8 +834,8 @@ function initsortinput(s) {
                     if (ok) {
                         iobj.removeAttr("disabled");
                         if (s.CurrentSorters().Options.length == 2 && s.CurrentSorters().Options[0].IsExternal) {
-                            s.CurrentSorters().Options[0].ImgSrc = appRoot + 'Images/control_up.png';
-                            s.CurrentSorters().Options[1].ImgSrc = appRoot + 'Images/control_down.png';
+                            s.CurrentSorters().Options[0].ImgSrc = "glyphicon glyphicon-chevron-up"; //appRoot + 'Images/control_up.png';
+                            s.CurrentSorters().Options[1].ImgSrc = "glyphicon glyphicon-chevron-down"; //appRoot + 'Images/control_down.png';
                         }
                         if (s.CurrentSorters().CanBeClosed && s.CurrentSorters().CurrentExpr() != null && s.CurrentSorters().CurrentExpr() != "") {
                             $('.sortlabel').qtip({
@@ -1270,13 +1276,16 @@ function updateCurrPage(p, p0) {
 
 
 function EditUser(data, event) {
-    $('#' + data.data.ID).foundation('reveal', 'open', {
-    });
+    $('#' + data.op_id).modal('show');
 }
 
-function EditUserDone(data, event) {
-    $('#' + data.data.ID).foundation('reveal', 'close');
+function ShowUser(data, event) {
+    $('#' + data.view_id).modal('show');
 }
+
+//function EditUserDone(data, event) {
+//    $('#' + data.data.ID).foundation('reveal', 'close');
+//}
 
 function selectUser(data, event) {
     userSet.CurrentSelectedUser(data);
@@ -1284,8 +1293,8 @@ function selectUser(data, event) {
 
 var userSet = null;
 var appName = '';
-var pageBlockSize = 10;
-var pageSize = 10;
+var pageBlockSize = '10';
+var pageSize = '10';
 
 // end set view model
 

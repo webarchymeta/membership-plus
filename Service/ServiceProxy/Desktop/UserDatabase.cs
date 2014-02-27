@@ -2182,6 +2182,110 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
+        ///   Load the set of indirectly depending entities "UsersInRole_UserID" of type <see cref="RoleSet" /> of an entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  Indirect depending entities are those that depend on the entity through a intermediate entity set, most like forming a
+        ///  many to many relationship. The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="RoleSet" />.
+        /// </returns>
+        public RoleSet MaterializeRoles(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeRoles(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of indirectly depending entities "UsersInRole_UserID" of type <see cref="RoleSet" /> of an entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  Indirect depending entities are those that depend on the entity through a intermediate entity set, most like forming a
+        ///  many to many relationship. The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="RoleSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<RoleSet> MaterializeRolesAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return await Channel.MaterializeRolesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of indirectly depending entities "AllRoles" of type <see cref="IEnumerable{Role}" /> (T = <see cref="Role" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  Indirect depending entities are those that depend on the entity through a intermediate entity set, most like forming a
+        ///  many to many relationship.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="IEnumerable{Role}" /> (T = <see cref="Role" />).
+        /// </returns>
+        public IEnumerable<Role> MaterializeAllRoles(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllRoles(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of indirectly depending entities "AllRoles" of type <see cref="IEnumerable{Role}" /> (T = <see cref="Role" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  Indirect depending entities are those that depend on the entity through a intermediate entity set, most like forming a
+        ///  many to many relationship.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="IEnumerable{Role}" /> (T = <see cref="Role" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<Role>> MaterializeAllRolesAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return await Channel.MaterializeAllRolesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
         ///   Load the set of depending entities "UsersInRole_AdminIDs" of type <see cref="UsersInRoleSet" /> of the entity. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
