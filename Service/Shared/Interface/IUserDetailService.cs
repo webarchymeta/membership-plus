@@ -552,11 +552,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         UserDetailSetConstraintsColl QuerySetConstraints(CallContext cntx, UserDetailSet set, QueryExpresion qexpr, int max, string nextId);
 
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserDetail.ApplicationID" />, <see cref="UserDetail.UserID" /> }. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserDetail.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
@@ -566,14 +565,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByKey")]
-        UserDetail LoadEntityByKey(CallContext cntx, string _ApplicationID, string _UserID);
+        UserDetail LoadEntityByKey(CallContext cntx, string _ID);
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserDetail.ApplicationID" />, <see cref="UserDetail.UserID" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserDetail.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -609,7 +607,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityGraphRecurs")]
-        UserDetail LoadEntityGraphRecurs(CallContext cntx, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        UserDetail LoadEntityGraphRecurs(CallContext cntx, string _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 
         /// <summary>
         ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UserDetail.ApplicationID" />, <see cref="UserDetail.UserID" /> }. 
@@ -619,11 +617,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="_UserID">Intrinsic id <see cref="UserDetail.UserID" />.</param>
         /// <remarks>
         ///  <para>
-        ///   The returned entity set should contain zero or one item or null.
+        ///   If the intrinsic identifiers are well chosen, the returned entity set should contain zero or one item. This could not be the case
+        ///   if the system is attached to an existing database whose data were entered without respecting the rules (namely those entities having the
+        ///   same set of intrinsic identifiers should appear only once inside the data source) imposed later by the
+        ///   system.
         ///  </para>
         /// </remarks>
         /// <returns>
-        ///   Null or zero or one entity.
+        ///   The list of found entities.
         /// </returns>
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -637,8 +638,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  Load the delay loaded property <see cref="UserDetail.Description" />. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <remarks>
         /// </remarks>
         /// <returns>
@@ -650,14 +650,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityDescription")]
-        string LoadEntityDescription(CallContext cntx, string _ApplicationID, string _UserID);
+        string LoadEntityDescription(CallContext cntx, string _ID);
 
         /// <summary>
         ///  Update the delay loaded property <see cref="UserDetail.Description" />. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="data">The updated value.</param>
         /// <remarks>
         /// </remarks>
@@ -670,14 +669,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/UpdateEntityDescription")]
-        void UpdateEntityDescription(CallContext cntx, string _ApplicationID, string _UserID, string data);
+        void UpdateEntityDescription(CallContext cntx, string _ID, string data);
 
         /// <summary>
         ///  Load the delay loaded property <see cref="UserDetail.Photo" />. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <remarks>
         /// </remarks>
         /// <returns>
@@ -689,14 +687,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityPhoto")]
-        byte[] LoadEntityPhoto(CallContext cntx, string _ApplicationID, string _UserID);
+        byte[] LoadEntityPhoto(CallContext cntx, string _ID);
 
         /// <summary>
         ///  Update the delay loaded property <see cref="UserDetail.Photo" />. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="_PhotoLastModified">Meta property <see cref="UserDetail.PhotoLastModified" />.</param>
         /// <param name="_PhotoMime">Meta property <see cref="UserDetail.PhotoMime" />.</param>
         /// <param name="data">The updated value.</param>
@@ -711,7 +708,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/UpdateEntityPhoto")]
-        void UpdateEntityPhoto(CallContext cntx, string _ApplicationID, string _UserID, System.Nullable<DateTime> _PhotoLastModified, string _PhotoMime, byte[] data);
+        void UpdateEntityPhoto(CallContext cntx, string _ID, System.Nullable<DateTime> _PhotoLastModified, string _PhotoMime, byte[] data);
 
         /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
@@ -1487,36 +1484,33 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserDetail.ApplicationID" />, <see cref="UserDetail.UserID" /> }. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserDetail.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
         [OperationContract]
-        UserDetail LoadEntityByKey(CallContext cntx, string _ApplicationID, string _UserID);
+        UserDetail LoadEntityByKey(CallContext cntx, string _ID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserDetail.ApplicationID" />, <see cref="UserDetail.UserID" /> }. Awaitable asynchronous version.
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserDetail.ID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<UserDetail> LoadEntityByKeyAsync(CallContext cntx, string _ApplicationID, string _UserID);
+        System.Threading.Tasks.Task<UserDetail> LoadEntityByKeyAsync(CallContext cntx, string _ID);
 #endif
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserDetail.ApplicationID" />, <see cref="UserDetail.UserID" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserDetail.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1547,14 +1541,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity graph found.
         /// </returns>
         [OperationContract]
-        UserDetail LoadEntityGraphRecurs(CallContext cntx, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        UserDetail LoadEntityGraphRecurs(CallContext cntx, string _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserDetail.ApplicationID" />, <see cref="UserDetail.UserID" /> }. Awaitable asynchronous version.
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserDetail.ID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1585,7 +1578,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity graph found.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<UserDetail> LoadEntityGraphRecursAsync(CallContext cntx, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        System.Threading.Tasks.Task<UserDetail> LoadEntityGraphRecursAsync(CallContext cntx, string _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 #endif
 
         /// <summary>
@@ -1596,11 +1589,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="_UserID">Intrinsic id <see cref="UserDetail.UserID" />.</param>
         /// <remarks>
         ///  <para>
-        ///   The returned entity set should contain zero or one item or null.
+        ///   If the intrinsic identifiers are well chosen, the returned entity set should contain zero or one item. This could not be the case
+        ///   if the system is attached to an existing database whose data were entered without respecting the rules (namely those entities having the
+        ///   same set of intrinsic identifiers should appear only once inside the data source) imposed later by the
+        ///   system.
         ///  </para>
         /// </remarks>
         /// <returns>
-        ///   Null or zero or one entity.
+        ///   The list of found entities.
         /// </returns>
         [OperationContract]
         List<UserDetail> LoadEntityByNature(CallContext cntx, string _ApplicationID, string _UserID);
@@ -1613,11 +1609,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="_UserID">Intrinsic id <see cref="UserDetail.UserID" />.</param>
         /// <remarks>
         ///  <para>
-        ///   The returned entity set should contain zero or one item or null.
+        ///   If the intrinsic identifiers are well chosen, the returned entity set should contain zero or one item. This could not be the case
+        ///   if the system is attached to an existing database whose data were entered without respecting the rules (namely those entities having the
+        ///   same set of intrinsic identifiers should appear only once inside the data source) imposed later by the
+        ///   system.
         ///  </para>
         /// </remarks>
         /// <returns>
-        ///   Null or zero or one entity.
+        ///   The list of found entities.
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<List<UserDetail>> LoadEntityByNatureAsync(CallContext cntx, string _ApplicationID, string _UserID);
@@ -1627,37 +1626,34 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  Load the delay loaded property <see cref="UserDetail.Description" />. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <remarks>
         /// </remarks>
         /// <returns>
         ///   The value of the property.
         /// </returns>
         [OperationContract]
-        string LoadEntityDescription(CallContext cntx, string _ApplicationID, string _UserID);
+        string LoadEntityDescription(CallContext cntx, string _ID);
 #if SUPPORT_ASYNC
         /// <summary>
         ///  Load the delay loaded property <see cref="UserDetail.Description" />. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <remarks>
         /// </remarks>
         /// <returns>
         ///   The value of the property.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<string> LoadEntityDescriptionAsync(CallContext cntx, string _ApplicationID, string _UserID);
+        System.Threading.Tasks.Task<string> LoadEntityDescriptionAsync(CallContext cntx, string _ID);
 #endif
 
         /// <summary>
         ///  Update the delay loaded property <see cref="UserDetail.Description" />. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="data">The updated value.</param>
         /// <remarks>
         /// </remarks>
@@ -1665,14 +1661,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The value of the property.
         /// </returns>
         [OperationContract]
-        void UpdateEntityDescription(CallContext cntx, string _ApplicationID, string _UserID, string data);
+        void UpdateEntityDescription(CallContext cntx, string _ID, string data);
 #if SUPPORT_ASYNC
         /// <summary>
         ///  Update the delay loaded property <see cref="UserDetail.Description" />. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="data">The updated value.</param>
         /// <remarks>
         /// </remarks>
@@ -1680,44 +1675,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The value of the property.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task UpdateEntityDescriptionAsync(CallContext cntx, string _ApplicationID, string _UserID, string data);
+        System.Threading.Tasks.Task UpdateEntityDescriptionAsync(CallContext cntx, string _ID, string data);
 #endif
 
         /// <summary>
         ///  Load the delay loaded property <see cref="UserDetail.Photo" />. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <remarks>
         /// </remarks>
         /// <returns>
         ///   The value of the property.
         /// </returns>
         [OperationContract]
-        byte[] LoadEntityPhoto(CallContext cntx, string _ApplicationID, string _UserID);
+        byte[] LoadEntityPhoto(CallContext cntx, string _ID);
 #if SUPPORT_ASYNC
         /// <summary>
         ///  Load the delay loaded property <see cref="UserDetail.Photo" />. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <remarks>
         /// </remarks>
         /// <returns>
         ///   The value of the property.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<byte[]> LoadEntityPhotoAsync(CallContext cntx, string _ApplicationID, string _UserID);
+        System.Threading.Tasks.Task<byte[]> LoadEntityPhotoAsync(CallContext cntx, string _ID);
 #endif
 
         /// <summary>
         ///  Update the delay loaded property <see cref="UserDetail.Photo" />. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="_PhotoLastModified">Meta property <see cref="UserDetail.PhotoLastModified" />.</param>
         /// <param name="_PhotoMime">Meta property <see cref="UserDetail.PhotoMime" />.</param>
         /// <param name="data">The updated value.</param>
@@ -1727,14 +1719,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The value of the property.
         /// </returns>
         [OperationContract]
-        void UpdateEntityPhoto(CallContext cntx, string _ApplicationID, string _UserID, System.Nullable<DateTime> _PhotoLastModified, string _PhotoMime, byte[] data);
+        void UpdateEntityPhoto(CallContext cntx, string _ID, System.Nullable<DateTime> _PhotoLastModified, string _PhotoMime, byte[] data);
 #if SUPPORT_ASYNC
         /// <summary>
         ///  Update the delay loaded property <see cref="UserDetail.Photo" />. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ApplicationID">Primary key <see cref="UserDetail.ApplicationID" />.</param>
-        /// <param name="_UserID">Primary key <see cref="UserDetail.UserID" />.</param>
+        /// <param name="_ID">Primary key <see cref="UserDetail.ID" />.</param>
         /// <param name="_PhotoLastModified">Meta property <see cref="UserDetail.PhotoLastModified" />.</param>
         /// <param name="_PhotoMime">Meta property <see cref="UserDetail.PhotoMime" />.</param>
         /// <param name="data">The updated value.</param>
@@ -1744,7 +1735,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The value of the property.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task UpdateEntityPhotoAsync(CallContext cntx, string _ApplicationID, string _UserID, System.Nullable<DateTime> _PhotoLastModified, string _PhotoMime, byte[] data);
+        System.Threading.Tasks.Task UpdateEntityPhotoAsync(CallContext cntx, string _ID, System.Nullable<DateTime> _PhotoLastModified, string _PhotoMime, byte[] data);
 #endif
 
         /// <summary>

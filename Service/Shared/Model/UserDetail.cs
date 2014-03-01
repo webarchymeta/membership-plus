@@ -35,12 +35,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Primary keys</term><description>Description</description>
     ///    </listheader>
     ///    <item>
-    ///      <term>ApplicationID</term>
-    ///      <description>See <see cref="UserDetail.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
-    ///    </item>
-    ///    <item>
-    ///      <term>UserID</term>
-    ///      <description>See <see cref="UserDetail.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <term>ID</term>
+    ///      <description>See <see cref="UserDetail.ID" />. Primary key; fixed; not null.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -49,11 +45,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    </listheader>
     ///    <item>
     ///      <term>ApplicationID</term>
-    ///      <description>See <see cref="UserDetail.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <description>See <see cref="UserDetail.ApplicationID" />. Intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///    <item>
     ///      <term>UserID</term>
-    ///      <description>See <see cref="UserDetail.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <description>See <see cref="UserDetail.UserID" />. Intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -97,6 +93,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>PhotoMime</term>
     ///      <description>See <see cref="UserDetail.PhotoMime" />. Editable; nullable; max-length = 50 characters.</description>
     ///    </item>
+    ///    <item>
+    ///      <term>WebsiteUrl</term>
+    ///      <description>See <see cref="UserDetail.WebsiteUrl" />. Editable; nullable; max-length = 150 characters.</description>
+    ///    </item>
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
@@ -104,11 +104,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    </listheader>
     ///    <item>
     ///      <term>ApplicationID</term>
-    ///      <description>See <see cref="UserDetail.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <description>See <see cref="UserDetail.ApplicationID" />. Intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///    <item>
     ///      <term>UserID</term>
-    ///      <description>See <see cref="UserDetail.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <description>See <see cref="UserDetail.UserID" />. Intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -140,7 +140,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             get
             {
-                return this.ApplicationID + ":" + this.UserID;
+                return this.ID;
             }
         }
 
@@ -224,48 +224,26 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private bool _isDeleted = false;
 
         /// <summary>
-        /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
+        /// Meta-info: primary key; fixed; not null.
         /// </summary>
         [Key]
         [Editable(false)]
         [DataMember(IsRequired = true)]
-        public string ApplicationID
+        public string ID
         { 
             get
             {
-                return _ApplicationID;
+                return _ID;
             }
             set
             {
-                if (_ApplicationID != value)
+                if (_ID != value)
                 {
-                    _ApplicationID = value;
+                    _ID = value;
                 }
             }
         }
-        private string _ApplicationID = default(string);
-
-        /// <summary>
-        /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
-        /// </summary>
-        [Key]
-        [Editable(false)]
-        [DataMember(IsRequired = true)]
-        public string UserID
-        { 
-            get
-            {
-                return _UserID;
-            }
-            set
-            {
-                if (_UserID != value)
-                {
-                    _UserID = value;
-                }
-            }
-        }
-        private string _UserID = default(string);
+        private string _ID = default(string);
 
         /// <summary>
         /// Meta-info: fixed; not null.
@@ -622,6 +600,95 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private bool _isPhotoMimeModified = false;
 
         /// <summary>
+        /// Meta-info: editable; nullable; max-length = 150 characters.
+        /// </summary>
+        [Editable(true)]
+        [StringLength(150)]
+        [DataMember(IsRequired = false)]
+        public string WebsiteUrl
+        { 
+            get
+            {
+                return _WebsiteUrl;
+            }
+            set
+            {
+                if (_WebsiteUrl != value)
+                {
+                    _WebsiteUrl = value;
+                    if (!IsInitializing)
+                        IsWebsiteUrlModified = true;
+                }
+            }
+        }
+        private string _WebsiteUrl = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="WebsiteUrl" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="WebsiteUrl" /> only if this is set to true no matter what
+        /// the actual value of <see cref="WebsiteUrl" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsWebsiteUrlModified
+        { 
+            get
+            {
+                return _isWebsiteUrlModified;
+            }
+            set
+            {
+                _isWebsiteUrlModified = value;
+            }
+        }
+        private bool _isWebsiteUrlModified = false;
+
+        /// <summary>
+        /// Meta-info: intrinsic id; fixed; not null; foreign key.
+        /// </summary>
+        [Key]
+        [Required]
+        [Editable(false)]
+        [DataMember(IsRequired = true)]
+        public string ApplicationID
+        { 
+            get
+            {
+                return _ApplicationID;
+            }
+            set
+            {
+                if (_ApplicationID != value)
+                {
+                    _ApplicationID = value;
+                }
+            }
+        }
+        private string _ApplicationID = default(string);
+
+        /// <summary>
+        /// Meta-info: intrinsic id; fixed; not null; foreign key.
+        /// </summary>
+        [Key]
+        [Required]
+        [Editable(false)]
+        [DataMember(IsRequired = true)]
+        public string UserID
+        { 
+            get
+            {
+                return _UserID;
+            }
+            set
+            {
+                if (_UserID != value)
+                {
+                    _UserID = value;
+                }
+            }
+        }
+        private string _UserID = default(string);
+
+        /// <summary>
         /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon.
         /// The corresponding foreign key set is { <see cref="UserDetail.ApplicationID" /> }.
         /// </summary>
@@ -716,9 +783,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             if (other == null)
                 return false;
-            if (ApplicationID != other.ApplicationID)
-                return false;
-            if (UserID != other.UserID)
+            if (ID != other.ID)
                 return false;
             return true;
         }              
@@ -784,12 +849,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.PhotoMime = from.PhotoMime;
                     to.IsPhotoMimeModified = true;
                 }
+                if (from.IsWebsiteUrlModified && !to.IsWebsiteUrlModified)
+                {
+                    to.WebsiteUrl = from.WebsiteUrl;
+                    to.IsWebsiteUrlModified = true;
+                }
             }
             else
             {
                 to.IsPersisted = from.IsPersisted;
-                to.ApplicationID = from.ApplicationID;
-                to.UserID = from.UserID;
+                to.ID = from.ID;
                 to.CreateDate = from.CreateDate;
                 to.BirthDate = from.BirthDate;
                 to.IsBirthDateModified = from.IsBirthDateModified;
@@ -805,6 +874,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.IsPhotoLastModifiedModified = from.IsPhotoLastModifiedModified;
                 to.PhotoMime = from.PhotoMime;
                 to.IsPhotoMimeModified = from.IsPhotoMimeModified;
+                to.WebsiteUrl = from.WebsiteUrl;
+                to.IsWebsiteUrlModified = from.IsWebsiteUrlModified;
+                to.ApplicationID = from.ApplicationID;
+                to.UserID = from.UserID;
             }
         }
 
@@ -871,6 +944,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsPhotoMimeModified = true;
                 cnt++;
             }
+            if (WebsiteUrl != newdata.WebsiteUrl)
+            {
+                WebsiteUrl = newdata.WebsiteUrl;
+                IsWebsiteUrlModified = true;
+                cnt++;
+            }
             IsEntityChanged = cnt > 0;
         }
 
@@ -880,8 +959,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void NormalizeValues()
         {
             IsInitializing = true;
+            if (ApplicationID == null)
+                ApplicationID = "";
+            if (UserID == null)
+                UserID = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsBirthDateModified || IsDescriptionModified || IsGenderModified || IsLastModifiedModified || IsPhotoModified || IsPhotoLastModifiedModified || IsPhotoMimeModified;
+                IsEntityChanged = IsBirthDateModified || IsDescriptionModified || IsGenderModified || IsLastModifiedModified || IsPhotoModified || IsPhotoLastModifiedModified || IsPhotoMimeModified || IsWebsiteUrlModified;
             if (IsDescriptionModified && !IsDescriptionLoaded)
                 IsDescriptionLoaded = true;
             if (IsPhotoModified && !IsPhotoLoaded)
@@ -896,14 +979,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             UserDetail e = new UserDetail();
             e.IsInitializing = true;
-            e.ApplicationID = ApplicationID;
-            e.UserID = UserID;
+            e.ID = ID;
             e.CreateDate = CreateDate;
             e.BirthDate = BirthDate;
             e.Gender = Gender;
             e.LastModified = LastModified;
             e.PhotoLastModified = PhotoLastModified;
             e.PhotoMime = PhotoMime;
+            e.WebsiteUrl = WebsiteUrl;
+            e.ApplicationID = ApplicationID;
+            e.UserID = UserID;
             if (allData)
             {
                 e.Description = Description;
@@ -924,12 +1009,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append(@"
 ----===== [[UserDetail]] =====----
-  ApplicationID = '" + ApplicationID + @"'");
-            sb.Append(@" (natural id)");
-            sb.Append(@"
-  UserID = '" + UserID + @"'");
-            sb.Append(@" (natural id)");
-            sb.Append(@"
+  ID = '" + ID + @"'
   CreateDate = " + CreateDate + @"
   BirthDate = " + (BirthDate.HasValue ? BirthDate.Value.ToString() : "null") + @"");
             if (IsBirthDateModified)
@@ -960,6 +1040,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
+            sb.Append(@"
+  WebsiteUrl = '" + (WebsiteUrl != null ? WebsiteUrl : "null") + @"'");
+            if (IsWebsiteUrlModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  ApplicationID = '" + ApplicationID + @"'");
+            sb.Append(@" (natural id)");
+            sb.Append(@"
+  UserID = '" + UserID + @"'");
+            sb.Append(@" (natural id)");
             sb.Append(@"
 ");
             return sb.ToString();

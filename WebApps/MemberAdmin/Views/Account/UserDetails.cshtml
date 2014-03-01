@@ -111,6 +111,14 @@ else
                                         @Html.TextBoxFor(m => m.BirthDate, "{0:yyyy-MM-dd}", new { @class = "form-control" })
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        @ResourceUtils.GetString("4ec6b2bad2e7119053dfaa48e1b8d6fe", "Primary Web Site:")
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(m => m.WebSiteUrl, new { @class = "form-control" })
+                                    </td>
+                                </tr>
                                 <tr><td></td><td></td></tr>
                                 <tr><td></td><td></td></tr>
                                 <tr>

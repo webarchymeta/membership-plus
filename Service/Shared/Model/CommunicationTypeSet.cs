@@ -30,7 +30,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     {
         /// <summary>
         /// The value of entity property <see cref="CommunicationType.TypeName" /> is descrete (expandable). 
-        /// This is the possible options: { "HomeAddress", "WorkAddress", "DaytimePhone", "NighttimePhone", "MobilePhone", "ElectronicMail", "InstantMessage", "VoiceMail" }
+        /// This is the possible options: { "HomeAddress", "WorkAddress", "DaytimePhone", "NighttimePhone", "MobilePhone", "ElectronicMail", "InstantMessage", "VoiceMail", "WebSite" }
         /// </summary>
         [DataMember]
         public string[] TypeNameValues
@@ -47,7 +47,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                                   "MobilePhone",
                                   "ElectronicMail",
                                   "InstantMessage",
-                                  "VoiceMail"
+                                  "VoiceMail",
+                                  "WebSite"
                     };
                 }
                 return _TypeNameValues;
