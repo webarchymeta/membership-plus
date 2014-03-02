@@ -168,6 +168,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null.
         /// </summary>
@@ -214,8 +216,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private string _TypeName = default(string);
 
+#endregion
+
+#region Entities that the current one depend upon.
+
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="EventCalendarShareCircleSet" /> for data set "EventCalendarShareCircles" of <see cref="EventCalendarShareCircle" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.AssocTypeID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarShareCircleSet EventCalendarShareCircles
@@ -235,6 +246,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "EventCalendarShareCircles" of <see cref="EventCalendarShareCircle" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.AssocTypeID" /> }.
         /// </summary>
 		public IEnumerable<EventCalendarShareCircle> EventCalendarShareCircleEnum
 		{
@@ -244,6 +256,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="EventCalendarShareCircle" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.AssocTypeID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarShareCircle[] ChangedEventCalendarShareCircles
@@ -254,6 +267,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserAssociationSet" /> for data set "UserAssociations" of <see cref="UserAssociation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.TypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssociationSet UserAssociations
@@ -273,6 +287,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserAssociations" of <see cref="UserAssociation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.TypeID" /> }.
         /// </summary>
 		public IEnumerable<UserAssociation> UserAssociationEnum
 		{
@@ -282,6 +297,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserAssociation" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.TypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssociation[] ChangedUserAssociations
@@ -289,6 +305,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).

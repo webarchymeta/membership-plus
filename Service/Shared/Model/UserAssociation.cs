@@ -217,6 +217,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
         /// </summary>
@@ -349,8 +351,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isAssocMemoModified = false;
 
+#endregion
+
+#region Entities that the current one depend upon.
+
         /// <summary>
-        /// Entity in data set "UserAssociationTypes" for <see cref="UserAssociationType" /> that this entity depend upon.
+        /// Entity in data set "UserAssociationTypes" for <see cref="UserAssociationType" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserAssociation.TypeID" /> }.
         /// </summary>
         [DataMember]
@@ -392,7 +398,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<UserAssociationType> AutoLoadUserAssociationTypeRef = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserAssociation.FromUserID" /> }.
         /// </summary>
         [DataMember]
@@ -434,7 +440,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<User> AutoLoadUser_FromUserID = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserAssociation.ToUserID" /> }.
         /// </summary>
         [DataMember]
@@ -474,6 +480,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// A delegate to load <see cref="UserAssociation.User_ToUserID" /> automatically when it is referred to at the first time.
         /// </summary>
         public Func<User> AutoLoadUser_ToUserID = null;
+
+#endregion
+
+#region Entities that depend on the current one.
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).

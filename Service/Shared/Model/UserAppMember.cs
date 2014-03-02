@@ -219,6 +219,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
         /// </summary>
@@ -639,8 +641,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isMemberStatusModified = false;
 
+#endregion
+
+#region Entities that the current one depend upon.
+
         /// <summary>
-        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon.
+        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserAppMember.ApplicationID" /> }.
         /// </summary>
         [DataMember]
@@ -682,7 +688,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<Application_> AutoLoadApplication_Ref = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserAppMember.UserID" /> }.
         /// </summary>
         [DataMember]
@@ -722,6 +728,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// A delegate to load <see cref="UserAppMember.UserRef" /> automatically when it is referred to at the first time.
         /// </summary>
         public Func<User> AutoLoadUserRef = null;
+
+#endregion
+
+#region Entities that depend on the current one.
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).

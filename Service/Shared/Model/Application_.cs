@@ -188,6 +188,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; fixed; not null.
         /// </summary>
@@ -277,8 +279,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDisplayNameModified = false;
 
+#endregion
+
+#region Entities that the current one depend upon.
+
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="AnnouncementSet" /> for data set "Announcements" of <see cref="Announcement" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public AnnouncementSet Announcements
@@ -298,6 +309,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "Announcements" of <see cref="Announcement" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.ApplicationID" /> }.
         /// </summary>
 		public IEnumerable<Announcement> AnnouncementEnum
 		{
@@ -307,6 +319,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="Announcement" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public Announcement[] ChangedAnnouncements
@@ -317,6 +330,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="CommunicationSet" /> for data set "Communications" of <see cref="Communication" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public CommunicationSet Communications
@@ -336,6 +350,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "Communications" of <see cref="Communication" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.ApplicationID" /> }.
         /// </summary>
 		public IEnumerable<Communication> CommunicationEnum
 		{
@@ -345,6 +360,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="Communication" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public Communication[] ChangedCommunications
@@ -355,6 +371,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="EventCalendarSet" /> for data set "EventCalendar" of <see cref="EventCalendar" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarSet EventCalendars
@@ -374,6 +391,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "EventCalendar" of <see cref="EventCalendar" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.ApplicationID" /> }.
         /// </summary>
 		public IEnumerable<EventCalendar> EventCalendarEnum
 		{
@@ -383,6 +401,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="EventCalendar" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendar[] ChangedEventCalendars
@@ -393,6 +412,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="RoleSet" /> for data set "Roles" of <see cref="Role" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="RoleSet" /> set is { <see cref="Role.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public RoleSet Roles
@@ -412,6 +432,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "Roles" of <see cref="Role" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="RoleSet" /> set is { <see cref="Role.ApplicationID" /> }.
         /// </summary>
 		public IEnumerable<Role> RoleEnum
 		{
@@ -421,6 +442,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="Role" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="RoleSet" /> set is { <see cref="Role.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public Role[] ChangedRoles
@@ -431,6 +453,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserAppMemberSet" /> for data set "UserAppMembers" of <see cref="UserAppMember" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAppMemberSet" /> set is { <see cref="UserAppMember.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public UserAppMemberSet UserAppMembers
@@ -450,6 +473,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserAppMembers" of <see cref="UserAppMember" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAppMemberSet" /> set is { <see cref="UserAppMember.ApplicationID" /> }.
         /// </summary>
 		public IEnumerable<UserAppMember> UserAppMemberEnum
 		{
@@ -459,6 +483,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserAppMember" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserAppMemberSet" /> set is { <see cref="UserAppMember.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public UserAppMember[] ChangedUserAppMembers
@@ -469,6 +494,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserDetailSet" /> for data set "UserDetails" of <see cref="UserDetail" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserDetailSet" /> set is { <see cref="UserDetail.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public UserDetailSet UserDetails
@@ -488,6 +514,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserDetails" of <see cref="UserDetail" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserDetailSet" /> set is { <see cref="UserDetail.ApplicationID" /> }.
         /// </summary>
 		public IEnumerable<UserDetail> UserDetailEnum
 		{
@@ -497,6 +524,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserDetail" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserDetailSet" /> set is { <see cref="UserDetail.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public UserDetail[] ChangedUserDetails
@@ -507,6 +535,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserProfileSet" /> for data set "UserProfiles" of <see cref="UserProfile" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public UserProfileSet UserProfiles
@@ -526,6 +555,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserProfiles" of <see cref="UserProfile" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.ApplicationID" /> }.
         /// </summary>
 		public IEnumerable<UserProfile> UserProfileEnum
 		{
@@ -535,6 +565,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserProfile" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.ApplicationID" /> }.
         /// </summary>
         [DataMember]
 		public UserProfile[] ChangedUserProfiles
@@ -542,6 +573,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).

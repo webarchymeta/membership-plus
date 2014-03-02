@@ -204,6 +204,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: auto-gen primary key; fixed; not null.
         /// </summary>
@@ -361,8 +363,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private string _UserID = default(string);
 
+#endregion
+
+#region Entities that the current one depend upon.
+
         /// <summary>
-        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon.
+        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UsersRoleHistory.RoleID" /> }.
         /// </summary>
         [DataMember]
@@ -404,7 +410,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<Role> AutoLoadRoleRef = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UsersRoleHistory.UserID" /> }.
         /// </summary>
         [DataMember]
@@ -446,7 +452,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<User> AutoLoadUser_UserID = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UsersRoleHistory.OperatorID" /> }.
         /// </summary>
         [DataMember]
@@ -486,6 +492,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// A delegate to load <see cref="UsersRoleHistory.User_OperatorID" /> automatically when it is referred to at the first time.
         /// </summary>
         public Func<User> AutoLoadUser_OperatorID = null;
+
+#endregion
+
+#region Entities that depend on the current one.
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
