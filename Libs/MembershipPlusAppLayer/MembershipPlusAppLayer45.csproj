@@ -59,6 +59,7 @@
     <Compile Include="MemberAdminContext.cs" />
     <Compile Include="MemberRoleContext.cs" />
     <Compile Include="MembershipContext.cs" />
+    <Compile Include="MemberViewContext.cs" />
     <Compile Include="Models\ContentRecord.cs" />
     <Compile Include="Models\UserDetailsVM.cs" />
     <Compile Include="PasswordGenerator.cs" />

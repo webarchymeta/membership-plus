@@ -19,15 +19,20 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
     {
         public string GetSetInfo(string sourceId, string set)
         {
+            JavaScriptSerializer jser = new JavaScriptSerializer();
+            dynamic sobj = jser.DeserializeObject(set) as dynamic;
             EntitySetType type;
-            if (Enum.TryParse<EntitySetType>(set, out type))
+            if (Enum.TryParse<EntitySetType>(sobj["set"], out type))
             {
+                string filter = null;
+                if (sobj.ContainsKey("setFilter"))
+                    filter = sobj["setFilter"];
                 switch (type)
                 {
                     case EntitySetType.User:
                         {
                             UserServiceProxy svc = new UserServiceProxy();
-                            var si = svc.GetSetInfo(ApplicationContext.ClientContext, null);
+                            var si = svc.GetSetInfo(ApplicationContext.ClientContext, filter);
                             JavaScriptSerializer ser = new JavaScriptSerializer();
                             string json = ser.Serialize(new { EntityCount = si.EntityCount, Sorters = si.Sorters });
                             return json;
@@ -35,7 +40,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                     case EntitySetType.Role:
                         {
                             RoleServiceProxy svc = new RoleServiceProxy();
-                            var si = svc.GetSetInfo(ApplicationContext.ClientContext, null);
+                            var si = svc.GetSetInfo(ApplicationContext.ClientContext, filter);
                             JavaScriptSerializer ser = new JavaScriptSerializer();
                             string json = ser.Serialize(new { EntityCount = si.EntityCount, Sorters = si.Sorters });
                             return json;

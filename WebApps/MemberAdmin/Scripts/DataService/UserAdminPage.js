@@ -441,7 +441,9 @@ var adminMaxPriority = 0;
 function UserSet(dataServiceUrl) {
     var self = this;
     self.BaseUrl = dataServiceUrl;
+    self.TotalEntities = ko.observable(0);
     self.EntityCount = ko.observable(0);
+    self.PageCount = ko.observable(0);
     self.SetFilter = "";
     self.AvailableRoles = [];
     // query
@@ -516,12 +518,12 @@ function UserSet(dataServiceUrl) {
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ set: setName }),
+            data: JSON.stringify({ set: JSON.stringify({ set: setName, setFilter: self.SetFilter, appName: appName }) }),
             beforeSend: function () {
             },
             success: function (content) {
                 var r = JSON.parse(content);
-                self.EntityCount(r.EntityCount);
+                self.TotalEntities(r.EntityCount);
                 self.CurrentSorters(new TokenOptions());
                 for (var i = 0; i < r.Sorters.length; i++) {
                     var tk = r.Sorters[i];
@@ -649,6 +651,8 @@ function UserSet(dataServiceUrl) {
             },
             success: function (content) {
                 var data = JSON.parse(content.NextPageBlockResult);
+                self.EntityCount(data.TotalEntities);
+                self.PageCount(data.TotalPages);
                 if (data.Pages.length == 0) {
                     var lpb = self.LastPageBlock();
                     if (lpb != null) {

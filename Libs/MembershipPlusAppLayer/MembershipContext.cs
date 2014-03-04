@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using CryptoGateway.RDB.Data.MembershipPlus;
 using Archymeta.Web.MembershipPlus.AppLayer.Models;
 using Archymeta.Web.Security;
@@ -35,8 +36,15 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         {
             get
             {
-                return ApplicationContext.ClientContext.CreateCopy();
+                return ApplicationContext.ClientContext;
             }
+        }
+
+        public static string GuidMix(string guid1, string guid2)
+        {
+            var h = HashAlgorithm.Create("MD5");
+            byte[] hash = h.ComputeHash(Encoding.ASCII.GetBytes(guid1 + guid2));
+            return new Guid(hash).ToString();
         }
 
         public static async Task<ContentRecord> GetMemberIcon(string id)
@@ -98,13 +106,14 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             UserDetailServiceProxy udsvc = new UserDetailServiceProxy();
             var cntx = Cntx;
             cntx.DirectDataAccess = direct;
-            var details = await udsvc.LoadEntityByKeyAsync(cntx, ApplicationContext.App.ID, id);
+
+            var details = await udsvc.LoadEntityByKeyAsync(cntx, GuidMix(ApplicationContext.App.ID, id));
             UserDetailsVM m = null;
             if (details != null)
             {
                 if (!details.IsDescriptionLoaded)
                 {
-                    details.Description = udsvc.LoadEntityDescription(cntx, ApplicationContext.App.ID, id);
+                    details.Description = udsvc.LoadEntityDescription(cntx, GuidMix(ApplicationContext.App.ID, id));
                     details.IsDescriptionLoaded = true;
                 }
                 m = new UserDetailsVM { Details = details };
@@ -126,21 +135,6 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             var lct = await ctsvc.QueryDatabaseAsync(Cntx, new CommunicationTypeSet(), qexpr);
             m.ChannelTypes = lct.ToArray();
             CommunicationServiceProxy csvc = new CommunicationServiceProxy();
-            //qexpr = new QueryExpresion();
-            //qexpr.OrderTks = new List<QToken>(new QToken[] { 
-            //    new QToken { TkName = "TypeID" },
-            //    new QToken { TkName = "asc" }
-            //});
-            //qexpr.FilterTks = new List<QToken>(new QToken[] { 
-            //    new QToken { TkName = "UserID" },
-            //    new QToken { TkName = "==" },
-            //    new QToken { TkName = "\"" + id + "\"" },
-            //    new QToken { TkName = "&&" },
-            //    new QToken { TkName = "ApplicationID" },
-            //    new QToken { TkName = "==" },
-            //    new QToken { TkName = "\"" + ApplicationContext.App.ID + "\"" }
-            //});
-            //var lc = await csvc.QueryDatabaseAsync(Cntx, new CommunicationSet(), qexpr);
             var fkeys = new CommunicationSetConstraints
             {
                 ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = ApplicationContext.App.ID },
@@ -161,11 +155,12 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         public static async Task<bool> CreateUserDetails(string id)
         {
             UserDetailServiceProxy udsvc = new UserDetailServiceProxy();
-            var ud = await udsvc.LoadEntityByKeyAsync(Cntx, ApplicationContext.App.ID, id);
+            var ud = await udsvc.LoadEntityByKeyAsync(Cntx, GuidMix(ApplicationContext.App.ID, id));
             if (ud == null)
             {
                 await udsvc.AddOrUpdateEntitiesAsync(Cntx, new UserDetailSet(), new UserDetail[] { 
                     new UserDetail{
+                        ID = GuidMix(ApplicationContext.App.ID, id),
                         UserID = id,
                         ApplicationID = ApplicationContext.App.ID,
                         CreateDate = DateTime.UtcNow
@@ -179,7 +174,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         {
             UserDetailServiceProxy udsvc = new UserDetailServiceProxy();
             var cntx = Cntx;
-            var details = await udsvc.LoadEntityByKeyAsync(cntx, ApplicationContext.App.ID, id);
+            var details = await udsvc.LoadEntityByKeyAsync(cntx, GuidMix(ApplicationContext.App.ID, id));
             int chgcnt = 0;
             if (details.Gender != model.Gender)
             {
@@ -204,10 +199,10 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         {
             UserDetailServiceProxy udsvc = new UserDetailServiceProxy();
             var cntx = Cntx;
-            var details = await udsvc.LoadEntityByKeyAsync(cntx, ApplicationContext.App.ID, id);
+            var details = await udsvc.LoadEntityByKeyAsync(cntx, GuidMix(ApplicationContext.App.ID, id));
             if (details != null && !details.IsDescriptionLoaded)
             {
-                details.Description = await udsvc.LoadEntityDescriptionAsync(cntx, ApplicationContext.App.ID, id);
+                details.Description = await udsvc.LoadEntityDescriptionAsync(cntx, GuidMix(ApplicationContext.App.ID, id));
                 details.IsDescriptionLoaded = true;
             }
             bool changed = details.Description == null && model.Description != null || details.Description != null && model.Description == null ||
@@ -224,7 +219,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         public static async Task<bool> UpdateUserPhoto(string id, string mimeType, DateTime lastModified, byte[] imagedata)
         {
             UserDetailServiceProxy udsvc = new UserDetailServiceProxy();
-            var ud = await udsvc.LoadEntityByKeyAsync(Cntx, ApplicationContext.App.ID, id);
+            var ud = await udsvc.LoadEntityByKeyAsync(Cntx, GuidMix(ApplicationContext.App.ID, id));
             ud.PhotoMime = mimeType;
             ud.PhotoLastModified = lastModified;
             ud.Photo = imagedata;
@@ -238,14 +233,14 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         public static async Task<ContentRecord> GetUserPhoto(string id)
         {
             UserDetailServiceProxy udsvc = new UserDetailServiceProxy();
-            var ud = await udsvc.LoadEntityByKeyAsync(Cntx, ApplicationContext.App.ID, id);
+            var ud = await udsvc.LoadEntityByKeyAsync(Cntx, GuidMix(ApplicationContext.App.ID, id));
             if (ud == null)
                 return null;
             ContentRecord rec = new ContentRecord();
             rec.MimeType = ud.PhotoMime;
             if (ud.LastModified.HasValue)
                 rec.LastModified = ud.LastModified.Value;
-            rec.Data = udsvc.LoadEntityPhoto(Cntx, ApplicationContext.App.ID, id);
+            rec.Data = udsvc.LoadEntityPhoto(Cntx, GuidMix(ApplicationContext.App.ID, id));
             return rec;
         }
 

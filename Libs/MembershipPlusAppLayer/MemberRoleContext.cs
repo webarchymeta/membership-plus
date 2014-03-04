@@ -29,7 +29,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
 
         private static CallContext Cntx
         {
-            get { return ApplicationContext.ClientContext.CreateCopy(); }
+            get { return ApplicationContext.ClientContext; }
         }
 
         public static bool DBAutoCleanupRoles

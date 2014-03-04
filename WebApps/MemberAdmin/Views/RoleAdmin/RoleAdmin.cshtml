@@ -11,7 +11,7 @@
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/knockout")
     <script src="@Url.Content("~/Scripts/DataService/RoleAdminPage.js")"></script>
-    <script src="@Url.Content("~/JavaScript/QueryCustomization")"></script>
+    <script src="@Url.Content("~/JavaScript/QueryAdminCustomization")"></script>
     <script src="@Url.Content("~/Scripts/DataService/UserAdminPage.js")"></script>
     <script type="text/javascript">
         appRoot = '@Url.Content("~/")';
@@ -146,7 +146,7 @@
             <table>
                 <tbody data-bind="foreach: UsersInRole">
                     <tr>
-                        <td><span class="ion-person"></span>&nbsp;<span data-bind="text: data.username"></span></td>
+                        <td><span class="ion-person"></span>&nbsp;<span data-bind="text: data.username"></span>&nbsp;</td>
                         <td>
                             <!-- ko if: op -->
                             <input type="text" data-bind="value: level" class="form-control" style="margin:0; padding: 0 5px; height:20px; min-width: 50px; " />

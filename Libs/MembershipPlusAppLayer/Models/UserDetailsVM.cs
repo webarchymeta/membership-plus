@@ -23,6 +23,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Models
                         BirthDate = value.BirthDate.Value.ToLocalTime();
                     else
                         BirthDate = null;
+                    WebSiteUrl = value.WebsiteUrl;
                     Description = value.Description;
                 }
             }
@@ -45,6 +46,12 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? BirthDate
+        {
+            get;
+            set;
+        }
+
+        public string WebSiteUrl
         {
             get;
             set;

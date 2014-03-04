@@ -20,7 +20,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         {
             get
             {
-                return ApplicationContext.ClientContext.CreateCopy();
+                return ApplicationContext.ClientContext;
             }
         }
 
@@ -50,15 +50,20 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         public static async Task<string> GetSetInfo(string adminId, string set)
         {
             EntitySetType type;
-            if (Enum.TryParse<EntitySetType>(set, out type))
+            JavaScriptSerializer jser = new JavaScriptSerializer();
+            dynamic sobj = jser.DeserializeObject(set) as dynamic;
+            if (Enum.TryParse<EntitySetType>(sobj["set"], out type))
             {
+                string filter = null;
+                if (sobj.ContainsKey("setFilter"))
+                    filter = sobj["setFilter"];
                 switch (type)
                 {
                     case EntitySetType.User:
                         {
                             var p = await GetMaxPriority(adminId);
                             UserServiceProxy svc = new UserServiceProxy();
-                            var si = await svc.GetSetInfoAsync(Cntx, null);
+                            var si = await svc.GetSetInfoAsync(Cntx, filter);
                             RoleServiceProxy rsvc = new RoleServiceProxy();
                             var roles = await rsvc.QueryDatabaseAsync(Cntx, new RoleSet(), null);
                             List<dynamic> rlist = new List<dynamic>();
@@ -74,7 +79,6 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                 }
             }
             return null;
-
         }
 
         public static async Task<string> GetManagedUsers(string adminId, string set, string qexpr, string prevlast)

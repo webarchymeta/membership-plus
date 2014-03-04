@@ -153,6 +153,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JavaScriptController.cs" />
     <Compile Include="Controllers\MemberAdminController.cs" />
+    <Compile Include="Controllers\QueryController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -642,6 +643,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\DataService\CustomMembershipPlus.js" />
+    <Content Include="Scripts\DataService\MemberSearchPage.js" />
     <Content Include="Scripts\DataService\RoleAdminPage.js" />
     <Content Include="Scripts\DataService\UserAdminPage.js" />
     <Content Include="Scripts\DataService\UserDetailsPage.js" />
@@ -669,7 +671,9 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Services\DataService\DataServiceProxy.svc" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -702,6 +706,9 @@
     <Content Include="Views\MemberAdmin\OnlineUsers.cshtml" />
     <Content Include="Views\MemberAdmin\UserAdmin.cshtml" />
     <Content Include="Views\RoleAdmin\RoleAdmin.cshtml" />
+    <Content Include="Views\Query\MemberDetails.cshtml" />
+    <Content Include="Views\Query\SearchMembers.cshtml" />
+    <Content Include="Views\Query\_MemberDetailsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\JavaScript\" />

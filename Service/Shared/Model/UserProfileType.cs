@@ -163,6 +163,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: auto-gen primary key; fixed; not null.
         /// </summary>
@@ -254,8 +256,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private string _SerializeType = default(string);
 
+#endregion
+
+#region Entities that the current one depend upon.
+
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="UserProfileSet" /> for data set "UserProfiles" of <see cref="UserProfile" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.TypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserProfileSet UserProfiles
@@ -275,6 +286,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserProfiles" of <see cref="UserProfile" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.TypeID" /> }.
         /// </summary>
 		public IEnumerable<UserProfile> UserProfileEnum
 		{
@@ -284,6 +296,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserProfile" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.TypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserProfile[] ChangedUserProfiles
@@ -291,6 +304,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).

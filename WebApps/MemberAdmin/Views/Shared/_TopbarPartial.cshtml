@@ -13,23 +13,22 @@
             <li>@Html.ActionLink(ResourceUtils.GetString("8cf04a9734132302f96da8e113e80ce6", "Home"), "Index", "Home")</li>
             @if (Request.IsAuthenticated)
             {
-                @*<li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Organizers<b class="caret"></b></a>
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("77a3f553666ab77020a502e5079335c9", "Membership")<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-submenu">
-                            <a href="#">Bookmarks</a>
+                            <a href="#">@ResourceUtils.GetString("13348442cc6a27032d2b4aa28b75a5d4","Search")</a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>@Html.ActionLink("By Data Source", "Bookmarks", "Home")</li>
-                                <li>@Html.ActionLink("By Categories", "CategBookmarks", "Home")</li>
+                                <li>@Html.ActionLink(@ResourceUtils.GetString("ef53538ae41a651c7f72ab6cb1135d8d", "Members"), "SearchMembers", "Query")</li>
                             </ul>
                         </li>
                     </ul>
-                </li>*@
+                </li>
                 <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("f4f70727dc34561dfde1a3c529b6205d", "Settings")<b class="caret"></b></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("184daff620aca4ad23fd2bf70d0b76b0", "Personal")<b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu">
                         <li class="dropdown-submenu">
-                            <a href="#">@ResourceUtils.GetString("08bd40c7543007ad06e4fce31618f6ed", "Account")</a>
+                            <a href="#">@ResourceUtils.GetString("f4f70727dc34561dfde1a3c529b6205d", "Settings")</a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>@Html.ActionLink(ResourceUtils.GetString("fe7fc019efd9d8c63caa40b65a987050", "Change account info"), "ChangeAccountInfo", "Account")</li>
                                 <li>@Html.ActionLink(ResourceUtils.GetString("19ea043ac4635abf9e611b26e847eda2", "Maintain profile"), "UserDetails", "Account")</li>

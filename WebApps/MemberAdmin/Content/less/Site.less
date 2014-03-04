@@ -230,6 +230,9 @@ table.QueryHead
                 margin: 1px 0; 
                 padding: 3px;
             }
+            label {
+                margin-bottom:0;
+            }
         }
     }
     margin-bottom: 0;
@@ -380,13 +383,40 @@ table.QueryHead
 .EntityListPanel
 {
     clear: both;
+    margin-bottom: 30px;
+    #pagelist {
+        .status {
+            padding: 8px 10px;
+            display:inline-block;
+        }
+        .list {
+            > ul {
+                .pagination();
+                margin-top:0;
+                margin-bottom:0;
+            }
+            display:inline-block;
+            margin: 0;
+            float:right;
+        }
+        margin: 0;
+    }
 }
 
 table.gridview
 {
     .table();
+    margin-bottom: 0;
     thead {
         background-color: @gray-light;
+    }
+    > tbody > tr.selected > td {
+        > a {
+            background-color: lighten(@gray, 5%);
+            color:white;
+        }
+        background-color: lighten(@gray, 5%);
+        color:white;
     }
 }
 
@@ -556,6 +586,77 @@ table.figure-frame
 
 .tabs-content > .content {
    width: 100%;
+}
+
+.user-details {
+    fieldset > legend {
+        font-size: 17px;
+        margin-bottom: 10px;
+    }
+
+    .head {
+        .clearfix();
+
+        .title {
+            background-color: @gray-light;
+
+            h2 {
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            float: left;
+            border-radius: 0 20px 0 0;
+            padding: 0 20px 0 20px;
+        }
+        //text-align: center;
+        padding: 0;
+        border-bottom: 1px solid @gray-light;
+    }
+    .body {
+        .photo {
+            .placeholder {
+                font-size: 360px;
+            }
+
+            img {
+                max-width: 100%;
+                margin: 0;
+            }
+            padding:10px;
+        }
+
+        .list-group-item {
+            > label {
+                padding: 3px 10px;
+                border-right: 1px @gray dotted;
+                margin: 0;
+            }
+
+            padding: 0;
+        }
+
+        .about {
+            border-top: 1px @gray solid;
+            padding: 10px 0;
+            margin: 10px 0;
+        }
+
+        table.attributes {
+            tr > td {
+                border-top: 1px @gray-light solid;
+                padding: 3px 15px;
+            }
+            tr > td:first-child {
+                background-color: @gray-light;
+                width:1px;
+                white-space:nowrap;
+                text-align:right;
+                padding: 3px 5px 3px 15px;
+            }
+        }
+        margin-top: 10px;
+    }
 }
 
 .breadcrumbs .menu 

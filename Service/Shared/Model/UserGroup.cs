@@ -229,6 +229,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null.
         /// </summary>
@@ -337,8 +339,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private string _ParentID = default(string);
 
+#endregion
+
+#region Entities that the current one depend upon.
+
         /// <summary>
-        /// Entity in data set "UserGroups" for <see cref="UserGroup" /> that this entity depend upon.
+        /// Entity in data set "UserGroups" for <see cref="UserGroup" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserGroup.ParentID" /> }.
         /// This is the hierarchic parent entity of the current one for this self-referencing data set.
         /// </summary>
@@ -383,7 +389,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<UserGroup> AutoLoadUpperRef = null;
 
         /// <summary>
-        /// Entity in data set "UserGroupTypes" for <see cref="UserGroupType" /> that this entity depend upon.
+        /// Entity in data set "UserGroupTypes" for <see cref="UserGroupType" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserGroup.GroupTypeID" /> }.
         /// </summary>
         [DataMember]
@@ -424,8 +430,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public Func<UserGroupType> AutoLoadUserGroupTypeRef = null;
 
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="AnnouncementSet" /> for data set "Announcements" of <see cref="Announcement" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.GroupID" /> }.
         /// </summary>
         [DataMember]
 		public AnnouncementSet Announcements
@@ -445,6 +456,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "Announcements" of <see cref="Announcement" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.GroupID" /> }.
         /// </summary>
 		public IEnumerable<Announcement> AnnouncementEnum
 		{
@@ -454,6 +466,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="Announcement" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.GroupID" /> }.
         /// </summary>
         [DataMember]
 		public Announcement[] ChangedAnnouncements
@@ -464,6 +477,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="EventCalendarSet" /> for data set "EventCalendar" of <see cref="EventCalendar" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.GroupID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarSet EventCalendars
@@ -483,6 +497,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "EventCalendar" of <see cref="EventCalendar" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.GroupID" /> }.
         /// </summary>
 		public IEnumerable<EventCalendar> EventCalendarEnum
 		{
@@ -492,6 +507,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="EventCalendar" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.GroupID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendar[] ChangedEventCalendars
@@ -502,6 +518,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserGroupAdminRoleSet" /> for data set "UserGroupAdminRoles" of <see cref="UserGroupAdminRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupAdminRoleSet" /> set is { <see cref="UserGroupAdminRole.GroupID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupAdminRoleSet UserGroupAdminRoles
@@ -521,6 +538,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserGroupAdminRoles" of <see cref="UserGroupAdminRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupAdminRoleSet" /> set is { <see cref="UserGroupAdminRole.GroupID" /> }.
         /// </summary>
 		public IEnumerable<UserGroupAdminRole> UserGroupAdminRoleEnum
 		{
@@ -530,6 +548,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserGroupAdminRole" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupAdminRoleSet" /> set is { <see cref="UserGroupAdminRole.GroupID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupAdminRole[] ChangedUserGroupAdminRoles
@@ -540,6 +559,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserGroupMemberSet" /> for data set "UserGroupMembers" of <see cref="UserGroupMember" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupMemberSet" /> set is { <see cref="UserGroupMember.UserGroupID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupMemberSet UserGroupMembers
@@ -559,6 +579,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserGroupMembers" of <see cref="UserGroupMember" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupMemberSet" /> set is { <see cref="UserGroupMember.UserGroupID" /> }.
         /// </summary>
 		public IEnumerable<UserGroupMember> UserGroupMemberEnum
 		{
@@ -568,6 +589,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserGroupMember" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupMemberSet" /> set is { <see cref="UserGroupMember.UserGroupID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupMember[] ChangedUserGroupMembers
@@ -578,6 +600,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserGroupSet" /> for data set "UserGroups" of <see cref="UserGroup" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.ParentID" /> }.
         /// This is the hierarchic child entity set for this self-referencing data set.
         /// </summary>
         [DataMember]
@@ -598,6 +621,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserGroups" of <see cref="UserGroup" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.ParentID" /> }.
         /// This is the hierarchic child enumeration for this self-referencing data set.
         /// </summary>
 		public IEnumerable<UserGroup> UserGroupEnum
@@ -608,6 +632,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserGroup" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.ParentID" /> }.
+        /// This is the hierarchic child changed set for this self-referencing data one.
         /// </summary>
         [DataMember]
 		public UserGroup[] ChangedUserGroups
@@ -615,6 +641,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).

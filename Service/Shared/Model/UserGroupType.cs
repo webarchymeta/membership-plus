@@ -173,6 +173,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null.
         /// </summary>
@@ -262,8 +264,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isKindLabelModified = false;
 
+#endregion
+
+#region Entities that the current one depend upon.
+
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="UserGroupSet" /> for data set "UserGroups" of <see cref="UserGroup" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.GroupTypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupSet UserGroups
@@ -283,6 +294,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserGroups" of <see cref="UserGroup" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.GroupTypeID" /> }.
         /// </summary>
 		public IEnumerable<UserGroup> UserGroupEnum
 		{
@@ -292,6 +304,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserGroup" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.GroupTypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroup[] ChangedUserGroups
@@ -299,6 +312,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).

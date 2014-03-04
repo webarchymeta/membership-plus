@@ -25,9 +25,23 @@ namespace MemberAdminMvc5.Controllers
         }
 
         [HttpGet]
+        public ActionResult QueryAdminCustomization()
+        {
+            StringBuilder sb = new StringBuilder();
+            _queryCustomization(sb, QueryTokenMap.GetAdminFilters);
+            return ReturnJavascript(sb.ToString());
+        }
+
+        [HttpGet]
         public ActionResult QueryCustomization()
         {
             StringBuilder sb = new StringBuilder();
+            _queryCustomization(sb, QueryTokenMap.GetAppFilters);
+            return ReturnJavascript(sb.ToString());
+        }
+
+        private void _queryCustomization(StringBuilder sb, Func<EntitySetType, SetFilters> getfilters)
+        {
             sb.Append(@"
 function tokenNameMap(tk, entity, isquery) {
     map" + EntitySetType.DatabaseLevel + @"Tokens(tk, isquery);
@@ -40,37 +54,15 @@ function tokenNameMap(tk, entity, isquery) {
                 if (QueryTokenMap[etype] != null)
                 {
                     sb.Append(@"
-        case '" + etype + @"':");
-                    switch (etype)
-                    {
-                        case EntitySetType.User:
-                            {
-                                sb.Append(@"
-            {
-                if (!isquery) {
-                    if (tk.TkName.indexOf('Password') == -1) {
-                        map" + etype + @"Tokens(tk, isquery);
-                    } else {
-                        return false;  // the password related attributes are excluded from sorting;
-                    }
-                } else {
-                    if (tk.TkName.indexOf('Password') == -1 || tk.TkName.indexOf('Password') != -1 && tk.TkName.indexOf('Failed') != -1) {
-                        map" + etype + @"Tokens(tk, isquery);
-                    } else {
-                        return false;  //  the password related attributes are excluded from querying;
-                    }
-                }
-            }");
-                            }
-                            break;
-                        default:
-                            {
-                                sb.Append(@"
-            map" + etype + @"Tokens(tk, isquery);");
-                            }
-                            break;
-                    }
+        case '" + etype + @"':
+            {");
                     sb.Append(@"
+                map" + etype + @"Tokens(tk, isquery);");
+                    var appfilters = getfilters(etype);
+                    if (appfilters != null && appfilters.Filters.Length > 0)
+                        GetFilterSection(appfilters, sb);
+                    sb.Append(@"
+            }
             break;");
                 }
             }
@@ -79,6 +71,76 @@ function tokenNameMap(tk, entity, isquery) {
     return true;
 }
 ");
+            GetMapFunction(sb);
+
+        }
+
+        private void GetFilterSection(SetFilters setFilters, StringBuilder sb)
+        {
+            for (int i = 0; i < setFilters.Filters.Length; i++)
+            {
+                var filter = setFilters.Filters[i];
+                sb.Append(@"
+                " + (i > 0 ? "else " : "") + @"if (");
+                switch(filter.Target)
+                {
+                    case TokenMatchTarget.Sorting:
+                        sb.Append("!isquery && (");
+                        break;
+                    case TokenMatchTarget.Filtering:
+                        sb.Append("isquery && (");
+                        break;
+                }
+                switch(filter.Kind)
+                {
+                    case TokenMatchKind.Equals:
+                        if (!filter.IsCaseSensitive)
+                            sb.Append("tk.TkName.toLowerCase() == '" + filter.FilterExpr + "'.toLowerCase()");
+                        else
+                            sb.Append("tk.TkName. == '" + filter.FilterExpr + "'");
+                        break;
+                    case TokenMatchKind.Contains:
+                        if (!filter.IsCaseSensitive)
+                            sb.Append("tk.TkName.toLowerCase().indexOf('" + filter.FilterExpr + "'.toLowerCase()) != -1");
+                        else
+                            sb.Append("tk.TkName.indexOf('" + filter.FilterExpr + "') != -1");
+                        break;
+                    case TokenMatchKind.StartsWith:
+                        if (!filter.IsCaseSensitive)
+                            sb.Append("tk.TkName.toLowerCase().indexOf('" + filter.FilterExpr + "'.toLowerCase()) == 0");
+                        else
+                            sb.Append("tk.TkName.indexOf('" + filter.FilterExpr + "') == 0");
+                        break;
+                    case TokenMatchKind.EndsWith:
+                        if (!filter.IsCaseSensitive)
+                            sb.Append("tk.TkName.toLowerCase().indexOf('" + filter.FilterExpr + "'.toLowerCase()) == tk.TkName.length - '" + filter.FilterExpr + "'.length");
+                        else
+                            sb.Append("tk.TkName.indexOf('" + filter.FilterExpr + "') == tk.TkName.length - '" + filter.FilterExpr + "'.length");
+                        break;
+                    case TokenMatchKind.Expression:
+                        sb.Append(string.Format(filter.FilterExpr, "tk.TkName"));
+                        break;
+                    case TokenMatchKind.Regex:
+                        sb.Append("tk.TkName.match(" + filter.FilterExpr + ")");
+                        break;
+                }
+                switch (filter.Target)
+                {
+                    case TokenMatchTarget.Sorting:
+                    case TokenMatchTarget.Filtering:
+                        sb.Append(")");
+                        break;
+                }
+                sb.Append(@")
+                    return " + (filter.IsAllowed ? "true" : "false") + @";");
+            }
+            sb.Append(@"
+                else
+                    return " + (setFilters.AllowImplied ? "true" : "false") + @";");
+        }
+
+        private void GetMapFunction(StringBuilder sb)
+        {
             foreach (var _etype in Enum.GetValues(typeof(EntitySetType)))
             {
                 var etype = (EntitySetType)_etype;
@@ -105,8 +167,7 @@ function map" + etype + @"Tokens(tk, isquery) {
 ");
                 }
             }
-            return ReturnJavascript(sb.ToString());
-        }
 
-	}
+        }
+    }
 }

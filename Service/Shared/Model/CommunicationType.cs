@@ -164,6 +164,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null.
         /// </summary>
@@ -231,8 +233,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isTypeNameModified = false;
 
+#endregion
+
+#region Entities that the current one depend upon.
+
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="CommunicationSet" /> for data set "Communications" of <see cref="Communication" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.TypeID" /> }.
         /// </summary>
         [DataMember]
 		public CommunicationSet Communications
@@ -252,6 +263,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "Communications" of <see cref="Communication" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.TypeID" /> }.
         /// </summary>
 		public IEnumerable<Communication> CommunicationEnum
 		{
@@ -261,6 +273,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="Communication" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.TypeID" /> }.
         /// </summary>
         [DataMember]
 		public Communication[] ChangedCommunications
@@ -268,6 +281,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).

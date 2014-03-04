@@ -1,6 +1,6 @@
 ﻿@using Archymeta.Web.Security.Resources;
 @{
-    ViewBag.Title = ResourceUtils.GetString("09a217db8a8b322f55c4a03507b93896", "User Administration");
+    ViewBag.Title = ResourceUtils.GetString("09a217db8a8b322f55c4a03507b93896", "Member Administration");
 }
 @section prestyles
 {
@@ -9,7 +9,7 @@
 @section scripts {
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/knockout")
-    <script src="@Url.Content("~/JavaScript/QueryCustomization")"></script>
+    <script src="@Url.Content("~/JavaScript/QueryAdminCustomization")"></script>
     <script src="@Url.Content("~/Scripts/DataService/UserAdminPage.js")"></script>
     <script type="text/javascript">
         appRoot = '@Url.Content("~/")';
@@ -34,7 +34,7 @@
 }
 <div class="row">
     <div class="col-md-12">
-        <h3><span class="ion-android-contacts"></span>&nbsp;@ResourceUtils.GetString("31fc5c1ba4a0c871af8d9dc52c647824", "User list")</h3>
+        <h3><span class="ion-android-contacts"></span>&nbsp;@ResourceUtils.GetString("2ccebe9b944daa9d72d4710df2f35ded", "Managed Members")</h3>
     </div>
 </div>
 <div class="row">
@@ -112,7 +112,7 @@
                     <!-- /ko -->
                 </td>
                 <td>
-                    <span data-bind="text: data.Email"></span>
+                    <span data-bind="text: member.Email"></span>
                 </td>
                 <td>
                     <span data-bind="text: CurrentMemberStatus"></span>
