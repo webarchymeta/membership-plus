@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Runtime.Serialization;
@@ -17,7 +18,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class DataServiceProxy : IDataServiceProxy
     {
-        public string GetSetInfo(string sourceId, string set)
+        public async Task<string> GetSetInfo(string sourceId, string set)
         {
             JavaScriptSerializer jser = new JavaScriptSerializer();
             dynamic sobj = jser.DeserializeObject(set) as dynamic;
@@ -32,7 +33,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                     case EntitySetType.User:
                         {
                             UserServiceProxy svc = new UserServiceProxy();
-                            var si = svc.GetSetInfo(ApplicationContext.ClientContext, filter);
+                            var si = await svc.GetSetInfoAsync(ApplicationContext.ClientContext, filter);
                             JavaScriptSerializer ser = new JavaScriptSerializer();
                             string json = ser.Serialize(new { EntityCount = si.EntityCount, Sorters = si.Sorters });
                             return json;
@@ -40,7 +41,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                     case EntitySetType.Role:
                         {
                             RoleServiceProxy svc = new RoleServiceProxy();
-                            var si = svc.GetSetInfo(ApplicationContext.ClientContext, filter);
+                            var si = await svc.GetSetInfoAsync(ApplicationContext.ClientContext, filter);
                             JavaScriptSerializer ser = new JavaScriptSerializer();
                             string json = ser.Serialize(new { EntityCount = si.EntityCount, Sorters = si.Sorters });
                             return json;
@@ -50,7 +51,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
             return null;
         }
 
-        public string GetNextSorterOps(string sourceId, string set, string sorters)
+        public async Task<string> GetNextSorterOps(string sourceId, string set, string sorters)
         {
             EntitySetType type;
             if (Enum.TryParse<EntitySetType>(set, out type))
@@ -67,7 +68,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             strm.Position = 0;
                             var _sorters = ser1.ReadObject(strm) as List<QToken>;
                             UserServiceProxy svc = new UserServiceProxy();
-                            var result = svc.GetNextSorterOps(ApplicationContext.ClientContext, _sorters);
+                            var result = await svc.GetNextSorterOpsAsync(ApplicationContext.ClientContext, _sorters);
                             strm = new System.IO.MemoryStream();
                             ser2.WriteObject(strm, result);
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
@@ -83,7 +84,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             strm.Position = 0;
                             var _sorters = ser1.ReadObject(strm) as List<QToken>;
                             RoleServiceProxy svc = new RoleServiceProxy();
-                            var result = svc.GetNextSorterOps(ApplicationContext.ClientContext, _sorters);
+                            var result = await svc.GetNextSorterOpsAsync(ApplicationContext.ClientContext, _sorters);
                             strm = new System.IO.MemoryStream();
                             ser2.WriteObject(strm, result);
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
@@ -94,7 +95,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
             return null;
         }
 
-        public string GetNextFilterOps(string sourceId, string set, string qexpr)
+        public async Task<string> GetNextFilterOps(string sourceId, string set, string qexpr)
         {
             EntitySetType type;
             if (Enum.TryParse<EntitySetType>(set, out type))
@@ -111,7 +112,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             strm.Position = 0;
                             var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
                             UserServiceProxy svc = new UserServiceProxy();
-                            var result = svc.GetNextFilterOps(ApplicationContext.ClientContext, _qexpr, "");
+                            var result = await svc.GetNextFilterOpsAsync(ApplicationContext.ClientContext, _qexpr, "");
                             strm = new System.IO.MemoryStream();
                             ser2.WriteObject(strm, result);
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
@@ -127,7 +128,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             strm.Position = 0;
                             var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
                             RoleServiceProxy svc = new RoleServiceProxy();
-                            var result = svc.GetNextFilterOps(ApplicationContext.ClientContext, _qexpr, "");
+                            var result = await svc.GetNextFilterOpsAsync(ApplicationContext.ClientContext, _qexpr, "");
                             strm = new System.IO.MemoryStream();
                             ser2.WriteObject(strm, result);
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
@@ -138,7 +139,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
             return null;
         }
 
-        public string NextPageBlock(string sourceId, string set, string qexpr, string prevlast)
+        public async Task<string> NextPageBlock(string sourceId, string set, string qexpr, string prevlast)
         {
             JavaScriptSerializer jser = new JavaScriptSerializer();
             dynamic sobj = jser.DeserializeObject(set) as dynamic;
@@ -172,7 +173,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                 strm.Position = 0;
                                 _prevlast = ser2.ReadObject(strm) as User;
                             }
-                            var result = svc.NextPageBlock(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
+                            var result = await svc.NextPageBlockAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
                             strm = new System.IO.MemoryStream();
                             ser3.WriteObject(strm, result);
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
@@ -203,7 +204,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                 strm.Position = 0;
                                 _prevlast = ser2.ReadObject(strm) as Role;
                             }
-                            var result = svc.NextPageBlock(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
+                            var result = await svc.NextPageBlockAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
                             strm = new System.IO.MemoryStream();
                             ser3.WriteObject(strm, result);
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
@@ -214,7 +215,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
             return null;
         }
 
-        public string GetPageItems(string sourceId, string set, string qexpr, string prevlast)
+        public async Task<string> GetPageItems(string sourceId, string set, string qexpr, string prevlast)
         {
             JavaScriptSerializer jser = new JavaScriptSerializer();
             dynamic sobj = jser.DeserializeObject(set) as dynamic;
@@ -248,7 +249,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                 strm.Position = 0;
                                 _prevlast = ser2.ReadObject(strm) as User;
                             }
-                            var result = svc.GetPageItems(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
+                            var result = await svc.GetPageItemsAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
                             var ar = new List<dynamic>();
                             foreach (var e in result)
                             {
@@ -282,7 +283,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                 strm.Position = 0;
                                 _prevlast = ser2.ReadObject(strm) as Role;
                             }
-                            var result = svc.GetPageItems(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
+                            var result = await svc.GetPageItemsAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
                             var ar = new List<dynamic>();
                             foreach (var e in result)
                             {
