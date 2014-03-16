@@ -102,23 +102,51 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Configuration
         }
     }
 
+    public class GlobalRec
+    {
+        public Dictionary<string, TokenMapRec> tokenMaps = new Dictionary<string, TokenMapRec>();
+    }
+
+    public class DataSourceRec
+    {
+        public Dictionary<string, Dictionary<string, TokenMapRec>> TokenMaps = new Dictionary<string, Dictionary<string, TokenMapRec>>();
+        public Dictionary<string, SetFilters> TokenAdminFilters = new Dictionary<string, SetFilters>();
+        public Dictionary<string, SetFilters> TokenAppFilters = new Dictionary<string, SetFilters>();
+
+    }
+
     public class QueryCustomization
     {
-        private Dictionary<EntitySetType, Dictionary<string, TokenMapRec>> tokenMaps = new Dictionary<EntitySetType, Dictionary<string, TokenMapRec>>();
-        private Dictionary<EntitySetType, SetFilters> tokenAdminFilters = new Dictionary<EntitySetType, SetFilters>();
-        private Dictionary<EntitySetType, SetFilters> tokenAppFilters = new Dictionary<EntitySetType, SetFilters>();
+        public GlobalRec GlobalTable = null;
+        public Dictionary<string, DataSourceRec> MapTable = new Dictionary<string, DataSourceRec>();
+        public bool ConfigExists = false;
        
+        private bool IsValidSetName(string src, string set)
+        {
+            switch(src)
+            {
+                case "MembershipPlus":
+                    {
+                        CryptoGateway.RDB.Data.MembershipPlus.EntitySetType x;
+                        return Enum.TryParse<CryptoGateway.RDB.Data.MembershipPlus.EntitySetType>(set, out x);
+                    }
+            }
+            return false;
+        }
+
         public QueryCustomization(XmlNode node)
         {
-            XmlNode xcommon = node.SelectSingleNode("set[@name='']");
+            XmlNode xcommon = node.SelectSingleNode("global");
+            ConfigExists = xcommon != null;
             if (xcommon != null)
             {
-                Dictionary<string, TokenMapRec> maps = new Dictionary<string, TokenMapRec>();
-                tokenMaps.Add(EntitySetType.DatabaseLevel, maps);
+                GlobalTable = new GlobalRec();
+                Dictionary<string, TokenMapRec> maps = GlobalTable.tokenMaps;
                 var xmaps = xcommon.SelectNodes("maps/map");
                 foreach (XmlNode xmap in xmaps)
                 {
-                    string toid = xmap.Attributes["toId"] == null ? null : xmap.Attributes["toId"].Value;
+                    bool glb = xmap.Attributes["globalize"] == null || xmap.Attributes["globalize"].Value.ToLower() == "true";
+                    string toid = xmap.Attributes["to-resId"] == null || !glb ? null : xmap.Attributes["to-resId"].Value;
                     string toname = xmap.Attributes["to"] == null ? "" : xmap.Attributes["to"].Value;
                     if (toid == null)
                         maps.Add(xmap.Attributes["from"].Value, new TokenMapRec { ToName = toname });
@@ -126,21 +154,28 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Configuration
                         maps.Add(xmap.Attributes["from"].Value, new TokenMapRec { ToID = toid });
                 }
             }
-            foreach (var _type in Enum.GetValues(typeof(EntitySetType)))
+            XmlNodeList xdataSrcs = node.SelectNodes("datasource");
+            if (xdataSrcs == null)
+                return;
+            ConfigExists = true;
+            foreach (XmlNode xdatasrc in xdataSrcs)
             {
-                var type = (EntitySetType)_type;
-                if (type == EntitySetType.Unknown || type == EntitySetType.DatabaseLevel)
-                    continue;
-                XmlNode xset = node.SelectSingleNode("set[@name='" + type + "']");
-                if (xset != null)
+                XmlNodeList xsets = xdatasrc.SelectNodes("set");
+                DataSourceRec rec = new DataSourceRec();
+                string src =xdatasrc.Attributes["name"].Value;
+                MapTable.Add(src, rec);
+                foreach (XmlNode xset in xsets)
                 {
+                    string set = xset.Attributes["name"].Value;
+                    if (!IsValidSetName(src, set))
+                        continue;
                     Dictionary<string, TokenMapRec> maps = new Dictionary<string, TokenMapRec>();
-                    tokenMaps.Add(type, maps);
+                    rec.TokenMaps.Add(set, maps);
                     var xmaps = xset.SelectNodes("maps/map");
                     foreach (XmlNode xmap in xmaps)
                     {
                         bool glb = xmap.Attributes["globalize"] == null || xmap.Attributes["globalize"].Value.ToLower() == "true";
-                        string toid = xmap.Attributes["toId"] == null || !glb ? null : xmap.Attributes["toId"].Value;
+                        string toid = xmap.Attributes["to-resId"] == null || !glb ? null : xmap.Attributes["to-resId"].Value;
                         string toname = xmap.Attributes["to"] == null ? "" : xmap.Attributes["to"].Value;
                         if (toid == null)
                             maps.Add(xmap.Attributes["from"].Value, new TokenMapRec { ToName = toname });
@@ -157,7 +192,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Configuration
                         l.Add(getFilter(n, setadminflts.AllowImplied));
                     }
                     setadminflts.Filters = l.ToArray();
-                    tokenAdminFilters.Add(type, setadminflts);
+                    rec.TokenAdminFilters.Add(set, setadminflts);
                     //
                     var xappfilters = xset.SelectSingleNode("filters[@type='app']");
                     SetFilters setappflts = new SetFilters();
@@ -168,7 +203,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Configuration
                         l.Add(getFilter(n, setappflts.AllowImplied));
                     }
                     setappflts.Filters = l.ToArray();
-                    tokenAppFilters.Add(type, setappflts);
+                    rec.TokenAppFilters.Add(set, setappflts);
                 }
             }
         }
@@ -214,33 +249,31 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Configuration
             return filter;
         }
 
-        public Dictionary<string,TokenMapRec> this[string key]
+        public Dictionary<string, Dictionary<string, TokenMapRec>> GetMaps(string src)
         {
-            get
-            {
-                EntitySetType type;
-                if (!Enum.TryParse<EntitySetType>(key, out type))
-                    return null;
-                return this[type];
-            }
+            DataSourceRec rec;
+            if (MapTable.TryGetValue(src, out rec))
+                return rec.TokenMaps;
+            else
+                return null;
         }
 
-        public Dictionary<string, TokenMapRec> this[EntitySetType type]
+        public SetFilters GetAdminFilters(string src, string set)
         {
-            get
-            {
-                return tokenMaps.ContainsKey(type) ? tokenMaps[type] : null;
-            }
+            DataSourceRec rec;
+            if (MapTable.TryGetValue(src, out rec))
+                return rec.TokenAdminFilters.ContainsKey(set) ? rec.TokenAdminFilters[set] : null;
+            else
+                return null;
         }
 
-        public SetFilters GetAdminFilters(EntitySetType type)
+        public SetFilters GetAppFilters(string src, string set)
         {
-            return tokenAdminFilters.ContainsKey(type) ? tokenAdminFilters[type] : null;
-        }
-
-        public SetFilters GetAppFilters(EntitySetType type)
-        {
-            return tokenAppFilters.ContainsKey(type) ? tokenAppFilters[type] : null;
+            DataSourceRec rec;
+            if (MapTable.TryGetValue(src, out rec))
+                return rec.TokenAppFilters.ContainsKey(set) ? rec.TokenAppFilters[set] : null;
+            else
+                return null;
         }
     }
 }

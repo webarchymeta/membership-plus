@@ -51,15 +51,21 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                 strm.Position = 0;
                 _prevlast = ser2.ReadObject(strm) as User;
             }
-            RoleServiceProxy rsvc = new RoleServiceProxy();
             var result = await svc.GetPageItemsAsync(Cntx, _set, _qexpr, _prevlast);
             var ar = new List<dynamic>();
             string appId = ApplicationContext.App.ID;
             UsersInRoleServiceProxy uirsvc = new UsersInRoleServiceProxy();
             foreach (var e in result)
             {
-                var membs = svc.MaterializeAllUserAppMembers(Cntx, e);
-                var memb = (from d in membs where d.ApplicationID == appId select d).SingleOrDefault();
+                //var membs = svc.MaterializeAllUserAppMembers(Cntx, e);
+                //var memb = (from d in membs where d.ApplicationID == appId select d).SingleOrDefault();
+                UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
+                var cond = new UserAppMemberSetConstraints 
+                { 
+                    ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = appId }, 
+                    UserIDWrap = new ForeignKeyData<string> { KeyValue = e.ID } 
+                };
+                var memb = (await mbsvc.ConstraintQueryAsync(Cntx, new UserAppMemberSet(), cond, null)).SingleOrDefault();
                 ar.Add(new { data = e, member = memb, hasIcon = memb != null && !string.IsNullOrEmpty(memb.IconMime) });
             }
             string json = ser3.Serialize(ar);

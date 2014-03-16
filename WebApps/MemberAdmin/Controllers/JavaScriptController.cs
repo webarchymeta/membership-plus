@@ -25,54 +25,65 @@ namespace MemberAdminMvc5.Controllers
         }
 
         [HttpGet]
-        public ActionResult QueryAdminCustomization()
+        public ActionResult QueryAdminCustomization(string src)
         {
+            if (QueryTokenMap == null || !QueryTokenMap.ConfigExists)
+                return new HttpStatusCodeResult(404, "Not Found");
             StringBuilder sb = new StringBuilder();
-            _queryCustomization(sb, QueryTokenMap.GetAdminFilters);
+            if (string.IsNullOrEmpty(src))
+                src = ConfigurationManager.AppSettings["DefaultDataSource"];
+            _queryCustomization(sb, src, QueryTokenMap.GetAdminFilters);
             return ReturnJavascript(sb.ToString());
         }
 
         [HttpGet]
-        public ActionResult QueryCustomization()
+        public ActionResult QueryCustomization(string src)
         {
+            if (QueryTokenMap == null || !QueryTokenMap.ConfigExists)
+                return new HttpStatusCodeResult(404, "Not Found");
             StringBuilder sb = new StringBuilder();
-            _queryCustomization(sb, QueryTokenMap.GetAppFilters);
+            if (string.IsNullOrEmpty(src))
+                src = ConfigurationManager.AppSettings["DefaultDataSource"];
+            _queryCustomization(sb, src, QueryTokenMap.GetAppFilters);
             return ReturnJavascript(sb.ToString());
         }
 
-        private void _queryCustomization(StringBuilder sb, Func<EntitySetType, SetFilters> getfilters)
+        private void _queryCustomization(StringBuilder sb, string src, Func<string, string, SetFilters> getfilters)
         {
             sb.Append(@"
-function tokenNameMap(tk, entity, isquery) {
-    map" + EntitySetType.DatabaseLevel + @"Tokens(tk, isquery);
-    switch (entity) {");
-            foreach (var _etype in Enum.GetValues(typeof(EntitySetType)))
+function tokenNameMap(tk, entity, isquery) {");
+            if (QueryTokenMap.GlobalTable != null)
             {
-                var etype = (EntitySetType)_etype;
-                if (etype == EntitySetType.Unknown || etype == EntitySetType.DatabaseLevel)
-                    continue;
-                if (QueryTokenMap[etype] != null)
+                sb.Append(@"
+    mapCommonTokens(tk, isquery);");
+            }
+            var dic = QueryTokenMap.GetMaps(src);
+            if (dic != null)
+            {
+                sb.Append(@"
+    switch (entity) {");
+                foreach (var kvp in dic)
                 {
                     sb.Append(@"
-        case '" + etype + @"':
+        case '" + kvp.Key + @"':
             {");
                     sb.Append(@"
-                map" + etype + @"Tokens(tk, isquery);");
-                    var appfilters = getfilters(etype);
+                map" + kvp.Key + @"Tokens(tk, isquery);");
+                    var appfilters = getfilters(src, kvp.Key);
                     if (appfilters != null && appfilters.Filters.Length > 0)
                         GetFilterSection(appfilters, sb);
                     sb.Append(@"
             }
             break;");
                 }
+                sb.Append(@"
+    }");
             }
             sb.Append(@"
-    }
     return true;
 }
 ");
-            GetMapFunction(sb);
-
+            GetMapFunction(src, sb);
         }
 
         private void GetFilterSection(SetFilters setFilters, StringBuilder sb)
@@ -139,20 +150,36 @@ function tokenNameMap(tk, entity, isquery) {
                     return " + (setFilters.AllowImplied ? "true" : "false") + @";");
         }
 
-        private void GetMapFunction(StringBuilder sb)
+        private void GetMapFunction(string src, StringBuilder sb)
         {
-            foreach (var _etype in Enum.GetValues(typeof(EntitySetType)))
+            if (QueryTokenMap.GlobalTable != null)
             {
-                var etype = (EntitySetType)_etype;
-                if (etype == EntitySetType.Unknown)
-                    continue;
-                Dictionary<string, TokenMapRec> maps = QueryTokenMap[etype];
-                if (maps != null)
+                sb.Append(@"
+function mapCommonTokens(tk, isquery) {
+    switch (tk.TkName) {");
+                foreach (var kvp in QueryTokenMap.GlobalTable.tokenMaps)
                 {
                     sb.Append(@"
-function map" + etype + @"Tokens(tk, isquery) {
+        case """ + kvp.Key + @""":
+            tk.DisplayAs = '" + (kvp.Value.ToID != null ? ResourceUtils.GetString(StoreTypes.QueryResources, kvp.Value.ToID, kvp.Value.ToName) : kvp.Value.ToName) + @"';
+            break;");
+                }
+                sb.Append(@"
+        default:
+            break;
+    }
+}
+");
+            }
+            var dic = QueryTokenMap.GetMaps(src);
+            if (dic != null)
+            {
+                foreach (var dickvp in dic)
+                {
+                    sb.Append(@"
+function map" + dickvp.Key + @"Tokens(tk, isquery) {
     switch (tk.TkName) {");
-                    foreach (var kvp in maps)
+                    foreach (var kvp in dickvp.Value)
                     {
                         sb.Append(@"
         case """ + kvp.Key + @""":
@@ -167,7 +194,6 @@ function map" + etype + @"Tokens(tk, isquery) {
 ");
                 }
             }
-
         }
     }
 }
