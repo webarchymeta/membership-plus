@@ -14,12 +14,12 @@ namespace Archymeta.Web.Security
 {
     public class ApplicationUser : User, IApplicationUser, IIdentity
     {
-        string IUser.Id
+        string IUser<string>.Id
         {
             get { return ID; }
         }
 
-        string IUser.UserName
+        string IUser<string>.UserName
         {
             get
             {
