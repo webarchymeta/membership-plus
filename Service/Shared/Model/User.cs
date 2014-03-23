@@ -151,6 +151,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="User.EventCalendar_CreatedUserIDs" />, which is a sub-set of the data set "EventCalendar" for <see cref="EventCalendar" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>MemberNotifications</term>
+    ///      <description>See <see cref="User.MemberNotifications" />, which is a sub-set of the data set "MemberNotifications" for <see cref="MemberNotification" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserAppMembers</term>
     ///      <description>See <see cref="User.UserAppMembers" />, which is a sub-set of the data set "UserAppMembers" for <see cref="UserAppMember" />.</description>
     ///    </item>
@@ -1097,7 +1101,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #endregion
 
-#region Entities that the current one depend upon.
+#region Entities that the current one depends upon.
 
 #endregion
 
@@ -1262,6 +1266,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [DataMember]
 		public EventCalendar[] ChangedEventCalendar_CreatedUserIDs
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="MemberNotificationSet" /> for data set "MemberNotifications" of <see cref="MemberNotification" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="MemberNotificationSet" /> set is { <see cref="MemberNotification.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public MemberNotificationSet MemberNotifications
+		{
+			get
+			{
+                if (_MemberNotifications == null)
+                    _MemberNotifications = new MemberNotificationSet();
+				return _MemberNotifications;
+			}
+            set
+            {
+                _MemberNotifications = value;
+            }
+		}
+		private MemberNotificationSet _MemberNotifications = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "MemberNotifications" of <see cref="MemberNotification" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="MemberNotificationSet" /> set is { <see cref="MemberNotification.UserID" /> }.
+        /// </summary>
+		public IEnumerable<MemberNotification> MemberNotificationEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="MemberNotification" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="MemberNotificationSet" /> set is { <see cref="MemberNotification.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public MemberNotification[] ChangedMemberNotifications
 		{
 			get;
             set;

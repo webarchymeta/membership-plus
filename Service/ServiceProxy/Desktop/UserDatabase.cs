@@ -132,7 +132,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="UserServiceProxy.MaterializeAnnouncements" />, <see cref="UserServiceProxy.MaterializeCommunications" />, <see cref="UserServiceProxy.MaterializeEventCalendar_UserIDs" />, <see cref="UserServiceProxy.MaterializeEventCalendar_CreatedUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAppMembers" />, <see cref="UserServiceProxy.MaterializeUserAssociation_FromUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssociation_ToUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssocInvitation_FromUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssocInvitation_ToUserIDs" />, <see cref="UserServiceProxy.MaterializeUserDetails" />, <see cref="UserServiceProxy.MaterializeUserGroupMembers" />, <see cref="UserServiceProxy.MaterializeUserProfiles" />, <see cref="UserServiceProxy.MaterializeUsersInRole_UserIDs" />, <see cref="UserServiceProxy.MaterializeUsersInRole_AdminIDs" />, <see cref="UserServiceProxy.MaterializeUsersRoleHistory_UserIDs" />, <see cref="UserServiceProxy.MaterializeUsersRoleHistory_OperatorIDs" />.
+    ///        <see cref="UserServiceProxy.MaterializeAnnouncements" />, <see cref="UserServiceProxy.MaterializeCommunications" />, <see cref="UserServiceProxy.MaterializeEventCalendar_UserIDs" />, <see cref="UserServiceProxy.MaterializeEventCalendar_CreatedUserIDs" />, <see cref="UserServiceProxy.MaterializeMemberNotifications" />, <see cref="UserServiceProxy.MaterializeUserAppMembers" />, <see cref="UserServiceProxy.MaterializeUserAssociation_FromUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssociation_ToUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssocInvitation_FromUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssocInvitation_ToUserIDs" />, <see cref="UserServiceProxy.MaterializeUserDetails" />, <see cref="UserServiceProxy.MaterializeUserGroupMembers" />, <see cref="UserServiceProxy.MaterializeUserProfiles" />, <see cref="UserServiceProxy.MaterializeUsersInRole_UserIDs" />, <see cref="UserServiceProxy.MaterializeUsersInRole_AdminIDs" />, <see cref="UserServiceProxy.MaterializeUsersRoleHistory_UserIDs" />, <see cref="UserServiceProxy.MaterializeUsersRoleHistory_OperatorIDs" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -254,7 +254,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -301,7 +301,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -359,7 +359,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -415,7 +415,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1118,6 +1118,100 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             try
             {
                 return await Channel.MaterializeAllEventCalendar_CreatedUserIDsAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "MemberNotifications" of type <see cref="MemberNotificationSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="MemberNotificationSet" />.
+        /// </returns>
+        public MemberNotificationSet MaterializeMemberNotifications(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeMemberNotifications(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "MemberNotifications" of type <see cref="MemberNotificationSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="MemberNotificationSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<MemberNotificationSet> MaterializeMemberNotificationsAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return await Channel.MaterializeMemberNotificationsAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllMemberNotifications" of type <see cref="IEnumerable{MemberNotification}" /> (T = <see cref="MemberNotification" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{MemberNotification}" /> (T = <see cref="MemberNotification" />).
+        /// </returns>
+        public IEnumerable<MemberNotification> MaterializeAllMemberNotifications(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllMemberNotifications(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllMemberNotifications" of type <see cref="IEnumerable{MemberNotification}" /> (T = <see cref="MemberNotification" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{MemberNotification}" /> (T = <see cref="MemberNotification" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<MemberNotification>> MaterializeAllMemberNotificationsAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return await Channel.MaterializeAllMemberNotificationsAsync(cntx, entity.ShallowCopy());
             }
             catch (Exception ex)
             {
@@ -2622,20 +2716,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <para>Relational databases are designed to serve as data query and storage backend, in a normalized way, for certain kind of applications. 
         /// However at the application level, normalized elementary data sets are often combined (jointed) in a user friendly way as views. In the object oriented 
         /// world and at the data view model level, these views can be represented using entity graphs.</para>
-        /// <para>This method is designed to load a selected sub entity graph recursively starting from a given entity (id) from the data source in one call 
-        /// to the service, which could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
-        /// <para>The selection is controlled by the two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
+        /// <para>This method is designed to load a selected sub entity graph recursively from the data source in one call to the service starting with a given entity (id).
+        /// It could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
+        /// <para>The selection is controlled by two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
         /// <para>The <paramref name="excludedSets" /> parameter is used to exclude a list of entity sets and all other sets that depend on it. This can be
         /// better understood if one has a look at the schematic view of the data set schema that is shown on the front page of the data service, namely
         /// if one date set (node) is excluded then all the sets that it points to will not be reached through it, although some of them could still be reached
         /// following other routes. </para>
         /// <para>There are many ways an entity sub-graph can be loaded, the present implementation is based on the rule to be given next. Namely, starting from 
-        /// entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also load all 
+        /// the entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also loads all 
         /// elements that any of the elements visited by the downward recursion depends upon, recursively upward (namely in 
         /// the opposite direction of the arrows in the schema view), but never go downward again without explicit instruction.</para>
         /// <para>The <paramref name="futherDrillSets" /> parameter is used control when to go downward again, represented by the <see cref="EntitySetRelation.SetType" /> member 
         /// and the collection of data sets that depend on it, represented by the <see cref="EntitySetRelation.RelatedSets" /> member, should be further drilled down, recursively.</para>
-        /// <para>Note that a data service has intrinsic limits that does not allow transimitting an entity graph that is too large in one call, so one has to select which part
+        /// <para>Note that a data service has intrinsic limits that do not allow transmitting an entity graph that is too large in one call, so one has to select which part
         /// of the entire graph should be loaded in each call to the data service,</para>
         /// <para>For a given entity, the entities that it depends upon are represented by the member objects corresponding to each foreign keys. However, the
         /// sets of entities that depend on the said entity are stored into the corresponding collection members having the "Changed" prefix and
@@ -2670,20 +2764,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <para>Relational databases are designed to serve as data query and storage backend, in a normalized way, for certain kind of applications. 
         /// However at the application level, normalized elementary data sets are often combined (jointed) in a user friendly way as views. In the object oriented 
         /// world and at the data view model level, these views can be represented using entity graphs.</para>
-        /// <para>This method is designed to load a selected sub entity graph recursively starting from a given entity (id) from the data source in one call 
-        /// to the service, which could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
-        /// <para>The selection is controlled by the two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
+        /// <para>This method is designed to load a selected sub entity graph recursively from the data source in one call to the service starting with a given entity (id).
+        /// It could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
+        /// <para>The selection is controlled by two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
         /// <para>The <paramref name="excludedSets" /> parameter is used to exclude a list of entity sets and all other sets that depend on it. This can be
         /// better understood if one has a look at the schematic view of the data set schema that is shown on the front page of the data service, namely
         /// if one date set (node) is excluded then all the sets that it points to will not be reached through it, although some of them could still be reached
         /// following other routes. </para>
         /// <para>There are many ways an entity sub-graph can be loaded, the present implementation is based on the rule to be given next. Namely, starting from 
-        /// entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also load all 
+        /// the entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also loads all 
         /// elements that any of the elements visited by the downward recursion depends upon, recursively upward (namely in 
         /// the opposite direction of the arrows in the schema view), but never go downward again without explicit instruction.</para>
         /// <para>The <paramref name="futherDrillSets" /> parameter is used control when to go downward again, represented by the <see cref="EntitySetRelation.SetType" /> member 
         /// and the collection of data sets that depend on it, represented by the <see cref="EntitySetRelation.RelatedSets" /> member, should be further drilled down, recursively.</para>
-        /// <para>Note that a data service has intrinsic limits that does not allow transimitting an entity graph that is too large in one call, so one has to select which part
+        /// <para>Note that a data service has intrinsic limits that do not allow transmitting an entity graph that is too large in one call, so one has to select which part
         /// of the entire graph should be loaded in each call to the data service,</para>
         /// <para>For a given entity, the entities that it depends upon are represented by the member objects corresponding to each foreign keys. However, the
         /// sets of entities that depend on the said entity are stored into the corresponding collection members having the "Changed" prefix and

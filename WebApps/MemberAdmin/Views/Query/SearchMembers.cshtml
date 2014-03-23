@@ -24,7 +24,7 @@
                 return true;
             }
             userSet = new UserSet(serviceUrl);
-            userSet.SetFilter = 'UserAppMember.Application_Ref.Name == "' + appName + '"';
+            userSet.SetFilter = 'UserAppMember.Application_Ref.Name == "' + appName + '" && ( UserAppMember.SearchListing is null || UserAppMember.SearchListing == true )';
             userSet.GetSetInfo();
             ko.applyBindings(userSet);
             initsortinput(userSet);

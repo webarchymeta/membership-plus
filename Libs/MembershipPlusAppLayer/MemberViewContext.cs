@@ -80,6 +80,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             {
                 EntitySetType.Announcement,
                 EntitySetType.EventCalendar,
+                EntitySetType.MemberNotification,
                 //EntitySetType.UserAppMember,
                 EntitySetType.UserAssociation,
                 EntitySetType.UserAssocInvitation,

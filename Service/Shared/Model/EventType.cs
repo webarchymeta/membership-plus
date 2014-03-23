@@ -235,7 +235,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #endregion
 
-#region Entities that the current one depend upon.
+#region Entities that the current one depends upon.
 
 #endregion
 

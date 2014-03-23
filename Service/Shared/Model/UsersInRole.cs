@@ -410,7 +410,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #endregion
 
-#region Entities that the current one depend upon.
+#region Entities that the current one depends upon.
 
         /// <summary>
         /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon through .

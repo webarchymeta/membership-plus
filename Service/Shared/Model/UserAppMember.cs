@@ -69,6 +69,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="UserAppMember.Comment" />. Editable; nullable; load delayed.</description>
     ///    </item>
     ///    <item>
+    ///      <term>ConnectionID</term>
+    ///      <description>See <see cref="UserAppMember.ConnectionID" />. Editable; nullable; max-length = 50 characters.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>IconImg</term>
     ///      <description>See <see cref="UserAppMember.IconImg" />. Editable; nullable; load delayed.</description>
     ///    </item>
@@ -91,6 +95,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>MemberStatus</term>
     ///      <description>See <see cref="UserAppMember.MemberStatus" />. Editable; nullable; max-length = 50 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>SearchListing</term>
+    ///      <description>See <see cref="UserAppMember.SearchListing" />. Editable; nullable.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -370,6 +378,49 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private bool _isCommentLoaded = false;
 
         /// <summary>
+        /// Meta-info: editable; nullable; max-length = 50 characters.
+        /// </summary>
+        [Editable(true)]
+        [StringLength(50)]
+        [DataMember(IsRequired = false)]
+        public string ConnectionID
+        { 
+            get
+            {
+                return _ConnectionID;
+            }
+            set
+            {
+                if (_ConnectionID != value)
+                {
+                    _ConnectionID = value;
+                    if (!IsInitializing)
+                        IsConnectionIDModified = true;
+                }
+            }
+        }
+        private string _ConnectionID = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="ConnectionID" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="ConnectionID" /> only if this is set to true no matter what
+        /// the actual value of <see cref="ConnectionID" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsConnectionIDModified
+        { 
+            get
+            {
+                return _isConnectionIDModified;
+            }
+            set
+            {
+                _isConnectionIDModified = value;
+            }
+        }
+        private bool _isConnectionIDModified = false;
+
+        /// <summary>
         /// Meta-info: editable; nullable; load delayed.
         /// </summary>
         [Editable(true)]
@@ -641,9 +692,51 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isMemberStatusModified = false;
 
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> SearchListing
+        { 
+            get
+            {
+                return _SearchListing;
+            }
+            set
+            {
+                if (_SearchListing != value)
+                {
+                    _SearchListing = value;
+                    if (!IsInitializing)
+                        IsSearchListingModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _SearchListing = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="SearchListing" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="SearchListing" /> only if this is set to true no matter what
+        /// the actual value of <see cref="SearchListing" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsSearchListingModified
+        { 
+            get
+            {
+                return _isSearchListingModified;
+            }
+            set
+            {
+                _isSearchListingModified = value;
+            }
+        }
+        private bool _isSearchListingModified = false;
+
 #endregion
 
-#region Entities that the current one depend upon.
+#region Entities that the current one depends upon.
 
         /// <summary>
         /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon through .
@@ -789,6 +882,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.Comment = from.Comment;
                     to.IsCommentModified = true;
                 }
+                if (from.IsConnectionIDModified && !to.IsConnectionIDModified)
+                {
+                    to.ConnectionID = from.ConnectionID;
+                    to.IsConnectionIDModified = true;
+                }
                 if (from.IsIconImgModified && !to.IsIconImgModified)
                 {
                     to.IconImg = from.IconImg;
@@ -819,6 +917,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.MemberStatus = from.MemberStatus;
                     to.IsMemberStatusModified = true;
                 }
+                if (from.IsSearchListingModified && !to.IsSearchListingModified)
+                {
+                    to.SearchListing = from.SearchListing;
+                    to.IsSearchListingModified = true;
+                }
             }
             else
             {
@@ -829,6 +932,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.IsEmailModified = from.IsEmailModified;
                 to.Comment = from.Comment;
                 to.IsCommentModified = from.IsCommentModified;
+                to.ConnectionID = from.ConnectionID;
+                to.IsConnectionIDModified = from.IsConnectionIDModified;
                 to.IconImg = from.IconImg;
                 to.IsIconImgModified = from.IsIconImgModified;
                 to.IconLastModified = from.IconLastModified;
@@ -841,6 +946,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.IsLastStatusChangeModified = from.IsLastStatusChangeModified;
                 to.MemberStatus = from.MemberStatus;
                 to.IsMemberStatusModified = from.IsMemberStatusModified;
+                to.SearchListing = from.SearchListing;
+                to.IsSearchListingModified = from.IsSearchListingModified;
             }
         }
 
@@ -863,6 +970,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 Comment = newdata.Comment;
                 IsCommentModified = true;
+                cnt++;
+            }
+            if (ConnectionID != newdata.ConnectionID)
+            {
+                ConnectionID = newdata.ConnectionID;
+                IsConnectionIDModified = true;
                 cnt++;
             }
             bool bIconImg = IconImg == null && newdata.IconImg != null ||
@@ -913,6 +1026,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsMemberStatusModified = true;
                 cnt++;
             }
+            if (SearchListing != newdata.SearchListing)
+            {
+                SearchListing = newdata.SearchListing;
+                IsSearchListingModified = true;
+                cnt++;
+            }
             IsEntityChanged = cnt > 0;
         }
 
@@ -925,7 +1044,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (Email == null)
                 Email = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsEmailModified || IsCommentModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified;
+                IsEntityChanged = IsEmailModified || IsCommentModified || IsConnectionIDModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
             if (IsCommentModified && !IsCommentLoaded)
                 IsCommentLoaded = true;
             if (IsIconImgModified && !IsIconImgLoaded)
@@ -943,11 +1062,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.ApplicationID = ApplicationID;
             e.UserID = UserID;
             e.Email = Email;
+            e.ConnectionID = ConnectionID;
             e.IconLastModified = IconLastModified;
             e.IconMime = IconMime;
             e.LastActivityDate = LastActivityDate;
             e.LastStatusChange = LastStatusChange;
             e.MemberStatus = MemberStatus;
+            e.SearchListing = SearchListing;
             if (allData)
             {
                 e.Comment = Comment;
@@ -980,6 +1101,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
+  ConnectionID = '" + (ConnectionID != null ? ConnectionID : "null") + @"'");
+            if (IsConnectionIDModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
   IconLastModified = " + (IconLastModified.HasValue ? IconLastModified.Value.ToString() : "null") + @"");
             if (IsIconLastModifiedModified)
                 sb.Append(@" (modified)");
@@ -1006,6 +1133,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@"
   MemberStatus = '" + (MemberStatus != null ? MemberStatus : "null") + @"'");
             if (IsMemberStatusModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  SearchListing = " + (SearchListing.HasValue ? SearchListing.Value.ToString() : "null") + @"");
+            if (IsSearchListingModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");

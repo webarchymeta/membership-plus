@@ -52,193 +52,201 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Interface\IJointSet.cs" />
-    <Compile Include="Interface\IAnnouncementService.cs" />
-    <Compile Include="Model\AnnouncementSet.cs" />
-    <Compile Include="Model\AnnouncementPage.cs">
-      <DependentUpon>AnnouncementSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Announcement.cs">
-      <DependentUpon>AnnouncementPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IApplication_Service.cs" />
-    <Compile Include="Model\Application_Set.cs" />
-    <Compile Include="Model\Application_Page.cs">
-      <DependentUpon>Application_Set.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Application_.cs">
-      <DependentUpon>Application_Page.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\ICommunicationService.cs" />
-    <Compile Include="Model\CommunicationSet.cs" />
-    <Compile Include="Model\CommunicationPage.cs">
-      <DependentUpon>CommunicationSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Communication.cs">
-      <DependentUpon>CommunicationPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\ICommunicationTypeService.cs" />
-    <Compile Include="Model\CommunicationTypeSet.cs" />
-    <Compile Include="Model\CommunicationTypePage.cs">
-      <DependentUpon>CommunicationTypeSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\CommunicationType.cs">
-      <DependentUpon>CommunicationTypePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IEventCalendarService.cs" />
-    <Compile Include="Model\EventCalendarSet.cs" />
-    <Compile Include="Model\EventCalendarPage.cs">
-      <DependentUpon>EventCalendarSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\EventCalendar.cs">
-      <DependentUpon>EventCalendarPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IEventCalendarShareCircleService.cs" />
-    <Compile Include="Model\EventCalendarShareCircleSet.cs" />
-    <Compile Include="Model\EventCalendarShareCirclePage.cs">
-      <DependentUpon>EventCalendarShareCircleSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\EventCalendarShareCircle.cs">
-      <DependentUpon>EventCalendarShareCirclePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IEventTypeService.cs" />
-    <Compile Include="Model\EventTypeSet.cs" />
-    <Compile Include="Model\EventTypePage.cs">
-      <DependentUpon>EventTypeSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\EventType.cs">
-      <DependentUpon>EventTypePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IRoleService.cs" />
-    <Compile Include="Model\RoleSet.cs" />
-    <Compile Include="Model\RolePage.cs">
-      <DependentUpon>RoleSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Role.cs">
-      <DependentUpon>RolePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserAppMemberService.cs" />
-    <Compile Include="Model\UserAppMemberSet.cs" />
-    <Compile Include="Model\UserAppMemberPage.cs">
-      <DependentUpon>UserAppMemberSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserAppMember.cs">
-      <DependentUpon>UserAppMemberPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserAssociationService.cs" />
-    <Compile Include="Model\UserAssociationSet.cs" />
-    <Compile Include="Model\UserAssociationPage.cs">
-      <DependentUpon>UserAssociationSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserAssociation.cs">
-      <DependentUpon>UserAssociationPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserAssociationTypeService.cs" />
-    <Compile Include="Model\UserAssociationTypeSet.cs" />
-    <Compile Include="Model\UserAssociationTypePage.cs">
-      <DependentUpon>UserAssociationTypeSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserAssociationType.cs">
-      <DependentUpon>UserAssociationTypePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserAssocInvitationService.cs" />
-    <Compile Include="Model\UserAssocInvitationSet.cs" />
-    <Compile Include="Model\UserAssocInvitationPage.cs">
-      <DependentUpon>UserAssocInvitationSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserAssocInvitation.cs">
-      <DependentUpon>UserAssocInvitationPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserDetailService.cs" />
-    <Compile Include="Model\UserDetailSet.cs" />
-    <Compile Include="Model\UserDetailPage.cs">
-      <DependentUpon>UserDetailSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserDetail.cs">
-      <DependentUpon>UserDetailPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserGroupAdminRoleService.cs" />
-    <Compile Include="Model\UserGroupAdminRoleSet.cs" />
-    <Compile Include="Model\UserGroupAdminRolePage.cs">
-      <DependentUpon>UserGroupAdminRoleSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserGroupAdminRole.cs">
-      <DependentUpon>UserGroupAdminRolePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserGroupMemberService.cs" />
-    <Compile Include="Model\UserGroupMemberSet.cs" />
-    <Compile Include="Model\UserGroupMemberPage.cs">
-      <DependentUpon>UserGroupMemberSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserGroupMember.cs">
-      <DependentUpon>UserGroupMemberPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserGroupService.cs" />
-    <Compile Include="Model\UserGroupSet.cs" />
-    <Compile Include="Model\UserGroupPage.cs">
-      <DependentUpon>UserGroupSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserGroup.cs">
-      <DependentUpon>UserGroupPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserGroupTypeService.cs" />
-    <Compile Include="Model\UserGroupTypeSet.cs" />
-    <Compile Include="Model\UserGroupTypePage.cs">
-      <DependentUpon>UserGroupTypeSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserGroupType.cs">
-      <DependentUpon>UserGroupTypePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserProfileService.cs" />
-    <Compile Include="Model\UserProfileSet.cs" />
-    <Compile Include="Model\UserProfilePage.cs">
-      <DependentUpon>UserProfileSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserProfile.cs">
-      <DependentUpon>UserProfilePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserProfileTypeService.cs" />
-    <Compile Include="Model\UserProfileTypeSet.cs" />
-    <Compile Include="Model\UserProfileTypePage.cs">
-      <DependentUpon>UserProfileTypeSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UserProfileType.cs">
-      <DependentUpon>UserProfileTypePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUserService.cs" />
-    <Compile Include="Model\UserSet.cs" />
-    <Compile Include="Model\UserPage.cs">
-      <DependentUpon>UserSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\User.cs">
-      <DependentUpon>UserPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUsersInRoleService.cs" />
-    <Compile Include="Model\UsersInRoleSet.cs" />
-    <Compile Include="Model\UsersInRolePage.cs">
-      <DependentUpon>UsersInRoleSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UsersInRole.cs">
-      <DependentUpon>UsersInRolePage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IUsersRoleHistoryService.cs" />
-    <Compile Include="Model\UsersRoleHistorySet.cs" />
-    <Compile Include="Model\UsersRoleHistoryPage.cs">
-      <DependentUpon>UsersRoleHistorySet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\UsersRoleHistory.cs">
-      <DependentUpon>UsersRoleHistoryPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\IMembershipPlusService.cs" />
-    <Compile Include="Interface\IMembershipPlusImportProvider.cs" />
-    <Compile Include="Model\DatabaseContext.cs" />
-    <Compile Include="Common\CallContext.cs" />
-    <Compile Include="Common\QueryExpressions.cs" />
-    <Compile Include="Common\EntityAbsNode.cs" />
-    <Compile Include="Common\Utils.cs" />
-    <Compile Include="Model\MembershipPlusEnumModels.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Interface\IJointSet.cs" />
+        <Compile Include="Interface\IAnnouncementService.cs" />
+        <Compile Include="Model\AnnouncementSet.cs" />
+        <Compile Include="Model\AnnouncementPage.cs">
+            <DependentUpon>AnnouncementSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\Announcement.cs">
+            <DependentUpon>AnnouncementPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IApplication_Service.cs" />
+        <Compile Include="Model\Application_Set.cs" />
+        <Compile Include="Model\Application_Page.cs">
+            <DependentUpon>Application_Set.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\Application_.cs">
+            <DependentUpon>Application_Page.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\ICommunicationService.cs" />
+        <Compile Include="Model\CommunicationSet.cs" />
+        <Compile Include="Model\CommunicationPage.cs">
+            <DependentUpon>CommunicationSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\Communication.cs">
+            <DependentUpon>CommunicationPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\ICommunicationTypeService.cs" />
+        <Compile Include="Model\CommunicationTypeSet.cs" />
+        <Compile Include="Model\CommunicationTypePage.cs">
+            <DependentUpon>CommunicationTypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\CommunicationType.cs">
+            <DependentUpon>CommunicationTypePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IEventCalendarService.cs" />
+        <Compile Include="Model\EventCalendarSet.cs" />
+        <Compile Include="Model\EventCalendarPage.cs">
+            <DependentUpon>EventCalendarSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\EventCalendar.cs">
+            <DependentUpon>EventCalendarPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IEventCalendarShareCircleService.cs" />
+        <Compile Include="Model\EventCalendarShareCircleSet.cs" />
+        <Compile Include="Model\EventCalendarShareCirclePage.cs">
+            <DependentUpon>EventCalendarShareCircleSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\EventCalendarShareCircle.cs">
+            <DependentUpon>EventCalendarShareCirclePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IEventTypeService.cs" />
+        <Compile Include="Model\EventTypeSet.cs" />
+        <Compile Include="Model\EventTypePage.cs">
+            <DependentUpon>EventTypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\EventType.cs">
+            <DependentUpon>EventTypePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IMemberNotificationService.cs" />
+        <Compile Include="Model\MemberNotificationSet.cs" />
+        <Compile Include="Model\MemberNotificationPage.cs">
+            <DependentUpon>MemberNotificationSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\MemberNotification.cs">
+            <DependentUpon>MemberNotificationPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IRoleService.cs" />
+        <Compile Include="Model\RoleSet.cs" />
+        <Compile Include="Model\RolePage.cs">
+            <DependentUpon>RoleSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\Role.cs">
+            <DependentUpon>RolePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserAppMemberService.cs" />
+        <Compile Include="Model\UserAppMemberSet.cs" />
+        <Compile Include="Model\UserAppMemberPage.cs">
+            <DependentUpon>UserAppMemberSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserAppMember.cs">
+            <DependentUpon>UserAppMemberPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserAssociationService.cs" />
+        <Compile Include="Model\UserAssociationSet.cs" />
+        <Compile Include="Model\UserAssociationPage.cs">
+            <DependentUpon>UserAssociationSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserAssociation.cs">
+            <DependentUpon>UserAssociationPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserAssociationTypeService.cs" />
+        <Compile Include="Model\UserAssociationTypeSet.cs" />
+        <Compile Include="Model\UserAssociationTypePage.cs">
+            <DependentUpon>UserAssociationTypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserAssociationType.cs">
+            <DependentUpon>UserAssociationTypePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserAssocInvitationService.cs" />
+        <Compile Include="Model\UserAssocInvitationSet.cs" />
+        <Compile Include="Model\UserAssocInvitationPage.cs">
+            <DependentUpon>UserAssocInvitationSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserAssocInvitation.cs">
+            <DependentUpon>UserAssocInvitationPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserDetailService.cs" />
+        <Compile Include="Model\UserDetailSet.cs" />
+        <Compile Include="Model\UserDetailPage.cs">
+            <DependentUpon>UserDetailSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserDetail.cs">
+            <DependentUpon>UserDetailPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserGroupAdminRoleService.cs" />
+        <Compile Include="Model\UserGroupAdminRoleSet.cs" />
+        <Compile Include="Model\UserGroupAdminRolePage.cs">
+            <DependentUpon>UserGroupAdminRoleSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserGroupAdminRole.cs">
+            <DependentUpon>UserGroupAdminRolePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserGroupMemberService.cs" />
+        <Compile Include="Model\UserGroupMemberSet.cs" />
+        <Compile Include="Model\UserGroupMemberPage.cs">
+            <DependentUpon>UserGroupMemberSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserGroupMember.cs">
+            <DependentUpon>UserGroupMemberPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserGroupService.cs" />
+        <Compile Include="Model\UserGroupSet.cs" />
+        <Compile Include="Model\UserGroupPage.cs">
+            <DependentUpon>UserGroupSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserGroup.cs">
+            <DependentUpon>UserGroupPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserGroupTypeService.cs" />
+        <Compile Include="Model\UserGroupTypeSet.cs" />
+        <Compile Include="Model\UserGroupTypePage.cs">
+            <DependentUpon>UserGroupTypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserGroupType.cs">
+            <DependentUpon>UserGroupTypePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserProfileService.cs" />
+        <Compile Include="Model\UserProfileSet.cs" />
+        <Compile Include="Model\UserProfilePage.cs">
+            <DependentUpon>UserProfileSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserProfile.cs">
+            <DependentUpon>UserProfilePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserProfileTypeService.cs" />
+        <Compile Include="Model\UserProfileTypeSet.cs" />
+        <Compile Include="Model\UserProfileTypePage.cs">
+            <DependentUpon>UserProfileTypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UserProfileType.cs">
+            <DependentUpon>UserProfileTypePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUserService.cs" />
+        <Compile Include="Model\UserSet.cs" />
+        <Compile Include="Model\UserPage.cs">
+            <DependentUpon>UserSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\User.cs">
+            <DependentUpon>UserPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUsersInRoleService.cs" />
+        <Compile Include="Model\UsersInRoleSet.cs" />
+        <Compile Include="Model\UsersInRolePage.cs">
+            <DependentUpon>UsersInRoleSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UsersInRole.cs">
+            <DependentUpon>UsersInRolePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IUsersRoleHistoryService.cs" />
+        <Compile Include="Model\UsersRoleHistorySet.cs" />
+        <Compile Include="Model\UsersRoleHistoryPage.cs">
+            <DependentUpon>UsersRoleHistorySet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\UsersRoleHistory.cs">
+            <DependentUpon>UsersRoleHistoryPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IMembershipPlusService.cs" />
+        <Compile Include="Interface\IMembershipPlusImportProvider.cs" />
+        <Compile Include="Model\DatabaseContext.cs" />
+        <Compile Include="Common\CallContext.cs" />
+        <Compile Include="Common\QueryExpressions.cs" />
+        <Compile Include="Common\EntityAbsNode.cs" />
+        <Compile Include="Common\Utils.cs" />
+        <Compile Include="Model\MembershipPlusEnumModels.cs" />
+    </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
