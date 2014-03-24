@@ -65,6 +65,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="UserAppMember.Email" />. Editable; not null; max-length = 128 characters.</description>
     ///    </item>
     ///    <item>
+    ///      <term>AcceptLanguages</term>
+    ///      <description>See <see cref="UserAppMember.AcceptLanguages" />. Editable; nullable; max-length = 50 characters.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>Comment</term>
     ///      <description>See <see cref="UserAppMember.Comment" />. Editable; nullable; load delayed.</description>
     ///    </item>
@@ -316,6 +320,49 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isEmailModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable; max-length = 50 characters.
+        /// </summary>
+        [Editable(true)]
+        [StringLength(50)]
+        [DataMember(IsRequired = false)]
+        public string AcceptLanguages
+        { 
+            get
+            {
+                return _AcceptLanguages;
+            }
+            set
+            {
+                if (_AcceptLanguages != value)
+                {
+                    _AcceptLanguages = value;
+                    if (!IsInitializing)
+                        IsAcceptLanguagesModified = true;
+                }
+            }
+        }
+        private string _AcceptLanguages = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="AcceptLanguages" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="AcceptLanguages" /> only if this is set to true no matter what
+        /// the actual value of <see cref="AcceptLanguages" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsAcceptLanguagesModified
+        { 
+            get
+            {
+                return _isAcceptLanguagesModified;
+            }
+            set
+            {
+                _isAcceptLanguagesModified = value;
+            }
+        }
+        private bool _isAcceptLanguagesModified = false;
 
         /// <summary>
         /// Meta-info: editable; nullable; load delayed.
@@ -877,6 +924,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.Email = from.Email;
                     to.IsEmailModified = true;
                 }
+                if (from.IsAcceptLanguagesModified && !to.IsAcceptLanguagesModified)
+                {
+                    to.AcceptLanguages = from.AcceptLanguages;
+                    to.IsAcceptLanguagesModified = true;
+                }
                 if (from.IsCommentModified && !to.IsCommentModified)
                 {
                     to.Comment = from.Comment;
@@ -930,6 +982,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.UserID = from.UserID;
                 to.Email = from.Email;
                 to.IsEmailModified = from.IsEmailModified;
+                to.AcceptLanguages = from.AcceptLanguages;
+                to.IsAcceptLanguagesModified = from.IsAcceptLanguagesModified;
                 to.Comment = from.Comment;
                 to.IsCommentModified = from.IsCommentModified;
                 to.ConnectionID = from.ConnectionID;
@@ -964,6 +1018,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 Email = newdata.Email;
                 IsEmailModified = true;
+                cnt++;
+            }
+            if (AcceptLanguages != newdata.AcceptLanguages)
+            {
+                AcceptLanguages = newdata.AcceptLanguages;
+                IsAcceptLanguagesModified = true;
                 cnt++;
             }
             if (Comment != newdata.Comment)
@@ -1044,7 +1104,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (Email == null)
                 Email = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsEmailModified || IsCommentModified || IsConnectionIDModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
+                IsEntityChanged = IsEmailModified || IsAcceptLanguagesModified || IsCommentModified || IsConnectionIDModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
             if (IsCommentModified && !IsCommentLoaded)
                 IsCommentLoaded = true;
             if (IsIconImgModified && !IsIconImgLoaded)
@@ -1062,6 +1122,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.ApplicationID = ApplicationID;
             e.UserID = UserID;
             e.Email = Email;
+            e.AcceptLanguages = AcceptLanguages;
             e.ConnectionID = ConnectionID;
             e.IconLastModified = IconLastModified;
             e.IconMime = IconMime;
@@ -1097,6 +1158,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@"
   Email = '" + Email + @"'");
             if (IsEmailModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  AcceptLanguages = '" + (AcceptLanguages != null ? AcceptLanguages : "null") + @"'");
+            if (IsAcceptLanguagesModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
