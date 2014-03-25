@@ -62,6 +62,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Foreign keys</term><description>Description</description>
     ///    </listheader>
     ///    <item>
+    ///      <term>ApplicationID</term>
+    ///      <description>See <see cref="UserGroup.ApplicationID" />. Fixed; not null; foreign key.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>GroupTypeID</term>
     ///      <description>See <see cref="UserGroup.GroupTypeID" />. Fixed; not null; foreign key.</description>
     ///    </item>
@@ -74,6 +78,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <listheader>
     ///       <term>This entity depends on</term><description>Description</description>
     ///    </listheader>
+    ///    <item>
+    ///      <term>Application_Ref</term>
+    ///      <description>See <see cref="UserGroup.Application_Ref" />, which is a member of the data set "Applications" for <see cref="Application_" />.</description>
+    ///    </item>
     ///    <item>
     ///      <term>UpperRef</term>
     ///      <description>See <see cref="UserGroup.UpperRef" />, which is a member of the data set "UserGroups" for <see cref="UserGroup" />. Self-referencing. Nullable.</description>
@@ -302,6 +310,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [Required]
         [Editable(false)]
         [DataMember(IsRequired = true)]
+        public string ApplicationID
+        { 
+            get
+            {
+                return _ApplicationID;
+            }
+            set
+            {
+                if (_ApplicationID != value)
+                {
+                    _ApplicationID = value;
+                }
+            }
+        }
+        private string _ApplicationID = default(string);
+
+        /// <summary>
+        /// Meta-info: fixed; not null; foreign key.
+        /// </summary>
+        [Required]
+        [Editable(false)]
+        [DataMember(IsRequired = true)]
         public int GroupTypeID
         { 
             get
@@ -342,6 +372,48 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endregion
 
 #region Entities that the current one depends upon.
+
+        /// <summary>
+        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon through .
+        /// The corresponding foreign key set is { <see cref="UserGroup.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+        public Application_ Application_Ref
+        {
+            get 
+            {
+                if (_Application_Ref == null && AutoLoadApplication_Ref != null)
+                    _Application_Ref = AutoLoadApplication_Ref();
+                return _Application_Ref; 
+            }
+            set 
+            { 
+                _Application_Ref = value; 
+            }
+        }
+        private Application_ _Application_Ref = null;
+
+        /// <summary>
+        /// <see cref="UserGroup.Application_Ref" /> is not initialized when the entity is created. Clients could call this method to load it provided a proper delegate <see cref="UserGroup.DelLoadApplication_Ref" /> was setup
+        /// before calling it.
+        /// </summary>
+        public void LoadApplication_Ref()
+        {
+            if (_Application_Ref != null)
+                return;
+            if (DelLoadApplication_Ref != null)
+                _Application_Ref = DelLoadApplication_Ref();
+        }
+
+        /// <summary>
+        /// A delegate to load <see cref="UserGroup.Application_Ref" />.
+        /// </summary>
+        public Func<Application_> DelLoadApplication_Ref = null;
+
+        /// <summary>
+        /// A delegate to load <see cref="UserGroup.Application_Ref" /> automatically when it is referred to at the first time.
+        /// </summary>
+        public Func<Application_> AutoLoadApplication_Ref = null;
 
         /// <summary>
         /// Entity in data set "UserGroups" for <see cref="UserGroup" /> that this entity depend upon through .
@@ -698,6 +770,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.ID = from.ID;
                 to.GroupName = from.GroupName;
                 to.IsGroupNameModified = from.IsGroupNameModified;
+                to.ApplicationID = from.ApplicationID;
                 to.GroupTypeID = from.GroupTypeID;
                 to.ParentID = from.ParentID;
             }
@@ -727,6 +800,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void NormalizeValues()
         {
             IsInitializing = true;
+            if (ApplicationID == null)
+                ApplicationID = "";
             if (!IsEntityChanged)
                 IsEntityChanged = IsGroupNameModified;
             IsInitializing = false;
@@ -741,6 +816,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.IsInitializing = true;
             e.ID = ID;
             e.GroupName = GroupName;
+            e.ApplicationID = ApplicationID;
             e.GroupTypeID = GroupTypeID;
             e.ParentID = ParentID;
             e.DistinctString = GetDistinctString(true);
@@ -767,6 +843,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
+  ApplicationID = '" + ApplicationID + @"'
   GroupTypeID = " + GroupTypeID + @"
   ParentID = '" + (ParentID != null ? ParentID : "null") + @"'
 ");

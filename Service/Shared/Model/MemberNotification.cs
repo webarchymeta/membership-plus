@@ -57,16 +57,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="MemberNotification.CreatedDate" />. Fixed; not null.</description>
     ///    </item>
     ///    <item>
-    ///      <term>NoticeMsg</term>
-    ///      <description>See <see cref="MemberNotification.NoticeMsg" />. Fixed; not null; load delayed.</description>
-    ///    </item>
-    ///    <item>
     ///      <term>PriorityLevel</term>
     ///      <description>See <see cref="MemberNotification.PriorityLevel" />. Fixed; not null.</description>
     ///    </item>
     ///    <item>
     ///      <term>Title</term>
     ///      <description>See <see cref="MemberNotification.Title" />. Fixed; not null; max-length = 100 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>NoticeMsg</term>
+    ///      <description>See <see cref="MemberNotification.NoticeMsg" />. Fixed; nullable; load delayed.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ReadOnce</term>
+    ///      <description>See <see cref="MemberNotification.ReadOnce" />. Fixed; nullable.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -80,6 +84,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Boockmarked</term>
     ///      <description>See <see cref="MemberNotification.Boockmarked" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>NoticeData</term>
+    ///      <description>See <see cref="MemberNotification.NoticeData" />. Editable; nullable; load delayed.</description>
     ///    </item>
     ///    <item>
     ///      <term>Processed</term>
@@ -99,6 +107,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="MemberNotification.ApplicationID" />. Fixed; not null; foreign key.</description>
     ///    </item>
     ///    <item>
+    ///      <term>TypeID</term>
+    ///      <description>See <see cref="MemberNotification.TypeID" />. Fixed; not null; foreign key.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserID</term>
     ///      <description>See <see cref="MemberNotification.UserID" />. Fixed; not null; foreign key.</description>
     ///    </item>
@@ -110,6 +122,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Application_Ref</term>
     ///      <description>See <see cref="MemberNotification.Application_Ref" />, which is a member of the data set "Applications" for <see cref="Application_" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>MemberNotificationTypeRef</term>
+    ///      <description>See <see cref="MemberNotification.MemberNotificationTypeRef" />, which is a member of the data set "MemberNotificationTypes" for <see cref="MemberNotificationType" />.</description>
     ///    </item>
     ///    <item>
     ///      <term>UserRef</term>
@@ -189,7 +205,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         private string GetDistinctString(bool ShowPathInfo)
         {
-            return String.Format(@"{0} ({1})", Title.Trim(), CreatedDate);
+            LoadMemberNotificationTypeRef();
+            return String.Format(@"[{0}] {1} ({2})", (MemberNotificationTypeRef != null ? MemberNotificationTypeRef.DistinctString : ""), Title.Trim(), CreatedDate);
         }
 
         /// <summary>
@@ -261,46 +278,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private DateTime _CreatedDate = default(DateTime);
 
         /// <summary>
-        /// Meta-info: fixed; not null; load delayed.
-        /// </summary>
-        [Required]
-        [Editable(false)]
-        [DataMember(IsRequired = true)]
-        public string NoticeMsg
-        { 
-            get
-            {
-                return _NoticeMsg;
-            }
-            set
-            {
-                if (_NoticeMsg != value)
-                {
-                    _NoticeMsg = value;
-                }
-            }
-        }
-        private string _NoticeMsg = default(string);
-
-        /// <summary>
-        /// Wether or not the value of the delay loaded "NoticeMsg" is Loaded. Clients are responsible for keeping 
-        /// track of loading status of delay loading properties.
-        /// </summary>
-        [DataMember]
-        public bool IsNoticeMsgLoaded
-        { 
-            get
-            {
-                return _isNoticeMsgLoaded;
-            }
-            set
-            {
-                _isNoticeMsgLoaded = value;
-            }
-        }
-        private bool _isNoticeMsgLoaded = false;
-
-        /// <summary>
         /// Meta-info: fixed; not null.
         /// </summary>
         [Required]
@@ -344,6 +321,66 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private string _Title = default(string);
+
+        /// <summary>
+        /// Meta-info: fixed; nullable; load delayed.
+        /// </summary>
+        [Editable(false)]
+        [DataMember(IsRequired = false)]
+        public string NoticeMsg
+        { 
+            get
+            {
+                return _NoticeMsg;
+            }
+            set
+            {
+                if (_NoticeMsg != value)
+                {
+                    _NoticeMsg = value;
+                }
+            }
+        }
+        private string _NoticeMsg = default(string);
+
+        /// <summary>
+        /// Wether or not the value of the delay loaded "NoticeMsg" is Loaded. Clients are responsible for keeping 
+        /// track of loading status of delay loading properties.
+        /// </summary>
+        [DataMember]
+        public bool IsNoticeMsgLoaded
+        { 
+            get
+            {
+                return _isNoticeMsgLoaded;
+            }
+            set
+            {
+                _isNoticeMsgLoaded = value;
+            }
+        }
+        private bool _isNoticeMsgLoaded = false;
+
+        /// <summary>
+        /// Meta-info: fixed; nullable.
+        /// </summary>
+        [Editable(false)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> ReadOnce
+        { 
+            get
+            {
+                return _ReadOnce;
+            }
+            set
+            {
+                if (_ReadOnce != value)
+                {
+                    _ReadOnce = value;
+                }
+            }
+        }
+        private System.Nullable<bool> _ReadOnce = default(System.Nullable<bool>);
 
         /// <summary>
         /// Meta-info: editable; not null.
@@ -429,6 +466,66 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isBoockmarkedModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable; load delayed.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public string NoticeData
+        { 
+            get
+            {
+                return _NoticeData;
+            }
+            set
+            {
+                if (_NoticeData != value)
+                {
+                    _NoticeData = value;
+                    if (!IsInitializing)
+                        IsNoticeDataModified = true;
+                }
+            }
+        }
+        private string _NoticeData = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="NoticeData" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="NoticeData" /> only if this is set to true no matter what
+        /// the actual value of <see cref="NoticeData" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsNoticeDataModified
+        { 
+            get
+            {
+                return _isNoticeDataModified;
+            }
+            set
+            {
+                _isNoticeDataModified = value;
+            }
+        }
+        private bool _isNoticeDataModified = false;
+
+        /// <summary>
+        /// Wether or not the value of the delay loaded "NoticeData" is Loaded. Clients are responsible for keeping 
+        /// track of loading status of delay loading properties.
+        /// </summary>
+        [DataMember]
+        public bool IsNoticeDataLoaded
+        { 
+            get
+            {
+                return _isNoticeDataLoaded;
+            }
+            set
+            {
+                _isNoticeDataLoaded = value;
+            }
+        }
+        private bool _isNoticeDataLoaded = false;
 
         /// <summary>
         /// Meta-info: editable; nullable.
@@ -542,6 +639,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [Required]
         [Editable(false)]
         [DataMember(IsRequired = true)]
+        public int TypeID
+        { 
+            get
+            {
+                return _TypeID;
+            }
+            set
+            {
+                if (_TypeID != value)
+                {
+                    _TypeID = value;
+                }
+            }
+        }
+        private int _TypeID = default(int);
+
+        /// <summary>
+        /// Meta-info: fixed; not null; foreign key.
+        /// </summary>
+        [Required]
+        [Editable(false)]
+        [DataMember(IsRequired = true)]
         public string UserID
         { 
             get
@@ -603,6 +722,48 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// A delegate to load <see cref="MemberNotification.Application_Ref" /> automatically when it is referred to at the first time.
         /// </summary>
         public Func<Application_> AutoLoadApplication_Ref = null;
+
+        /// <summary>
+        /// Entity in data set "MemberNotificationTypes" for <see cref="MemberNotificationType" /> that this entity depend upon through .
+        /// The corresponding foreign key set is { <see cref="MemberNotification.TypeID" /> }.
+        /// </summary>
+        [DataMember]
+        public MemberNotificationType MemberNotificationTypeRef
+        {
+            get 
+            {
+                if (_MemberNotificationTypeRef == null && AutoLoadMemberNotificationTypeRef != null)
+                    _MemberNotificationTypeRef = AutoLoadMemberNotificationTypeRef();
+                return _MemberNotificationTypeRef; 
+            }
+            set 
+            { 
+                _MemberNotificationTypeRef = value; 
+            }
+        }
+        private MemberNotificationType _MemberNotificationTypeRef = null;
+
+        /// <summary>
+        /// <see cref="MemberNotification.MemberNotificationTypeRef" /> is not initialized when the entity is created. Clients could call this method to load it provided a proper delegate <see cref="MemberNotification.DelLoadMemberNotificationTypeRef" /> was setup
+        /// before calling it.
+        /// </summary>
+        public void LoadMemberNotificationTypeRef()
+        {
+            if (_MemberNotificationTypeRef != null)
+                return;
+            if (DelLoadMemberNotificationTypeRef != null)
+                _MemberNotificationTypeRef = DelLoadMemberNotificationTypeRef();
+        }
+
+        /// <summary>
+        /// A delegate to load <see cref="MemberNotification.MemberNotificationTypeRef" />.
+        /// </summary>
+        public Func<MemberNotificationType> DelLoadMemberNotificationTypeRef = null;
+
+        /// <summary>
+        /// A delegate to load <see cref="MemberNotification.MemberNotificationTypeRef" /> automatically when it is referred to at the first time.
+        /// </summary>
+        public Func<MemberNotificationType> AutoLoadMemberNotificationTypeRef = null;
 
         /// <summary>
         /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
@@ -704,6 +865,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.Boockmarked = from.Boockmarked;
                     to.IsBoockmarkedModified = true;
                 }
+                if (from.IsNoticeDataModified && !to.IsNoticeDataModified)
+                {
+                    to.NoticeData = from.NoticeData;
+                    to.IsNoticeDataModified = true;
+                }
                 if (from.IsProcessedModified && !to.IsProcessedModified)
                 {
                     to.Processed = from.Processed;
@@ -720,18 +886,22 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.IsPersisted = from.IsPersisted;
                 to.ID = from.ID;
                 to.CreatedDate = from.CreatedDate;
-                to.NoticeMsg = from.NoticeMsg;
                 to.PriorityLevel = from.PriorityLevel;
                 to.Title = from.Title;
+                to.NoticeMsg = from.NoticeMsg;
+                to.ReadOnce = from.ReadOnce;
                 to.ReadCount = from.ReadCount;
                 to.IsReadCountModified = from.IsReadCountModified;
                 to.Boockmarked = from.Boockmarked;
                 to.IsBoockmarkedModified = from.IsBoockmarkedModified;
+                to.NoticeData = from.NoticeData;
+                to.IsNoticeDataModified = from.IsNoticeDataModified;
                 to.Processed = from.Processed;
                 to.IsProcessedModified = from.IsProcessedModified;
                 to.ProcessedDate = from.ProcessedDate;
                 to.IsProcessedDateModified = from.IsProcessedDateModified;
                 to.ApplicationID = from.ApplicationID;
+                to.TypeID = from.TypeID;
                 to.UserID = from.UserID;
             }
         }
@@ -757,6 +927,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsBoockmarkedModified = true;
                 cnt++;
             }
+            if (NoticeData != newdata.NoticeData)
+            {
+                NoticeData = newdata.NoticeData;
+                IsNoticeDataModified = true;
+                cnt++;
+            }
             if (Processed != newdata.Processed)
             {
                 Processed = newdata.Processed;
@@ -778,8 +954,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void NormalizeValues()
         {
             IsInitializing = true;
-            if (NoticeMsg == null)
-                NoticeMsg = "";
             if (Title == null)
                 Title = "";
             if (ApplicationID == null)
@@ -787,7 +961,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (UserID == null)
                 UserID = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsReadCountModified || IsBoockmarkedModified || IsProcessedModified || IsProcessedDateModified;
+                IsEntityChanged = IsReadCountModified || IsBoockmarkedModified || IsNoticeDataModified || IsProcessedModified || IsProcessedDateModified;
+            if (IsNoticeDataModified && !IsNoticeDataLoaded)
+                IsNoticeDataLoaded = true;
             IsInitializing = false;
         }
 
@@ -802,15 +978,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.CreatedDate = CreatedDate;
             e.PriorityLevel = PriorityLevel;
             e.Title = Title;
+            e.ReadOnce = ReadOnce;
             e.ReadCount = ReadCount;
             e.Boockmarked = Boockmarked;
             e.Processed = Processed;
             e.ProcessedDate = ProcessedDate;
             e.ApplicationID = ApplicationID;
+            e.TypeID = TypeID;
             e.UserID = UserID;
             if (allData)
             {
                 e.NoticeMsg = NoticeMsg;
+                e.NoticeData = NoticeData;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = true;
@@ -833,6 +1012,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
   CreatedDate = " + CreatedDate + @"
   PriorityLevel = " + PriorityLevel + @"
   Title = '" + Title + @"'
+  ReadOnce = " + (ReadOnce.HasValue ? ReadOnce.Value.ToString() : "null") + @"
   ReadCount = " + ReadCount + @"");
             if (IsReadCountModified)
                 sb.Append(@" (modified)");
@@ -858,6 +1038,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 sb.Append(@" (unchanged)");
             sb.Append(@"
   ApplicationID = '" + ApplicationID + @"'
+  TypeID = " + TypeID + @"
   UserID = '" + UserID + @"'
 ");
             return sb.ToString();

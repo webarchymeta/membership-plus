@@ -90,6 +90,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="Application_.UserDetails" />, which is a sub-set of the data set "UserDetails" for <see cref="UserDetail" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>UserGroups</term>
+    ///      <description>See <see cref="Application_.UserGroups" />, which is a sub-set of the data set "UserGroups" for <see cref="UserGroup" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserProfiles</term>
     ///      <description>See <see cref="Application_.UserProfiles" />, which is a sub-set of the data set "UserProfiles" for <see cref="UserProfile" />.</description>
     ///    </item>
@@ -573,6 +577,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [DataMember]
 		public UserDetail[] ChangedUserDetails
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="UserGroupSet" /> for data set "UserGroups" of <see cref="UserGroup" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public UserGroupSet UserGroups
+		{
+			get
+			{
+                if (_UserGroups == null)
+                    _UserGroups = new UserGroupSet();
+				return _UserGroups;
+			}
+            set
+            {
+                _UserGroups = value;
+            }
+		}
+		private UserGroupSet _UserGroups = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "UserGroups" of <see cref="UserGroup" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.ApplicationID" /> }.
+        /// </summary>
+		public IEnumerable<UserGroup> UserGroupEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="UserGroup" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public UserGroup[] ChangedUserGroups
 		{
 			get;
             set;

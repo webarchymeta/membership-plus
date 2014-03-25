@@ -36,12 +36,21 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             get 
             {
                 if (_cacheKey == null) 
-                    _cacheKey = (GroupTypeIDWrap != null ? GroupTypeIDWrap.CacheKey : "" ) + "_" + (ParentIDWrap != null ? ParentIDWrap.CacheKey : "" ) + "_"; 
+                    _cacheKey = (ApplicationIDWrap != null ? ApplicationIDWrap.CacheKey : "" ) + "_" + (GroupTypeIDWrap != null ? GroupTypeIDWrap.CacheKey : "" ) + "_" + (ParentIDWrap != null ? ParentIDWrap.CacheKey : "" ) + "_"; 
                 return _cacheKey;
             }
         }
         private string _cacheKey = null;
 
+        /// <summary>
+        /// The wrapper for the ApplicationID key value.
+        /// </summary>
+        [DataMember]
+        public ForeignKeyData<string> ApplicationIDWrap
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// The wrapper for the GroupTypeID key value.
         /// </summary>
@@ -77,7 +86,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns></returns>
         public bool IsTheSameAs(UserGroupSetConstraints constraints)
         {
-            return GroupTypeIDWrap.KeyValue == constraints.GroupTypeIDWrap.KeyValue && ParentIDWrap.KeyValue == constraints.ParentIDWrap.KeyValue;
+            return ApplicationIDWrap.KeyValue == constraints.ApplicationIDWrap.KeyValue && GroupTypeIDWrap.KeyValue == constraints.GroupTypeIDWrap.KeyValue && ParentIDWrap.KeyValue == constraints.ParentIDWrap.KeyValue;
         }
     }
 

@@ -168,7 +168,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="UserGroupServiceProxy.MaterializeUpperRef" />, <see cref="UserGroupServiceProxy.MaterializeUserGroupTypeRef" />.
+    ///        <see cref="UserGroupServiceProxy.MaterializeApplication_Ref" />, <see cref="UserGroupServiceProxy.MaterializeUpperRef" />, <see cref="UserGroupServiceProxy.MaterializeUserGroupTypeRef" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -307,7 +307,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.Application_Ref" />, <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -358,7 +358,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.Application_Ref" />, <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -997,6 +997,56 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             try
             {
                 return await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="Application_" /> or null.
+        /// </returns>
+        public Application_ MaterializeApplication_Ref(CallContext cntx, UserGroup entity)
+        {
+            try
+            {
+                return Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="Application_" /> or null.
+        /// </returns>
+        public async System.Threading.Tasks.Task<Application_> MaterializeApplication_RefAsync(CallContext cntx, UserGroup entity)
+        {
+            try
+            {
+                return await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
             }
             catch (Exception ex)
             {

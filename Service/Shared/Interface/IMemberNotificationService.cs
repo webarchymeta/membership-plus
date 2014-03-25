@@ -148,13 +148,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods (loading)</term>
     ///      <description>
-    ///         <see cref="IMemberNotificationService.LoadEntityNoticeMsg" />
+    ///         <see cref="IMemberNotificationService.LoadEntityNoticeMsg" />, <see cref="IMemberNotificationService.LoadEntityNoticeData" />
     ///      </description>
     ///    </item>
     ///    <item>
     ///      <term>Methods (uploading)</term>
     ///      <description>
-    ///         
+    ///         <see cref="IMemberNotificationService.UpdateEntityNoticeData" />
     ///      </description>
     ///    </item>
     ///  </list>
@@ -171,7 +171,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IMemberNotificationService.MaterializeApplication_Ref" />, <see cref="IMemberNotificationService.MaterializeUserRef" />.
+    ///        <see cref="IMemberNotificationService.MaterializeApplication_Ref" />, <see cref="IMemberNotificationService.MaterializeMemberNotificationTypeRef" />, <see cref="IMemberNotificationService.MaterializeUserRef" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -277,7 +277,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -329,7 +329,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -513,6 +513,25 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         Application_ MaterializeApplication_Ref(CallContext cntx, MemberNotification entity);
 
         /// <summary>
+        ///   Load the entity "MemberNotificationTypeRef" of type <see cref="MemberNotificationType" /> that the entity depend upon. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="MemberNotificationType" /> or null.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeMemberNotificationTypeRef")]
+        MemberNotificationType MaterializeMemberNotificationTypeRef(CallContext cntx, MemberNotification entity);
+
+        /// <summary>
         ///   Load the entity "UserRef" of type <see cref="User" /> that the entity depend upon. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -647,6 +666,43 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityNoticeMsg")]
         string LoadEntityNoticeMsg(CallContext cntx, string _ID);
+
+        /// <summary>
+        ///  Load the delay loaded property <see cref="MemberNotification.NoticeData" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="MemberNotification.ID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/LoadEntityNoticeData")]
+        string LoadEntityNoticeData(CallContext cntx, string _ID);
+
+        /// <summary>
+        ///  Update the delay loaded property <see cref="MemberNotification.NoticeData" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="MemberNotification.ID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/UpdateEntityNoticeData")]
+        void UpdateEntityNoticeData(CallContext cntx, string _ID, string data);
 
         /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
@@ -807,13 +863,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods (loading)</term>
     ///      <description>
-    ///         <see cref="IMemberNotificationService2.LoadEntityNoticeMsg" />
+    ///         <see cref="IMemberNotificationService2.LoadEntityNoticeMsg" />, <see cref="IMemberNotificationService2.LoadEntityNoticeData" />
     ///      </description>
     ///    </item>
     ///    <item>
     ///      <term>Methods (uploading)</term>
     ///      <description>
-    ///         
+    ///         <see cref="IMemberNotificationService2.UpdateEntityNoticeData" />
     ///      </description>
     ///    </item>
     ///  </list>
@@ -830,7 +886,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IMemberNotificationService2.MaterializeApplication_Ref" />, <see cref="IMemberNotificationService2.MaterializeUserRef" />.
+    ///        <see cref="IMemberNotificationService2.MaterializeApplication_Ref" />, <see cref="IMemberNotificationService2.MaterializeMemberNotificationTypeRef" />, <see cref="IMemberNotificationService2.MaterializeUserRef" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -967,7 +1023,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1003,7 +1059,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1051,7 +1107,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1097,7 +1153,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1362,6 +1418,35 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
+        ///   Load the entity "MemberNotificationTypeRef" of type <see cref="MemberNotificationType" /> that the entity depend upon. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="MemberNotificationType" /> or null.
+        /// </returns>
+        [OperationContract]
+        MemberNotificationType MaterializeMemberNotificationTypeRef(CallContext cntx, MemberNotification entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the entity "MemberNotificationTypeRef" of type <see cref="MemberNotificationType" /> that the entity depend upon. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="MemberNotificationType" /> or null.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<MemberNotificationType> MaterializeMemberNotificationTypeRefAsync(CallContext cntx, MemberNotification entity);
+#endif
+
+        /// <summary>
         ///   Load the entity "UserRef" of type <see cref="User" /> that the entity depend upon. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -1577,6 +1662,62 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<string> LoadEntityNoticeMsgAsync(CallContext cntx, string _ID);
+#endif
+
+        /// <summary>
+        ///  Load the delay loaded property <see cref="MemberNotification.NoticeData" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="MemberNotification.ID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        string LoadEntityNoticeData(CallContext cntx, string _ID);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Load the delay loaded property <see cref="MemberNotification.NoticeData" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="MemberNotification.ID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<string> LoadEntityNoticeDataAsync(CallContext cntx, string _ID);
+#endif
+
+        /// <summary>
+        ///  Update the delay loaded property <see cref="MemberNotification.NoticeData" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="MemberNotification.ID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        void UpdateEntityNoticeData(CallContext cntx, string _ID, string data);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Update the delay loaded property <see cref="MemberNotification.NoticeData" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="MemberNotification.ID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task UpdateEntityNoticeDataAsync(CallContext cntx, string _ID, string data);
 #endif
 
         /// <summary>

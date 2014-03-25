@@ -79,6 +79,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [EnumMember]
         MemberNotification,
         /// <summary>
+        /// It represents data set <c>MemberNotificationTypes</c> (see <see cref="MemberNotificationType" />).
+        /// </summary>
+        [EnumMember]
+        MemberNotificationType,
+        /// <summary>
         /// It represents data set <c>Roles</c> (see <see cref="Role" />).
         /// </summary>
         [EnumMember]
@@ -438,6 +443,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     item.Fkeys = lk.ToArray();
                     lk.Clear();
                     l.Add(item);
+                    item = new RootEntityInfo{ EntityName = "MemberNotificationType", TrueRoot = true };
+                    item.Fkeys = lk.ToArray();
+                    lk.Clear();
+                    l.Add(item);
                     item = new RootEntityInfo{ EntityName = "UserAssociationType", TrueRoot = true };
                     item.Fkeys = lk.ToArray();
                     lk.Clear();
@@ -517,6 +526,25 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private EventTypeSet _EventTypes = null;
+
+        /// <summary>
+        /// Root entity set <see cref="MemberNotificationTypeSet" />. See also <see cref="RootEntityInfo" />.
+        /// </summary>
+        [DataMember]
+        public MemberNotificationTypeSet MemberNotificationTypes
+        {
+            get
+            {
+                if (_MemberNotificationTypes == null)
+                    _MemberNotificationTypes = new MemberNotificationTypeSet();
+                return _MemberNotificationTypes;
+            }
+            set
+            {
+                _MemberNotificationTypes = value;
+            }
+        }
+        private MemberNotificationTypeSet _MemberNotificationTypes = null;
 
         /// <summary>
         /// Root entity set <see cref="UserAssociationTypeSet" />. See also <see cref="RootEntityInfo" />.

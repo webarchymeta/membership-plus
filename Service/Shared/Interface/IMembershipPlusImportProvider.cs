@@ -78,6 +78,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         IEnumerable<MemberNotification> GetMemberNotifications();
 
         /// <summary>
+        /// When implemeneted, the <c>MemberNotificationType</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<MemberNotificationType> GetMemberNotificationTypes();
+
+        /// <summary>
         /// When implemeneted, the <c>Role</c> enumerator used to fetch the corresponding entities from the data source.
         /// </summary>
         IEnumerable<Role> GetRoles();

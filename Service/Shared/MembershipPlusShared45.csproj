@@ -118,6 +118,14 @@
         <Compile Include="Model\MemberNotification.cs">
             <DependentUpon>MemberNotificationPage.cs</DependentUpon>
         </Compile>
+        <Compile Include="Interface\IMemberNotificationTypeService.cs" />
+        <Compile Include="Model\MemberNotificationTypeSet.cs" />
+        <Compile Include="Model\MemberNotificationTypePage.cs">
+            <DependentUpon>MemberNotificationTypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\MemberNotificationType.cs">
+            <DependentUpon>MemberNotificationTypePage.cs</DependentUpon>
+        </Compile>
         <Compile Include="Interface\IRoleService.cs" />
         <Compile Include="Model\RoleSet.cs" />
         <Compile Include="Model\RolePage.cs">
@@ -247,18 +255,6 @@
         <Compile Include="Common\Utils.cs" />
         <Compile Include="Model\MembershipPlusEnumModels.cs" />
     </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

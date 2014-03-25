@@ -23,10 +23,10 @@ namespace Archymeta.Web.Security.Resources
 
     public class ResourceUtils
     {
-        public static CultureInfo[] GetAcceptLanguages()
+        public static CultureInfo[] GetAcceptLanguages(string langs)
         {
             HttpRequest req = HttpContext.Current.Request;
-            string strlan = req.Headers["Accept-Language"];
+            string strlan = langs == null ? req.Headers["Accept-Language"] : langs;
             if (string.IsNullOrEmpty(strlan))
                 return null;
             string[] lans = strlan.Split(',');
@@ -103,9 +103,9 @@ namespace Archymeta.Web.Security.Resources
         }
         private static string[] _supportedLanguages = null;
 
-        public static CultureInfo GetEffective()
+        public static CultureInfo GetEffective(string langs)
         {
-            CultureInfo[] culs = GetAcceptLanguages();
+            CultureInfo[] culs = GetAcceptLanguages(langs);
             if (culs != null)
             {
                 foreach (CultureInfo ci in culs)
@@ -147,12 +147,12 @@ namespace Archymeta.Web.Security.Resources
             reader.ShutDown();
         }
 
-        public static string GetString(string resId, string defval = null)
+        public static string GetString(string resId, string defval = null, string langs = null)
         {
             return GetString(StoreTypes.CommonShortResources, resId, defval);
         }
 
-        public static string GetString(StoreTypes type, string resId, string defval = null)
+        public static string GetString(StoreTypes type, string resId, string defval = null, string langs = null)
         {
             DateTime dt;
             IUniResStore reader = null;
@@ -180,12 +180,12 @@ namespace Archymeta.Web.Security.Resources
             return GetString(reader, resId, out dt, defval);
         }
 
-        public static string GetString(IUniResStore reader, string resId, out DateTime LastModified, string defval = null)
+        public static string GetString(IUniResStore reader, string resId, out DateTime LastModified, string defval = null, string langs = null)
         {
             LastModified = DateTime.MinValue;
             if (reader == null)
                 return string.IsNullOrEmpty(defval) ? "string database not found...." : defval;
-            int lcid = GetEffective().LCID;
+            int lcid = GetEffective(langs).LCID;
             ResStrItem itm = null;
             ResStrItem ritm = new ResStrItem();
             ritm.ID = resId;

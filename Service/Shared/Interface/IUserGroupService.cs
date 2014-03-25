@@ -166,7 +166,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserGroupService.MaterializeUpperRef" />, <see cref="IUserGroupService.MaterializeUserGroupTypeRef" />.
+    ///        <see cref="IUserGroupService.MaterializeApplication_Ref" />, <see cref="IUserGroupService.MaterializeUpperRef" />, <see cref="IUserGroupService.MaterializeUserGroupTypeRef" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -289,7 +289,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.Application_Ref" />, <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -345,7 +345,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.Application_Ref" />, <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -512,6 +512,25 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/ConstraintQueryLimited")]
         IEnumerable<UserGroup> ConstraintQueryLimited(CallContext cntx, UserGroupSet set, UserGroupSetConstraints constraints, QueryExpresion qexpr, int maxRecords);
+
+        /// <summary>
+        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="Application_" /> or null.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeApplication_Ref")]
+        Application_ MaterializeApplication_Ref(CallContext cntx, UserGroup entity);
 
         /// <summary>
         ///   Load the entity "UpperRef" of type <see cref="UserGroup" /> that the entity depend upon. 
@@ -1098,7 +1117,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserGroupService2.MaterializeUpperRef" />, <see cref="IUserGroupService2.MaterializeUserGroupTypeRef" />.
+    ///        <see cref="IUserGroupService2.MaterializeApplication_Ref" />, <see cref="IUserGroupService2.MaterializeUpperRef" />, <see cref="IUserGroupService2.MaterializeUserGroupTypeRef" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -1252,7 +1271,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.Application_Ref" />, <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1292,7 +1311,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.Application_Ref" />, <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1344,7 +1363,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.Application_Ref" />, <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1394,7 +1413,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.Application_Ref" />, <see cref="UserGroup.UpperRef" />, <see cref="UserGroup.UserGroupTypeRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1631,6 +1650,35 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<IEnumerable<UserGroup>> ConstraintQueryLimitedAsync(CallContext cntx, UserGroupSet set, UserGroupSetConstraints constraints, QueryExpresion qexpr, int maxRecords);
+#endif
+
+        /// <summary>
+        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="Application_" /> or null.
+        /// </returns>
+        [OperationContract]
+        Application_ MaterializeApplication_Ref(CallContext cntx, UserGroup entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="Application_" /> or null.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<Application_> MaterializeApplication_RefAsync(CallContext cntx, UserGroup entity);
 #endif
 
         /// <summary>
