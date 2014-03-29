@@ -142,6 +142,14 @@
         <Compile Include="Model\Role.cs">
             <DependentUpon>RolePage.cs</DependentUpon>
         </Compile>
+        <Compile Include="Interface\ISignalRHostStateService.cs" />
+        <Compile Include="Model\SignalRHostStateSet.cs" />
+        <Compile Include="Model\SignalRHostStatePage.cs">
+            <DependentUpon>SignalRHostStateSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\SignalRHostState.cs">
+            <DependentUpon>SignalRHostStatePage.cs</DependentUpon>
+        </Compile>
         <Compile Include="Interface\ISignalRMessageService.cs" />
         <Compile Include="Model\SignalRMessageSet.cs" />
         <Compile Include="Model\SignalRMessagePage.cs">

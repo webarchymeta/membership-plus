@@ -47,10 +47,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>ID</term>
     ///      <description>See <see cref="EventCalendar.ID" />. Primary key; intrinsic id; fixed; not null.</description>
     ///    </item>
-    ///    <item>
-    ///      <term>EventTypeID</term>
-    ///      <description>See <see cref="EventCalendar.EventTypeID" />. Intrinsic id; fixed; nullable; foreign key.</description>
-    ///    </item>
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
@@ -104,7 +100,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    </item>
     ///    <item>
     ///      <term>EventTypeID</term>
-    ///      <description>See <see cref="EventCalendar.EventTypeID" />. Intrinsic id; fixed; nullable; foreign key.</description>
+    ///      <description>See <see cref="EventCalendar.EventTypeID" />. Fixed; nullable; foreign key.</description>
     ///    </item>
     ///    <item>
     ///      <term>GroupID</term>
@@ -618,9 +614,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private string _CreatedUserID = default(string);
 
         /// <summary>
-        /// Meta-info: intrinsic id; fixed; nullable; foreign key.
+        /// Meta-info: fixed; nullable; foreign key.
         /// </summary>
-        [Key]
         [Editable(false)]
         [DataMember(IsRequired = false)]
         public System.Nullable<int> EventTypeID
@@ -1021,7 +1016,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (other == null)
                 return false;
             else
-                return ID == other.ID &&  EventTypeID == other.EventTypeID;
+                return ID == other.ID;
         }              
 
         /// <summary>
@@ -1228,9 +1223,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@"
   ApplicationID = '" + (ApplicationID != null ? ApplicationID : "null") + @"'
   CreatedUserID = '" + (CreatedUserID != null ? CreatedUserID : "null") + @"'
-  EventTypeID = " + (EventTypeID.HasValue ? EventTypeID.Value.ToString() : "null") + @"");
-            sb.Append(@" (natural id)");
-            sb.Append(@"
+  EventTypeID = " + (EventTypeID.HasValue ? EventTypeID.Value.ToString() : "null") + @"
   GroupID = '" + (GroupID != null ? GroupID : "null") + @"'
   UserID = '" + (UserID != null ? UserID : "null") + @"'
 ");

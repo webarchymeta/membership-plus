@@ -101,6 +101,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
 
         /// <summary>
+        /// When implemeneted, the <c>SignalRHostState</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<SignalRHostState> GetSignalRHostStates();
+
+        /// <summary>
         /// When implemeneted, the <c>SignalRMessage</c> enumerator used to fetch the corresponding entities from the data source.
         /// </summary>
         IEnumerable<SignalRMessage> GetSignalRMessages();

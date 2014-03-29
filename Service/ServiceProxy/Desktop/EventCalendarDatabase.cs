@@ -1642,11 +1642,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" />, <see cref="EventCalendar.EventTypeID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_ID">Intrinsic id <see cref="EventCalendar.ID" />.</param>
-        /// <param name="_EventTypeID">Intrinsic id <see cref="EventCalendar.EventTypeID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1655,11 +1654,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or zero or one entity.
         /// </returns>
-        public List<EventCalendar> LoadEntityByNature(CallContext cntx, string _ID, System.Nullable<int> _EventTypeID)
+        public List<EventCalendar> LoadEntityByNature(CallContext cntx, string _ID)
         {
             try
             {
-                return Channel.LoadEntityByNature(cntx, _ID, _EventTypeID);
+                return Channel.LoadEntityByNature(cntx, _ID);
             }
             catch (Exception ex)
             {
@@ -1670,11 +1669,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" />, <see cref="EventCalendar.EventTypeID" /> }. Awaitable asynchronous version.
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_ID">Intrinsic id <see cref="EventCalendar.ID" />.</param>
-        /// <param name="_EventTypeID">Intrinsic id <see cref="EventCalendar.EventTypeID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1683,11 +1681,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or zero or one entity.
         /// </returns>
-        public async System.Threading.Tasks.Task<List<EventCalendar>> LoadEntityByNatureAsync(CallContext cntx, string _ID, System.Nullable<int> _EventTypeID)
+        public async System.Threading.Tasks.Task<List<EventCalendar>> LoadEntityByNatureAsync(CallContext cntx, string _ID)
         {
             try
             {
-                return await Channel.LoadEntityByNatureAsync(cntx, _ID, _EventTypeID);
+                return await Channel.LoadEntityByNatureAsync(cntx, _ID);
             }
             catch (Exception ex)
             {

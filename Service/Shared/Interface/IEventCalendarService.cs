@@ -762,11 +762,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         EventCalendar LoadEntityGraphRecurs(CallContext cntx, string _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" />, <see cref="EventCalendar.EventTypeID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_ID">Intrinsic id <see cref="EventCalendar.ID" />.</param>
-        /// <param name="_EventTypeID">Intrinsic id <see cref="EventCalendar.EventTypeID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -781,7 +780,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByNature")]
-        List<EventCalendar> LoadEntityByNature(CallContext cntx, string _ID, System.Nullable<int> _EventTypeID);
+        List<EventCalendar> LoadEntityByNature(CallContext cntx, string _ID);
 
         /// <summary>
         ///  Load the delay loaded property <see cref="EventCalendar.Description" />. 
@@ -1916,11 +1915,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" />, <see cref="EventCalendar.EventTypeID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_ID">Intrinsic id <see cref="EventCalendar.ID" />.</param>
-        /// <param name="_EventTypeID">Intrinsic id <see cref="EventCalendar.EventTypeID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1930,14 +1928,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
-        List<EventCalendar> LoadEntityByNature(CallContext cntx, string _ID, System.Nullable<int> _EventTypeID);
+        List<EventCalendar> LoadEntityByNature(CallContext cntx, string _ID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" />, <see cref="EventCalendar.EventTypeID" /> }. Awaitable asynchronous version.
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="EventCalendar.ID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_ID">Intrinsic id <see cref="EventCalendar.ID" />.</param>
-        /// <param name="_EventTypeID">Intrinsic id <see cref="EventCalendar.EventTypeID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1947,7 +1944,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<List<EventCalendar>> LoadEntityByNatureAsync(CallContext cntx, string _ID, System.Nullable<int> _EventTypeID);
+        System.Threading.Tasks.Task<List<EventCalendar>> LoadEntityByNatureAsync(CallContext cntx, string _ID);
 #endif
 
         /// <summary>

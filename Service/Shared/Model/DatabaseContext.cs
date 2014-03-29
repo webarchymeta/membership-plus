@@ -94,6 +94,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [EnumMember]
         Role,
         /// <summary>
+        /// It represents data set <c>SignalRHostStates</c> (see <see cref="SignalRHostState" />).
+        /// </summary>
+        [EnumMember]
+        SignalRHostState,
+        /// <summary>
         /// It represents data set <c>SignalRMessages</c> (see <see cref="SignalRMessage" />).
         /// </summary>
         [EnumMember]

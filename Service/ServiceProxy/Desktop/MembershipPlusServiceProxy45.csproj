@@ -61,6 +61,7 @@
         <Compile Include="MemberNotificationTypeDatabase.cs" />
         <Compile Include="NotificationTaskScheduleDatabase.cs" />
         <Compile Include="RoleDatabase.cs" />
+        <Compile Include="SignalRHostStateDatabase.cs" />
         <Compile Include="SignalRMessageDatabase.cs" />
         <Compile Include="UserAppMemberDatabase.cs" />
         <Compile Include="UserAssociationDatabase.cs" />

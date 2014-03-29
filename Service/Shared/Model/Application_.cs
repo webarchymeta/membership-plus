@@ -82,6 +82,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="Application_.Roles" />, which is a sub-set of the data set "Roles" for <see cref="Role" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>SignalRHostStates</term>
+    ///      <description>See <see cref="Application_.SignalRHostStates" />, which is a sub-set of the data set "SignalRHostStates" for <see cref="SignalRHostState" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>SignalRMessages</term>
     ///      <description>See <see cref="Application_.SignalRMessages" />, which is a sub-set of the data set "SignalRMessages" for <see cref="SignalRMessage" />.</description>
     ///    </item>
@@ -499,6 +503,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [DataMember]
 		public Role[] ChangedRoles
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="SignalRHostStateSet" /> for data set "SignalRHostStates" of <see cref="SignalRHostState" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="SignalRHostStateSet" /> set is { <see cref="SignalRHostState.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public SignalRHostStateSet SignalRHostStates
+		{
+			get
+			{
+                if (_SignalRHostStates == null)
+                    _SignalRHostStates = new SignalRHostStateSet();
+				return _SignalRHostStates;
+			}
+            set
+            {
+                _SignalRHostStates = value;
+            }
+		}
+		private SignalRHostStateSet _SignalRHostStates = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "SignalRHostStates" of <see cref="SignalRHostState" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="SignalRHostStateSet" /> set is { <see cref="SignalRHostState.ApplicationID" /> }.
+        /// </summary>
+		public IEnumerable<SignalRHostState> SignalRHostStateEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="SignalRHostState" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="SignalRHostStateSet" /> set is { <see cref="SignalRHostState.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public SignalRHostState[] ChangedSignalRHostStates
 		{
 			get;
             set;
