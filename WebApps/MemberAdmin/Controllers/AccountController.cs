@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 using System.Threading;
 using System.Security.Principal;
 using Microsoft.IdentityModel;
-//using Microsoft.IdentityModel.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using CryptoGateway.RDB.Data.MembershipPlus;
@@ -74,8 +74,9 @@ namespace MemberAdminMvc5.Controllers
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public async Task<ActionResult> LogOff()
         {
+            await ConnectionContext.UserConnectionClosed(User.Identity.GetUserId());
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
@@ -245,6 +246,12 @@ namespace MemberAdminMvc5.Controllers
             bool hasIcon;
             if (!string.IsNullOrEmpty(strIcon) && bool.TryParse(strIcon, out hasIcon) && hasIcon)
                 m.IconUrl = "Account/GetMemberIcon?id=" + User.Identity.GetUserId();
+#if NO_SIGNALR
+            m.Notifications = false;
+#else
+            string enable = ConfigurationManager.AppSettings["EnableSignalR"];
+            m.Notifications = bool.Parse(enable);
+#endif
             return PartialView("_UserIconPartial", m);
         }
 

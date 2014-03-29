@@ -7,6 +7,7 @@
     <title>@ViewBag.Title - @ResourceUtils.GetString("2b5ca6c9ca99b01ad5c5b2ca6ac7ec71", "Membership+ Administration System")</title>
     @RenderSection("prestyles", required: false)
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/qtip2")
     @RenderSection("styles", required: false)
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/ionicons")
@@ -27,6 +28,11 @@
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts/qTip/jquery.qtip.js")
+    @if (Request.IsAuthenticated)
+    {
+        Html.RenderAction("GetSystemNotificationWrapper", "Home");
+    }
     @RenderSection("scripts", required: false)
 </body>
 </html>

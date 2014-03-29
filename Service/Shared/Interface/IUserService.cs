@@ -130,7 +130,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserService.MaterializeAnnouncements" />, <see cref="IUserService.MaterializeCommunications" />, <see cref="IUserService.MaterializeEventCalendar_UserIDs" />, <see cref="IUserService.MaterializeEventCalendar_CreatedUserIDs" />, <see cref="IUserService.MaterializeMemberNotifications" />, <see cref="IUserService.MaterializeUserAppMembers" />, <see cref="IUserService.MaterializeUserAssociation_FromUserIDs" />, <see cref="IUserService.MaterializeUserAssociation_ToUserIDs" />, <see cref="IUserService.MaterializeUserAssocInvitation_FromUserIDs" />, <see cref="IUserService.MaterializeUserAssocInvitation_ToUserIDs" />, <see cref="IUserService.MaterializeUserDetails" />, <see cref="IUserService.MaterializeUserGroupMembers" />, <see cref="IUserService.MaterializeUserProfiles" />, <see cref="IUserService.MaterializeUsersInRole_UserIDs" />, <see cref="IUserService.MaterializeUsersInRole_AdminIDs" />, <see cref="IUserService.MaterializeUsersRoleHistory_UserIDs" />, <see cref="IUserService.MaterializeUsersRoleHistory_OperatorIDs" />.
+    ///        <see cref="IUserService.MaterializeAnnouncements" />, <see cref="IUserService.MaterializeCommunications" />, <see cref="IUserService.MaterializeEventCalendar_UserIDs" />, <see cref="IUserService.MaterializeEventCalendar_CreatedUserIDs" />, <see cref="IUserService.MaterializeMemberNotifications" />, <see cref="IUserService.MaterializeNotificationTaskSchedules" />, <see cref="IUserService.MaterializeUserAppMembers" />, <see cref="IUserService.MaterializeUserAssociation_FromUserIDs" />, <see cref="IUserService.MaterializeUserAssociation_ToUserIDs" />, <see cref="IUserService.MaterializeUserAssocInvitation_FromUserIDs" />, <see cref="IUserService.MaterializeUserAssocInvitation_ToUserIDs" />, <see cref="IUserService.MaterializeUserDetails" />, <see cref="IUserService.MaterializeUserGroupMembers" />, <see cref="IUserService.MaterializeUserProfiles" />, <see cref="IUserService.MaterializeUsersInRole_UserIDs" />, <see cref="IUserService.MaterializeUsersInRole_AdminIDs" />, <see cref="IUserService.MaterializeUsersRoleHistory_UserIDs" />, <see cref="IUserService.MaterializeUsersRoleHistory_OperatorIDs" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -236,7 +236,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -288,7 +288,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -553,6 +553,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/MaterializeAllMemberNotifications")]
         IEnumerable<MemberNotification> MaterializeAllMemberNotifications(CallContext cntx, User entity);
+
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeNotificationTaskSchedules")]
+        NotificationTaskScheduleSet MaterializeNotificationTaskSchedules(CallContext cntx, User entity);
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeAllNotificationTaskSchedules")]
+        IEnumerable<NotificationTaskSchedule> MaterializeAllNotificationTaskSchedules(CallContext cntx, User entity);
 
         /// <summary>
         ///   Load the set of depending entities "UserAppMembers" of type <see cref="UserAppMemberSet" /> of the entity. 
@@ -1317,7 +1352,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserService2.MaterializeAnnouncements" />, <see cref="IUserService2.MaterializeCommunications" />, <see cref="IUserService2.MaterializeEventCalendar_UserIDs" />, <see cref="IUserService2.MaterializeEventCalendar_CreatedUserIDs" />, <see cref="IUserService2.MaterializeMemberNotifications" />, <see cref="IUserService2.MaterializeUserAppMembers" />, <see cref="IUserService2.MaterializeUserAssociation_FromUserIDs" />, <see cref="IUserService2.MaterializeUserAssociation_ToUserIDs" />, <see cref="IUserService2.MaterializeUserAssocInvitation_FromUserIDs" />, <see cref="IUserService2.MaterializeUserAssocInvitation_ToUserIDs" />, <see cref="IUserService2.MaterializeUserDetails" />, <see cref="IUserService2.MaterializeUserGroupMembers" />, <see cref="IUserService2.MaterializeUserProfiles" />, <see cref="IUserService2.MaterializeUsersInRole_UserIDs" />, <see cref="IUserService2.MaterializeUsersInRole_AdminIDs" />, <see cref="IUserService2.MaterializeUsersRoleHistory_UserIDs" />, <see cref="IUserService2.MaterializeUsersRoleHistory_OperatorIDs" />.
+    ///        <see cref="IUserService2.MaterializeAnnouncements" />, <see cref="IUserService2.MaterializeCommunications" />, <see cref="IUserService2.MaterializeEventCalendar_UserIDs" />, <see cref="IUserService2.MaterializeEventCalendar_CreatedUserIDs" />, <see cref="IUserService2.MaterializeMemberNotifications" />, <see cref="IUserService2.MaterializeNotificationTaskSchedules" />, <see cref="IUserService2.MaterializeUserAppMembers" />, <see cref="IUserService2.MaterializeUserAssociation_FromUserIDs" />, <see cref="IUserService2.MaterializeUserAssociation_ToUserIDs" />, <see cref="IUserService2.MaterializeUserAssocInvitation_FromUserIDs" />, <see cref="IUserService2.MaterializeUserAssocInvitation_ToUserIDs" />, <see cref="IUserService2.MaterializeUserDetails" />, <see cref="IUserService2.MaterializeUserGroupMembers" />, <see cref="IUserService2.MaterializeUserProfiles" />, <see cref="IUserService2.MaterializeUsersInRole_UserIDs" />, <see cref="IUserService2.MaterializeUsersInRole_AdminIDs" />, <see cref="IUserService2.MaterializeUsersRoleHistory_UserIDs" />, <see cref="IUserService2.MaterializeUsersRoleHistory_OperatorIDs" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -1454,7 +1489,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1490,7 +1525,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1538,7 +1573,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1584,7 +1619,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1967,6 +2002,58 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<IEnumerable<MemberNotification>> MaterializeAllMemberNotificationsAsync(CallContext cntx, User entity);
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        [OperationContract]
+        NotificationTaskScheduleSet MaterializeNotificationTaskSchedules(CallContext cntx, User entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<NotificationTaskScheduleSet> MaterializeNotificationTaskSchedulesAsync(CallContext cntx, User entity);
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        [OperationContract]
+        IEnumerable<NotificationTaskSchedule> MaterializeAllNotificationTaskSchedules(CallContext cntx, User entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<IEnumerable<NotificationTaskSchedule>> MaterializeAllNotificationTaskSchedulesAsync(CallContext cntx, User entity);
 #endif
 
         /// <summary>

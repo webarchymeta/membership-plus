@@ -2,15 +2,31 @@
 @using Microsoft.AspNet.Identity
 @using Archymeta.Web.Security.Resources
 <div class="UserSmallIcon">
-    @if (!string.IsNullOrEmpty(Model.IconUrl))
+    @if (Model.Notifications)
     {
-        <img src="@Url.Content("~/" + Model.IconUrl)" />
+        <div class="signalr-indicator">
+            <span class="ion-chatbubble-working" title="@ResourceUtils.GetString("25a483527c8511ac51491156ec3d8d6b", "SignalR enabled ...")"></span>
+        </div>
+    }
+    <a title="@ResourceUtils.GetString("fe7fc019efd9d8c63caa40b65a987050", "Change account info")" href="@Url.Content("~/Account/ChangeAccountInfo")">
+        @if (!string.IsNullOrEmpty(Model.IconUrl))
+        {
+            <img src="@Url.Content("~/" + Model.IconUrl)" />
+        }
+        else
+        {
+            <span class="ion-android-contact"></span>
+        }
+        <span>
+            @Model.Greetings
+        </span>
+    </a>
+    @if (Model.Notifications)
+    {
+        <a id="system-alert" class="notice" href="@Url.Content("~/Notification")"><span></span></a>
     }
     else
     {
-        <span class="ion-android-contact"></span>
+        <a id="system-alert" class="notice-alert" href="@Url.Content("~/Notification")"><span></span></a>
     }
-    <span>
-        @Model.Greetings
-    </span>
 </div>

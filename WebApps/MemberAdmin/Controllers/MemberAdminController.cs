@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using System.Threading;
 using System.Security.Principal;
 using Microsoft.IdentityModel;
-//using Microsoft.IdentityModel.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using CryptoGateway.RDB.Data.MembershipPlus;
@@ -21,6 +20,14 @@ namespace MemberAdminMvc5.Controllers
 {
     public class MemberAdminController : BaseController
     {
+        private Microsoft.AspNet.SignalR.IHubContext NoticeContext
+        {
+            get
+            {
+                return Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<SignalRHubs.NotificationHub>();
+            }
+        }
+
         [HttpGet]
         [Authorize(Roles = "Administrators")]
         public ActionResult UserAdmin()

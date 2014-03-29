@@ -155,6 +155,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="User.MemberNotifications" />, which is a sub-set of the data set "MemberNotifications" for <see cref="MemberNotification" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>NotificationTaskSchedules</term>
+    ///      <description>See <see cref="User.NotificationTaskSchedules" />, which is a sub-set of the data set "NotificationTaskSchedules" for <see cref="NotificationTaskSchedule" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserAppMembers</term>
     ///      <description>See <see cref="User.UserAppMembers" />, which is a sub-set of the data set "UserAppMembers" for <see cref="UserAppMember" />.</description>
     ///    </item>
@@ -1307,6 +1311,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [DataMember]
 		public MemberNotification[] ChangedMemberNotifications
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="NotificationTaskScheduleSet" /> for data set "NotificationTaskSchedules" of <see cref="NotificationTaskSchedule" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+        [DataMember]
+		public NotificationTaskScheduleSet NotificationTaskSchedules
+		{
+			get
+			{
+                if (_NotificationTaskSchedules == null)
+                    _NotificationTaskSchedules = new NotificationTaskScheduleSet();
+				return _NotificationTaskSchedules;
+			}
+            set
+            {
+                _NotificationTaskSchedules = value;
+            }
+		}
+		private NotificationTaskScheduleSet _NotificationTaskSchedules = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "NotificationTaskSchedules" of <see cref="NotificationTaskSchedule" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+		public IEnumerable<NotificationTaskSchedule> NotificationTaskScheduleEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="NotificationTaskSchedule" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+        [DataMember]
+		public NotificationTaskSchedule[] ChangedNotificationTaskSchedules
 		{
 			get;
             set;

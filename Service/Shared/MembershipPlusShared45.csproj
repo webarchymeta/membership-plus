@@ -126,6 +126,14 @@
         <Compile Include="Model\MemberNotificationType.cs">
             <DependentUpon>MemberNotificationTypePage.cs</DependentUpon>
         </Compile>
+        <Compile Include="Interface\INotificationTaskScheduleService.cs" />
+        <Compile Include="Model\NotificationTaskScheduleSet.cs" />
+        <Compile Include="Model\NotificationTaskSchedulePage.cs">
+            <DependentUpon>NotificationTaskScheduleSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\NotificationTaskSchedule.cs">
+            <DependentUpon>NotificationTaskSchedulePage.cs</DependentUpon>
+        </Compile>
         <Compile Include="Interface\IRoleService.cs" />
         <Compile Include="Model\RoleSet.cs" />
         <Compile Include="Model\RolePage.cs">
@@ -133,6 +141,14 @@
         </Compile>
         <Compile Include="Model\Role.cs">
             <DependentUpon>RolePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\ISignalRMessageService.cs" />
+        <Compile Include="Model\SignalRMessageSet.cs" />
+        <Compile Include="Model\SignalRMessagePage.cs">
+            <DependentUpon>SignalRMessageSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\SignalRMessage.cs">
+            <DependentUpon>SignalRMessagePage.cs</DependentUpon>
         </Compile>
         <Compile Include="Interface\IUserAppMemberService.cs" />
         <Compile Include="Model\UserAppMemberSet.cs" />

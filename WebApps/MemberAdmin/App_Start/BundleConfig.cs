@@ -11,9 +11,12 @@ namespace MemberAdminMvc5
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
+                        "~/Scripts/jquery.signalR-{version}.js",
+                        "~/signalr/hubs"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                        "~/Scripts/jquery-ui-{version}.js",
-                        "~/Scripts/qTip/jquery.qtip.js"));
+                        "~/Scripts/jquery-ui-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -40,6 +43,8 @@ namespace MemberAdminMvc5
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/Site.css"));
 
+            bundles.Add(new StyleBundle("~/Content/qtip2").Include("~/Scripts/qTip/jquery.qtip.css"));
+
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                       "~/Content/themes/base/jquery.ui.core.css",
                       "~/Content/themes/base/jquery.ui.resizable.css",
@@ -52,8 +57,7 @@ namespace MemberAdminMvc5
                       "~/Content/themes/base/jquery.ui.tabs.css",
                       "~/Content/themes/base/jquery.ui.datepicker.css",
                       "~/Content/themes/base/jquery.ui.progressbar.css",
-                      "~/Content/themes/base/jquery.ui.theme.css",
-                      "~/Scripts/qTip/jquery.qtip.css"));
+                      "~/Content/themes/base/jquery.ui.theme.css"));
 
         }
     }

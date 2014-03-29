@@ -59,6 +59,19 @@ namespace MemberAdminMvc5.Models
             get;
             set;
         }
+
+        public bool Notifications
+        {
+            get { return _notifications; }
+            set { _notifications = value; }
+        }
+        private bool _notifications = false;
+
+        public string NoticeSummary
+        { 
+            get; 
+            set; 
+        }
     }
 
     public class ChangeAccountInfoModel

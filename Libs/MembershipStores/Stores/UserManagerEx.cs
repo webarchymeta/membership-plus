@@ -84,7 +84,18 @@ namespace Archymeta.Web.Security
             : base(store)
         {
             this.PasswordHasher = store as UserStore<TUser>;
+#if TEST
             this.PasswordValidator = store as UserStore<TUser>;
+#else
+            this.PasswordValidator = new PasswordValidator
+            {
+                RequiredLength = 6,
+                RequireNonLetterOrDigit = true,
+                RequireDigit = true,
+                RequireLowercase = true,
+                RequireUppercase = true,
+            };
+#endif
             this.UserValidator = new UserValidator<TUser>();
         }
 
@@ -273,10 +284,10 @@ namespace Archymeta.Web.Security
             {
                 u.LastLoginDate = DateTime.UtcNow;
                 u.IsLastLoginDateModified = true;
-                usvc.EnqueueNewOrUpdateEntities(cctx, new UserSet(), new User[] { u });
+                await usvc.AddOrUpdateEntitiesAsync(cctx, new UserSet(), new User[] { u });
                 memb.LastActivityDate = u.LastLoginDate;
                 memb.IsLastActivityDateModified = true;
-                mbsvc.EnqueueNewOrUpdateEntities(cctx, membs, new UserAppMember[] { memb });
+                await mbsvc.AddOrUpdateEntitiesAsync(cctx, membs, new UserAppMember[] { memb });
             }
             return found;
         }

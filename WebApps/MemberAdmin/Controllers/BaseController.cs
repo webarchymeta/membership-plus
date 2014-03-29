@@ -38,6 +38,19 @@ namespace MemberAdminMvc5.Controllers
             }
         }
 
+        protected bool IsSignalREnabled
+        {
+            get
+            {
+                string sval = ConfigurationManager.AppSettings["EnableSignalR"];
+                bool bval;
+                if (string.IsNullOrEmpty(sval) || !bool.TryParse(sval, out bval))
+                    return false;
+                else
+                    return bval;
+            }
+        }
+
         private bool IsTimeGreater(DateTime t1, DateTime t2)
         {
             return t1.Year > t2.Year || t1.Month > t2.Month || t1.Date > t2.Date || t1.Hour > t2.Hour || t1.Minute > t2.Minute || t1.Second > t2.Second;

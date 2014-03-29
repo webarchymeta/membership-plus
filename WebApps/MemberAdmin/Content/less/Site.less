@@ -130,16 +130,52 @@ h1.text-logo
    padding: 1px 2px;
 }
 
-.UserSmallIcon
-{
-   img 
-   {
-       display:inline-block;
-       width:30px;
-       margin-top: -8px;
-   }
-   position:relative;
+.signalr-indicator {
+    > span {
+        position:absolute;
+        left: -15px;
+        color: @navbar-inverse-link-color;
+        font-size: @font-size-large;
+    }
+    display: inline;
+    position: relative;
+}
 
+.UserSmallIcon {
+    img {
+        display: inline-block;
+        width: 30px;
+        margin-top: -8px;
+    }
+    > a {
+        padding: 10px 1px;
+        line-height: @line-height-computed;
+        color: @navbar-inverse-link-color;
+        &:hover,
+        &:focus {
+            color: @navbar-inverse-link-hover-color;
+            background-color: @navbar-inverse-link-hover-bg;
+            text-decoration: none;
+        }
+    }
+    > a.notice {
+        padding:2px;
+        color:@gray;
+        span {
+            .glyphicon();
+            .glyphicon-eye-close()
+        }
+    }
+    > a.notice-alert {
+        span {
+            .glyphicon();
+            .glyphicon-eye-open()
+        }
+        padding:2px;
+    }
+    position: relative;
+    margin-top: 15px;
+    white-space:nowrap;
 }
 
 table.personal-properties

@@ -283,7 +283,7 @@ function UserSet(dataServiceUrl) {
                 self.CurrentSorters(new TokenOptions());
                 for (var i = 0; i < r.Sorters.length; i++) {
                     var tk = r.Sorters[i];
-                    if (tokenNameMap) {
+                    if (typeof tokenNameMap != 'undefined') {
                         if (tokenNameMap(tk, setName, false)) {
                             self.CurrentSorters().Options.push(tk);
                         }
@@ -326,7 +326,7 @@ function UserSet(dataServiceUrl) {
                 for (var i = 0; i < r.Options.length; i++) {
                     var tk = new QToken();
                     tk.CopyToken(r.Options[i]);
-                    if (tokenNameMap) {
+                    if (typeof tokenNameMap != 'undefined') {
                         if (tokenNameMap(tk, setName, false)) {
                             self.CurrentSorters().Options.push(tk);
                         }
@@ -371,7 +371,7 @@ function UserSet(dataServiceUrl) {
                 for (var i = 0; i < r.Options.length; i++) {
                     var tk = new QToken();
                     tk.CopyToken(r.Options[i]);
-                    if (tokenNameMap) {
+                    if (typeof tokenNameMap != 'undefined') {
                         if (tokenNameMap(tk, setName, true)) {
                             self.CurrentFilters().Options.push(tk);
                         }

@@ -1,6 +1,7 @@
 ﻿var appRoot = null;
 var appName = null;
 var roleSet = null;
+var alreadyInRoleMsg = 'The user is already in the role!';
 
 function RoleAbs(data) {
     var self = this;
@@ -477,7 +478,7 @@ function _addUserToCurrentRole(data, event) {
     if (userSet.roleUsers) {
         for (var i = 0; i < userSet.roleUsers.length; i++) {
             if (userSet.roleUsers[i].id == data.data.ID) {
-                alert('Already in the role');
+                alert(alreadyInRoleMsg);
                 return;
             }
         }

@@ -52,6 +52,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Owin.2.0.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.0.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.IdentityModel">
       <HintPath>..\..\packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
@@ -157,9 +163,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CallbacksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JavaScriptController.cs" />
     <Compile Include="Controllers\MemberAdminController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\QueryController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Global.asax.cs">
@@ -167,6 +175,8 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignalRHubs\HubBase.cs" />
+    <Compile Include="SignalRHubs\NotificationHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -247,11 +257,21 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\variables.less" />
+    <Content Include="Content\bootstrap\bootstrap.less" />
+    <Content Include="Content\fonts\ionicons.eot" />
+    <Content Include="Content\fonts\ionicons.ttf" />
+    <Content Include="Content\fonts\ionicons.woff" />
+    <Content Include="App_Data\ShortResources.datal" />
+    <Content Include="App_Data\ShortResources.didxl" />
+    <Content Include="Images\node_green.png" />
+    <Content Include="App_Data\QueryResources.datal" />
+    <Content Include="App_Data\QueryResources.didxl" />
+    <Content Include="Content\bootstrap\variables_custom.less" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap\wells.less" />
-    <Content Include="Content\bootstrap\variables.less" />
     <Content Include="Content\bootstrap\utilities.less" />
     <Content Include="Content\bootstrap\type.less" />
     <Content Include="Content\bootstrap\tooltip.less" />
@@ -287,15 +307,8 @@
     <Content Include="Content\bootstrap\buttons.less" />
     <Content Include="Content\bootstrap\button-groups.less" />
     <Content Include="Content\bootstrap\breadcrumbs.less" />
-    <Content Include="Content\bootstrap\bootstrap.less" />
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
-    <Content Include="Content\fonts\ionicons.eot" />
-    <Content Include="Content\fonts\ionicons.ttf" />
-    <Content Include="Content\fonts\ionicons.woff" />
-    <Content Include="App_Data\ShortResources.datal" />
-    <Content Include="App_Data\ShortResources.didxl" />
-    <Content Include="Images\node_green.png" />
     <Content Include="Scripts\ckeditor\adapters\jquery.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
@@ -375,6 +388,7 @@
     <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\da.js" />
     <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\de.js" />
     <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\el.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\en-gb.js" />
     <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\en.js" />
     <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\eo.js" />
     <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\es.js" />
@@ -523,6 +537,7 @@
     <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\cy.js" />
     <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\de.js" />
     <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\el.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\en-gb.js" />
     <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\en.js" />
     <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\eo.js" />
     <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\es.js" />
@@ -643,14 +658,16 @@
     <Content Include="Scripts\ckeditor\plugins\scayt\README.md" />
     <Content Include="Scripts\ckeditor\plugins\scayt\LICENSE.md" />
     <Content Include="Scripts\ckeditor\LICENSE.md" />
+    <Content Include="Scripts\ckeditor\composer.json" />
     <Content Include="Scripts\ckeditor\CHANGES.md" />
-    <Content Include="App_Data\QueryResources.datal" />
-    <Content Include="App_Data\QueryResources.didxl" />
+    <Content Include="Scripts\ckeditor\bower.json" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\ckeditor\styles.js" />
     <Content Include="Scripts\DataService\CustomMembershipPlus.js" />
     <Content Include="Scripts\DataService\MemberSearchPage.js" />
+    <Content Include="Scripts\DataService\NotificationSearchPage.js" />
     <Content Include="Scripts\DataService\RoleAdminPage.js" />
     <Content Include="Scripts\DataService\UserAdminPage.js" />
     <Content Include="Scripts\DataService\UserDetailsPage.js" />
@@ -660,6 +677,8 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.2.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -667,14 +686,14 @@
     <Content Include="Scripts\knockout-3.1.0.debug.js" />
     <Content Include="Scripts\knockout-3.1.0.js" />
     <Content Include="Scripts\knockout-bindinghandlers.js" />
-    <Content Include="Scripts\less-1.5.1.js" />
-    <Content Include="Scripts\less-1.5.1.min.js" />
     <Content Include="Scripts\modernizr-2.7.2.js" />
     <Content Include="Scripts\qTip\jquery.qtip.css" />
     <Content Include="Scripts\qTip\jquery.qtip.js" />
     <Content Include="Scripts\qTip\jquery.qtip.min.css" />
     <Content Include="Scripts\qTip\jquery.qtip.min.js" />
     <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Services\DataService\DataServiceProxy.svc" />
@@ -703,19 +722,23 @@
     <Content Include="Views\Shared\_TopbarPartial.cshtml" />
     <Content Include="Views\Account\_SampleUsersInfo.cshtml" />
     <Content Include="Views\Account\_UserIconPartial.cshtml" />
-    <Content Include="Views\Shared\_QueryComposerPartial.cshtml" />
-    <Content Include="Views\Home\_UserIconPartial.cshtml" />
     <Content Include="Views\Account\ChangeAccountInfo.cshtml" />
     <Content Include="Views\Account\UpdateMemberIcon.cshtml" />
-    <Content Include="Views\Account\UpdateUserPhoto.cshtml" />
     <Content Include="Views\Account\UserDetails.cshtml" />
-    <Content Include="Views\Account\_PersonalChannelsPartial.cshtml" />
-    <Content Include="Views\MemberAdmin\OnlineUsers.cshtml" />
+    <Content Include="Views\Account\UpdateUserPhoto.cshtml" />
     <Content Include="Views\MemberAdmin\UserAdmin.cshtml" />
+    <Content Include="Views\Shared\_QueryComposerPartial.cshtml" />
+    <Content Include="Views\Home\_UserIconPartial.cshtml" />
+    <Content Include="Views\Account\_PersonalChannelsPartial.cshtml" />
     <Content Include="Views\RoleAdmin\RoleAdmin.cshtml" />
-    <Content Include="Views\Query\MemberDetails.cshtml" />
+    <Content Include="Views\MemberAdmin\OnlineUsers.cshtml" />
     <Content Include="Views\Query\SearchMembers.cshtml" />
     <Content Include="Views\Query\_MemberDetailsPartial.cshtml" />
+    <Content Include="Views\Query\MemberDetails.cshtml" />
+    <Content Include="Views\Callbacks\SystemNotification.cshtml" />
+    <Content Include="Views\Callbacks\_SysNotificationWraper.cshtml" />
+    <Content Include="Views\Notification\Index.cshtml" />
+    <Content Include="Views\Notification\CategorizedQuery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\JavaScript\" />

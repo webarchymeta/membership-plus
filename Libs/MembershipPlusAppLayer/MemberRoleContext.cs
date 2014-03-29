@@ -18,6 +18,12 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         public int[] adminRoleIds;
     }
 
+    public class OperationResult
+    {
+        public dynamic Result;
+        public SimpleMessage[] notices;
+    }
+
     public class MemberRoleContext
     {
         public enum UserRoleOperations
@@ -25,6 +31,14 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             Added,
             Modified,
             Deleted
+        }
+
+        protected static string AppId
+        {
+            get
+            {
+                return ApplicationContext.App.ID;
+            }
         }
 
         private static CallContext Cntx
@@ -68,15 +82,20 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         }
         private static bool? _throwOnPopulatedRole = default(bool?);
 
-        public static async Task<dynamic> AddUserToRole(string adminId, string uid, int rid)
+        public static async Task<OperationResult> AddUserToRole(string adminId, string uid, int rid)
         {
+            OperationResult OpResult = new OperationResult();
             var maxp = await MemberAdminContext.GetMaxPriority(adminId);
             RoleServiceProxy rsvc = new RoleServiceProxy();
             UserServiceProxy usvc = new UserServiceProxy();
-            var u = await usvc.LoadEntityByKeyAsync(Cntx, uid);
+            var cntx = Cntx;
+            var u = await usvc.LoadEntityByKeyAsync(cntx, uid);
             if (u == null)
-                return new { ok = false, msg = string.Format(ResourceUtils.GetString("b66098049404e4de1356242e8aa6444a", "User \"{0}\" is not found."), uid) };
-            var uroles = await usvc.MaterializeAllRolesAsync(Cntx, u);
+            {
+                OpResult.Result = new { ok = false, msg = string.Format(ResourceUtils.GetString("b66098049404e4de1356242e8aa6444a", "User \"{0}\" is not found."), uid) };
+                return OpResult;
+            }
+            var uroles = await usvc.MaterializeAllRolesAsync(cntx, u);
             if (DBAutoCleanupRoles)
             {
                 // prevent polution
@@ -88,7 +107,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                         higherroles.Add(ur);
                     while (pr.ParentID != null)
                     {
-                        pr.UpperRef = await rsvc.MaterializeUpperRefAsync(Cntx, pr);
+                        pr.UpperRef = await rsvc.MaterializeUpperRefAsync(cntx, pr);
                         pr = pr.UpperRef;
                         if (pr.ID == rid)
                         {
@@ -103,14 +122,22 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     foreach (var hr in higherroles)
                         rolesstr += (rolesstr == "" ? "" : ", ") + hr.DistinctString;
                     string errorfmt = ResourceUtils.GetString("43558b5deaec392b9461d28d4e753687", "Operation denied: the user already has this or more specific roles: '{0}'! Try to remove them before adding present one.");
-                    return new { ok = false, msg = string.Format(errorfmt, rolesstr) };
+                    OpResult.Result = new { ok = false, msg = string.Format(errorfmt, rolesstr) };
+                    return OpResult;
                 }
             }
-            var r = await rsvc.LoadEntityByKeyAsync(Cntx, rid);
+            var r = await rsvc.LoadEntityByKeyAsync(cntx, rid);
             if (r == null)
-                return new { ok = false, msg = ResourceUtils.GetString("db2a3d7bc44d36a9ebeaa0d562c4cd21", "The role is not found.") };
+            {
+                OpResult.Result = new { ok = false, msg = ResourceUtils.GetString("db2a3d7bc44d36a9ebeaa0d562c4cd21", "The role is not found.") };
+                return OpResult;
+            }
             else if (r.RolePriority > maxp.Major)
-                return new { ok = false, msg = ResourceUtils.GetString("67729f0f407d1ea57f28b43235b3e5f6", "Adding more priviledged role is not authorized.") };
+            {
+                OpResult.Result = new { ok = false, msg = ResourceUtils.GetString("67729f0f407d1ea57f28b43235b3e5f6", "Adding more priviledged role is not authorized.") };
+                return OpResult;
+            }
+            List<SimpleMessage> notices = new List<SimpleMessage>();
             var uir = new UsersInRole();
             List<Role> removed = new List<Role>();
             if (DBAutoCleanupRoles)
@@ -119,7 +146,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                 var p = r;
                 while (p.ParentID != null)
                 {
-                    p.UpperRef = await rsvc.MaterializeUpperRefAsync(Cntx, p);
+                    p.UpperRef = await rsvc.MaterializeUpperRefAsync(cntx, p);
                     p = p.UpperRef;
                     foreach (var ur in uroles)
                     {
@@ -139,7 +166,15 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             uir.LastModified = uir.AssignDate;
             uir.AdminID = adminId;
             UsersInRoleServiceProxy uirsvc = new UsersInRoleServiceProxy();
-            await uirsvc.AddOrUpdateEntitiesAsync(Cntx, new UsersInRoleSet(), new UsersInRole[] { uir });
+            await uirsvc.AddOrUpdateEntitiesAsync(cntx, new UsersInRoleSet(), new UsersInRole[] { uir });
+            UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
+            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, uid);
+            notices.Add(new SimpleMessage
+                        {
+                            TypeId = 1,
+                            Title = string.Format(ResourceUtils.GetString("38015f8af3e032dfd803758dd2bde917", "New role: [{0}] is added.", memb.AcceptLanguages), r.DistinctString),
+                            Data = "{ id=\"" + r.ID + "\", type=\"role\", name=\"" + r.DistinctString + "\" }"
+                        });
             var _r = new { id = rid, uid = u.ID, name = r.RoleName, path = r.DistinctString, level = uir.SubPriority, op = true };
             List<dynamic> _removed = new List<dynamic>();
             if (removed.Count > 0)
@@ -151,55 +186,110 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     l.Add(x);
                     _removed.Add(new { id = rmv.ID, name = rmv.RoleName, path = rmv.DistinctString, op = maxp.Major >= rmv.RolePriority });
                 }
-                uirsvc.DeleteEntities(Cntx, new UsersInRoleSet(), l.ToArray());
+                await uirsvc.DeleteEntitiesAsync(Cntx, new UsersInRoleSet(), l.ToArray());
+                foreach (var _rrmv in removed)
+                    notices.Add(new SimpleMessage
+                    {
+                        TypeId = 1,
+                        Title = string.Format(ResourceUtils.GetString("9708d527fbbf0d9752fc2c741615fb58", "Your role: [{0}] is removed.", memb.AcceptLanguages), _rrmv.DistinctString),
+                        Data = "{ id=\"" + _rrmv.ID + "\", type=\"role\", name=\"" + _rrmv.DistinctString + "\" }"
+                    });
             }
             await AddUserRoleHistory(uir, UserRoleOperations.Added);
-            return new { ok = true, msg = "", added = _r, removed = _removed.ToArray() };
+            OpResult.Result = new { ok = true, msg = "", added = _r, removed = _removed.ToArray() };
+            OpResult.notices = notices.ToArray();
+            return OpResult;
         }
 
-        public static async Task<dynamic> AdjustUserRoleLevel(string adminId, string uid, int rid, int del)
+        public static async Task<OperationResult> AdjustUserRoleLevel(string adminId, string uid, int rid, int del)
         {
+            OperationResult OpResult = new OperationResult();
             var maxp = await MemberAdminContext.GetMaxPriority(adminId);
+            var cntx = Cntx;
             UserServiceProxy usvc = new UserServiceProxy();
-            var u = usvc.LoadEntityByKey(Cntx, uid);
+            var u = usvc.LoadEntityByKey(cntx, uid);
             if (u == null)
-                return new { ok = false, msg = string.Format(ResourceUtils.GetString("b66098049404e4de1356242e8aa6444a", "User \"{0}\" is not found."), uid) };
+            {
+                OpResult.Result = new { ok = false, msg = string.Format(ResourceUtils.GetString("b66098049404e4de1356242e8aa6444a", "User \"{0}\" is not found."), uid) };
+                return OpResult;
+            }
             UsersInRoleServiceProxy uirsvc = new UsersInRoleServiceProxy();
-            var uir = await uirsvc.LoadEntityByKeyAsync(Cntx, rid, u.ID);
+            var uir = await uirsvc.LoadEntityByKeyAsync(cntx, rid, u.ID);
             if (uir == null)
-                return new { ok = false, msg = ResourceUtils.GetString("78257cace857db766d54e6568d7f912b", "The user is not in this role.") };
-            uir.RoleRef = await uirsvc.MaterializeRoleRefAsync(Cntx, uir);
+            {
+                OpResult.Result = new { ok = false, msg = ResourceUtils.GetString("78257cace857db766d54e6568d7f912b", "The user is not in this role.") };
+                return OpResult;
+            }
+            uir.RoleRef = await uirsvc.MaterializeRoleRefAsync(cntx, uir);
             if (maxp.Major < uir.RoleRef.RolePriority || maxp.Major == uir.RoleRef.RolePriority && uir.SubPriority + del > maxp.Major)
-                return new { ok = false, msg = ResourceUtils.GetString("5986d63fe301793ee7f5b2134a8f8787", "Modifying more priviledged role is not authorized.") };
+            {
+                OpResult.Result = new { ok = false, msg = ResourceUtils.GetString("5986d63fe301793ee7f5b2134a8f8787", "Modifying more priviledged role is not authorized.") };
+                return OpResult;
+            }
+            var oldPrio = uir.SubPriority;
             uir.SubPriority += del;
             uir.LastModified = DateTime.UtcNow;
             uir.AdminID = adminId;
-            await uirsvc.AddOrUpdateEntitiesAsync(Cntx, new UsersInRoleSet(), new UsersInRole[] { uir });
+            await uirsvc.AddOrUpdateEntitiesAsync(cntx, new UsersInRoleSet(), new UsersInRole[] { uir });
             uir.UserID = u.ID;
             uir.RoleID = rid;
             await AddUserRoleHistory(uir, UserRoleOperations.Modified);
-            return new { ok = true, msg = "" };
+            UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
+            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, uid);
+            var notice = new SimpleMessage
+            {
+                TypeId = 1,
+                Title = string.Format(ResourceUtils.GetString("54da39696e8014b5ded7a0eaeac1dfc4", "The relative priority of your role: [{0}] is changed from {1} to {2}.", memb.AcceptLanguages),
+                                      uir.RoleRef.DistinctString, oldPrio, uir.SubPriority),
+                Data = "{ id=\"" + rid + "\", type=\"role\", name=\"" + uir.RoleRef.DistinctString + "\" }"
+            };
+            OpResult.Result = new { ok = true, msg = "" };
+            OpResult.notices = new SimpleMessage[] { notice };
+            return OpResult;
         }
 
-        public static async Task<dynamic> RemoveUserFromRole(string adminId, string uid, int rid)
+        public static async Task<OperationResult> RemoveUserFromRole(string adminId, string uid, int rid)
         {
+            OperationResult OpResult = new OperationResult();
             var maxp = await MemberAdminContext.GetMaxPriority(adminId);
+            var cntx = Cntx;
             UserServiceProxy usvc = new UserServiceProxy();
-            var u = await usvc.LoadEntityByKeyAsync(Cntx, uid);
+            var u = await usvc.LoadEntityByKeyAsync(cntx, uid);
             if (u == null)
-                return new { ok = false, msg = string.Format(ResourceUtils.GetString("b66098049404e4de1356242e8aa6444a", "User \"{0}\" is not found."), uid) };
+            {
+                OpResult.Result = new { ok = false, msg = string.Format(ResourceUtils.GetString("b66098049404e4de1356242e8aa6444a", "User \"{0}\" is not found."), uid) };
+                return OpResult;
+            }
             UsersInRoleServiceProxy uirsvc = new UsersInRoleServiceProxy();
-            var uir = await uirsvc.LoadEntityByKeyAsync(Cntx, rid, u.ID);
+            var uir = await uirsvc.LoadEntityByKeyAsync(cntx, rid, u.ID);
             if (uir == null)
-                return new { ok = false, msg = ResourceUtils.GetString("78257cace857db766d54e6568d7f912b", "The user is not in this role.") };
-            uir.RoleRef = await uirsvc.MaterializeRoleRefAsync(Cntx, uir);
+            {
+                OpResult.Result = new { ok = false, msg = ResourceUtils.GetString("78257cace857db766d54e6568d7f912b", "The user is not in this role.") };
+                return OpResult;
+            }
+            uir.RoleRef = await uirsvc.MaterializeRoleRefAsync(cntx, uir);
             if (maxp.Major < uir.RoleRef.RolePriority || maxp.Major == uir.RoleRef.RolePriority && uir.SubPriority > maxp.Major)
-                return new { ok = false, msg = ResourceUtils.GetString("0437b5660f17723dc29c3fa7e08e08a0", "Removing more priviledged role is not authorized.") };
-            await uirsvc.DeleteEntitiesAsync(Cntx, new UsersInRoleSet(), new UsersInRole[] { uir });
+            {
+                OpResult.Result = new { ok = false, msg = ResourceUtils.GetString("0437b5660f17723dc29c3fa7e08e08a0", "Removing more priviledged role is not authorized.") };
+                return OpResult;
+            }
+            await uirsvc.DeleteEntitiesAsync(cntx, new UsersInRoleSet(), new UsersInRole[] { uir });
             uir.UserID = u.ID;
             uir.RoleID = rid;
             await AddUserRoleHistory(uir, UserRoleOperations.Deleted);
-            return new { ok = true, msg = "", available = new { id = rid, name = uir.RoleRef.RoleName, path = uir.RoleRef.DistinctString, op = true } };
+            UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
+            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, uid);
+            OpResult.Result = new { ok = true, msg = "", available = new { id = rid, name = uir.RoleRef.RoleName, path = uir.RoleRef.DistinctString, op = true } };
+            OpResult.notices = new SimpleMessage[]
+            {
+                new SimpleMessage 
+                {
+                    TypeId = 1,
+                    Title = string.Format(ResourceUtils.GetString("9708d527fbbf0d9752fc2c741615fb58", "Your role: [{0}] is removed.", memb.AcceptLanguages), uir.RoleRef.DistinctString), 
+                    Data = "{ id=\"" + rid + "\", type=\"role\", name=\"" + uir.RoleRef.DistinctString + "\" }"
+                }
+            };
+            return OpResult;
         }
 
         private static async Task AddUserRoleHistory(UsersInRole current, UserRoleOperations op)

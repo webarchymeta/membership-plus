@@ -59,7 +59,9 @@
         <Compile Include="EventTypeDatabase.cs" />
         <Compile Include="MemberNotificationDatabase.cs" />
         <Compile Include="MemberNotificationTypeDatabase.cs" />
+        <Compile Include="NotificationTaskScheduleDatabase.cs" />
         <Compile Include="RoleDatabase.cs" />
+        <Compile Include="SignalRMessageDatabase.cs" />
         <Compile Include="UserAppMemberDatabase.cs" />
         <Compile Include="UserAssociationDatabase.cs" />
         <Compile Include="UserAssociationTypeDatabase.cs" />

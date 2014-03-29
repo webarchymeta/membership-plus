@@ -22,6 +22,16 @@ namespace MemberAdminMvc5.Controllers
     [Authorize]
     public class RoleAdminController : BaseController
     {
+#if !NO_SIGNALR
+        private Microsoft.AspNet.SignalR.IHubContext NoticeContext
+        {
+            get
+            {
+                return Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<SignalRHubs.NotificationHub>();
+            }
+        }
+#endif
+
         [HttpGet]
         [Authorize(Roles = "Administrators")]
         public async Task<ActionResult> RoleAdmin()
@@ -41,21 +51,72 @@ namespace MemberAdminMvc5.Controllers
         [Authorize(Roles = "Administrators")]
         public async Task<ActionResult> AddUserToRole(string uid, int rid)
         {
-            return Json(await MemberRoleContext.AddUserToRole(User.Identity.GetUserId(), uid, rid));
+            var OpResult = await MemberRoleContext.AddUserToRole(User.Identity.GetUserId(), uid, rid);
+            await HandleNotification(uid, OpResult);
+            return Json(OpResult.Result);
         }
 
         [HttpPost]
         [Authorize(Roles = "Administrators")]
-        public async Task<ActionResult> AdjustUserRoleLevel(string adminId, string uid, int rid, int del)
+        public async Task<ActionResult> AdjustUserRoleLevel(string uid, int rid, int del)
         {
-            return Json(await MemberRoleContext.AdjustUserRoleLevel(User.Identity.GetUserId(), uid, rid, del));
+            var OpResult = await MemberRoleContext.AdjustUserRoleLevel(User.Identity.GetUserId(), uid, rid, del);
+            await HandleNotification(uid, OpResult);
+            return Json(OpResult.Result);
         }
 
         [HttpPost]
         [Authorize(Roles = "Administrators")]
-        public async Task<ActionResult> RemoveUserFromRole(string adminId, string uid, int rid)
+        public async Task<ActionResult> RemoveUserFromRole(string uid, int rid)
         {
-            return Json(await MemberRoleContext.RemoveUserFromRole(User.Identity.GetUserId(), uid, rid));
+            var OpResult = await MemberRoleContext.RemoveUserFromRole(User.Identity.GetUserId(), uid, rid);
+            await HandleNotification(uid, OpResult);
+            return Json(OpResult.Result);
+        }
+
+        private async Task HandleNotification(string uid, OperationResult OpResult)
+        {
+            if (OpResult.notices != null)
+            {
+                var member = await NotificationContext.SetNotification(uid, OpResult.notices);
+#if !NO_SIGNALR
+                if (IsSignalREnabled && !string.IsNullOrEmpty(member.ConnectionID))
+                {
+                    var lcateg = await NotificationContext.GetRecentCategorized(uid, OpResult.notices, 15);
+                    List<dynamic> lmsg = new List<dynamic>();
+                    foreach (var n in OpResult.notices)
+                    {
+                        lmsg.Add(new
+                        {
+                            title = n.Title,
+                            msg = n.Message,
+                            priority = n.Priority
+                        });
+                    }
+                    List<dynamic> categs = new List<dynamic>();
+                    foreach (var categ in lcateg)
+                    {
+                        string categ_name = NotificationContext.MapCategoryName(categ, member.AcceptLanguages);
+                        List<dynamic> l = new List<dynamic>();
+                        foreach (var n in categ.ChangedMemberNotifications)
+                        {
+                            l.Add(new
+                            {
+                                title = n.DistinctString,
+                                msg = "",
+                                priority = n.PriorityLevel
+                            });
+                        }
+                        categs.Add(new
+                        {
+                            name = categ_name,
+                            list = l.ToArray()
+                        });
+                    }
+                    NoticeContext.Clients.Client(member.ConnectionID).serverNotifications(lmsg.ToArray(), categs);
+                }
+#endif
+            }
         }
 
         [HttpGet]

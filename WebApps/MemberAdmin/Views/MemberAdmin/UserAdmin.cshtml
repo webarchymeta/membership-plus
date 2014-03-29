@@ -50,14 +50,14 @@
                     <td>
                         <table>
                             <tr>
-                                <td>
-                                    <label for="pageBlockSize">@ResourceUtils.GetString("0974d2c2f4c6420089275c2a41c4b41d", "Pages:")</label>
-                                </td>
+                                <td><label for="setSize">@ResourceUtils.GetString("3e26229363fee0953001a220377ff63a", "Set Size:")</label></td>
+                                <td><span id="setSize" data-bind="text: TotalEntities" style="padding-right:5px;"></span></td>
+                                <td><label for="pageBlockSize">@ResourceUtils.GetString("0974d2c2f4c6420089275c2a41c4b41d", "Pages:")</label> </td>
                                 <td>
                                     <input id="pageBlockSize" type="text" data-bind="value: PageBlockSize" />
                                 </td>
                                 <td>
-                                    <label for="pageSize">@ResourceUtils.GetString("a5a9679d8e8ef2c129aa9f4480f09dbd", "User No.:")</label>
+                                    <label for="pageSize">@ResourceUtils.GetString("f29f2298322c60e63a7cb93de972b1a5", "Rows:")</label>
                                 </td>
                                 <td>
                                     <input id="pageSize" type="text" data-bind="value: PageSize_" />
@@ -138,6 +138,9 @@
         </tbody>
     </table>
     <div id="pagelist">
+        <div class="label-default status">
+            <span>@ResourceUtils.GetString("bb84a8b9d441c2b0af6526488d137b43", "Matches:")</span>&nbsp;<span data-bind="text: EntityCount"></span>
+        </div>
         <div class="list">
             <ul class="pagination">
                 <!-- ko if: PrevBlock() != null -->

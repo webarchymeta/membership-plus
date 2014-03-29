@@ -84,10 +84,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [EnumMember]
         MemberNotificationType,
         /// <summary>
+        /// It represents data set <c>NotificationTaskSchedules</c> (see <see cref="NotificationTaskSchedule" />).
+        /// </summary>
+        [EnumMember]
+        NotificationTaskSchedule,
+        /// <summary>
         /// It represents data set <c>Roles</c> (see <see cref="Role" />).
         /// </summary>
         [EnumMember]
         Role,
+        /// <summary>
+        /// It represents data set <c>SignalRMessages</c> (see <see cref="SignalRMessage" />).
+        /// </summary>
+        [EnumMember]
+        SignalRMessage,
         /// <summary>
         /// It represents data set <c>UserAppMembers</c> (see <see cref="UserAppMember" />).
         /// </summary>

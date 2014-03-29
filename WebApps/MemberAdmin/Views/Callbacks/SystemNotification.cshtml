@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>System Notifications</title>
+</head>
+<body>
+@if (Request.IsAuthenticated)
+{
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/signalr")
+    <script src="@Url.Content("~/signalr/hubs")"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var notice = $.connection.notificationHub;
+            notice.client.serverNotifications = function (msgs, categs) {
+                if (parent && parent.serverNotifications) {
+                    parent.serverNotifications(msgs, categs);
+                }
+            };
+            $.connection.hub.start().done(function () {
+
+            });
+        });
+    </script>
+}
+</body>
+</html>

@@ -8,9 +8,7 @@
     @Html.AntiForgeryToken()
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <a title="@ResourceUtils.GetString("fe7fc019efd9d8c63caa40b65a987050", "Change account info")" href="@Url.Content("~/Account/ChangeAccountInfo")">
-                @{ Html.RenderAction("GenerateUserIcon", "Account"); }
-            </a>
+             @{ Html.RenderAction("GenerateUserIcon", "Account"); }
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">@ResourceUtils.GetString("99f01e14b21162806142bace835e81c3", "Log off")</a></li>
     </ul>

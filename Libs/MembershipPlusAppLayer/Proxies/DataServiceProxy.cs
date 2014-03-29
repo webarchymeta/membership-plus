@@ -46,6 +46,14 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             string json = ser.Serialize(new { EntityCount = si.EntityCount, Sorters = si.Sorters });
                             return json;
                         }
+                    case EntitySetType.MemberNotification:
+                        {
+                            MemberNotificationServiceProxy svc = new MemberNotificationServiceProxy();
+                            var si = await svc.GetSetInfoAsync(ApplicationContext.ClientContext, filter);
+                            JavaScriptSerializer ser = new JavaScriptSerializer();
+                            string json = ser.Serialize(new { EntityCount = si.EntityCount, Sorters = si.Sorters });
+                            return json;
+                        }
                 }
             }
             return null;
@@ -90,6 +98,22 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
                             return json;
                         }
+                    case EntitySetType.MemberNotification:
+                        {
+                            DataContractJsonSerializer ser1 = new DataContractJsonSerializer(typeof(List<QToken>));
+                            DataContractJsonSerializer ser2 = new DataContractJsonSerializer(typeof(TokenOptions));
+                            System.IO.MemoryStream strm = new System.IO.MemoryStream();
+                            byte[] sbf = System.Text.Encoding.UTF8.GetBytes(sorters);
+                            strm.Write(sbf, 0, sbf.Length);
+                            strm.Position = 0;
+                            var _sorters = ser1.ReadObject(strm) as List<QToken>;
+                            MemberNotificationServiceProxy svc = new MemberNotificationServiceProxy();
+                            var result = await svc.GetNextSorterOpsAsync(ApplicationContext.ClientContext, _sorters);
+                            strm = new System.IO.MemoryStream();
+                            ser2.WriteObject(strm, result);
+                            string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
+                            return json;
+                        }
                 }
             }
             return null;
@@ -128,6 +152,22 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             strm.Position = 0;
                             var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
                             RoleServiceProxy svc = new RoleServiceProxy();
+                            var result = await svc.GetNextFilterOpsAsync(ApplicationContext.ClientContext, _qexpr, "");
+                            strm = new System.IO.MemoryStream();
+                            ser2.WriteObject(strm, result);
+                            string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
+                            return json;
+                        }
+                    case EntitySetType.MemberNotification:
+                        {
+                            DataContractJsonSerializer ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
+                            DataContractJsonSerializer ser2 = new DataContractJsonSerializer(typeof(TokenOptions));
+                            System.IO.MemoryStream strm = new System.IO.MemoryStream();
+                            byte[] sbf = System.Text.Encoding.UTF8.GetBytes(qexpr);
+                            strm.Write(sbf, 0, sbf.Length);
+                            strm.Position = 0;
+                            var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
+                            MemberNotificationServiceProxy svc = new MemberNotificationServiceProxy();
                             var result = await svc.GetNextFilterOpsAsync(ApplicationContext.ClientContext, _qexpr, "");
                             strm = new System.IO.MemoryStream();
                             ser2.WriteObject(strm, result);
@@ -210,6 +250,37 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
                             return json;
                         }
+                    case EntitySetType.MemberNotification:
+                        {
+                            DataContractJsonSerializer ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
+                            DataContractJsonSerializer ser2 = new DataContractJsonSerializer(typeof(MemberNotification));
+                            DataContractJsonSerializer ser3 = new DataContractJsonSerializer(typeof(MemberNotificationPageBlock));
+                            System.IO.MemoryStream strm = new System.IO.MemoryStream();
+                            byte[] sbf = System.Text.Encoding.UTF8.GetBytes(qexpr);
+                            strm.Write(sbf, 0, sbf.Length);
+                            strm.Position = 0;
+                            var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
+                            MemberNotificationServiceProxy svc = new MemberNotificationServiceProxy();
+                            MemberNotificationSet _set = new MemberNotificationSet();
+                            _set.PageBlockSize = int.Parse(sobj["pageBlockSize"]);
+                            _set.PageSize_ = int.Parse(sobj["pageSize"]);
+                            if (sobj.ContainsKey("setFilter"))
+                                _set.SetFilter = sobj["setFilter"];
+                            MemberNotification _prevlast = null;
+                            if (!string.IsNullOrEmpty(prevlast))
+                            {
+                                strm = new System.IO.MemoryStream();
+                                sbf = System.Text.Encoding.UTF8.GetBytes(prevlast);
+                                strm.Write(sbf, 0, sbf.Length);
+                                strm.Position = 0;
+                                _prevlast = ser2.ReadObject(strm) as MemberNotification;
+                            }
+                            var result = await svc.NextPageBlockAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
+                            strm = new System.IO.MemoryStream();
+                            ser3.WriteObject(strm, result);
+                            string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
+                            return json;
+                        }
                 }
             }
             return null;
@@ -282,6 +353,40 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                 strm.Write(sbf, 0, sbf.Length);
                                 strm.Position = 0;
                                 _prevlast = ser2.ReadObject(strm) as Role;
+                            }
+                            var result = await svc.GetPageItemsAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
+                            var ar = new List<dynamic>();
+                            foreach (var e in result)
+                            {
+                                ar.Add(new { Id = e.ID.ToString(), DistinctString = e.DistinctString });
+                            }
+                            string json = ser3.Serialize(ar);
+                            return json;
+                        }
+                    case EntitySetType.MemberNotification:
+                        {
+                            DataContractJsonSerializer ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
+                            DataContractJsonSerializer ser2 = new DataContractJsonSerializer(typeof(MemberNotification));
+                            var ser3 = new JavaScriptSerializer();
+                            System.IO.MemoryStream strm = new System.IO.MemoryStream();
+                            byte[] sbf = System.Text.Encoding.UTF8.GetBytes(qexpr);
+                            strm.Write(sbf, 0, sbf.Length);
+                            strm.Position = 0;
+                            var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
+                            MemberNotificationServiceProxy svc = new MemberNotificationServiceProxy();
+                            MemberNotificationSet _set = new MemberNotificationSet();
+                            _set.PageBlockSize = int.Parse(sobj["pageBlockSize"]);
+                            _set.PageSize_ = int.Parse(sobj["pageSize"]);
+                            if (sobj.ContainsKey("setFilter"))
+                                _set.SetFilter = sobj["setFilter"];
+                            MemberNotification _prevlast = null;
+                            if (!string.IsNullOrEmpty(prevlast))
+                            {
+                                strm = new System.IO.MemoryStream();
+                                sbf = System.Text.Encoding.UTF8.GetBytes(prevlast);
+                                strm.Write(sbf, 0, sbf.Length);
+                                strm.Position = 0;
+                                _prevlast = ser2.ReadObject(strm) as MemberNotification;
                             }
                             var result = await svc.GetPageItemsAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
                             var ar = new List<dynamic>();
