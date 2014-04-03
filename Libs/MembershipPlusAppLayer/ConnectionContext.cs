@@ -52,6 +52,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             var memb = await mbsvc.LoadEntityByKeyAsync(Cntx, AppId, userId); // await GetMember(userId);
             if (memb != null)
             {
+                memb.StartAutoUpdating = true;
                 memb.ConnectionID = connectId;
                 memb.LastActivityDate = DateTime.UtcNow;
                 memb.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];

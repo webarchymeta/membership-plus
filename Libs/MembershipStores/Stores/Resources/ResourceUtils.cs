@@ -149,7 +149,7 @@ namespace Archymeta.Web.Security.Resources
 
         public static string GetString(string resId, string defval = null, string langs = null)
         {
-            return GetString(StoreTypes.CommonShortResources, resId, defval);
+            return GetString(StoreTypes.CommonShortResources, resId, defval, langs);
         }
 
         public static string GetString(StoreTypes type, string resId, string defval = null, string langs = null)
@@ -177,7 +177,7 @@ namespace Archymeta.Web.Security.Resources
                     reader = Get_URL_Reader();
                     break;
             }
-            return GetString(reader, resId, out dt, defval);
+            return GetString(reader, resId, out dt, defval, langs);
         }
 
         public static string GetString(IUniResStore reader, string resId, out DateTime LastModified, string defval = null, string langs = null)

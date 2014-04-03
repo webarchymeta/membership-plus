@@ -490,10 +490,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         Application_ MaterializeApplication_Ref(CallContext cntx, SignalRHostState entity);
 
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
@@ -503,13 +504,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByKey")]
-        SignalRHostState LoadEntityByKey(CallContext cntx, string _HostName);
+        SignalRHostState LoadEntityByKey(CallContext cntx, string _HostName, string _ApplicationID);
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -545,13 +547,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityGraphRecurs")]
-        SignalRHostState LoadEntityGraphRecurs(CallContext cntx, string _HostName, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        SignalRHostState LoadEntityGraphRecurs(CallContext cntx, string _HostName, string _ApplicationID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Intrinsic id <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -566,7 +569,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByNature")]
-        List<SignalRHostState> LoadEntityByNature(CallContext cntx, string _HostName);
+        List<SignalRHostState> LoadEntityByNature(CallContext cntx, string _HostName, string _ApplicationID);
 
         /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
@@ -1259,33 +1262,36 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
         [OperationContract]
-        SignalRHostState LoadEntityByKey(CallContext cntx, string _HostName);
+        SignalRHostState LoadEntityByKey(CallContext cntx, string _HostName, string _ApplicationID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. Awaitable asynchronous version.
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<SignalRHostState> LoadEntityByKeyAsync(CallContext cntx, string _HostName);
+        System.Threading.Tasks.Task<SignalRHostState> LoadEntityByKeyAsync(CallContext cntx, string _HostName, string _ApplicationID);
 #endif
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1316,13 +1322,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity graph found.
         /// </returns>
         [OperationContract]
-        SignalRHostState LoadEntityGraphRecurs(CallContext cntx, string _HostName, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        SignalRHostState LoadEntityGraphRecurs(CallContext cntx, string _HostName, string _ApplicationID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. Awaitable asynchronous version.
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1353,14 +1360,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity graph found.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<SignalRHostState> LoadEntityGraphRecursAsync(CallContext cntx, string _HostName, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        System.Threading.Tasks.Task<SignalRHostState> LoadEntityGraphRecursAsync(CallContext cntx, string _HostName, string _ApplicationID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 #endif
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Intrinsic id <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1370,13 +1378,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
-        List<SignalRHostState> LoadEntityByNature(CallContext cntx, string _HostName);
+        List<SignalRHostState> LoadEntityByNature(CallContext cntx, string _HostName, string _ApplicationID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" /> }. Awaitable asynchronous version.
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Intrinsic id <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1386,7 +1395,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<List<SignalRHostState>> LoadEntityByNatureAsync(CallContext cntx, string _HostName);
+        System.Threading.Tasks.Task<List<SignalRHostState>> LoadEntityByNatureAsync(CallContext cntx, string _HostName, string _ApplicationID);
 #endif
 
         /// <summary>

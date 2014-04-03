@@ -12,8 +12,7 @@ namespace MemberAdminMvc5
                         "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
-                        "~/Scripts/jquery.signalR-{version}.js",
-                        "~/signalr/hubs"));
+                        "~/Scripts/jquery.signalR-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                         "~/Scripts/jquery-ui-{version}.js"));
@@ -28,6 +27,9 @@ namespace MemberAdminMvc5
                         "~/Scripts/knockout-{version}.js",
                         "~/Scripts/knockout-bindinghandlers.js"
                 ));
+
+            bundles.Add(new ScriptBundle("~/bundles/jgrowl").Include(
+                        "~/Scripts/jquery.jgrowl.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
@@ -44,6 +46,8 @@ namespace MemberAdminMvc5
                       "~/Content/Site.css"));
 
             bundles.Add(new StyleBundle("~/Content/qtip2").Include("~/Scripts/qTip/jquery.qtip.css"));
+
+            bundles.Add(new StyleBundle("~/Content/jgrowl").Include("~/Content/jquery.jgrowl.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                       "~/Content/themes/base/jquery.ui.core.css",

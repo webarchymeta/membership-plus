@@ -165,12 +165,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserAppMemberService.AddOrUpdateEntities" />.
@@ -182,6 +182,42 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ApplicationID = " + ApplicationID + "\r\n";
+                str += "UserID = " + UserID + "\r\n";
+                if (IsEmailModified)
+                    str += "Modified [Email] = " + Email + "\r\n";
+                if (IsAcceptLanguagesModified)
+                    str += "Modified [AcceptLanguages] = " + AcceptLanguages + "\r\n";
+                if (IsCommentModified)
+                    str += "Modified [Comment] = " + Comment + "\r\n";
+                if (IsConnectionIDModified)
+                    str += "Modified [ConnectionID] = " + ConnectionID + "\r\n";
+                if (IsIconImgModified)
+                    str += "Modified [IconImg] = " + IconImg + "\r\n";
+                if (IsIconLastModifiedModified)
+                    str += "Modified [IconLastModified] = " + IconLastModified + "\r\n";
+                if (IsIconMimeModified)
+                    str += "Modified [IconMime] = " + IconMime + "\r\n";
+                if (IsLastActivityDateModified)
+                    str += "Modified [LastActivityDate] = " + LastActivityDate + "\r\n";
+                if (IsLastStatusChangeModified)
+                    str += "Modified [LastStatusChange] = " + LastStatusChange + "\r\n";
+                if (IsMemberStatusModified)
+                    str += "Modified [MemberStatus] = " + MemberStatus + "\r\n";
+                if (IsSearchListingModified)
+                    str += "Modified [SearchListing] = " + SearchListing + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -295,7 +331,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Email != value)
                 {
                     _Email = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsEmailModified = true;
                 }
             }
@@ -338,7 +374,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_AcceptLanguages != value)
                 {
                     _AcceptLanguages = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsAcceptLanguagesModified = true;
                 }
             }
@@ -380,7 +416,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Comment != value)
                 {
                     _Comment = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsCommentModified = true;
                 }
             }
@@ -441,7 +477,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_ConnectionID != value)
                 {
                     _ConnectionID = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsConnectionIDModified = true;
                 }
             }
@@ -483,7 +519,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IconImg != value)
                 {
                     _IconImg = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIconImgModified = true;
                 }
             }
@@ -543,7 +579,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IconLastModified != value)
                 {
                     _IconLastModified = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIconLastModifiedModified = true;
                 }
             }
@@ -586,7 +622,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IconMime != value)
                 {
                     _IconMime = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIconMimeModified = true;
                 }
             }
@@ -628,7 +664,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastActivityDate != value)
                 {
                     _LastActivityDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastActivityDateModified = true;
                 }
             }
@@ -670,7 +706,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastStatusChange != value)
                 {
                     _LastStatusChange = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastStatusChangeModified = true;
                 }
             }
@@ -713,7 +749,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_MemberStatus != value)
                 {
                     _MemberStatus = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsMemberStatusModified = true;
                 }
             }
@@ -755,7 +791,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_SearchListing != value)
                 {
                     _SearchListing = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsSearchListingModified = true;
                 }
             }
@@ -1100,7 +1136,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Email == null)
                 Email = "";
             if (!IsEntityChanged)
@@ -1109,36 +1145,91 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsCommentLoaded = true;
             if (IsIconImgModified && !IsIconImgLoaded)
                 IsIconImgLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAppMember ShallowCopy(bool allData = false)
+        public UserAppMember ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserAppMember e = new UserAppMember();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ApplicationID = ApplicationID;
             e.UserID = UserID;
             e.Email = Email;
+            if (preserveState)
+                e.IsEmailModified = IsEmailModified;
+            else
+                e.IsEmailModified = false;
             e.AcceptLanguages = AcceptLanguages;
+            if (preserveState)
+                e.IsAcceptLanguagesModified = IsAcceptLanguagesModified;
+            else
+                e.IsAcceptLanguagesModified = false;
             e.ConnectionID = ConnectionID;
+            if (preserveState)
+                e.IsConnectionIDModified = IsConnectionIDModified;
+            else
+                e.IsConnectionIDModified = false;
             e.IconLastModified = IconLastModified;
+            if (preserveState)
+                e.IsIconLastModifiedModified = IsIconLastModifiedModified;
+            else
+                e.IsIconLastModifiedModified = false;
             e.IconMime = IconMime;
+            if (preserveState)
+                e.IsIconMimeModified = IsIconMimeModified;
+            else
+                e.IsIconMimeModified = false;
             e.LastActivityDate = LastActivityDate;
+            if (preserveState)
+                e.IsLastActivityDateModified = IsLastActivityDateModified;
+            else
+                e.IsLastActivityDateModified = false;
             e.LastStatusChange = LastStatusChange;
+            if (preserveState)
+                e.IsLastStatusChangeModified = IsLastStatusChangeModified;
+            else
+                e.IsLastStatusChangeModified = false;
             e.MemberStatus = MemberStatus;
+            if (preserveState)
+                e.IsMemberStatusModified = IsMemberStatusModified;
+            else
+                e.IsMemberStatusModified = false;
             e.SearchListing = SearchListing;
+            if (preserveState)
+                e.IsSearchListingModified = IsSearchListingModified;
+            else
+                e.IsSearchListingModified = false;
             if (allData)
             {
                 e.Comment = Comment;
+                if (preserveState)
+                    e.IsCommentModified = IsCommentModified;
+                else
+                    e.IsCommentModified = false;
                 e.IconImg = IconImg;
+                if (preserveState)
+                    e.IsIconImgModified = IsIconImgModified;
+                else
+                    e.IsIconImgModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

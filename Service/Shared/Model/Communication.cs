@@ -129,12 +129,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="ICommunicationService.AddOrUpdateEntities" />.
@@ -146,6 +146,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ID = " + ID + "\r\n";
+                if (IsAddressInfoModified)
+                    str += "Modified [AddressInfo] = " + AddressInfo + "\r\n";
+                if (IsCommentModified)
+                    str += "Modified [Comment] = " + Comment + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -237,7 +254,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_AddressInfo != value)
                 {
                     _AddressInfo = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsAddressInfoModified = true;
                 }
             }
@@ -280,7 +297,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Comment != value)
                 {
                     _Comment = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsCommentModified = true;
                 }
             }
@@ -622,7 +639,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (AddressInfo == null)
                 AddressInfo = "";
             if (ApplicationID == null)
@@ -633,29 +650,48 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsEntityChanged = IsAddressInfoModified || IsCommentModified;
             if (IsCommentModified && !IsCommentLoaded)
                 IsCommentLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public Communication ShallowCopy(bool allData = false)
+        public Communication ShallowCopy(bool allData = false, bool preserveState = false)
         {
             Communication e = new Communication();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.AddressInfo = AddressInfo;
+            if (preserveState)
+                e.IsAddressInfoModified = IsAddressInfoModified;
+            else
+                e.IsAddressInfoModified = false;
             e.ApplicationID = ApplicationID;
             e.TypeID = TypeID;
             e.UserID = UserID;
             if (allData)
             {
                 e.Comment = Comment;
+                if (preserveState)
+                    e.IsCommentModified = IsCommentModified;
+                else
+                    e.IsCommentModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

@@ -8,6 +8,7 @@
     @RenderSection("prestyles", required: false)
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/qtip2")
+    @Styles.Render("~/Content/jgrowl")
     @RenderSection("styles", required: false)
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/ionicons")
@@ -28,7 +29,8 @@
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/Scripts/qTip/jquery.qtip.js")
+    @Scripts.Render("~/bundles/qtip")
+    @Scripts.Render("~/bundles/jgrowl")
     @if (Request.IsAuthenticated)
     {
         Html.RenderAction("GetSystemNotificationWrapper", "Home");

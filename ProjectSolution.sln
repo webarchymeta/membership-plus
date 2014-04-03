@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MembershipPlusServiceProxy4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemberAdminMvc5", "WebApps\MemberAdmin\MemberAdminMvc5.csproj", "{78CBA105-8A50-4996-9737-68CF591378FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalR.MembershipPlus", "Libs\SignalR.MembershipPlus\SignalR.MembershipPlus.csproj", "{1C2227A4-997F-4996-878B-480EA62988EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{78CBA105-8A50-4996-9737-68CF591378FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78CBA105-8A50-4996-9737-68CF591378FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78CBA105-8A50-4996-9737-68CF591378FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C2227A4-997F-4996-878B-480EA62988EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C2227A4-997F-4996-878B-480EA62988EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C2227A4-997F-4996-878B-480EA62988EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C2227A4-997F-4996-878B-480EA62988EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -175,12 +175,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IMemberNotificationService.AddOrUpdateEntities" />.
@@ -192,6 +192,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ID = " + ID + "\r\n";
+                if (IsReadCountModified)
+                    str += "Modified [ReadCount] = " + ReadCount + "\r\n";
+                if (IsBoockmarkedModified)
+                    str += "Modified [Boockmarked] = " + Boockmarked + "\r\n";
+                if (IsNoticeDataModified)
+                    str += "Modified [NoticeData] = " + NoticeData + "\r\n";
+                if (IsProcessedModified)
+                    str += "Modified [Processed] = " + Processed + "\r\n";
+                if (IsProcessedDateModified)
+                    str += "Modified [ProcessedDate] = " + ProcessedDate + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -408,7 +431,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_ReadCount != value)
                 {
                     _ReadCount = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsReadCountModified = true;
                 }
             }
@@ -450,7 +473,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Boockmarked != value)
                 {
                     _Boockmarked = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsBoockmarkedModified = true;
                 }
             }
@@ -492,7 +515,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_NoticeData != value)
                 {
                     _NoticeData = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsNoticeDataModified = true;
                 }
             }
@@ -552,7 +575,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Processed != value)
                 {
                     _Processed = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsProcessedModified = true;
                 }
             }
@@ -594,7 +617,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_ProcessedDate != value)
                 {
                     _ProcessedDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsProcessedDateModified = true;
                 }
             }
@@ -1003,7 +1026,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Title == null)
                 Title = "";
             if (ApplicationID == null)
@@ -1014,25 +1037,49 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsEntityChanged = IsReadCountModified || IsBoockmarkedModified || IsNoticeDataModified || IsProcessedModified || IsProcessedDateModified;
             if (IsNoticeDataModified && !IsNoticeDataLoaded)
                 IsNoticeDataLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public MemberNotification ShallowCopy(bool allData = false)
+        public MemberNotification ShallowCopy(bool allData = false, bool preserveState = false)
         {
             MemberNotification e = new MemberNotification();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.CreatedDate = CreatedDate;
             e.PriorityLevel = PriorityLevel;
             e.Title = Title;
             e.ReadOnce = ReadOnce;
             e.ReadCount = ReadCount;
+            if (preserveState)
+                e.IsReadCountModified = IsReadCountModified;
+            else
+                e.IsReadCountModified = false;
             e.Boockmarked = Boockmarked;
+            if (preserveState)
+                e.IsBoockmarkedModified = IsBoockmarkedModified;
+            else
+                e.IsBoockmarkedModified = false;
             e.Processed = Processed;
+            if (preserveState)
+                e.IsProcessedModified = IsProcessedModified;
+            else
+                e.IsProcessedModified = false;
             e.ProcessedDate = ProcessedDate;
+            if (preserveState)
+                e.IsProcessedDateModified = IsProcessedDateModified;
+            else
+                e.IsProcessedDateModified = false;
             e.ApplicationID = ApplicationID;
             e.TypeID = TypeID;
             e.UserID = UserID;
@@ -1040,11 +1087,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 e.NoticeMsg = NoticeMsg;
                 e.NoticeData = NoticeData;
+                if (preserveState)
+                    e.IsNoticeDataModified = IsNoticeDataModified;
+                else
+                    e.IsNoticeDataModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

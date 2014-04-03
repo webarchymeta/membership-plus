@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Threading;
+using System.Configuration;
 using System.Security.Principal;
 using Microsoft.IdentityModel;
 using Microsoft.AspNet.Identity;
@@ -70,6 +71,16 @@ namespace MemberAdminMvc5.Controllers
         [Authorize(Roles = "Administrators")]
         public ActionResult OnlineUsers()
         {
+            string val = ConfigurationManager.AppSettings["OnlineUserInactiveTimeInMinutes"] == null ? "20" : ConfigurationManager.AppSettings["OnlineUserInactiveTimeInMinutes"];
+            int minutes;
+            if (!int.TryParse(val, out minutes))
+                minutes = 20;
+            var svc = new MembershipPlusServiceProxy();
+            string filter = "UserAppMember.Application_Ref.ID == \"" + ApplicationContext.App.ID + "\" && ( UserAppMember.SearchListing is null || UserAppMember.SearchListing == true ) && ";
+            filter += "UserAppMember.ConnectionID is not null && UserAppMember.LastActivityDate > ";
+            ViewBag.SetFilter = filter;
+            ViewBag.TimeWindow = minutes;
+            ViewBag.AppNam = ApplicationContext.App.Name;
             return View();
         }
 

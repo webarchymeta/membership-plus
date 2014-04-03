@@ -142,12 +142,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserAssocInvitationService.AddOrUpdateEntities" />.
@@ -159,6 +159,26 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "FromUserID = " + FromUserID + "\r\n";
+                str += "ToUserID = " + ToUserID + "\r\n";
+                if (IsCurrentStatusModified)
+                    str += "Modified [CurrentStatus] = " + CurrentStatus + "\r\n";
+                if (IsInvitationMessageModified)
+                    str += "Modified [InvitationMessage] = " + InvitationMessage + "\r\n";
+                if (IsLastStatusChangeModified)
+                    str += "Modified [LastStatusChange] = " + LastStatusChange + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -293,7 +313,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_CurrentStatus != value)
                 {
                     _CurrentStatus = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsCurrentStatusModified = true;
                 }
             }
@@ -336,7 +356,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_InvitationMessage != value)
                 {
                     _InvitationMessage = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsInvitationMessageModified = true;
                 }
             }
@@ -396,7 +416,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastStatusChange != value)
                 {
                     _LastStatusChange = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastStatusChangeModified = true;
                 }
             }
@@ -626,34 +646,57 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (!IsEntityChanged)
                 IsEntityChanged = IsCurrentStatusModified || IsInvitationMessageModified || IsLastStatusChangeModified;
             if (IsInvitationMessageModified && !IsInvitationMessageLoaded)
                 IsInvitationMessageLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAssocInvitation ShallowCopy(bool allData = false)
+        public UserAssocInvitation ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserAssocInvitation e = new UserAssocInvitation();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.FromUserID = FromUserID;
             e.ToUserID = ToUserID;
             e.CreateDate = CreateDate;
             e.CurrentStatus = CurrentStatus;
+            if (preserveState)
+                e.IsCurrentStatusModified = IsCurrentStatusModified;
+            else
+                e.IsCurrentStatusModified = false;
             e.LastStatusChange = LastStatusChange;
+            if (preserveState)
+                e.IsLastStatusChangeModified = IsLastStatusChangeModified;
+            else
+                e.IsLastStatusChangeModified = false;
             if (allData)
             {
                 e.InvitationMessage = InvitationMessage;
+                if (preserveState)
+                    e.IsInvitationMessageModified = IsInvitationMessageModified;
+                else
+                    e.IsInvitationMessageModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

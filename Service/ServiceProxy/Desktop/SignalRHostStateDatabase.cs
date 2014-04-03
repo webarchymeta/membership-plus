@@ -204,6 +204,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         }
 
+        /// <summary>
+        /// Client attached error handler.
+        /// </summary>
         public Action<Exception> DelHandleError = null;
         /// <summary>
         ///   Retrieve information about the entity set: "SignalRHostStates". 
@@ -575,7 +578,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return Channel.GetPageItems(cntx, set, qexpr, prevlast);
+                return Channel.GetPageItems(cntx, set, qexpr, prevlast).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -605,7 +608,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast);
+                return (await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -674,7 +677,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabase(cntx, set, qexpr);
+                return Channel.QueryDatabase(cntx, set, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -697,7 +700,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseAsync(cntx, set, qexpr);
+                return (await Channel.QueryDatabaseAsync(cntx, set, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -721,7 +724,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords);
+                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -745,7 +748,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords);
+                return (await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -865,7 +868,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.ConstraintQuery(cntx, set, constraints, qexpr);
+                return Channel.ConstraintQuery(cntx, set, constraints, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -889,7 +892,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.ConstraintQueryAsync(cntx, set, constraints, qexpr);
+                return (await Channel.ConstraintQueryAsync(cntx, set, constraints, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -914,7 +917,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.ConstraintQueryLimited(cntx, set, constraints, qexpr, maxRecords);
+                return Channel.ConstraintQueryLimited(cntx, set, constraints, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -939,7 +942,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords);
+                return (await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -964,7 +967,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -989,7 +995,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1000,18 +1009,22 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
-        public SignalRHostState LoadEntityByKey(CallContext cntx, string _HostName)
+        public SignalRHostState LoadEntityByKey(CallContext cntx, string _HostName, string _ApplicationID)
         {
             try
             {
-                return Channel.LoadEntityByKey(cntx, _HostName);
+                var e = Channel.LoadEntityByKey(cntx, _HostName, _ApplicationID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1022,18 +1035,22 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. Awaitable asynchronous version.
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
-        public async System.Threading.Tasks.Task<SignalRHostState> LoadEntityByKeyAsync(CallContext cntx, string _HostName)
+        public async System.Threading.Tasks.Task<SignalRHostState> LoadEntityByKeyAsync(CallContext cntx, string _HostName, string _ApplicationID)
         {
             try
             {
-                return await Channel.LoadEntityByKeyAsync(cntx, _HostName);
+                var e = await Channel.LoadEntityByKeyAsync(cntx, _HostName, _ApplicationID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1044,10 +1061,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1077,11 +1095,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or the entity graph found.
         /// </returns>
-        public SignalRHostState LoadEntityGraphRecurs(CallContext cntx, string _HostName, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets)
+        public SignalRHostState LoadEntityGraphRecurs(CallContext cntx, string _HostName, string _ApplicationID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets)
         {
             try
             {
-                return Channel.LoadEntityGraphRecurs(cntx, _HostName, excludedSets, futherDrillSets);
+                return Channel.LoadEntityGraphRecurs(cntx, _HostName, _ApplicationID, excludedSets, futherDrillSets);
             }
             catch (Exception ex)
             {
@@ -1092,10 +1110,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" /> }. Awaitable asynchronous version.
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Primary key <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1125,11 +1144,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or the entity graph found.
         /// </returns>
-        public async System.Threading.Tasks.Task<SignalRHostState> LoadEntityGraphRecursAsync(CallContext cntx, string _HostName, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets)
+        public async System.Threading.Tasks.Task<SignalRHostState> LoadEntityGraphRecursAsync(CallContext cntx, string _HostName, string _ApplicationID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets)
         {
             try
             {
-                return await Channel.LoadEntityGraphRecursAsync(cntx, _HostName, excludedSets, futherDrillSets);
+                return await Channel.LoadEntityGraphRecursAsync(cntx, _HostName, _ApplicationID, excludedSets, futherDrillSets);
             }
             catch (Exception ex)
             {
@@ -1140,10 +1159,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Intrinsic id <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1152,11 +1172,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or zero or one entity.
         /// </returns>
-        public List<SignalRHostState> LoadEntityByNature(CallContext cntx, string _HostName)
+        public List<SignalRHostState> LoadEntityByNature(CallContext cntx, string _HostName, string _ApplicationID)
         {
             try
             {
-                return Channel.LoadEntityByNature(cntx, _HostName);
+                var list = Channel.LoadEntityByNature(cntx, _HostName, _ApplicationID);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {
@@ -1167,10 +1188,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" /> }. Awaitable asynchronous version.
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="SignalRHostState.HostName" />, <see cref="SignalRHostState.ApplicationID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="_HostName">Intrinsic id <see cref="SignalRHostState.HostName" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="SignalRHostState.ApplicationID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1179,11 +1201,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or zero or one entity.
         /// </returns>
-        public async System.Threading.Tasks.Task<List<SignalRHostState>> LoadEntityByNatureAsync(CallContext cntx, string _HostName)
+        public async System.Threading.Tasks.Task<List<SignalRHostState>> LoadEntityByNatureAsync(CallContext cntx, string _HostName, string _ApplicationID)
         {
             try
             {
-                return await Channel.LoadEntityByNatureAsync(cntx, _HostName);
+                var list = await Channel.LoadEntityByNatureAsync(cntx, _HostName, _ApplicationID);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {

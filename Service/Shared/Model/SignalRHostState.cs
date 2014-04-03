@@ -38,6 +38,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>HostName</term>
     ///      <description>See <see cref="SignalRHostState.HostName" />. Primary key; intrinsic id; fixed; not null; max-length = 100 characters.</description>
     ///    </item>
+    ///    <item>
+    ///      <term>ApplicationID</term>
+    ///      <description>See <see cref="SignalRHostState.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///    </item>
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
@@ -46,6 +50,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>HostName</term>
     ///      <description>See <see cref="SignalRHostState.HostName" />. Primary key; intrinsic id; fixed; not null; max-length = 100 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ApplicationID</term>
+    ///      <description>See <see cref="SignalRHostState.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -63,7 +71,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    </listheader>
     ///    <item>
     ///      <term>ApplicationID</term>
-    ///      <description>See <see cref="SignalRHostState.ApplicationID" />. Fixed; nullable; foreign key.</description>
+    ///      <description>See <see cref="SignalRHostState.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -72,7 +80,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    </listheader>
     ///    <item>
     ///      <term>Application_Ref</term>
-    ///      <description>See <see cref="SignalRHostState.Application_Ref" />, which is a member of the data set "Applications" for <see cref="Application_" />. Nullable.</description>
+    ///      <description>See <see cref="SignalRHostState.Application_Ref" />, which is a member of the data set "Applications" for <see cref="Application_" />.</description>
     ///    </item>
     ///  </list>
     /// </remarks>
@@ -91,7 +99,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             get
             {
-                return this.HostName;
+                return this.ApplicationID + ":" + this.HostName;
             }
         }
 
@@ -109,12 +117,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="ISignalRHostStateService.AddOrUpdateEntities" />.
@@ -126,6 +134,22 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "HostName = " + HostName + "\r\n";
+                str += "ApplicationID = " + ApplicationID + "\r\n";
+                if (IsLastMsgIdModified)
+                    str += "Modified [LastMsgId] = " + LastMsgId + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -200,6 +224,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private string _HostName = default(string);
 
         /// <summary>
+        /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
+        /// </summary>
+        [Key]
+        [Editable(false)]
+        [DataMember(IsRequired = true)]
+        public string ApplicationID
+        { 
+            get
+            {
+                return _ApplicationID;
+            }
+            set
+            {
+                if (_ApplicationID != value)
+                {
+                    _ApplicationID = value;
+                }
+            }
+        }
+        private string _ApplicationID = default(string);
+
+        /// <summary>
         /// Meta-info: editable; not null.
         /// </summary>
         [Required]
@@ -216,7 +262,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastMsgId != value)
                 {
                     _LastMsgId = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastMsgIdModified = true;
                 }
             }
@@ -242,27 +288,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isLastMsgIdModified = false;
 
-        /// <summary>
-        /// Meta-info: fixed; nullable; foreign key.
-        /// </summary>
-        [Editable(false)]
-        [DataMember(IsRequired = false)]
-        public string ApplicationID
-        { 
-            get
-            {
-                return _ApplicationID;
-            }
-            set
-            {
-                if (_ApplicationID != value)
-                {
-                    _ApplicationID = value;
-                }
-            }
-        }
-        private string _ApplicationID = default(string);
-
 #endregion
 
 #region Entities that the current one depends upon.
@@ -276,9 +301,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             get 
             {
-                if (ApplicationID == null)
-                    return null;
-                else if (_Application_Ref == null && AutoLoadApplication_Ref != null)
+                if (_Application_Ref == null && AutoLoadApplication_Ref != null)
                     _Application_Ref = AutoLoadApplication_Ref();
                 return _Application_Ref; 
             }
@@ -295,7 +318,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void LoadApplication_Ref()
         {
-            if (ApplicationID == null || _Application_Ref != null)
+            if (_Application_Ref != null)
                 return;
             if (DelLoadApplication_Ref != null)
                 _Application_Ref = DelLoadApplication_Ref();
@@ -330,6 +353,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 return false;
             if (HostName != other.HostName)
                 return false;
+            if (ApplicationID != other.ApplicationID)
+                return false;
             return true;
         }              
 
@@ -345,7 +370,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (other == null)
                 return false;
             else
-                return HostName == other.HostName;
+                return HostName == other.HostName &&  ApplicationID == other.ApplicationID;
         }              
 
         /// <summary>
@@ -369,9 +394,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 to.IsPersisted = from.IsPersisted;
                 to.HostName = from.HostName;
+                to.ApplicationID = from.ApplicationID;
                 to.LastMsgId = from.LastMsgId;
                 to.IsLastMsgIdModified = from.IsLastMsgIdModified;
-                to.ApplicationID = from.ApplicationID;
             }
         }
 
@@ -398,26 +423,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (!IsEntityChanged)
                 IsEntityChanged = IsLastMsgIdModified;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public SignalRHostState ShallowCopy(bool allData = false)
+        public SignalRHostState ShallowCopy(bool allData = false, bool preserveState = false)
         {
             SignalRHostState e = new SignalRHostState();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.HostName = HostName;
-            e.LastMsgId = LastMsgId;
             e.ApplicationID = ApplicationID;
+            e.LastMsgId = LastMsgId;
+            if (preserveState)
+                e.IsLastMsgIdModified = IsLastMsgIdModified;
+            else
+                e.IsLastMsgIdModified = false;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
@@ -432,13 +472,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
   HostName = '" + HostName + @"'");
             sb.Append(@" (natural id)");
             sb.Append(@"
+  ApplicationID = '" + ApplicationID + @"'");
+            sb.Append(@" (natural id)");
+            sb.Append(@"
   LastMsgId = " + LastMsgId + @"");
             if (IsLastMsgIdModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
-  ApplicationID = '" + (ApplicationID != null ? ApplicationID : "null") + @"'
 ");
             return sb.ToString();
         }

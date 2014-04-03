@@ -53,10 +53,10 @@
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Owin.2.0.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
-      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.0.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.0.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
-      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.3\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.IdentityModel">
@@ -677,8 +677,8 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.2.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.2.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.3.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.3.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -761,6 +761,10 @@
     <ProjectReference Include="..\..\Libs\MembershipPlusAppLayer\MembershipPlusAppLayer45.csproj">
       <Project>{dfb293e3-8f2b-4213-885f-e05b52d1559f}</Project>
       <Name>MembershipPlusAppLayer45</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libs\SignalR.MembershipPlus\SignalR.MembershipPlus.csproj">
+      <Project>{1c2227a4-997f-4996-878b-480ea62988eb}</Project>
+      <Name>SignalR.MembershipPlus</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Service\ServiceProxy\Desktop\MembershipPlusServiceProxy45.csproj">
       <Project>{d82d6395-46f5-c4f3-a6e2-329b4496e5bd}</Project>
