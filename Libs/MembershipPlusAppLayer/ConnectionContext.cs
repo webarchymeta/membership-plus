@@ -35,53 +35,44 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
 
         protected static UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
 
-        protected static async Task<UserAppMember> GetMember(string userId)
+        public static async Task OnUserConnected(string userId, string connectId, string languages)
         {
-            // use session, signalr used now is of the same nature at present any way
-            UserAppMember memb = HttpContext.Current.Session[UserAppMemberKey] as UserAppMember;
-            if (memb == null)
-            {
-                memb = await mbsvc.LoadEntityByKeyAsync(Cntx, AppId, userId);
-                HttpContext.Current.Session[UserAppMemberKey] = memb;
-            }
-            return memb;
-        }
-
-        public static async Task OnUserConnected(string userId, string connectId)
-        {
-            var memb = await mbsvc.LoadEntityByKeyAsync(Cntx, AppId, userId); // await GetMember(userId);
+            var cntx = Cntx;
+            cntx.AcceptLanguages = languages;
+            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, userId);
             if (memb != null)
             {
                 memb.StartAutoUpdating = true;
                 memb.ConnectionID = connectId;
                 memb.LastActivityDate = DateTime.UtcNow;
-                memb.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];
-                //HttpContext.Current.Session[UserAppMemberKey] = memb;
-                await mbsvc.AddOrUpdateEntitiesAsync(Cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
+                memb.AcceptLanguages = languages;
+                await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
             }
         }
 
-        public static async Task UserConnectionClosed(string userId)
+        public static async Task UserConnectionClosed(string userId, string languages)
         {
-            var memb = await mbsvc.LoadEntityByKeyAsync(Cntx, AppId, userId); // await GetMember(userId);
+            var cntx = Cntx;
+            cntx.AcceptLanguages = languages;
+            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, userId);
             if (memb != null)
             {
                 memb.ConnectionID = null;
                 memb.LastActivityDate = DateTime.UtcNow;
-                //HttpContext.Current.Session[UserAppMemberKey] = memb;
-                await mbsvc.AddOrUpdateEntitiesAsync(Cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
+                await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
             }
         }
 
-        public static async Task OnUserReconnected(string userId, string connectId)
+        public static async Task OnUserReconnected(string userId, string connectId, string languages)
         {
-            var memb = await mbsvc.LoadEntityByKeyAsync(Cntx, AppId, userId);
+            var cntx = Cntx;
+            cntx.AcceptLanguages = languages;
+            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, userId);
             if (memb != null)
             {
                 memb.ConnectionID = connectId;
-                memb.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];
-                //HttpContext.Current.Session[UserAppMemberKey] = memb;
-                await mbsvc.AddOrUpdateEntitiesAsync(Cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
+                memb.AcceptLanguages = languages;
+                await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
             }
         }
     }

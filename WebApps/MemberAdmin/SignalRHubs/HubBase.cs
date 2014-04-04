@@ -11,25 +11,40 @@ namespace MemberAdminMvc5.SignalRHubs
     {
         protected string UserId
         {
-            get { return HttpContext.Current.User.Identity.GetUserId(); }
+            get 
+            {
+                var c = Context.Request.GetHttpContext();
+                return c.User.Identity.GetUserId(); 
+            }
+        }
+
+        protected HttpContextBase Http
+        {
+            get
+            {
+                return Context.Request.GetHttpContext();
+            }
         }
 
         public override async Task OnConnected()
         {
+            var langs = Context.Request.Headers["Accept-Language"];
+            await ConnectionContext.OnUserConnected(UserId, Context.ConnectionId, langs);
             await base.OnConnected();
-            await ConnectionContext.OnUserConnected(UserId, Context.ConnectionId);
         }
 
         //public override async Task OnDisconnected()
         //{
-        //    await ConnectionContext.OnUserDisconnected(UserId);
         //    await base.OnDisconnected();
+        //    var langs = Context.Request.Headers["Accept-Language"];
+        //    await ConnectionContext.UserConnectionClosed(UserId, langs);
         //}
 
         public override async Task OnReconnected()
         {
+            var langs = Context.Request.Headers["Accept-Language"];
+            await ConnectionContext.OnUserReconnected(UserId, Context.ConnectionId, langs);
             await base.OnReconnected();
-            await ConnectionContext.OnUserReconnected(UserId, Context.ConnectionId);
         }
     }
 }

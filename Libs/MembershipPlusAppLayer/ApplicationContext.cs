@@ -22,7 +22,9 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     if (_clientContext != null)
                     {
                         c = _clientContext.CreateCopy();
-                        c.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];
+                        //(HttpContext.Current may not be available in some application environment
+                        if (HttpContext.Current != null)
+                            c.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];
                     }
                     else  
                         c = null; 

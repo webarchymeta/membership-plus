@@ -76,7 +76,8 @@ namespace MemberAdminMvc5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> LogOff()
         {
-            await ConnectionContext.UserConnectionClosed(User.Identity.GetUserId());
+            string langs = Request.Headers["Accept-Language"];
+            await ConnectionContext.UserConnectionClosed(User.Identity.GetUserId(), langs);
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }

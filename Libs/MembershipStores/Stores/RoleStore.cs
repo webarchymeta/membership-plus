@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 #if MemberPlus
 using CryptoGateway.RDB.Data.MembershipPlus;
+using Archymeta.Web.Security.Resources;
 #else
 using CryptoGateway.RDB.Data.AspNetMember;
 #endif
-using Archymeta.Web.Security.Resources;
 
 namespace Archymeta.Web.Security
 {

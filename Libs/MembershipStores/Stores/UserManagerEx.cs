@@ -13,10 +13,10 @@ using Microsoft.AspNet.Identity;
 using System.Security.Principal;
 #if MemberPlus
 using CryptoGateway.RDB.Data.MembershipPlus;
+using Archymeta.Web.Security.Resources;
 #else
 using CryptoGateway.RDB.Data.AspNetMember;
 #endif
-using Archymeta.Web.Security.Resources;
 
 namespace Archymeta.Web.Security
 {
@@ -115,7 +115,11 @@ namespace Archymeta.Web.Security
                     ExternalErrorsHandler(new AuthFailedEventArg
                     {
                         FailType = AuthFailedTypes.ActionTip,
+#if MemberPlus
                         FailMessage = string.Format(ResourceUtils.GetString("8b3c7a0358df5b19b82260b843718251", "Try to login after {0} seconds."), (Store as UserStore<TUser>).PasswordAttemptWindow)
+#else
+                        FailMessage = string.Format("Try to login after {0} seconds.", (Store as UserStore<TUser>).PasswordAttemptWindow)
+#endif
                     });
             }
             if (HttpContext.Current != null)
@@ -180,7 +184,11 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.UnknownUser,
+#if MemberPlus
                     FailMessage = ResourceUtils.GetString("3488820581565e9098c46152335ebb24", "Your don't have an account in the present system, please register!")
+#else
+                    FailMessage = "Your don't have an account in the present system, please register!"
+#endif
                 };
                 ErrorsHandler(userName, err);
                 return null;
@@ -191,7 +199,11 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.ApprovalNeeded,
+#if MemberPlus
                     FailMessage = ResourceUtils.GetString("3bdf31486d76404d69c73b90c790f9be", "Your account is pending for approval, please wait!")
+#else
+                    FailMessage = "Your account is pending for approval, please wait!"
+#endif
                 };
                 ErrorsHandler(userName, err);
                 return null;
@@ -201,7 +213,11 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.UserAccountBlocked,
+#if MemberPlus
                     FailMessage = string.Format(ResourceUtils.GetString("0bcd70b0b005df9491a0623280ee1f4d", "Your account is in the state of being [{0}], please contact an administrator!"), u.Status)
+#else
+                    FailMessage = string.Format("Your account is in the state of being [{0}], please contact an administrator!", u.Status)
+#endif
                 };
                 ErrorsHandler(userName, err);
                 return null;
@@ -214,7 +230,11 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.MemberNotFound,
+#if MemberPlus
                     FailMessage = string.Format(ResourceUtils.GetString("d084974602e8940a962aad7d00bf7b3e", "You are not currently a member of \"{0}\", please register."), string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName)
+#else
+                    FailMessage = string.Format("You are not currently a member of \"{0}\", please register.", string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName)
+#endif
                 };
                 ErrorsHandler(userName, err);
                 return null;
@@ -226,7 +246,11 @@ namespace Archymeta.Web.Security
                     var err = new AuthFailedEventArg
                     {
                         FailType = AuthFailedTypes.MembershipBlocked,
+#if MemberPlus
                         FailMessage = string.Format(ResourceUtils.GetString("3508707fb8263c95b4c022dd0468235b", "Your membership in \"{0}\" is in the state of being [{1}], please contact an administrator!"), string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName, memb.MemberStatus)
+#else
+                        FailMessage = string.Format("Your membership in \"{0}\" is in the state of being [{1}], please contact an administrator!", string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName, memb.MemberStatus)
+#endif
                     };
                     ErrorsHandler(userName, err);
                     return null;
@@ -240,7 +264,11 @@ namespace Archymeta.Web.Security
                         var err = new AuthFailedEventArg
                         {
                             FailType = AuthFailedTypes.MembershipFrozen,
+#if MemberPlus
                             FailMessage = string.Format(ResourceUtils.GetString("99529364b5dfda1d15a5859cd49c5a7c", "Maximum login attemps for \"{0}\" exceeded, please try again later!"), string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName)
+#else
+                            FailMessage = string.Format("Maximum login attemps for \"{0}\" exceeded, please try again later!", string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName)
+#endif
                         };
                         ErrorsHandler(userName, err, false);
                         return null;
@@ -255,7 +283,11 @@ namespace Archymeta.Web.Security
                         var err = new AuthFailedEventArg
                         {
                             FailType = AuthFailedTypes.MembershipRecovered,
+#if MemberPlus
                             FailMessage = ResourceUtils.GetString("8cdaed0e2a0dd2e31c4960412351d4b5", "Your membership status is restored, please try again!")
+#else
+                            FailMessage = "Your membership status is restored, please try again!"
+#endif
                         };
                         if (u.FailedPasswordAttemptCount != 0)
                         {
@@ -276,7 +308,11 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.InvalidCredential,
+#if MemberPlus
                     FailMessage = ResourceUtils.GetString("3a2a06b3a1f05cde765219211bf2e9be", "Invalid username or password.")
+#else
+                    FailMessage = "Invalid username or password."
+#endif
                 };
                 ErrorsHandler(userName, err, false);
             }
