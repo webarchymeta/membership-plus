@@ -13,17 +13,20 @@ namespace MemberAdminMvc5
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            DataServiceConfiguration config = new DataServiceConfiguration
+            if (MemberInitSuccess)
             {
-                App = App,
-                HostName = Environment.MachineName,
-                TimeWindowInHours = 2,
-                MaxBacklogMessages = 300,
-                MaxQueueLength = 50,
-                HostStateUpdateIntervalInSeconds = 30
-            };
-            GlobalHost.DependencyResolver.UseDataService(config, ClientContext);
-            app.MapSignalR();
+                DataServiceConfiguration config = new DataServiceConfiguration
+                {
+                    App = App,
+                    HostName = Environment.MachineName,
+                    TimeWindowInHours = 2,
+                    MaxBacklogMessages = 300,
+                    MaxQueueLength = 50,
+                    HostStateUpdateIntervalInSeconds = 30
+                };
+                GlobalHost.DependencyResolver.UseDataService(config, ClientContext);
+                app.MapSignalR();
+            }
         }
     }
 }

@@ -242,8 +242,13 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                 MemoryStream strm = new MemoryStream(bf);
                 strm.Position = 0;
                 var e = ser.ReadObject(strm) as SignalRMessage;
-                msgId = (ulong)e.ID;
-                return ScaleoutMessage.FromBytes(e.MesssageData);
+                if (e.ApplicationID == config.App.ID)
+                {
+                    msgId = (ulong)e.ID;
+                    return ScaleoutMessage.FromBytes(e.MesssageData);
+                }
+                else
+                    return null;
             }
             return null;
 

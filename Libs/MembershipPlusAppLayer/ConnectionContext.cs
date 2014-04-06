@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -46,6 +47,29 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                 memb.ConnectionID = connectId;
                 memb.LastActivityDate = DateTime.UtcNow;
                 memb.AcceptLanguages = languages;
+                await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
+            }
+        }
+
+        public static async Task OnUserDisconnected(string connectId)
+        {
+            if (string.IsNullOrEmpty(connectId))
+                return;
+            var cntx = Cntx;
+            QueryExpresion qexpr = new QueryExpresion();
+            qexpr.OrderTks = new List<QToken>(new QToken[] { 
+                new QToken { TkName = "UserID" },
+                new QToken { TkName = "asc" }
+            });
+            qexpr.FilterTks = new List<QToken>(new QToken[] { 
+                new QToken { TkName = "ConnectionID == \"" + connectId + "\"" }
+            });
+            var memb = (await mbsvc.QueryDatabaseAsync(cntx, new UserAppMemberSet(), qexpr)).FirstOrDefault();
+            if (memb != null)
+            {
+                memb.StartAutoUpdating = true;
+                memb.ConnectionID = null;
+                memb.LastActivityDate = DateTime.UtcNow;
                 await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
             }
         }

@@ -1,5 +1,6 @@
 ﻿#if !NO_SIGNALR
 using System.Web;
+using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.Identity;
@@ -18,13 +19,28 @@ namespace MemberAdminMvc5.SignalRHubs
             }
         }
 
-        protected HttpContextBase Http
+        public bool TrackDisconnectState
         {
             get
             {
-                return Context.Request.GetHttpContext();
+                if (!_trackDisconnectState.HasValue)
+                {
+                    if (ConfigurationManager.AppSettings["TrackDisconnectState"] != null)
+                    {
+                        string bv = ConfigurationManager.AppSettings["TrackDisconnectState"].ToLower();
+                        bool b;
+                        if (bool.TryParse(bv, out b))
+                            _trackDisconnectState = b;
+                        else
+                            _trackDisconnectState = false;
+                    }
+                    else
+                        _trackDisconnectState = false;
+                }
+                return _trackDisconnectState.Value;
             }
         }
+        private bool? _trackDisconnectState = null;
 
         public override async Task OnConnected()
         {
@@ -33,12 +49,12 @@ namespace MemberAdminMvc5.SignalRHubs
             await base.OnConnected();
         }
 
-        //public override async Task OnDisconnected()
-        //{
-        //    await base.OnDisconnected();
-        //    var langs = Context.Request.Headers["Accept-Language"];
-        //    await ConnectionContext.UserConnectionClosed(UserId, langs);
-        //}
+        public override async Task OnDisconnected()
+        {
+            await base.OnDisconnected();
+            if (TrackDisconnectState)
+                await ConnectionContext.OnUserDisconnected(Context.ConnectionId);
+        }
 
         public override async Task OnReconnected()
         {
