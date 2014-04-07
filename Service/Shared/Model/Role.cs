@@ -158,12 +158,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IRoleService.AddOrUpdateEntities" />.
@@ -175,6 +175,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "RoleName = " + RoleName + "\r\n";
+                str += "ApplicationID = " + ApplicationID + "\r\n";
+                str += "ParentID = " + ParentID + "\r\n";
+                if (IsCanBeDeletedModified)
+                    str += "Modified [CanBeDeleted] = " + CanBeDeleted + "\r\n";
+                if (IsRolePriorityModified)
+                    str += "Modified [RolePriority] = " + RolePriority + "\r\n";
+                if (IsDescriptionModified)
+                    str += "Modified [Description] = " + Description + "\r\n";
+                if (IsDisplayNameModified)
+                    str += "Modified [DisplayName] = " + DisplayName + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -245,6 +268,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: auto-gen primary key; fixed; not null.
         /// </summary>
@@ -308,7 +333,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_CanBeDeleted != value)
                 {
                     _CanBeDeleted = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsCanBeDeletedModified = true;
                 }
             }
@@ -351,7 +376,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_RolePriority != value)
                 {
                     _RolePriority = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsRolePriorityModified = true;
                 }
             }
@@ -394,7 +419,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Description != value)
                 {
                     _Description = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsDescriptionModified = true;
                 }
             }
@@ -455,7 +480,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_DisplayName != value)
                 {
                     _DisplayName = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsDisplayNameModified = true;
                 }
             }
@@ -526,8 +551,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private System.Nullable<int> _ParentID = default(System.Nullable<int>);
 
+#endregion
+
+#region Entities that the current one depends upon.
+
         /// <summary>
-        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon.
+        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="Role.ApplicationID" /> }.
         /// </summary>
         [DataMember]
@@ -569,7 +598,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<Application_> AutoLoadApplication_Ref = null;
 
         /// <summary>
-        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon.
+        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="Role.ParentID" /> }.
         /// This is the hierarchic parent entity of the current one for this self-referencing data set.
         /// </summary>
@@ -613,8 +642,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public Func<Role> AutoLoadUpperRef = null;
 
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="RoleSet" /> for data set "Roles" of <see cref="Role" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="RoleSet" /> set is { <see cref="Role.ParentID" /> }.
         /// This is the hierarchic child entity set for this self-referencing data set.
         /// </summary>
         [DataMember]
@@ -635,6 +669,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "Roles" of <see cref="Role" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="RoleSet" /> set is { <see cref="Role.ParentID" /> }.
         /// This is the hierarchic child enumeration for this self-referencing data set.
         /// </summary>
 		public IEnumerable<Role> RoleEnum
@@ -645,6 +680,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="Role" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="RoleSet" /> set is { <see cref="Role.ParentID" /> }.
+        /// This is the hierarchic child changed set for this self-referencing data one.
         /// </summary>
         [DataMember]
 		public Role[] ChangedRoles
@@ -655,6 +692,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserGroupAdminRoleSet" /> for data set "UserGroupAdminRoles" of <see cref="UserGroupAdminRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupAdminRoleSet" /> set is { <see cref="UserGroupAdminRole.RoleID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupAdminRoleSet UserGroupAdminRoles
@@ -674,6 +712,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserGroupAdminRoles" of <see cref="UserGroupAdminRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupAdminRoleSet" /> set is { <see cref="UserGroupAdminRole.RoleID" /> }.
         /// </summary>
 		public IEnumerable<UserGroupAdminRole> UserGroupAdminRoleEnum
 		{
@@ -683,6 +722,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserGroupAdminRole" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupAdminRoleSet" /> set is { <see cref="UserGroupAdminRole.RoleID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupAdminRole[] ChangedUserGroupAdminRoles
@@ -693,6 +733,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UsersInRoleSet" /> for data set "UsersInRoles" of <see cref="UsersInRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.RoleID" /> }.
         /// </summary>
         [DataMember]
 		public UsersInRoleSet UsersInRoles
@@ -712,6 +753,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UsersInRoles" of <see cref="UsersInRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.RoleID" /> }.
         /// </summary>
 		public IEnumerable<UsersInRole> UsersInRoleEnum
 		{
@@ -721,6 +763,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UsersInRole" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.RoleID" /> }.
         /// </summary>
         [DataMember]
 		public UsersInRole[] ChangedUsersInRoles
@@ -731,6 +774,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UsersRoleHistorySet" /> for data set "UsersRoleHistories" of <see cref="UsersRoleHistory" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.RoleID" /> }.
         /// </summary>
         [DataMember]
 		public UsersRoleHistorySet UsersRoleHistorys
@@ -750,6 +794,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UsersRoleHistories" of <see cref="UsersRoleHistory" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.RoleID" /> }.
         /// </summary>
 		public IEnumerable<UsersRoleHistory> UsersRoleHistoryEnum
 		{
@@ -759,6 +804,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UsersRoleHistory" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.RoleID" /> }.
         /// </summary>
         [DataMember]
 		public UsersRoleHistory[] ChangedUsersRoleHistorys
@@ -766,6 +812,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -889,7 +937,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (RoleName == null)
                 RoleName = "";
             if (ApplicationID == null)
@@ -898,31 +946,58 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsEntityChanged = IsCanBeDeletedModified || IsRolePriorityModified || IsDescriptionModified || IsDisplayNameModified;
             if (IsDescriptionModified && !IsDescriptionLoaded)
                 IsDescriptionLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public Role ShallowCopy(bool allData = false)
+        public Role ShallowCopy(bool allData = false, bool preserveState = false)
         {
             Role e = new Role();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.RoleName = RoleName;
             e.CanBeDeleted = CanBeDeleted;
+            if (preserveState)
+                e.IsCanBeDeletedModified = IsCanBeDeletedModified;
+            else
+                e.IsCanBeDeletedModified = false;
             e.RolePriority = RolePriority;
+            if (preserveState)
+                e.IsRolePriorityModified = IsRolePriorityModified;
+            else
+                e.IsRolePriorityModified = false;
             e.DisplayName = DisplayName;
+            if (preserveState)
+                e.IsDisplayNameModified = IsDisplayNameModified;
+            else
+                e.IsDisplayNameModified = false;
             e.ApplicationID = ApplicationID;
             e.ParentID = ParentID;
             if (allData)
             {
                 e.Description = Description;
+                if (preserveState)
+                    e.IsDescriptionModified = IsDescriptionModified;
+                else
+                    e.IsDescriptionModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

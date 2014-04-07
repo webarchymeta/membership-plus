@@ -150,12 +150,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserAssociationService.AddOrUpdateEntities" />.
@@ -167,6 +167,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "FromUserID = " + FromUserID + "\r\n";
+                str += "ToUserID = " + ToUserID + "\r\n";
+                str += "TypeID = " + TypeID + "\r\n";
+                if (IsAssocMemoModified)
+                    str += "Modified [AssocMemo] = " + AssocMemo + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -216,6 +233,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region Properties of the current entity
 
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
@@ -323,7 +342,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_AssocMemo != value)
                 {
                     _AssocMemo = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsAssocMemoModified = true;
                 }
             }
@@ -349,8 +368,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isAssocMemoModified = false;
 
+#endregion
+
+#region Entities that the current one depends upon.
+
         /// <summary>
-        /// Entity in data set "UserAssociationTypes" for <see cref="UserAssociationType" /> that this entity depend upon.
+        /// Entity in data set "UserAssociationTypes" for <see cref="UserAssociationType" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserAssociation.TypeID" /> }.
         /// </summary>
         [DataMember]
@@ -392,7 +415,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<UserAssociationType> AutoLoadUserAssociationTypeRef = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserAssociation.FromUserID" /> }.
         /// </summary>
         [DataMember]
@@ -434,7 +457,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<User> AutoLoadUser_FromUserID = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserAssociation.ToUserID" /> }.
         /// </summary>
         [DataMember]
@@ -474,6 +497,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// A delegate to load <see cref="UserAssociation.User_ToUserID" /> automatically when it is referred to at the first time.
         /// </summary>
         public Func<User> AutoLoadUser_ToUserID = null;
+
+#endregion
+
+#region Entities that depend on the current one.
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -562,28 +591,43 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (!IsEntityChanged)
                 IsEntityChanged = IsAssocMemoModified;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAssociation ShallowCopy(bool allData = false)
+        public UserAssociation ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserAssociation e = new UserAssociation();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.FromUserID = FromUserID;
             e.ToUserID = ToUserID;
             e.TypeID = TypeID;
             e.CreateDate = CreateDate;
             e.AssocMemo = AssocMemo;
+            if (preserveState)
+                e.IsAssocMemoModified = IsAssocMemoModified;
+            else
+                e.IsAssocMemoModified = false;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

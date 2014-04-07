@@ -44,7 +44,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService.AddOrUpdateEntities" />, <see cref="IUserProfileService.EnqueueNewOrUpdateEntities" />, and <see cref="IUserProfileService.DeleteEntities" />.
+    ///         <see cref="IMemberCallbackService.AddOrUpdateEntities" />, <see cref="IMemberCallbackService.EnqueueNewOrUpdateEntities" />, and <see cref="IMemberCallbackService.DeleteEntities" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -61,7 +61,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService.NextPageBlock" /> and <see cref="IUserProfileService.GetPageItems" />,
+    ///         <see cref="IMemberCallbackService.NextPageBlock" /> and <see cref="IMemberCallbackService.GetPageItems" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -78,7 +78,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService.QueryEntityCount" />, <see cref="IUserProfileService.QueryDatabase" />, <see cref="IUserProfileService.QueryDatabaseLimited" />,
+    ///         <see cref="IMemberCallbackService.QueryEntityCount" />, <see cref="IMemberCallbackService.QueryDatabase" />, <see cref="IMemberCallbackService.QueryDatabaseLimited" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -95,7 +95,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService.LoadEntityByKey" /> and <see cref="IUserProfileService.LoadEntityByNature" />,
+    ///         <see cref="IMemberCallbackService.LoadEntityByKey" /> and <see cref="IMemberCallbackService.LoadEntityByNature" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -113,7 +113,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService.ConstraintQueryEntityCount" />, <see cref="IUserProfileService.ConstraintQuery" />, <see cref="IUserProfileService.ConstraintQueryLimited" />,
+    ///         <see cref="IMemberCallbackService.ConstraintQueryEntityCount" />, <see cref="IMemberCallbackService.ConstraintQuery" />, <see cref="IMemberCallbackService.ConstraintQueryLimited" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -131,30 +131,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService.GetNextSorterOps" /> and <see cref="IUserProfileService.GetNextFilterOps" />.
-    ///      </description>
-    ///    </item>
-    ///  </list>
-    ///  <list type="table">
-    ///    <listheader>
-    ///       <term>Delay Loaded Properties</term><description></description>
-    ///    </listheader>
-    ///    <item>
-    ///      <term>Description</term>
-    ///      <description>
-    ///        Properties that are loaded on demand.
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (loading)</term>
-    ///      <description>
-    ///         <see cref="IUserProfileService.LoadEntityBinaryValue" />, <see cref="IUserProfileService.LoadEntityStringValue" />
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (uploading)</term>
-    ///      <description>
-    ///         <see cref="IUserProfileService.UpdateEntityBinaryValue" />, <see cref="IUserProfileService.UpdateEntityStringValue" />
+    ///         <see cref="IMemberCallbackService.GetNextSorterOps" /> and <see cref="IMemberCallbackService.GetNextFilterOps" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -171,7 +148,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserProfileService.MaterializeApplication_Ref" />, <see cref="IUserProfileService.MaterializeUserProfileTypeRef" />, <see cref="IUserProfileService.MaterializeUserRef" />.
+    ///        <see cref="IMemberCallbackService.MaterializeUserAppMemberRef" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -188,21 +165,21 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserProfileService.LoadEntityGraphRecurs" />.
+    ///        <see cref="IMemberCallbackService.LoadEntityGraphRecurs" />.
     ///      </description>
     ///    </item>
     ///  </list>
     /// </remarks>
     [ServiceContract(Namespace = "http://relationaldb.archymeta.com/MembershipPlus/", SessionMode = SessionMode.Allowed)]
-    public interface IUserProfileService
+    public interface IMemberCallbackService
     {
         /// <summary>
-        ///   Retrieve information about the entity set: "UserProfiles". 
+        ///   Retrieve information about the entity set: "MemberCallbacks". 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="filter">Filter expression for the current set.</param>
         /// <returns>
-        ///   Entity set: <see cref="UserProfileSet" /> data model.
+        ///   Entity set: <see cref="MemberCallbackSet" /> data model.
         /// </returns>
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -210,10 +187,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/GetSetInfo")]
-        UserProfileSet GetSetInfo(CallContext cntx, string filter);
+        MemberCallbackSet GetSetInfo(CallContext cntx, string filter);
 
         /// <summary>
-        ///   Get a block of page frames from the entity set "UserProfiles" of the data source under specified filtering and sorting conditions. 
+        ///   Get a block of page frames from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <remarks>
         /// The page size and the page block size is specified inside "set".
@@ -223,7 +200,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page block. For the first page block, it is set to null value.</param>
         /// <returns>
-        ///   <see cref="UserProfilePageBlock" /> data model for entity set "UserProfiles".
+        ///   <see cref="MemberCallbackPageBlock" /> data model for entity set "MemberCallbacks".
         /// </returns>
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -231,10 +208,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/NextPageBlock")]
-        UserProfilePageBlock NextPageBlock(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, UserProfile prevlast);
+        MemberCallbackPageBlock NextPageBlock(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast);
 
         /// <summary>
-        ///   Load entities of a page from the entity set "UserProfiles" of the data source under specified filtering and sorting conditions. 
+        ///   Load entities of a page from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <remarks>
         /// The page size is specified inside "set".
@@ -244,7 +221,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page. For the first page, it is set to null value.</param>
         /// <returns>
-        ///   Collection of <see cref="UserProfile" /> in set "UserProfiles" for the current page defined by "prevlast".
+        ///   Collection of <see cref="MemberCallback" /> in set "MemberCallbacks" for the current page defined by "prevlast".
         /// </returns>
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -252,7 +229,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/GetPageItems")]
-        IEnumerable<UserProfile> GetPageItems(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, UserProfile prevlast);
+        IEnumerable<MemberCallback> GetPageItems(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast);
 
         /// <summary>
         ///   Add or update a set of entities to the entity set. 
@@ -273,11 +250,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="UserProfile" />) is modified or its <see cref="UserProfile.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserProfile.Application_Ref" />, <see cref="UserProfile.UserProfileTypeRef" />, <see cref="UserProfile.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberCallback.UserAppMemberRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -293,7 +270,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/AddOrUpdateEntities")]
-        ChangeOpResults<UserProfileUpdateResult> AddOrUpdateEntities(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        ChangeOpResults<MemberCallbackUpdateResult> AddOrUpdateEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 
         /// <summary>
         ///   Queue a set of entities to be added or updated to the entity set in a certain preset future time. 
@@ -321,7 +298,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="UserProfile" />) is modified or its <see cref="UserProfile.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
@@ -329,7 +306,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserProfile.Application_Ref" />, <see cref="UserProfile.UserProfileTypeRef" />, <see cref="UserProfile.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberCallback.UserAppMemberRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -344,7 +321,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/EnqueueNewOrUpdateEntities")]
-        void EnqueueNewOrUpdateEntities(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        void EnqueueNewOrUpdateEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 
         /// <summary>
         ///  Delete a set of entities from the entity set, together with all their dependents, recursively. 
@@ -366,10 +343,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/DeleteEntities")]
-        OperationResults DeleteEntities(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        OperationResults DeleteEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 
         /// <summary>
-        ///   Count the number of entities inside entity set "UserProfiles" of the data source under specified filtering condition. 
+        ///   Count the number of entities inside entity set "MemberCallbacks" of the data source under specified filtering condition. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -383,10 +360,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/QueryEntityCount")]
-        Int64 QueryEntityCount(CallContext cntx, UserProfileSet set, QueryExpresion qexpr);
+        Int64 QueryEntityCount(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr);
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source under specified filtering and sorting conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -400,10 +377,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/QueryDatabase")]
-        IEnumerable<UserProfile> QueryDatabase(CallContext cntx, UserProfileSet set, QueryExpresion qexpr);
+        IEnumerable<MemberCallback> QueryDatabase(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr);
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" from the data source under specified filtering, sorting and max number of returning entities conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source under specified filtering, sorting and max number of returning entities conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -418,14 +395,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/QueryDatabaseLimited")]
-        IEnumerable<UserProfile> QueryDatabaseLimited(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, int maxRecords);
+        IEnumerable<MemberCallback> QueryDatabaseLimited(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, int maxRecords);
 
         /// <summary>
         ///   Get the number of entities from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The number of entities.
@@ -436,14 +413,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/ConstraintQueryEntityCount")]
-        Int64 ConstraintQueryEntityCount(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr);
+        Int64 ConstraintQueryEntityCount(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr);
 
         /// <summary>
         ///   Given a set of foreign key constraints, find the ones that has non zero corresponding entities. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   A set of constraint pointer that has non-zero corresponding entities.
@@ -454,14 +431,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/ConstraintsFindMatches")]
-        ConstraintsPtr[] ConstraintsFindMatches(CallContext cntx, UserProfileSet set, UserProfileSetConstraints[] cnstSets, QueryExpresion qexpr);
+        ConstraintsPtr[] ConstraintsFindMatches(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints[] cnstSets, QueryExpresion qexpr);
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The collection of entities.
@@ -472,14 +449,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/ConstraintQuery")]
-        IEnumerable<UserProfile> ConstraintQuery(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr);
+        IEnumerable<MemberCallback> ConstraintQuery(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr);
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="maxRecords">Max number of entities to return.</param>
         /// <returns>
@@ -491,10 +468,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/ConstraintQueryLimited")]
-        IEnumerable<UserProfile> ConstraintQueryLimited(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr, int maxRecords);
+        IEnumerable<MemberCallback> ConstraintQueryLimited(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr, int maxRecords);
 
         /// <summary>
-        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. 
+        ///   Load the entity "UserAppMemberRef" of type <see cref="UserAppMember" /> that the entity depend upon. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="entity">The entity.</param>
@@ -502,79 +479,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// If the corresponding foreign key is nullable, the returned entity can be null.
         /// </remarks>
         /// <returns>
-        ///   An entity of type <see cref="Application_" /> or null.
+        ///   An entity of type <see cref="UserAppMember" /> or null.
         /// </returns>
         [OperationContract]
         [WebInvoke(Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/MaterializeApplication_Ref")]
-        Application_ MaterializeApplication_Ref(CallContext cntx, UserProfile entity);
+            UriTemplate = "/MaterializeUserAppMemberRef")]
+        UserAppMember MaterializeUserAppMemberRef(CallContext cntx, MemberCallback entity);
 
         /// <summary>
-        ///   Load the entity "UserProfileTypeRef" of type <see cref="UserProfileType" /> that the entity depend upon. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="UserProfileType" /> or null.
-        /// </returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/MaterializeUserProfileTypeRef")]
-        UserProfileType MaterializeUserProfileTypeRef(CallContext cntx, UserProfile entity);
-
-        /// <summary>
-        ///   Load the entity "UserRef" of type <see cref="User" /> that the entity depend upon. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="User" /> or null.
-        /// </returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/MaterializeUserRef")]
-        User MaterializeUserRef(CallContext cntx, UserProfile entity);
-
-        /// <summary>
-        ///   Get the collection of non-trivial foreign key constrains of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source under specified filtering and sorting conditions. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="set">Set information.</param>
-        /// <param name="qexpr">Filter expression for the set.</param>
-        /// <param name="max">Number of items per page.</param>
-        /// <param name="nextId">The id of next page, if any.</param>
-        /// <returns>
-        ///   The collection of independent non-trivial foreign key constrains.
-        /// </returns>
-        /// <remarks>It will throw an exception if the <see cref="UserProfileSet.SetFilter" /> of <paramref name="set" /> is null or empty.</remarks>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/QuerySetConstraints")]
-        UserProfileSetConstraintsColl QuerySetConstraints(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, int max, string nextId);
-
-        /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserProfile.ID" /> }. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
@@ -584,13 +505,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByKey")]
-        UserProfile LoadEntityByKey(CallContext cntx, Int64 _ID);
+        MemberCallback LoadEntityByKey(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserProfile.ID" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -626,25 +549,22 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityGraphRecurs")]
-        UserProfile LoadEntityGraphRecurs(CallContext cntx, Int64 _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        MemberCallback LoadEntityGraphRecurs(CallContext cntx, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UserProfile.PropName" />, <see cref="UserProfile.ApplicationID" />, <see cref="UserProfile.UserID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_PropName">Intrinsic id <see cref="UserProfile.PropName" />.</param>
-        /// <param name="_ApplicationID">Intrinsic id <see cref="UserProfile.ApplicationID" />.</param>
-        /// <param name="_UserID">Intrinsic id <see cref="UserProfile.UserID" />.</param>
+        /// <param name="_HubID">Intrinsic id <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Intrinsic id <see cref="MemberCallback.UserID" />.</param>
         /// <remarks>
         ///  <para>
-        ///   If the intrinsic identifiers are well chosen, the returned entity set should contain zero or one item. This could not be the case
-        ///   if the system is attached to an existing database whose data were entered without respecting the rules (namely those entities having the
-        ///   same set of intrinsic identifiers should appear only once inside the data source) imposed later by the
-        ///   system.
+        ///   The returned entity set should contain zero or one item or null.
         ///  </para>
         /// </remarks>
         /// <returns>
-        ///   The list of found entities.
+        ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -652,81 +572,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByNature")]
-        List<UserProfile> LoadEntityByNature(CallContext cntx, string _PropName, string _ApplicationID, string _UserID);
-
-        /// <summary>
-        ///  Load the delay loaded property <see cref="UserProfile.BinaryValue" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/LoadEntityBinaryValue")]
-        byte[] LoadEntityBinaryValue(CallContext cntx, Int64 _ID);
-
-        /// <summary>
-        ///  Update the delay loaded property <see cref="UserProfile.BinaryValue" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/UpdateEntityBinaryValue")]
-        void UpdateEntityBinaryValue(CallContext cntx, Int64 _ID, byte[] data);
-
-        /// <summary>
-        ///  Load the delay loaded property <see cref="UserProfile.StringValue" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/LoadEntityStringValue")]
-        string LoadEntityStringValue(CallContext cntx, Int64 _ID);
-
-        /// <summary>
-        ///  Update the delay loaded property <see cref="UserProfile.StringValue" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/UpdateEntityStringValue")]
-        void UpdateEntityStringValue(CallContext cntx, Int64 _ID, string data);
+        List<MemberCallback> LoadEntityByNature(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
 
         /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
@@ -783,7 +629,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService2.AddOrUpdateEntities" />, <see cref="IUserProfileService2.EnqueueNewOrUpdateEntities" />, and <see cref="IUserProfileService2.DeleteEntities" />.
+    ///         <see cref="IMemberCallbackService2.AddOrUpdateEntities" />, <see cref="IMemberCallbackService2.EnqueueNewOrUpdateEntities" />, and <see cref="IMemberCallbackService2.DeleteEntities" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -800,7 +646,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService2.NextPageBlock" /> and <see cref="IUserProfileService2.GetPageItems" />,
+    ///         <see cref="IMemberCallbackService2.NextPageBlock" /> and <see cref="IMemberCallbackService2.GetPageItems" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -817,7 +663,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService2.QueryEntityCount" />, <see cref="IUserProfileService2.QueryDatabase" />, <see cref="IUserProfileService2.QueryDatabaseLimited" />,
+    ///         <see cref="IMemberCallbackService2.QueryEntityCount" />, <see cref="IMemberCallbackService2.QueryDatabase" />, <see cref="IMemberCallbackService2.QueryDatabaseLimited" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -834,7 +680,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService2.LoadEntityByKey" /> and <see cref="IUserProfileService2.LoadEntityByNature" />,
+    ///         <see cref="IMemberCallbackService2.LoadEntityByKey" /> and <see cref="IMemberCallbackService2.LoadEntityByNature" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -852,7 +698,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService2.ConstraintQueryEntityCount" />, <see cref="IUserProfileService2.ConstraintQuery" />, <see cref="IUserProfileService2.ConstraintQueryLimited" />,
+    ///         <see cref="IMemberCallbackService2.ConstraintQueryEntityCount" />, <see cref="IMemberCallbackService2.ConstraintQuery" />, <see cref="IMemberCallbackService2.ConstraintQueryLimited" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -870,30 +716,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="IUserProfileService2.GetNextSorterOps" /> and <see cref="IUserProfileService2.GetNextFilterOps" />.
-    ///      </description>
-    ///    </item>
-    ///  </list>
-    ///  <list type="table">
-    ///    <listheader>
-    ///       <term>Delay Loaded Properties</term><description></description>
-    ///    </listheader>
-    ///    <item>
-    ///      <term>Description</term>
-    ///      <description>
-    ///        Properties that are loaded on demand.
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (loading)</term>
-    ///      <description>
-    ///         <see cref="IUserProfileService2.LoadEntityBinaryValue" />, <see cref="IUserProfileService2.LoadEntityStringValue" />
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (uploading)</term>
-    ///      <description>
-    ///         <see cref="IUserProfileService2.UpdateEntityBinaryValue" />, <see cref="IUserProfileService2.UpdateEntityStringValue" />
+    ///         <see cref="IMemberCallbackService2.GetNextSorterOps" /> and <see cref="IMemberCallbackService2.GetNextFilterOps" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -910,7 +733,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserProfileService2.MaterializeApplication_Ref" />, <see cref="IUserProfileService2.MaterializeUserProfileTypeRef" />, <see cref="IUserProfileService2.MaterializeUserRef" />.
+    ///        <see cref="IMemberCallbackService2.MaterializeUserAppMemberRef" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -927,39 +750,39 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserProfileService2.LoadEntityGraphRecurs" />.
+    ///        <see cref="IMemberCallbackService2.LoadEntityGraphRecurs" />.
     ///      </description>
     ///    </item>
     ///  </list>
     /// </remarks>
     [ServiceContract(Namespace = "http://relationaldb.archymeta.com/MembershipPlus/", SessionMode = SessionMode.Allowed)]
-    public interface IUserProfileService2
+    public interface IMemberCallbackService2
     {
         /// <summary>
-        ///   Retrieve information about the entity set: "UserProfiles". 
+        ///   Retrieve information about the entity set: "MemberCallbacks". 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="filter">Filter expression for the current set.</param>
         /// <returns>
-        ///   Entity set: <see cref="UserProfileSet" /> data model.
+        ///   Entity set: <see cref="MemberCallbackSet" /> data model.
         /// </returns>
         [OperationContract]
-        UserProfileSet GetSetInfo(CallContext cntx, string filter);
+        MemberCallbackSet GetSetInfo(CallContext cntx, string filter);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Retrieve information about the entity set: "UserProfiles". Awaitable asynchronous version.
+        ///   Retrieve information about the entity set: "MemberCallbacks". Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="filter">Filter expression for the current set.</param>
         /// <returns>
-        ///   Entity set: <see cref="UserProfileSet" /> data model.
+        ///   Entity set: <see cref="MemberCallbackSet" /> data model.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<UserProfileSet> GetSetInfoAsync(CallContext cntx, string filter);
+        System.Threading.Tasks.Task<MemberCallbackSet> GetSetInfoAsync(CallContext cntx, string filter);
 #endif
 
         /// <summary>
-        ///   Get a block of page frames from the entity set "UserProfiles" of the data source under specified filtering and sorting conditions. 
+        ///   Get a block of page frames from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <remarks>
         /// The page size and the page block size is specified inside "set".
@@ -969,13 +792,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page block. For the first page block, it is set to null value.</param>
         /// <returns>
-        ///   <see cref="UserProfilePageBlock" /> data model for entity set "UserProfiles".
+        ///   <see cref="MemberCallbackPageBlock" /> data model for entity set "MemberCallbacks".
         /// </returns>
         [OperationContract]
-        UserProfilePageBlock NextPageBlock(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, UserProfile prevlast);
+        MemberCallbackPageBlock NextPageBlock(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Get a block of page frames from the entity set "UserProfiles" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
+        ///   Get a block of page frames from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <remarks>
         /// The page size and the page block size is specified inside "set".
@@ -985,14 +808,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page block. For the first page block, it is set to null value.</param>
         /// <returns>
-        ///   <see cref="UserProfilePageBlock" /> data model for entity set "UserProfiles".
+        ///   <see cref="MemberCallbackPageBlock" /> data model for entity set "MemberCallbacks".
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<UserProfilePageBlock> NextPageBlockAsync(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, UserProfile prevlast);
+        System.Threading.Tasks.Task<MemberCallbackPageBlock> NextPageBlockAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast);
 #endif
 
         /// <summary>
-        ///   Load entities of a page from the entity set "UserProfiles" of the data source under specified filtering and sorting conditions. 
+        ///   Load entities of a page from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <remarks>
         /// The page size is specified inside "set".
@@ -1002,13 +825,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page. For the first page, it is set to null value.</param>
         /// <returns>
-        ///   Collection of <see cref="UserProfile" /> in set "UserProfiles" for the current page defined by "prevlast".
+        ///   Collection of <see cref="MemberCallback" /> in set "MemberCallbacks" for the current page defined by "prevlast".
         /// </returns>
         [OperationContract]
-        IEnumerable<UserProfile> GetPageItems(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, UserProfile prevlast);
+        IEnumerable<MemberCallback> GetPageItems(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Load entities of a page from the entity set "UserProfiles" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
+        ///   Load entities of a page from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <remarks>
         /// The page size is specified inside "set".
@@ -1018,10 +841,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page. For the first page, it is set to null value.</param>
         /// <returns>
-        ///   Collection of <see cref="UserProfile" /> in set "UserProfiles" for the current page defined by "prevlast".
+        ///   Collection of <see cref="MemberCallback" /> in set "MemberCallbacks" for the current page defined by "prevlast".
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<IEnumerable<UserProfile>> GetPageItemsAsync(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, UserProfile prevlast);
+        System.Threading.Tasks.Task<IEnumerable<MemberCallback>> GetPageItemsAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast);
 #endif
 
         /// <summary>
@@ -1043,11 +866,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="UserProfile" />) is modified or its <see cref="UserProfile.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserProfile.Application_Ref" />, <see cref="UserProfile.UserProfileTypeRef" />, <see cref="UserProfile.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberCallback.UserAppMemberRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1058,7 +881,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Operation result contained inside an object of type <see cref="ChangeOpResults{T}" /> which contains operation messages, if any, and a list of successfully added or updated entities.
         /// </returns>
         [OperationContract]
-        ChangeOpResults<UserProfileUpdateResult> AddOrUpdateEntities(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        ChangeOpResults<MemberCallbackUpdateResult> AddOrUpdateEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 #if SUPPORT_ASYNC
         /// <summary>
         ///   Add or update a set of entities to the entity set. Awaitable asynchronous version.
@@ -1079,11 +902,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="UserProfile" />) is modified or its <see cref="UserProfile.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserProfile.Application_Ref" />, <see cref="UserProfile.UserProfileTypeRef" />, <see cref="UserProfile.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberCallback.UserAppMemberRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1094,7 +917,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Operation result contained inside an object of type <see cref="ChangeOpResults{T}" /> which contains operation messages, if any, and a list of successfully added or updated entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<ChangeOpResults<UserProfileUpdateResult>> AddOrUpdateEntitiesAsync(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        System.Threading.Tasks.Task<ChangeOpResults<MemberCallbackUpdateResult>> AddOrUpdateEntitiesAsync(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 #endif
 
         /// <summary>
@@ -1123,7 +946,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="UserProfile" />) is modified or its <see cref="UserProfile.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
@@ -1131,7 +954,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserProfile.Application_Ref" />, <see cref="UserProfile.UserProfileTypeRef" />, <see cref="UserProfile.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberCallback.UserAppMemberRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1141,7 +964,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         /// </returns>
         [OperationContract]
-        void EnqueueNewOrUpdateEntities(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        void EnqueueNewOrUpdateEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 #if SUPPORT_ASYNC
         /// <summary>
         ///   Queue a set of entities to be added or updated to the entity set in a certain preset future time. Awaitable asynchronous version.
@@ -1169,7 +992,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="UserProfile" />) is modified or its <see cref="UserProfile.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
@@ -1177,7 +1000,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserProfile.Application_Ref" />, <see cref="UserProfile.UserProfileTypeRef" />, <see cref="UserProfile.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberCallback.UserAppMemberRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1187,7 +1010,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task EnqueueNewOrUpdateEntitiesAsync(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        System.Threading.Tasks.Task EnqueueNewOrUpdateEntitiesAsync(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 #endif
 
         /// <summary>
@@ -1205,7 +1028,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
         /// </returns>
         [OperationContract]
-        OperationResults DeleteEntities(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        OperationResults DeleteEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 #if SUPPORT_ASYNC
         /// <summary>
         ///  Delete a set of entities from the entity set, together with all their dependents, recursively. Awaitable asynchronous version.
@@ -1222,11 +1045,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<OperationResults> DeleteEntitiesAsync(CallContext cntx, UserProfileSet set, UserProfile[] entities);
+        System.Threading.Tasks.Task<OperationResults> DeleteEntitiesAsync(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities);
 #endif
 
         /// <summary>
-        ///   Count the number of entities inside entity set "UserProfiles" of the data source under specified filtering condition. 
+        ///   Count the number of entities inside entity set "MemberCallbacks" of the data source under specified filtering condition. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -1235,10 +1058,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The number of entities.
         /// </returns>
         [OperationContract]
-        Int64 QueryEntityCount(CallContext cntx, UserProfileSet set, QueryExpresion qexpr);
+        Int64 QueryEntityCount(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Count the number of entities inside entity set "UserProfiles" of the data source under specified filtering condition. Awaitable asynchronous version.
+        ///   Count the number of entities inside entity set "MemberCallbacks" of the data source under specified filtering condition. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -1247,11 +1070,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The number of entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<Int64> QueryEntityCountAsync(CallContext cntx, UserProfileSet set, QueryExpresion qexpr);
+        System.Threading.Tasks.Task<Int64> QueryEntityCountAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr);
 #endif
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source under specified filtering and sorting conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -1260,10 +1083,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The collection of entities.
         /// </returns>
         [OperationContract]
-        IEnumerable<UserProfile> QueryDatabase(CallContext cntx, UserProfileSet set, QueryExpresion qexpr);
+        IEnumerable<MemberCallback> QueryDatabase(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -1272,11 +1095,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The collection of entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<IEnumerable<UserProfile>> QueryDatabaseAsync(CallContext cntx, UserProfileSet set, QueryExpresion qexpr);
+        System.Threading.Tasks.Task<IEnumerable<MemberCallback>> QueryDatabaseAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr);
 #endif
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" from the data source under specified filtering, sorting and max number of returning entities conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source under specified filtering, sorting and max number of returning entities conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -1286,10 +1109,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The collection of entities.
         /// </returns>
         [OperationContract]
-        IEnumerable<UserProfile> QueryDatabaseLimited(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, int maxRecords);
+        IEnumerable<MemberCallback> QueryDatabaseLimited(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, int maxRecords);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" from the data source under specified filtering, sorting and max number of returning entities conditions. Awaitable asynchronous version.
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source under specified filtering, sorting and max number of returning entities conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -1299,7 +1122,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The collection of entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<IEnumerable<UserProfile>> QueryDatabaseLimitedAsync(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, int maxRecords);
+        System.Threading.Tasks.Task<IEnumerable<MemberCallback>> QueryDatabaseLimitedAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, int maxRecords);
 #endif
 
         /// <summary>
@@ -1307,26 +1130,26 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The number of entities.
         /// </returns>
         [OperationContract]
-        Int64 ConstraintQueryEntityCount(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr);
+        Int64 ConstraintQueryEntityCount(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr);
 #if SUPPORT_ASYNC
         /// <summary>
         ///   Get the number of entities from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The number of entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<Int64> ConstraintQueryEntityCountAsync(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr);
+        System.Threading.Tasks.Task<Int64> ConstraintQueryEntityCountAsync(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr);
 #endif
 
         /// <summary>
@@ -1334,230 +1157,147 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   A set of constraint pointer that has non-zero corresponding entities.
         /// </returns>
         [OperationContract]
-        ConstraintsPtr[] ConstraintsFindMatches(CallContext cntx, UserProfileSet set, UserProfileSetConstraints[] cnstSets, QueryExpresion qexpr);
+        ConstraintsPtr[] ConstraintsFindMatches(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints[] cnstSets, QueryExpresion qexpr);
 #if SUPPORT_ASYNC
         /// <summary>
         ///   Given a set of foreign key constraints, find the ones that has non zero corresponding entities. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   A set of constraint pointer that has non-zero corresponding entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<ConstraintsPtr[]> ConstraintsFindMatchesAsync(CallContext cntx, UserProfileSet set, UserProfileSetConstraints[] cnstSets, QueryExpresion qexpr);
+        System.Threading.Tasks.Task<ConstraintsPtr[]> ConstraintsFindMatchesAsync(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints[] cnstSets, QueryExpresion qexpr);
 #endif
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The collection of entities.
         /// </returns>
         [OperationContract]
-        IEnumerable<UserProfile> ConstraintQuery(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr);
+        IEnumerable<MemberCallback> ConstraintQuery(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. Awaitable asynchronous version.
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The collection of entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<IEnumerable<UserProfile>> ConstraintQueryAsync(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr);
+        System.Threading.Tasks.Task<IEnumerable<MemberCallback>> ConstraintQueryAsync(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr);
 #endif
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
-        /// <param name="qexpr">Tokenized querying and sorting expression.</param>
-        /// <param name="maxRecords">Max number of entities to return.</param>
-        /// <returns>
-        ///   The collection of entities.
-        /// </returns>
-        [OperationContract]
-        IEnumerable<UserProfile> ConstraintQueryLimited(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr, int maxRecords);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///   Get the collection of entities of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "UserProfiles" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="maxRecords">Max number of entities to return.</param>
         /// <returns>
         ///   The collection of entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<IEnumerable<UserProfile>> ConstraintQueryLimitedAsync(CallContext cntx, UserProfileSet set, UserProfileSetConstraints constraints, QueryExpresion qexpr, int maxRecords);
-#endif
-
-        /// <summary>
-        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="Application_" /> or null.
-        /// </returns>
-        [OperationContract]
-        Application_ MaterializeApplication_Ref(CallContext cntx, UserProfile entity);
+        IEnumerable<MemberCallback> ConstraintQueryLimited(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr, int maxRecords);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="Application_" /> or null.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task<Application_> MaterializeApplication_RefAsync(CallContext cntx, UserProfile entity);
-#endif
-
-        /// <summary>
-        ///   Load the entity "UserProfileTypeRef" of type <see cref="UserProfileType" /> that the entity depend upon. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="UserProfileType" /> or null.
-        /// </returns>
-        [OperationContract]
-        UserProfileType MaterializeUserProfileTypeRef(CallContext cntx, UserProfile entity);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///   Load the entity "UserProfileTypeRef" of type <see cref="UserProfileType" /> that the entity depend upon. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="UserProfileType" /> or null.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task<UserProfileType> MaterializeUserProfileTypeRefAsync(CallContext cntx, UserProfile entity);
-#endif
-
-        /// <summary>
-        ///   Load the entity "UserRef" of type <see cref="User" /> that the entity depend upon. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="User" /> or null.
-        /// </returns>
-        [OperationContract]
-        User MaterializeUserRef(CallContext cntx, UserProfile entity);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///   Load the entity "UserRef" of type <see cref="User" /> that the entity depend upon. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="User" /> or null.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task<User> MaterializeUserRefAsync(CallContext cntx, UserProfile entity);
-#endif
-
-        /// <summary>
-        ///   Get the collection of non-trivial foreign key constrains of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source under specified filtering and sorting conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="qexpr">Filter expression for the set.</param>
-        /// <param name="max">Number of items per page.</param>
-        /// <param name="nextId">The id of next page, if any.</param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="qexpr">Tokenized querying and sorting expression.</param>
+        /// <param name="maxRecords">Max number of entities to return.</param>
         /// <returns>
-        ///   The collection of independent non-trivial foreign key constrains.
+        ///   The collection of entities.
         /// </returns>
-        /// <remarks>It will throw an exception if the <see cref="UserProfileSet.SetFilter" /> of <paramref name="set" /> is null or empty.</remarks>
         [OperationContract]
-        UserProfileSetConstraintsColl QuerySetConstraints(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, int max, string nextId);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///   Get the collection of non-trivial foreign key constrains of type <see cref="UserProfile" /> inside entity set "UserProfiles" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="set">Set information.</param>
-        /// <param name="qexpr">Filter expression for the set.</param>
-        /// <param name="max">Number of items per page.</param>
-        /// <param name="nextId">The id of next page, if any.</param>
-        /// <returns>
-        ///   The collection of independent non-trivial foreign key constrains.
-        /// </returns>
-        /// <remarks>It will throw an exception if the <see cref="UserProfileSet.SetFilter" /> of <paramref name="set" /> is null or empty.</remarks>
-        [OperationContract]
-        System.Threading.Tasks.Task<UserProfileSetConstraintsColl> QuerySetConstraintsAsync(CallContext cntx, UserProfileSet set, QueryExpresion qexpr, int max, string nextId);
+        System.Threading.Tasks.Task<IEnumerable<MemberCallback>> ConstraintQueryLimitedAsync(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr, int maxRecords);
 #endif
 
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserProfile.ID" /> }. 
+        ///   Load the entity "UserAppMemberRef" of type <see cref="UserAppMember" /> that the entity depend upon. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="UserAppMember" /> or null.
+        /// </returns>
+        [OperationContract]
+        UserAppMember MaterializeUserAppMemberRef(CallContext cntx, MemberCallback entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the entity "UserAppMemberRef" of type <see cref="UserAppMember" /> that the entity depend upon. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        /// If the corresponding foreign key is nullable, the returned entity can be null.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="UserAppMember" /> or null.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<UserAppMember> MaterializeUserAppMemberRefAsync(CallContext cntx, MemberCallback entity);
+#endif
+
+        /// <summary>
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
         [OperationContract]
-        UserProfile LoadEntityByKey(CallContext cntx, Int64 _ID);
+        MemberCallback LoadEntityByKey(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserProfile.ID" /> }. Awaitable asynchronous version.
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<UserProfile> LoadEntityByKeyAsync(CallContext cntx, Int64 _ID);
+        System.Threading.Tasks.Task<MemberCallback> LoadEntityByKeyAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
 #endif
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserProfile.ID" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1588,13 +1328,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity graph found.
         /// </returns>
         [OperationContract]
-        UserProfile LoadEntityGraphRecurs(CallContext cntx, Int64 _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        MemberCallback LoadEntityGraphRecurs(CallContext cntx, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="UserProfile.ID" /> }. Awaitable asynchronous version.
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1625,162 +1367,44 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity graph found.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<UserProfile> LoadEntityGraphRecursAsync(CallContext cntx, Int64 _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        System.Threading.Tasks.Task<MemberCallback> LoadEntityGraphRecursAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 #endif
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UserProfile.PropName" />, <see cref="UserProfile.ApplicationID" />, <see cref="UserProfile.UserID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_PropName">Intrinsic id <see cref="UserProfile.PropName" />.</param>
-        /// <param name="_ApplicationID">Intrinsic id <see cref="UserProfile.ApplicationID" />.</param>
-        /// <param name="_UserID">Intrinsic id <see cref="UserProfile.UserID" />.</param>
+        /// <param name="_HubID">Intrinsic id <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Intrinsic id <see cref="MemberCallback.UserID" />.</param>
         /// <remarks>
         ///  <para>
-        ///   If the intrinsic identifiers are well chosen, the returned entity set should contain zero or one item. This could not be the case
-        ///   if the system is attached to an existing database whose data were entered without respecting the rules (namely those entities having the
-        ///   same set of intrinsic identifiers should appear only once inside the data source) imposed later by the
-        ///   system.
+        ///   The returned entity set should contain zero or one item or null.
         ///  </para>
         /// </remarks>
         /// <returns>
-        ///   The list of found entities.
+        ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
-        List<UserProfile> LoadEntityByNature(CallContext cntx, string _PropName, string _ApplicationID, string _UserID);
+        List<MemberCallback> LoadEntityByNature(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UserProfile.PropName" />, <see cref="UserProfile.ApplicationID" />, <see cref="UserProfile.UserID" /> }. Awaitable asynchronous version.
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_PropName">Intrinsic id <see cref="UserProfile.PropName" />.</param>
-        /// <param name="_ApplicationID">Intrinsic id <see cref="UserProfile.ApplicationID" />.</param>
-        /// <param name="_UserID">Intrinsic id <see cref="UserProfile.UserID" />.</param>
+        /// <param name="_HubID">Intrinsic id <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Intrinsic id <see cref="MemberCallback.UserID" />.</param>
         /// <remarks>
         ///  <para>
-        ///   If the intrinsic identifiers are well chosen, the returned entity set should contain zero or one item. This could not be the case
-        ///   if the system is attached to an existing database whose data were entered without respecting the rules (namely those entities having the
-        ///   same set of intrinsic identifiers should appear only once inside the data source) imposed later by the
-        ///   system.
+        ///   The returned entity set should contain zero or one item or null.
         ///  </para>
         /// </remarks>
         /// <returns>
-        ///   The list of found entities.
+        ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<List<UserProfile>> LoadEntityByNatureAsync(CallContext cntx, string _PropName, string _ApplicationID, string _UserID);
-#endif
-
-        /// <summary>
-        ///  Load the delay loaded property <see cref="UserProfile.BinaryValue" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        byte[] LoadEntityBinaryValue(CallContext cntx, Int64 _ID);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///  Load the delay loaded property <see cref="UserProfile.BinaryValue" />. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task<byte[]> LoadEntityBinaryValueAsync(CallContext cntx, Int64 _ID);
-#endif
-
-        /// <summary>
-        ///  Update the delay loaded property <see cref="UserProfile.BinaryValue" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        void UpdateEntityBinaryValue(CallContext cntx, Int64 _ID, byte[] data);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///  Update the delay loaded property <see cref="UserProfile.BinaryValue" />. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task UpdateEntityBinaryValueAsync(CallContext cntx, Int64 _ID, byte[] data);
-#endif
-
-        /// <summary>
-        ///  Load the delay loaded property <see cref="UserProfile.StringValue" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        string LoadEntityStringValue(CallContext cntx, Int64 _ID);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///  Load the delay loaded property <see cref="UserProfile.StringValue" />. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task<string> LoadEntityStringValueAsync(CallContext cntx, Int64 _ID);
-#endif
-
-        /// <summary>
-        ///  Update the delay loaded property <see cref="UserProfile.StringValue" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        void UpdateEntityStringValue(CallContext cntx, Int64 _ID, string data);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///  Update the delay loaded property <see cref="UserProfile.StringValue" />. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="UserProfile.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task UpdateEntityStringValueAsync(CallContext cntx, Int64 _ID, string data);
+        System.Threading.Tasks.Task<List<MemberCallback>> LoadEntityByNatureAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
 #endif
 
         /// <summary>

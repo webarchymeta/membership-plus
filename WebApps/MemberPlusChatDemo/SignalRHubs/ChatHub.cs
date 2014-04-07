@@ -9,6 +9,11 @@ namespace MemberAdminMvc5.SignalRHubs
 {
     public class ChatHub : HubBase
     {
+        public override string HubIdentity
+        {
+            get { return "Chatting"; }
+        }
+
         #region Data Members
 
         //static List<UserDetail> ConnectedUsers = new List<UserDetail>();

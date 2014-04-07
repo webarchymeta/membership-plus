@@ -31,6 +31,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
         /// </summary>
         string DistinctString { get; set; }
+
+        /// <summary>
+        /// Configured at system generation step, its value provides a list of value for intrinsic keys.
+        /// </summary>
+        string SignatureString { get; }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        /// <param name="preserveState">Whether or not to preserve editing state of the entity.</param>
+        /// <returns>A shallow copy of the entity.</returns>
+        IDbEntity ShallowCopy(bool preserveState);
     }
 
     /// <summary>

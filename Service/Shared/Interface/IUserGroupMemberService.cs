@@ -324,6 +324,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         void EnqueueNewOrUpdateEntities(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
 
         /// <summary>
+        ///  Delete a set of entities from the entity set, together with all their dependents, recursively. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="set">The current entity set.</param>
+        /// <param name="entities">The list of entities to be processed.</param>
+        /// <remarks>
+        ///  <para>
+        ///   Care should be taken when deleting an entire inter-dependent object sub-graph.
+        ///  </para>
+        /// </remarks>
+        /// <returns>
+        ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/DeleteEntities")]
+        OperationResults DeleteEntities(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
+
+        /// <summary>
         ///   Count the number of entities inside entity set "UserGroupMembers" of the data source under specified filtering condition. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -535,20 +557,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <para>Relational databases are designed to serve as data query and storage backend, in a normalized way, for certain kind of applications. 
         /// However at the application level, normalized elementary data sets are often combined (jointed) in a user friendly way as views. In the object oriented 
         /// world and at the data view model level, these views can be represented using entity graphs.</para>
-        /// <para>This method is designed to load a selected sub entity graph recursively starting from a given entity (id) from the data source in one call 
-        /// to the service, which could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
-        /// <para>The selection is controlled by the two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
+        /// <para>This method is designed to load a selected sub entity graph recursively from the data source in one call to the service starting with a given entity (id).
+        /// It could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
+        /// <para>The selection is controlled by two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
         /// <para>The <paramref name="excludedSets" /> parameter is used to exclude a list of entity sets and all other sets that depend on it. This can be
         /// better understood if one has a look at the schematic view of the data set schema that is shown on the front page of the data service, namely
         /// if one date set (node) is excluded then all the sets that it points to will not be reached through it, although some of them could still be reached
         /// following other routes. </para>
         /// <para>There are many ways an entity sub-graph can be loaded, the present implementation is based on the rule to be given next. Namely, starting from 
-        /// entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also load all 
+        /// the entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also loads all 
         /// elements that any of the elements visited by the downward recursion depends upon, recursively upward (namely in 
         /// the opposite direction of the arrows in the schema view), but never go downward again without explicit instruction.</para>
         /// <para>The <paramref name="futherDrillSets" /> parameter is used control when to go downward again, represented by the <see cref="EntitySetRelation.SetType" /> member 
         /// and the collection of data sets that depend on it, represented by the <see cref="EntitySetRelation.RelatedSets" /> member, should be further drilled down, recursively.</para>
-        /// <para>Note that a data service has intrinsic limits that does not allow transimitting an entity graph that is too large in one call, so one has to select which part
+        /// <para>Note that a data service has intrinsic limits that do not allow transmitting an entity graph that is too large in one call, so one has to select which part
         /// of the entire graph should be loaded in each call to the data service,</para>
         /// <para>For a given entity, the entities that it depends upon are represented by the member objects corresponding to each foreign keys. However, the
         /// sets of entities that depend on the said entity are stored into the corresponding collection members having the "Changed" prefix and
@@ -1028,6 +1050,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
+        ///  Delete a set of entities from the entity set, together with all their dependents, recursively. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="set">The current entity set.</param>
+        /// <param name="entities">The list of entities to be processed.</param>
+        /// <remarks>
+        ///  <para>
+        ///   Care should be taken when deleting an entire inter-dependent object sub-graph.
+        ///  </para>
+        /// </remarks>
+        /// <returns>
+        ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
+        /// </returns>
+        [OperationContract]
+        OperationResults DeleteEntities(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Delete a set of entities from the entity set, together with all their dependents, recursively. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="set">The current entity set.</param>
+        /// <param name="entities">The list of entities to be processed.</param>
+        /// <remarks>
+        ///  <para>
+        ///   Care should be taken when deleting an entire inter-dependent object sub-graph.
+        ///  </para>
+        /// </remarks>
+        /// <returns>
+        ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<OperationResults> DeleteEntitiesAsync(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
+#endif
+
+        /// <summary>
         ///   Count the number of entities inside entity set "UserGroupMembers" of the data source under specified filtering condition. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -1340,20 +1397,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <para>Relational databases are designed to serve as data query and storage backend, in a normalized way, for certain kind of applications. 
         /// However at the application level, normalized elementary data sets are often combined (jointed) in a user friendly way as views. In the object oriented 
         /// world and at the data view model level, these views can be represented using entity graphs.</para>
-        /// <para>This method is designed to load a selected sub entity graph recursively starting from a given entity (id) from the data source in one call 
-        /// to the service, which could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
-        /// <para>The selection is controlled by the two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
+        /// <para>This method is designed to load a selected sub entity graph recursively from the data source in one call to the service starting with a given entity (id).
+        /// It could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
+        /// <para>The selection is controlled by two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
         /// <para>The <paramref name="excludedSets" /> parameter is used to exclude a list of entity sets and all other sets that depend on it. This can be
         /// better understood if one has a look at the schematic view of the data set schema that is shown on the front page of the data service, namely
         /// if one date set (node) is excluded then all the sets that it points to will not be reached through it, although some of them could still be reached
         /// following other routes. </para>
         /// <para>There are many ways an entity sub-graph can be loaded, the present implementation is based on the rule to be given next. Namely, starting from 
-        /// entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also load all 
+        /// the entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also loads all 
         /// elements that any of the elements visited by the downward recursion depends upon, recursively upward (namely in 
         /// the opposite direction of the arrows in the schema view), but never go downward again without explicit instruction.</para>
         /// <para>The <paramref name="futherDrillSets" /> parameter is used control when to go downward again, represented by the <see cref="EntitySetRelation.SetType" /> member 
         /// and the collection of data sets that depend on it, represented by the <see cref="EntitySetRelation.RelatedSets" /> member, should be further drilled down, recursively.</para>
-        /// <para>Note that a data service has intrinsic limits that does not allow transimitting an entity graph that is too large in one call, so one has to select which part
+        /// <para>Note that a data service has intrinsic limits that do not allow transmitting an entity graph that is too large in one call, so one has to select which part
         /// of the entire graph should be loaded in each call to the data service,</para>
         /// <para>For a given entity, the entities that it depends upon are represented by the member objects corresponding to each foreign keys. However, the
         /// sets of entities that depend on the said entity are stored into the corresponding collection members having the "Changed" prefix and
@@ -1378,20 +1435,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <para>Relational databases are designed to serve as data query and storage backend, in a normalized way, for certain kind of applications. 
         /// However at the application level, normalized elementary data sets are often combined (jointed) in a user friendly way as views. In the object oriented 
         /// world and at the data view model level, these views can be represented using entity graphs.</para>
-        /// <para>This method is designed to load a selected sub entity graph recursively starting from a given entity (id) from the data source in one call 
-        /// to the service, which could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
-        /// <para>The selection is controlled by the two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
+        /// <para>This method is designed to load a selected sub entity graph recursively from the data source in one call to the service starting with a given entity (id).
+        /// It could be used to increase performance and to reduce client code complexity, sometimes significantly.</para>
+        /// <para>The selection is controlled by two parameters, namely <paramref name="excludedSets" /> and <paramref name="futherDrillSets" />.</para>
         /// <para>The <paramref name="excludedSets" /> parameter is used to exclude a list of entity sets and all other sets that depend on it. This can be
         /// better understood if one has a look at the schematic view of the data set schema that is shown on the front page of the data service, namely
         /// if one date set (node) is excluded then all the sets that it points to will not be reached through it, although some of them could still be reached
         /// following other routes. </para>
         /// <para>There are many ways an entity sub-graph can be loaded, the present implementation is based on the rule to be given next. Namely, starting from 
-        /// entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also load all 
+        /// the entry element, it loads all entities that depends on it, recursively downward (namely following the arrows in the schema view). It also loads all 
         /// elements that any of the elements visited by the downward recursion depends upon, recursively upward (namely in 
         /// the opposite direction of the arrows in the schema view), but never go downward again without explicit instruction.</para>
         /// <para>The <paramref name="futherDrillSets" /> parameter is used control when to go downward again, represented by the <see cref="EntitySetRelation.SetType" /> member 
         /// and the collection of data sets that depend on it, represented by the <see cref="EntitySetRelation.RelatedSets" /> member, should be further drilled down, recursively.</para>
-        /// <para>Note that a data service has intrinsic limits that does not allow transimitting an entity graph that is too large in one call, so one has to select which part
+        /// <para>Note that a data service has intrinsic limits that do not allow transmitting an entity graph that is too large in one call, so one has to select which part
         /// of the entire graph should be loaded in each call to the data service,</para>
         /// <para>For a given entity, the entities that it depends upon are represented by the member objects corresponding to each foreign keys. However, the
         /// sets of entities that depend on the said entity are stored into the corresponding collection members having the "Changed" prefix and

@@ -44,6 +44,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Intrinsic Identifiers</term><description>Description</description>
     ///    </listheader>
     ///    <item>
+    ///      <term>ChangeDate</term>
+    ///      <description>See <see cref="UsersRoleHistory.ChangeDate" />. Intrinsic id; fixed; not null.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>RoleID</term>
     ///      <description>See <see cref="UsersRoleHistory.RoleID" />. Intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
@@ -56,10 +60,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <listheader>
     ///       <term>None editable properties</term><description>Description</description>
     ///    </listheader>
-    ///    <item>
-    ///      <term>ChangeDate</term>
-    ///      <description>See <see cref="UsersRoleHistory.ChangeDate" />. Fixed; not null.</description>
-    ///    </item>
     ///    <item>
     ///      <term>Operation</term>
     ///      <description>See <see cref="UsersRoleHistory.Operation" />. Fixed; not null; max-length = 20 characters.</description>
@@ -137,12 +137,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUsersRoleHistoryService.AddOrUpdateEntities" />.
@@ -154,6 +154,21 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ChangeDate = " + ChangeDate + "\r\n";
+                str += "RoleID = " + RoleID + "\r\n";
+                str += "UserID = " + UserID + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -204,6 +219,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: auto-gen primary key; fixed; not null.
         /// </summary>
@@ -227,8 +244,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private int _ID = default(int);
 
         /// <summary>
-        /// Meta-info: fixed; not null.
+        /// Meta-info: intrinsic id; fixed; not null.
         /// </summary>
+        [Key]
         [Required]
         [Editable(false)]
         [DataMember(IsRequired = true)]
@@ -361,8 +379,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private string _UserID = default(string);
 
+#endregion
+
+#region Entities that the current one depends upon.
+
         /// <summary>
-        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon.
+        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UsersRoleHistory.RoleID" /> }.
         /// </summary>
         [DataMember]
@@ -404,7 +426,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<Role> AutoLoadRoleRef = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UsersRoleHistory.UserID" /> }.
         /// </summary>
         [DataMember]
@@ -446,7 +468,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<User> AutoLoadUser_UserID = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UsersRoleHistory.OperatorID" /> }.
         /// </summary>
         [DataMember]
@@ -487,6 +509,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public Func<User> AutoLoadUser_OperatorID = null;
 
+#endregion
+
+#region Entities that depend on the current one.
+
+#endregion
+
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
         /// </summary>
@@ -515,7 +543,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (other == null)
                 return false;
             else
-                return RoleID == other.RoleID &&  UserID == other.UserID;
+                return ChangeDate == other.ChangeDate &&  RoleID == other.RoleID &&  UserID == other.UserID;
         }              
 
         /// <summary>
@@ -560,23 +588,31 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Operation == null)
                 Operation = "";
             if (OperatorID == null)
                 OperatorID = "";
             if (UserID == null)
                 UserID = "";
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UsersRoleHistory ShallowCopy(bool allData = false)
+        public UsersRoleHistory ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UsersRoleHistory e = new UsersRoleHistory();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.ChangeDate = ChangeDate;
             e.Operation = Operation;
@@ -585,9 +621,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.RoleID = RoleID;
             e.UserID = UserID;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
@@ -600,7 +639,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@"
 ----===== [[UsersRoleHistory]] =====----
   ID = " + ID + @"
-  ChangeDate = " + ChangeDate + @"
+  ChangeDate = " + ChangeDate + @"");
+            sb.Append(@" (natural id)");
+            sb.Append(@"
   Operation = '" + Operation + @"'
   SubPriority = " + SubPriority + @"
   OperatorID = '" + OperatorID + @"'

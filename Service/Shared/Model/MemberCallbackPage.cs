@@ -26,7 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a block of pages.
     /// </summary>
     [DataContract]
-    public class RolePageBlock
+    public class MemberCallbackPageBlock
     {
         /// <summary>
         /// The total number of entities.
@@ -75,7 +75,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// The collection of pages inside the block.
         /// </summary>
         [DataMember]
-        public RolePage[] Pages
+        public MemberCallbackPage[] Pages
         {
             get;
             set;
@@ -83,10 +83,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     }
 
     /// <summary>
-    /// A structure representing a page of entity <see cref="Role" />.
+    /// A structure representing a page of entity <see cref="MemberCallback" />.
     /// </summary>
     [DataContract]
-    public class RolePage
+    public class MemberCallbackPage
     {
         /// <summary>
         /// The zero based index of the page.
@@ -113,7 +113,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// The first entity of the page.
         /// </summary>
         [DataMember]
-        public Role FirstItem
+        public MemberCallback FirstItem
         {
             get;
             set;
@@ -123,7 +123,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// The last entity of the page.
         /// </summary>
         [DataMember]
-        public Role LastItem
+        public MemberCallback LastItem
         {
             get;
             set;
@@ -142,13 +142,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// The collection of entities inside the page.
         /// </summary>
-        public List<Role> Items
+        public List<MemberCallback> Items
         {
             get;
             set;
         }
 
-        public RolePage(int idx)
+        public MemberCallbackPage(int idx)
         {
             _index = idx;
         }

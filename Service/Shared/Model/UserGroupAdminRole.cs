@@ -134,12 +134,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserGroupAdminRoleService.AddOrUpdateEntities" />.
@@ -151,6 +151,22 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "GroupID = " + GroupID + "\r\n";
+                str += "RoleID = " + RoleID + "\r\n";
+                if (IsPermissionModified)
+                    str += "Modified [Permission] = " + Permission + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -199,6 +215,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region Properties of the current entity
 
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
@@ -284,7 +302,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Permission != value)
                 {
                     _Permission = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPermissionModified = true;
                 }
             }
@@ -310,8 +328,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isPermissionModified = false;
 
+#endregion
+
+#region Entities that the current one depends upon.
+
         /// <summary>
-        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon.
+        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserGroupAdminRole.RoleID" /> }.
         /// </summary>
         [DataMember]
@@ -353,7 +375,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<Role> AutoLoadRoleRef = null;
 
         /// <summary>
-        /// Entity in data set "UserGroups" for <see cref="UserGroup" /> that this entity depend upon.
+        /// Entity in data set "UserGroups" for <see cref="UserGroup" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserGroupAdminRole.GroupID" /> }.
         /// </summary>
         [DataMember]
@@ -393,6 +415,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// A delegate to load <see cref="UserGroupAdminRole.UserGroupRef" /> automatically when it is referred to at the first time.
         /// </summary>
         public Func<UserGroup> AutoLoadUserGroupRef = null;
+
+#endregion
+
+#region Entities that depend on the current one.
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -478,27 +506,42 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (!IsEntityChanged)
                 IsEntityChanged = IsPermissionModified;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserGroupAdminRole ShallowCopy(bool allData = false)
+        public UserGroupAdminRole ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserGroupAdminRole e = new UserGroupAdminRole();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.GroupID = GroupID;
             e.RoleID = RoleID;
             e.CreateDate = CreateDate;
             e.Permission = Permission;
+            if (preserveState)
+                e.IsPermissionModified = IsPermissionModified;
+            else
+                e.IsPermissionModified = false;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

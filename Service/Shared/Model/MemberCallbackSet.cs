@@ -23,42 +23,109 @@ using System.Runtime.Serialization;
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
     /// <summary>
-    /// A structure representing the data set of "CommunicationTypes".
+    /// A structure representing possible combination of foreign key constraint of the data set of "MemberCallbacks".
     /// </summary>
     [DataContract]
-    public class CommunicationTypeSet
+    public class MemberCallbackSetConstraints
     {
         /// <summary>
-        /// The value of entity property <see cref="CommunicationType.TypeName" /> is descrete (expandable). 
-        /// This is the possible options: { "HomeAddress", "WorkAddress", "DaytimePhone", "NighttimePhone", "MobilePhone", "ElectronicMail", "InstantMessage", "VoiceMail", "WebSite" }
+        /// internal use.
         /// </summary>
-        [DataMember]
-        public string[] TypeNameValues
+        public string CacheKey
         {
-            get
+            get 
             {
-                if (_TypeNameValues == null)
-                {
-                    _TypeNameValues = new string[] {
-                                  "HomeAddress",
-                                  "WorkAddress",
-                                  "DaytimePhone",
-                                  "NighttimePhone",
-                                  "MobilePhone",
-                                  "ElectronicMail",
-                                  "InstantMessage",
-                                  "VoiceMail",
-                                  "WebSite"
-                    };
-                }
-                return _TypeNameValues;
-            }
-            set
-            {
+                if (_cacheKey == null) 
+                    _cacheKey = (ApplicationIDWrap != null ? ApplicationIDWrap.CacheKey : "" ) + "_" + (UserIDWrap != null ? UserIDWrap.CacheKey : "" ) + "_"; 
+                return _cacheKey;
             }
         }
-        private string[] _TypeNameValues = null;
+        private string _cacheKey = null;
 
+        /// <summary>
+        /// The wrapper for the ApplicationID key value.
+        /// </summary>
+        [DataMember]
+        public ForeignKeyData<string> ApplicationIDWrap
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// The wrapper for the UserID key value.
+        /// </summary>
+        [DataMember]
+        public ForeignKeyData<string> UserIDWrap
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// The corresponding item count.
+        /// </summary>
+        [DataMember]
+        public int ItemCount
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Is it the same as the input one
+        /// </summary>
+        /// <param name="constraints">The one to be compared with.</param>
+        /// <returns></returns>
+        public bool IsTheSameAs(MemberCallbackSetConstraints constraints)
+        {
+            return ApplicationIDWrap.KeyValue == constraints.ApplicationIDWrap.KeyValue && UserIDWrap.KeyValue == constraints.UserIDWrap.KeyValue;
+        }
+    }
+
+    /// <summary>
+    /// A structure representing a limited set of available constraints of "MemberCallbacks".
+    /// </summary>
+    [DataContract]
+    public class MemberCallbackSetConstraintsColl
+    {
+        /// <summary>
+        /// Total number
+        /// </summary>
+        [DataMember]
+        public Int64 AllCounts
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Next page id
+        /// </summary>
+        [DataMember]
+        public string NextPageId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// A list of non-trivial constraints. 
+        /// </summary>
+        /// <remarks>If the total is tool large, it will be set to null so that the client will do active search.</remarks>
+        [DataMember]
+        public MemberCallbackSetConstraints[] AvailableOnes
+        {
+            get;
+            set;
+        }
+
+    }
+
+    /// <summary>
+    /// A structure representing the data set of "MemberCallbacks".
+    /// </summary>
+    [DataContract]
+    public class MemberCallbackSet
+    {
         /// <summary>
         /// The size of a page in the set.
         /// </summary>
@@ -177,23 +244,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// The loaded pages of the set.
         /// </summary>
         [DataMember]
-        public List<CommunicationTypePage> Pages
+        public List<MemberCallbackPage> Pages
         {
             get { return _pages; }
             set { _pages = value; }
         }
-        private List<CommunicationTypePage> _pages;
+        private List<MemberCallbackPage> _pages;
 
         /// <summary>
         /// The displaying page block of the set.
         /// </summary>
         [DataMember]
-        public List<CommunicationTypePage> PagesWindow
+        public List<MemberCallbackPage> PagesWindow
         {
             get { return _pagesWindow; }
             set { _pagesWindow = value; }
         }
-        private List<CommunicationTypePage> _pagesWindow;
+        private List<MemberCallbackPage> _pagesWindow;
 
         /// <summary>
         /// A key that identifies the set in caches.
@@ -206,14 +273,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
 
-        public CommunicationTypeSet()
+        public MemberCallbackSet()
         {
             NameSpace = "dbo";
-            //Name = "CommunicationTypes " + StringResources.Table;
-            Name = "CommunicationTypes " + "Table";
-            EntityName = "CommunicationType";
+            //Name = "MemberCallbacks " + StringResources.Table;
+            Name = "MemberCallbacks " + "Table";
+            EntityName = "MemberCallback";
             //... other init
-            _pages = new List<CommunicationTypePage>();
+            _pages = new List<MemberCallbackPage>();
         }
     }
 

@@ -390,9 +390,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (DelHandleError != null)
                 DelHandleError(ex);
             else
-                throw ex;
+                throw new Exception("server exception", ex);
         }
 
+        /// <summary>
+        /// The data service requires that date and time string for a filter expression should be normalized in particular format and precision
+        /// so that date and time comparison operation will be consistent.
+        /// </summary>
+        /// <param name="dt">The data and time object.</param>
+        /// <param name="tc">The time coordinate. Available options are "Utc" and "Ltc" with the former referring to the Coordinated Universal Time and the 
+        /// later the local time.</param>
+        /// <returns>The normalized date and time string.</returns>
         public string FormatRepoDateTime(DateTime dt, string tc = "Utc")
         {
             return dt.ToString("yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture) + " " + tc;

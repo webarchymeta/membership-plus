@@ -149,12 +149,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserProfileService.AddOrUpdateEntities" />.
@@ -166,6 +166,31 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "PropName = " + PropName + "\r\n";
+                str += "ApplicationID = " + ApplicationID + "\r\n";
+                str += "UserID = " + UserID + "\r\n";
+                if (IsBinaryValueModified)
+                    str += "Modified [BinaryValue] = " + BinaryValue + "\r\n";
+                if (IsLastAccessTimeModified)
+                    str += "Modified [LastAccessTime] = " + LastAccessTime + "\r\n";
+                if (IsLastUpdateTimeModified)
+                    str += "Modified [LastUpdateTime] = " + LastUpdateTime + "\r\n";
+                if (IsStringValueModified)
+                    str += "Modified [StringValue] = " + StringValue + "\r\n";
+                if (IsValueMimeTypeModified)
+                    str += "Modified [ValueMimeType] = " + ValueMimeType + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -212,6 +237,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region Properties of the current entity
 
         /// <summary>
         /// Meta-info: auto-gen primary key; fixed; not null.
@@ -275,7 +302,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_BinaryValue != value)
                 {
                     _BinaryValue = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsBinaryValueModified = true;
                 }
             }
@@ -335,7 +362,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastAccessTime != value)
                 {
                     _LastAccessTime = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastAccessTimeModified = true;
                 }
             }
@@ -377,7 +404,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastUpdateTime != value)
                 {
                     _LastUpdateTime = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastUpdateTimeModified = true;
                 }
             }
@@ -419,7 +446,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_StringValue != value)
                 {
                     _StringValue = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsStringValueModified = true;
                 }
             }
@@ -480,7 +507,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_ValueMimeType != value)
                 {
                     _ValueMimeType = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsValueMimeTypeModified = true;
                 }
             }
@@ -573,8 +600,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private string _UserID = default(string);
 
+#endregion
+
+#region Entities that the current one depends upon.
+
         /// <summary>
-        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon.
+        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserProfile.ApplicationID" /> }.
         /// </summary>
         [DataMember]
@@ -616,7 +647,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<Application_> AutoLoadApplication_Ref = null;
 
         /// <summary>
-        /// Entity in data set "UserProfileTypes" for <see cref="UserProfileType" /> that this entity depend upon.
+        /// Entity in data set "UserProfileTypes" for <see cref="UserProfileType" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserProfile.TypeID" /> }.
         /// </summary>
         [DataMember]
@@ -658,7 +689,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<UserProfileType> AutoLoadUserProfileTypeRef = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="UserProfile.UserID" /> }.
         /// </summary>
         [DataMember]
@@ -700,6 +731,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// A delegate to load <see cref="UserProfile.UserRef" /> automatically when it is referred to at the first time.
         /// </summary>
         public Func<User> AutoLoadUserRef = null;
+
+#endregion
+
+#region Entities that depend on the current one.
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -849,7 +886,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (PropName == null)
                 PropName = "";
             if (ApplicationID == null)
@@ -860,33 +897,64 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsBinaryValueLoaded = true;
             if (IsStringValueModified && !IsStringValueLoaded)
                 IsStringValueLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserProfile ShallowCopy(bool allData = false)
+        public UserProfile ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserProfile e = new UserProfile();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.PropName = PropName;
             e.LastAccessTime = LastAccessTime;
+            if (preserveState)
+                e.IsLastAccessTimeModified = IsLastAccessTimeModified;
+            else
+                e.IsLastAccessTimeModified = false;
             e.LastUpdateTime = LastUpdateTime;
+            if (preserveState)
+                e.IsLastUpdateTimeModified = IsLastUpdateTimeModified;
+            else
+                e.IsLastUpdateTimeModified = false;
             e.ValueMimeType = ValueMimeType;
+            if (preserveState)
+                e.IsValueMimeTypeModified = IsValueMimeTypeModified;
+            else
+                e.IsValueMimeTypeModified = false;
             e.ApplicationID = ApplicationID;
             e.TypeID = TypeID;
             e.UserID = UserID;
             if (allData)
             {
                 e.BinaryValue = BinaryValue;
+                if (preserveState)
+                    e.IsBinaryValueModified = IsBinaryValueModified;
+                else
+                    e.IsBinaryValueModified = false;
                 e.StringValue = StringValue;
+                if (preserveState)
+                    e.IsStringValueModified = IsStringValueModified;
+                else
+                    e.IsStringValueModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

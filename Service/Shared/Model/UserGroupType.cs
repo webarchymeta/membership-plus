@@ -109,12 +109,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserGroupTypeService.AddOrUpdateEntities" />.
@@ -126,6 +126,21 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ID = " + ID + "\r\n";
+                if (IsKindLabelModified)
+                    str += "Modified [KindLabel] = " + KindLabel + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -172,6 +187,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region Properties of the current entity
 
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null.
@@ -236,7 +253,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_KindLabel != value)
                 {
                     _KindLabel = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsKindLabelModified = true;
                 }
             }
@@ -262,8 +279,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isKindLabelModified = false;
 
+#endregion
+
+#region Entities that the current one depends upon.
+
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="UserGroupSet" /> for data set "UserGroups" of <see cref="UserGroup" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.GroupTypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupSet UserGroups
@@ -283,6 +309,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserGroups" of <see cref="UserGroup" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.GroupTypeID" /> }.
         /// </summary>
 		public IEnumerable<UserGroup> UserGroupEnum
 		{
@@ -292,6 +319,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserGroup" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupSet" /> set is { <see cref="UserGroup.GroupTypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroup[] ChangedUserGroups
@@ -299,6 +327,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -381,28 +411,43 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (KindName == null)
                 KindName = "";
             if (!IsEntityChanged)
                 IsEntityChanged = IsKindLabelModified;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserGroupType ShallowCopy(bool allData = false)
+        public UserGroupType ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserGroupType e = new UserGroupType();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.KindName = KindName;
             e.KindLabel = KindLabel;
+            if (preserveState)
+                e.IsKindLabelModified = IsKindLabelModified;
+            else
+                e.IsKindLabelModified = false;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

@@ -29,6 +29,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     public class UserGroupTypePageBlock
     {
         /// <summary>
+        /// The total number of entities.
+        /// </summary>
+        [DataMember]
+        public Int64 TotalEntities
+        {
+            get { return _totalEntities; } 
+            set { _totalEntities = value; }
+        }
+        private Int64 _totalEntities = 0;
+
+        /// <summary>
+        /// The total number of pages.
+        /// </summary>
+        [DataMember]
+        public Int64 TotalPages
+        {
+            get { return _totalPages; } 
+            set { _totalPages = value; }
+        }
+        private Int64 _totalPages = 0;
+
+        /// <summary>
         /// The number of pages inside the block.
         /// </summary>
         [DataMember]

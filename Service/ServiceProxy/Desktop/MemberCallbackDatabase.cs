@@ -27,7 +27,7 @@ using System.ServiceModel.Channels;
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
     /// <summary>
-    /// Proxy for <see cref="IAnnouncementService2" /> service.
+    /// Proxy for <see cref="IMemberCallbackService2" /> service.
     /// </summary>
     /// <remarks>
     ///  <para>
@@ -46,7 +46,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="AnnouncementServiceProxy.AddOrUpdateEntities" />, <see cref="AnnouncementServiceProxy.EnqueueNewOrUpdateEntities" />, and <see cref="AnnouncementServiceProxy.DeleteEntities" />.
+    ///         <see cref="MemberCallbackServiceProxy.AddOrUpdateEntities" />, <see cref="MemberCallbackServiceProxy.EnqueueNewOrUpdateEntities" />, and <see cref="MemberCallbackServiceProxy.DeleteEntities" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -63,7 +63,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="AnnouncementServiceProxy.NextPageBlock" /> and <see cref="AnnouncementServiceProxy.GetPageItems" />,
+    ///         <see cref="MemberCallbackServiceProxy.NextPageBlock" /> and <see cref="MemberCallbackServiceProxy.GetPageItems" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -80,7 +80,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="AnnouncementServiceProxy.QueryEntityCount" />, <see cref="AnnouncementServiceProxy.QueryDatabase" />, <see cref="AnnouncementServiceProxy.QueryDatabaseLimited" />,
+    ///         <see cref="MemberCallbackServiceProxy.QueryEntityCount" />, <see cref="MemberCallbackServiceProxy.QueryDatabase" />, <see cref="MemberCallbackServiceProxy.QueryDatabaseLimited" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -97,7 +97,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="AnnouncementServiceProxy.LoadEntityByKey" /> and <see cref="AnnouncementServiceProxy.LoadEntityByNature" />,
+    ///         <see cref="MemberCallbackServiceProxy.LoadEntityByKey" /> and <see cref="MemberCallbackServiceProxy.LoadEntityByNature" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -115,7 +115,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="AnnouncementServiceProxy.ConstraintQueryEntityCount" />, <see cref="AnnouncementServiceProxy.ConstraintQuery" />, <see cref="AnnouncementServiceProxy.ConstraintQueryLimited" />,
+    ///         <see cref="MemberCallbackServiceProxy.ConstraintQueryEntityCount" />, <see cref="MemberCallbackServiceProxy.ConstraintQuery" />, <see cref="MemberCallbackServiceProxy.ConstraintQueryLimited" />,
     ///      </description>
     ///    </item>
     ///  </list>
@@ -133,30 +133,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///         <see cref="AnnouncementServiceProxy.GetNextSorterOps" /> and <see cref="AnnouncementServiceProxy.GetNextFilterOps" />.
-    ///      </description>
-    ///    </item>
-    ///  </list>
-    ///  <list type="table">
-    ///    <listheader>
-    ///       <term>Delay Loaded Properties</term><description></description>
-    ///    </listheader>
-    ///    <item>
-    ///      <term>Description</term>
-    ///      <description>
-    ///        Properties that are loaded on demand.
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (loading)</term>
-    ///      <description>
-    ///         <see cref="AnnouncementServiceProxy.LoadEntityDescription" />
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (uploading)</term>
-    ///      <description>
-    ///         <see cref="AnnouncementServiceProxy.UpdateEntityDescription" />
+    ///         <see cref="MemberCallbackServiceProxy.GetNextSorterOps" /> and <see cref="MemberCallbackServiceProxy.GetNextFilterOps" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -173,7 +150,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="AnnouncementServiceProxy.MaterializeApplication_Ref" />, <see cref="AnnouncementServiceProxy.MaterializeUserGroupRef" />, <see cref="AnnouncementServiceProxy.MaterializeUserRef" />.
+    ///        <see cref="MemberCallbackServiceProxy.MaterializeUserAppMemberRef" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -190,17 +167,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="AnnouncementServiceProxy.LoadEntityGraphRecurs" />.
+    ///        <see cref="MemberCallbackServiceProxy.LoadEntityGraphRecurs" />.
     ///      </description>
     ///    </item>
     ///  </list>
     /// </remarks>
-    public class AnnouncementServiceProxy : ClientBase<IAnnouncementService2>, IAnnouncementService2
+    public class MemberCallbackServiceProxy : ClientBase<IMemberCallbackService2>, IMemberCallbackService2
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public AnnouncementServiceProxy() 
+        public MemberCallbackServiceProxy() 
             : base("HTTP")
         {
 
@@ -210,7 +187,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// Constructor.
         /// </summary>
         /// <param name="svcConfig">The name of the configuration node for the end point.</param>
-        public AnnouncementServiceProxy(string svcConfig) 
+        public MemberCallbackServiceProxy(string svcConfig) 
             : base(svcConfig)
         {
 
@@ -221,7 +198,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         /// <param name="binding">The binding with which to make calls to the service.</param>
         /// <param name="remoteAddress">The address of the service endpoint.</param>
-        public AnnouncementServiceProxy(Binding binding, EndpointAddress remoteAddress)
+        public MemberCallbackServiceProxy(Binding binding, EndpointAddress remoteAddress)
             : base(binding, remoteAddress)
         {
 
@@ -232,14 +209,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public Action<Exception> DelHandleError = null;
         /// <summary>
-        ///   Retrieve information about the entity set: "Announcements". 
+        ///   Retrieve information about the entity set: "MemberCallbacks". 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="filter">Filter expression for the current set.</param>
         /// <returns>
-        ///   Entity set: <see cref="AnnouncementSet" /> data model.
+        ///   Entity set: <see cref="MemberCallbackSet" /> data model.
         /// </returns>
-        public AnnouncementSet GetSetInfo(CallContext cntx, string filter)
+        public MemberCallbackSet GetSetInfo(CallContext cntx, string filter)
         {
             try
             {
@@ -254,14 +231,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Retrieve information about the entity set: "Announcements". Awaitable asynchronous version.
+        ///   Retrieve information about the entity set: "MemberCallbacks". Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="filter">Filter expression for the current set.</param>
         /// <returns>
-        ///   Entity set: <see cref="AnnouncementSet" /> data model.
+        ///   Entity set: <see cref="MemberCallbackSet" /> data model.
         /// </returns>
-        public async System.Threading.Tasks.Task<AnnouncementSet> GetSetInfoAsync(CallContext cntx, string filter)
+        public async System.Threading.Tasks.Task<MemberCallbackSet> GetSetInfoAsync(CallContext cntx, string filter)
         {
             try
             {
@@ -294,11 +271,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="Announcement" />) is modified or its <see cref="Announcement.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="Announcement.Application_Ref" />, <see cref="Announcement.UserGroupRef" />, <see cref="Announcement.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberCallback.UserAppMemberRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -308,7 +285,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Operation result contained inside an object of type <see cref="ChangeOpResults{T}" /> which contains operation messages, if any, and a list of successfully added or updated entities.
         /// </returns>
-        public ChangeOpResults<AnnouncementUpdateResult> AddOrUpdateEntities(CallContext cntx, AnnouncementSet set, Announcement[] entities)
+        public ChangeOpResults<MemberCallbackUpdateResult> AddOrUpdateEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities)
         {
             try
             {
@@ -341,11 +318,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="Announcement" />) is modified or its <see cref="Announcement.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="Announcement.Application_Ref" />, <see cref="Announcement.UserGroupRef" />, <see cref="Announcement.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="MemberCallback.UserAppMemberRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -355,7 +332,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Operation result contained inside an object of type <see cref="ChangeOpResults{T}" /> which contains operation messages, if any, and a list of successfully added or updated entities.
         /// </returns>
-        public async System.Threading.Tasks.Task<ChangeOpResults<AnnouncementUpdateResult>> AddOrUpdateEntitiesAsync(CallContext cntx, AnnouncementSet set, Announcement[] entities)
+        public async System.Threading.Tasks.Task<ChangeOpResults<MemberCallbackUpdateResult>> AddOrUpdateEntitiesAsync(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities)
         {
             try
             {
@@ -395,7 +372,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="Announcement" />) is modified or its <see cref="Announcement.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
@@ -405,7 +382,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </remarks>
         /// <returns>
         /// </returns>
-        public void EnqueueNewOrUpdateEntities(CallContext cntx, AnnouncementSet set, Announcement[] entities)
+        public void EnqueueNewOrUpdateEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities)
         {
             try
             {
@@ -444,7 +421,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Note 2: A persisted entity (namely the one loaded
         ///  from the data set) will be ignored in if none of its editable properties (set before system generation, see
-        ///  <see cref="Announcement" />) is modified or its <see cref="Announcement.IsEntityChanged" /> property is
+        ///  <see cref="MemberCallback" />) is modified or its <see cref="MemberCallback.IsEntityChanged" /> property is
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
@@ -454,7 +431,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </remarks>
         /// <returns>
         /// </returns>
-        public async System.Threading.Tasks.Task EnqueueNewOrUpdateEntitiesAsync(CallContext cntx, AnnouncementSet set, Announcement[] entities)
+        public async System.Threading.Tasks.Task EnqueueNewOrUpdateEntitiesAsync(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities)
         {
             try
             {
@@ -481,7 +458,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
         /// </returns>
-        public OperationResults DeleteEntities(CallContext cntx, AnnouncementSet set, Announcement[] entities)
+        public OperationResults DeleteEntities(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities)
         {
             try
             {
@@ -509,7 +486,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
         /// </returns>
-        public async System.Threading.Tasks.Task<OperationResults> DeleteEntitiesAsync(CallContext cntx, AnnouncementSet set, Announcement[] entities)
+        public async System.Threading.Tasks.Task<OperationResults> DeleteEntitiesAsync(CallContext cntx, MemberCallbackSet set, MemberCallback[] entities)
         {
             try
             {
@@ -524,7 +501,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Get a block of page frames from the entity set "Announcements" of the data source under specified filtering and sorting conditions. 
+        ///   Get a block of page frames from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <remarks>
         /// The page size and the page block size is specified inside "set".
@@ -534,9 +511,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page block. For the first page block, it is set to null value.</param>
         /// <returns>
-        ///   <see cref="AnnouncementPageBlock" /> data model for entity set "Announcements".
+        ///   <see cref="MemberCallbackPageBlock" /> data model for entity set "MemberCallbacks".
         /// </returns>
-        public AnnouncementPageBlock NextPageBlock(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr, Announcement prevlast)
+        public MemberCallbackPageBlock NextPageBlock(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast)
         {
             try
             {
@@ -554,7 +531,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #if SUPPORT_ASYNC
 
         /// <summary>
-        ///   Get a block of page frames from the entity set "Announcements" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
+        ///   Get a block of page frames from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <remarks>
         /// The page size and the page block size is specified inside "set".
@@ -564,9 +541,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page block. For the first page block, it is set to null value.</param>
         /// <returns>
-        ///   <see cref="AnnouncementPageBlock" /> data model for entity set "Announcements".
+        ///   <see cref="MemberCallbackPageBlock" /> data model for entity set "MemberCallbacks".
         /// </returns>
-        public async System.Threading.Tasks.Task<AnnouncementPageBlock> NextPageBlockAsync(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr, Announcement prevlast)
+        public async System.Threading.Tasks.Task<MemberCallbackPageBlock> NextPageBlockAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast)
         {
             try
             {
@@ -583,7 +560,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Load entities of a page from the entity set "Announcements" of the data source under specified filtering and sorting conditions. 
+        ///   Load entities of a page from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <remarks>
         /// The page size is specified inside "set".
@@ -593,9 +570,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page. For the first page, it is set to null value.</param>
         /// <returns>
-        ///   Collection of <see cref="Announcement" /> in set "Announcements" for the current page defined by "prevlast".
+        ///   Collection of <see cref="MemberCallback" /> in set "MemberCallbacks" for the current page defined by "prevlast".
         /// </returns>
-        public IEnumerable<Announcement> GetPageItems(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr, Announcement prevlast)
+        public IEnumerable<MemberCallback> GetPageItems(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast)
         {
             try
             {
@@ -613,7 +590,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #if SUPPORT_ASYNC
 
         /// <summary>
-        ///   Load entities of a page from the entity set "Announcements" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
+        ///   Load entities of a page from the entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <remarks>
         /// The page size is specified inside "set".
@@ -623,9 +600,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="prevlast">The last entity inside the previous page. For the first page, it is set to null value.</param>
         /// <returns>
-        ///   Collection of <see cref="Announcement" /> in set "Announcements" for the current page defined by "prevlast".
+        ///   Collection of <see cref="MemberCallback" /> in set "MemberCallbacks" for the current page defined by "prevlast".
         /// </returns>
-        public async System.Threading.Tasks.Task<IEnumerable<Announcement>> GetPageItemsAsync(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr, Announcement prevlast)
+        public async System.Threading.Tasks.Task<IEnumerable<MemberCallback>> GetPageItemsAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, MemberCallback prevlast)
         {
             try
             {
@@ -642,7 +619,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Count the number of entities inside entity set "Announcements" of the data source under specified filtering condition. 
+        ///   Count the number of entities inside entity set "MemberCallbacks" of the data source under specified filtering condition. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -650,7 +627,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   The number of entities.
         /// </returns>
-        public Int64 QueryEntityCount(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr)
+        public Int64 QueryEntityCount(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr)
         {
             try
             {
@@ -665,7 +642,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Count the number of entities inside entity set "Announcements" of the data source under specified filtering condition. Awaitable asynchronous version.
+        ///   Count the number of entities inside entity set "MemberCallbacks" of the data source under specified filtering condition. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -673,7 +650,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   The number of entities.
         /// </returns>
-        public async System.Threading.Tasks.Task<Int64> QueryEntityCountAsync(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr)
+        public async System.Threading.Tasks.Task<Int64> QueryEntityCountAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr)
         {
             try
             {
@@ -688,7 +665,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="Announcement" /> inside entity set "Announcements" of the data source under specified filtering and sorting conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -696,7 +673,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   The collection of entities.
         /// </returns>
-        public IEnumerable<Announcement> QueryDatabase(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr)
+        public IEnumerable<MemberCallback> QueryDatabase(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr)
         {
             try
             {
@@ -711,7 +688,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Get the collection of entities of type <see cref="Announcement" /> inside entity set "Announcements" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -719,7 +696,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   The collection of entities.
         /// </returns>
-        public async System.Threading.Tasks.Task<IEnumerable<Announcement>> QueryDatabaseAsync(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr)
+        public async System.Threading.Tasks.Task<IEnumerable<MemberCallback>> QueryDatabaseAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr)
         {
             try
             {
@@ -734,7 +711,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="Announcement" /> inside entity set "Announcements" from the data source under specified filtering, sorting and max number of returning entities conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source under specified filtering, sorting and max number of returning entities conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -743,7 +720,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   The collection of entities.
         /// </returns>
-        public IEnumerable<Announcement> QueryDatabaseLimited(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr, int maxRecords)
+        public IEnumerable<MemberCallback> QueryDatabaseLimited(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, int maxRecords)
         {
             try
             {
@@ -758,7 +735,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Get the collection of entities of type <see cref="Announcement" /> inside entity set "Announcements" from the data source under specified filtering, sorting and max number of returning entities conditions. Awaitable asynchronous version.
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source under specified filtering, sorting and max number of returning entities conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
@@ -767,7 +744,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   The collection of entities.
         /// </returns>
-        public async System.Threading.Tasks.Task<IEnumerable<Announcement>> QueryDatabaseLimitedAsync(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr, int maxRecords)
+        public async System.Threading.Tasks.Task<IEnumerable<MemberCallback>> QueryDatabaseLimitedAsync(CallContext cntx, MemberCallbackSet set, QueryExpresion qexpr, int maxRecords)
         {
             try
             {
@@ -786,12 +763,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "Announcements" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The number of entities.
         /// </returns>
-        public Int64 ConstraintQueryEntityCount(CallContext cntx, AnnouncementSet set, AnnouncementSetConstraints constraints, QueryExpresion qexpr)
+        public Int64 ConstraintQueryEntityCount(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr)
         {
             try
             {
@@ -810,12 +787,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "Announcements" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The number of entities.
         /// </returns>
-        public async System.Threading.Tasks.Task<Int64> ConstraintQueryEntityCountAsync(CallContext cntx, AnnouncementSet set, AnnouncementSetConstraints constraints, QueryExpresion qexpr)
+        public async System.Threading.Tasks.Task<Int64> ConstraintQueryEntityCountAsync(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr)
         {
             try
             {
@@ -834,12 +811,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "Announcements" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   A set of constraint pointer that has non-zero corresponding entities.
         /// </returns>
-        public ConstraintsPtr[] ConstraintsFindMatches(CallContext cntx, AnnouncementSet set, AnnouncementSetConstraints[] cnstSets, QueryExpresion qexpr)
+        public ConstraintsPtr[] ConstraintsFindMatches(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints[] cnstSets, QueryExpresion qexpr)
         {
             try
             {
@@ -858,12 +835,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "Announcements" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="cnstSets">A collection of sets of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   A set of constraint pointer that has non-zero corresponding entities.
         /// </returns>
-        public async System.Threading.Tasks.Task<ConstraintsPtr[]> ConstraintsFindMatchesAsync(CallContext cntx, AnnouncementSet set, AnnouncementSetConstraints[] cnstSets, QueryExpresion qexpr)
+        public async System.Threading.Tasks.Task<ConstraintsPtr[]> ConstraintsFindMatchesAsync(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints[] cnstSets, QueryExpresion qexpr)
         {
             try
             {
@@ -878,16 +855,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="Announcement" /> inside entity set "Announcements" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "Announcements" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The collection of entities.
         /// </returns>
-        public IEnumerable<Announcement> ConstraintQuery(CallContext cntx, AnnouncementSet set, AnnouncementSetConstraints constraints, QueryExpresion qexpr)
+        public IEnumerable<MemberCallback> ConstraintQuery(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr)
         {
             try
             {
@@ -902,16 +879,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Get the collection of entities of type <see cref="Announcement" /> inside entity set "Announcements" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. Awaitable asynchronous version.
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" from the data source restricted by a set of specified foreign key values and under specified filtering, sorting conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "Announcements" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <returns>
         ///   The collection of entities.
         /// </returns>
-        public async System.Threading.Tasks.Task<IEnumerable<Announcement>> ConstraintQueryAsync(CallContext cntx, AnnouncementSet set, AnnouncementSetConstraints constraints, QueryExpresion qexpr)
+        public async System.Threading.Tasks.Task<IEnumerable<MemberCallback>> ConstraintQueryAsync(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr)
         {
             try
             {
@@ -926,17 +903,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Get the collection of entities of type <see cref="Announcement" /> inside entity set "Announcements" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. 
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "Announcements" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="maxRecords">Max number of entities to return.</param>
         /// <returns>
         ///   The collection of entities.
         /// </returns>
-        public IEnumerable<Announcement> ConstraintQueryLimited(CallContext cntx, AnnouncementSet set, AnnouncementSetConstraints constraints, QueryExpresion qexpr, int maxRecords)
+        public IEnumerable<MemberCallback> ConstraintQueryLimited(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr, int maxRecords)
         {
             try
             {
@@ -951,17 +928,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Get the collection of entities of type <see cref="Announcement" /> inside entity set "Announcements" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. Awaitable asynchronous version.
+        ///   Get the collection of entities of type <see cref="MemberCallback" /> inside entity set "MemberCallbacks" of the data source restricted by a set of specified foreign key values and under specified filtering, sorting and max number of returning entities conditions. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="set">Set information.</param>
-        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "Announcements" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
+        /// <param name="constraints">A set of foreign key wrapper pointing to primary keys of the sets that "MemberCallbacks" depends upon. If a user do not wish to set a contraint for it, then set it to null, </param>
         /// <param name="qexpr">Tokenized querying and sorting expression.</param>
         /// <param name="maxRecords">Max number of entities to return.</param>
         /// <returns>
         ///   The collection of entities.
         /// </returns>
-        public async System.Threading.Tasks.Task<IEnumerable<Announcement>> ConstraintQueryLimitedAsync(CallContext cntx, AnnouncementSet set, AnnouncementSetConstraints constraints, QueryExpresion qexpr, int maxRecords)
+        public async System.Threading.Tasks.Task<IEnumerable<MemberCallback>> ConstraintQueryLimitedAsync(CallContext cntx, MemberCallbackSet set, MemberCallbackSetConstraints constraints, QueryExpresion qexpr, int maxRecords)
         {
             try
             {
@@ -976,7 +953,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. 
+        ///   Load the entity "UserAppMemberRef" of type <see cref="UserAppMember" /> that the entity depend upon. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="entity">The entity.</param>
@@ -984,13 +961,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// If the corresponding foreign key is nullable, the returned entity can be null.
         /// </remarks>
         /// <returns>
-        ///   An entity of type <see cref="Application_" /> or null.
+        ///   An entity of type <see cref="UserAppMember" /> or null.
         /// </returns>
-        public Application_ MaterializeApplication_Ref(CallContext cntx, Announcement entity)
+        public UserAppMember MaterializeUserAppMemberRef(CallContext cntx, MemberCallback entity)
         {
             try
             {
-                var e = Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy()); 
+                var e = Channel.MaterializeUserAppMemberRef(cntx, entity.ShallowCopy()); 
                 if (e != null)
                     e.StartAutoUpdating = true;
                 return e;
@@ -1004,7 +981,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///   Load the entity "Application_Ref" of type <see cref="Application_" /> that the entity depend upon. Awaitable asynchronous version.
+        ///   Load the entity "UserAppMemberRef" of type <see cref="UserAppMember" /> that the entity depend upon. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
         /// <param name="entity">The entity.</param>
@@ -1012,13 +989,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// If the corresponding foreign key is nullable, the returned entity can be null.
         /// </remarks>
         /// <returns>
-        ///   An entity of type <see cref="Application_" /> or null.
+        ///   An entity of type <see cref="UserAppMember" /> or null.
         /// </returns>
-        public async System.Threading.Tasks.Task<Application_> MaterializeApplication_RefAsync(CallContext cntx, Announcement entity)
+        public async System.Threading.Tasks.Task<UserAppMember> MaterializeUserAppMemberRefAsync(CallContext cntx, MemberCallback entity)
         {
             try
             {
-                var e = await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeUserAppMemberRefAsync(cntx, entity.ShallowCopy());
                 if (e != null)
                     e.StartAutoUpdating = true;
                 return e;
@@ -1032,182 +1009,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///   Load the entity "UserGroupRef" of type <see cref="UserGroup" /> that the entity depend upon. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="UserGroup" /> or null.
-        /// </returns>
-        public UserGroup MaterializeUserGroupRef(CallContext cntx, Announcement entity)
-        {
-            try
-            {
-                var e = Channel.MaterializeUserGroupRef(cntx, entity.ShallowCopy()); 
-                if (e != null)
-                    e.StartAutoUpdating = true;
-                return e;
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-                return null;
-            }
-        }
-
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///   Load the entity "UserGroupRef" of type <see cref="UserGroup" /> that the entity depend upon. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="UserGroup" /> or null.
-        /// </returns>
-        public async System.Threading.Tasks.Task<UserGroup> MaterializeUserGroupRefAsync(CallContext cntx, Announcement entity)
-        {
-            try
-            {
-                var e = await Channel.MaterializeUserGroupRefAsync(cntx, entity.ShallowCopy());
-                if (e != null)
-                    e.StartAutoUpdating = true;
-                return e;
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-                return null;
-            }
-        }
-#endif
-
-        /// <summary>
-        ///   Load the entity "UserRef" of type <see cref="User" /> that the entity depend upon. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="User" /> or null.
-        /// </returns>
-        public User MaterializeUserRef(CallContext cntx, Announcement entity)
-        {
-            try
-            {
-                var e = Channel.MaterializeUserRef(cntx, entity.ShallowCopy()); 
-                if (e != null)
-                    e.StartAutoUpdating = true;
-                return e;
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-                return null;
-            }
-        }
-
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///   Load the entity "UserRef" of type <see cref="User" /> that the entity depend upon. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="entity">The entity.</param>
-        /// <remarks>
-        /// If the corresponding foreign key is nullable, the returned entity can be null.
-        /// </remarks>
-        /// <returns>
-        ///   An entity of type <see cref="User" /> or null.
-        /// </returns>
-        public async System.Threading.Tasks.Task<User> MaterializeUserRefAsync(CallContext cntx, Announcement entity)
-        {
-            try
-            {
-                var e = await Channel.MaterializeUserRefAsync(cntx, entity.ShallowCopy());
-                if (e != null)
-                    e.StartAutoUpdating = true;
-                return e;
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-                return null;
-            }
-        }
-#endif
-
-        /// <summary>
-        ///   Get the collection of non-trivial foreign key constrains of type <see cref="Announcement" /> inside entity set "Announcements" of the data source under specified filtering and sorting conditions. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="set">Set information.</param>
-        /// <param name="qexpr">Filter expression for the set.</param>
-        /// <param name="max">Number of items per page.</param>
-        /// <param name="nextId">The id of next page, if any.</param>
-        /// <returns>
-        ///   The collection of independent non-trivial foreign key constrains.
-        /// </returns>
-        /// <remarks>It will throw an exception if the <see cref="AnnouncementSet.SetFilter" /> of <paramref name="set" /> is null or empty.</remarks>
-        public AnnouncementSetConstraintsColl QuerySetConstraints(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr, int max, string nextId)
-        {
-            try
-            {
-                return Channel.QuerySetConstraints(cntx, set, qexpr, max, nextId);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-                return null;
-            }
-        }
-
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///   Get the collection of non-trivial foreign key constrains of type <see cref="Announcement" /> inside entity set "Announcements" of the data source under specified filtering and sorting conditions. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="set">Set information.</param>
-        /// <param name="qexpr">Filter expression for the set.</param>
-        /// <param name="max">Number of items per page.</param>
-        /// <param name="nextId">The id of next page, if any.</param>
-        /// <returns>
-        ///   The collection of independent non-trivial foreign key constrains.
-        /// </returns>
-        /// <remarks>It will throw an exception if the <see cref="AnnouncementSet.SetFilter" /> of <paramref name="set" /> is null or empty.</remarks>
-        public async System.Threading.Tasks.Task<AnnouncementSetConstraintsColl> QuerySetConstraintsAsync(CallContext cntx, AnnouncementSet set, QueryExpresion qexpr, int max, string nextId)
-        {
-            try
-            {
-                return await Channel.QuerySetConstraintsAsync(cntx, set, qexpr, max, nextId);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-                return null;
-            }
-        }
-#endif
-
-        /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="Announcement.ID" /> }. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="Announcement.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
-        public Announcement LoadEntityByKey(CallContext cntx, string _ID)
+        public MemberCallback LoadEntityByKey(CallContext cntx, string _HubID, string _ApplicationID, string _UserID)
         {
             try
             {
-                var e = Channel.LoadEntityByKey(cntx, _ID);
+                var e = Channel.LoadEntityByKey(cntx, _HubID, _ApplicationID, _UserID);
                 if (e != null)
                     e.StartAutoUpdating = true;
                 return e;
@@ -1221,18 +1036,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="Announcement.ID" /> }. Awaitable asynchronous version.
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="Announcement.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <returns>
         ///   Null or the entity found.
         /// </returns>
-        public async System.Threading.Tasks.Task<Announcement> LoadEntityByKeyAsync(CallContext cntx, string _ID)
+        public async System.Threading.Tasks.Task<MemberCallback> LoadEntityByKeyAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID)
         {
             try
             {
-                var e = await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                var e = await Channel.LoadEntityByKeyAsync(cntx, _HubID, _ApplicationID, _UserID);
                 if (e != null)
                     e.StartAutoUpdating = true;
                 return e;
@@ -1246,10 +1063,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="Announcement.ID" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="Announcement.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1279,11 +1098,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or the entity graph found.
         /// </returns>
-        public Announcement LoadEntityGraphRecurs(CallContext cntx, string _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets)
+        public MemberCallback LoadEntityGraphRecurs(CallContext cntx, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets)
         {
             try
             {
-                return Channel.LoadEntityGraphRecurs(cntx, _ID, excludedSets, futherDrillSets);
+                return Channel.LoadEntityGraphRecurs(cntx, _HubID, _ApplicationID, _UserID, excludedSets, futherDrillSets);
             }
             catch (Exception ex)
             {
@@ -1294,10 +1113,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="Announcement.ID" /> }. Awaitable asynchronous version.
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="Announcement.ID" />.</param>
+        /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
         /// <param name="excludedSets">A list of sets to be excluded. </param>
         /// <param name="futherDrillSets">A list of sets above the entry set that are to be drilled down futher (see the following). </param>
         /// <remarks>
@@ -1327,11 +1148,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or the entity graph found.
         /// </returns>
-        public async System.Threading.Tasks.Task<Announcement> LoadEntityGraphRecursAsync(CallContext cntx, string _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets)
+        public async System.Threading.Tasks.Task<MemberCallback> LoadEntityGraphRecursAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets)
         {
             try
             {
-                return await Channel.LoadEntityGraphRecursAsync(cntx, _ID, excludedSets, futherDrillSets);
+                return await Channel.LoadEntityGraphRecursAsync(cntx, _HubID, _ApplicationID, _UserID, excludedSets, futherDrillSets);
             }
             catch (Exception ex)
             {
@@ -1342,10 +1163,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="Announcement.ID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Intrinsic id <see cref="Announcement.ID" />.</param>
+        /// <param name="_HubID">Intrinsic id <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Intrinsic id <see cref="MemberCallback.UserID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1354,11 +1177,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or zero or one entity.
         /// </returns>
-        public List<Announcement> LoadEntityByNature(CallContext cntx, string _ID)
+        public List<MemberCallback> LoadEntityByNature(CallContext cntx, string _HubID, string _ApplicationID, string _UserID)
         {
             try
             {
-                var list = Channel.LoadEntityByNature(cntx, _ID);
+                var list = Channel.LoadEntityByNature(cntx, _HubID, _ApplicationID, _UserID);
                 return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
@@ -1370,10 +1193,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="Announcement.ID" /> }. Awaitable asynchronous version.
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Intrinsic id <see cref="Announcement.ID" />.</param>
+        /// <param name="_HubID">Intrinsic id <see cref="MemberCallback.HubID" />.</param>
+        /// <param name="_ApplicationID">Intrinsic id <see cref="MemberCallback.ApplicationID" />.</param>
+        /// <param name="_UserID">Intrinsic id <see cref="MemberCallback.UserID" />.</param>
         /// <remarks>
         ///  <para>
         ///   The returned entity set should contain zero or one item or null.
@@ -1382,113 +1207,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   Null or zero or one entity.
         /// </returns>
-        public async System.Threading.Tasks.Task<List<Announcement>> LoadEntityByNatureAsync(CallContext cntx, string _ID)
+        public async System.Threading.Tasks.Task<List<MemberCallback>> LoadEntityByNatureAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID)
         {
             try
             {
-                var list = await Channel.LoadEntityByNatureAsync(cntx, _ID);
+                var list = await Channel.LoadEntityByNatureAsync(cntx, _HubID, _ApplicationID, _UserID);
                 return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {
                 HandleError(ex);
                 return null;
-            }
-        }
-#endif
-
-        /// <summary>
-        ///  Load the delay loaded property <see cref="Announcement.Description" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="Announcement.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        public string LoadEntityDescription(CallContext cntx, string _ID)
-        {
-            try
-            {
-                return Channel.LoadEntityDescription(cntx, _ID);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-                return null;
-            }
-        }
-
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///  Load the delay loaded property <see cref="Announcement.Description" />. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="Announcement.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        public async System.Threading.Tasks.Task<string> LoadEntityDescriptionAsync(CallContext cntx, string _ID)
-        {
-            try
-            {
-                return await Channel.LoadEntityDescriptionAsync(cntx, _ID);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-                return null;
-            }
-        }
-#endif
-
-        /// <summary>
-        ///  Update the delay loaded property <see cref="Announcement.Description" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="Announcement.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        public void UpdateEntityDescription(CallContext cntx, string _ID, string data)
-        {
-            try
-            {
-                Channel.UpdateEntityDescription(cntx, _ID, data);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-            }
-        }
-
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///  Update the delay loaded property <see cref="Announcement.Description" />. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="Announcement.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        public async System.Threading.Tasks.Task UpdateEntityDescriptionAsync(CallContext cntx, string _ID, string data)
-        {
-            try
-            {
-                await Channel.UpdateEntityDescriptionAsync(cntx, _ID, data);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
             }
         }
 #endif

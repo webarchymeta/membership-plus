@@ -129,12 +129,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IEventCalendarShareCircleService.AddOrUpdateEntities" />.
@@ -146,6 +146,24 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "AssocTypeID = " + AssocTypeID + "\r\n";
+                str += "EventID = " + EventID + "\r\n";
+                if (IsShareDurationModified)
+                    str += "Modified [ShareDuration] = " + ShareDuration + "\r\n";
+                if (IsStartDateModified)
+                    str += "Modified [StartDate] = " + StartDate + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -192,6 +210,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region Properties of the current entity
 
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
@@ -254,7 +274,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_ShareDuration != value)
                 {
                     _ShareDuration = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsShareDurationModified = true;
                 }
             }
@@ -296,7 +316,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_StartDate != value)
                 {
                     _StartDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsStartDateModified = true;
                 }
             }
@@ -322,8 +342,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isStartDateModified = false;
 
+#endregion
+
+#region Entities that the current one depends upon.
+
         /// <summary>
-        /// Entity in data set "EventCalendar" for <see cref="EventCalendar" /> that this entity depend upon.
+        /// Entity in data set "EventCalendar" for <see cref="EventCalendar" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="EventCalendarShareCircle.EventID" /> }.
         /// </summary>
         [DataMember]
@@ -365,7 +389,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<EventCalendar> AutoLoadEventCalendarRef = null;
 
         /// <summary>
-        /// Entity in data set "UserAssociationTypes" for <see cref="UserAssociationType" /> that this entity depend upon.
+        /// Entity in data set "UserAssociationTypes" for <see cref="UserAssociationType" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="EventCalendarShareCircle.AssocTypeID" /> }.
         /// </summary>
         [DataMember]
@@ -405,6 +429,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// A delegate to load <see cref="EventCalendarShareCircle.UserAssociationTypeRef" /> automatically when it is referred to at the first time.
         /// </summary>
         public Func<UserAssociationType> AutoLoadUserAssociationTypeRef = null;
+
+#endregion
+
+#region Entities that depend on the current one.
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -502,27 +532,46 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (!IsEntityChanged)
                 IsEntityChanged = IsShareDurationModified || IsStartDateModified;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public EventCalendarShareCircle ShallowCopy(bool allData = false)
+        public EventCalendarShareCircle ShallowCopy(bool allData = false, bool preserveState = false)
         {
             EventCalendarShareCircle e = new EventCalendarShareCircle();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.AssocTypeID = AssocTypeID;
             e.EventID = EventID;
             e.ShareDuration = ShareDuration;
+            if (preserveState)
+                e.IsShareDurationModified = IsShareDurationModified;
+            else
+                e.IsShareDurationModified = false;
             e.StartDate = StartDate;
+            if (preserveState)
+                e.IsStartDateModified = IsStartDateModified;
+            else
+                e.IsStartDateModified = false;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

@@ -47,10 +47,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>ID</term>
     ///      <description>See <see cref="EventCalendar.ID" />. Primary key; intrinsic id; fixed; not null.</description>
     ///    </item>
-    ///    <item>
-    ///      <term>EventTypeID</term>
-    ///      <description>See <see cref="EventCalendar.EventTypeID" />. Intrinsic id; fixed; nullable; foreign key.</description>
-    ///    </item>
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
@@ -104,7 +100,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    </item>
     ///    <item>
     ///      <term>EventTypeID</term>
-    ///      <description>See <see cref="EventCalendar.EventTypeID" />. Intrinsic id; fixed; nullable; foreign key.</description>
+    ///      <description>See <see cref="EventCalendar.EventTypeID" />. Fixed; nullable; foreign key.</description>
     ///    </item>
     ///    <item>
     ///      <term>GroupID</term>
@@ -148,6 +144,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>EventCalendarShareCircles</term>
     ///      <description>See <see cref="EventCalendar.EventCalendarShareCircles" />, which is a sub-set of the data set "EventCalendarShareCircles" for <see cref="EventCalendarShareCircle" />.</description>
     ///    </item>
+    ///    <item>
+    ///      <term>NotificationTaskSchedules</term>
+    ///      <description>See <see cref="EventCalendar.NotificationTaskSchedules" />, which is a sub-set of the data set "NotificationTaskSchedules" for <see cref="NotificationTaskSchedule" />.</description>
+    ///    </item>
     ///  </list>
     /// </remarks>
     [DataContract]
@@ -183,12 +183,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IEventCalendarService.AddOrUpdateEntities" />.
@@ -200,6 +200,31 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ID = " + ID + "\r\n";
+                if (IsEventDurationModified)
+                    str += "Modified [EventDuration] = " + EventDuration + "\r\n";
+                if (IsStartDateModified)
+                    str += "Modified [StartDate] = " + StartDate + "\r\n";
+                if (IsTitleModified)
+                    str += "Modified [Title] = " + Title + "\r\n";
+                if (IsDescriptionModified)
+                    str += "Modified [Description] = " + Description + "\r\n";
+                if (IsEventStatusModified)
+                    str += "Modified [EventStatus] = " + EventStatus + "\r\n";
+                if (IsSubTitleModified)
+                    str += "Modified [SubTitle] = " + SubTitle + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -247,6 +272,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region Properties of the current entity
 
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null.
@@ -309,7 +336,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_EventDuration != value)
                 {
                     _EventDuration = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsEventDurationModified = true;
                 }
             }
@@ -352,7 +379,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_StartDate != value)
                 {
                     _StartDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsStartDateModified = true;
                 }
             }
@@ -396,7 +423,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Title != value)
                 {
                     _Title = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsTitleModified = true;
                 }
             }
@@ -439,7 +466,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Description != value)
                 {
                     _Description = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsDescriptionModified = true;
                 }
             }
@@ -500,7 +527,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_EventStatus != value)
                 {
                     _EventStatus = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsEventStatusModified = true;
                 }
             }
@@ -543,7 +570,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_SubTitle != value)
                 {
                     _SubTitle = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsSubTitleModified = true;
                 }
             }
@@ -612,9 +639,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private string _CreatedUserID = default(string);
 
         /// <summary>
-        /// Meta-info: intrinsic id; fixed; nullable; foreign key.
+        /// Meta-info: fixed; nullable; foreign key.
         /// </summary>
-        [Key]
         [Editable(false)]
         [DataMember(IsRequired = false)]
         public System.Nullable<int> EventTypeID
@@ -675,8 +701,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private string _UserID = default(string);
 
+#endregion
+
+#region Entities that the current one depends upon.
+
         /// <summary>
-        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon.
+        /// Entity in data set "Applications" for <see cref="Application_" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="EventCalendar.ApplicationID" /> }.
         /// </summary>
         [DataMember]
@@ -720,7 +750,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<Application_> AutoLoadApplication_Ref = null;
 
         /// <summary>
-        /// Entity in data set "EventTypes" for <see cref="EventType" /> that this entity depend upon.
+        /// Entity in data set "EventTypes" for <see cref="EventType" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="EventCalendar.EventTypeID" /> }.
         /// </summary>
         [DataMember]
@@ -764,7 +794,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<EventType> AutoLoadEventTypeRef = null;
 
         /// <summary>
-        /// Entity in data set "UserGroups" for <see cref="UserGroup" /> that this entity depend upon.
+        /// Entity in data set "UserGroups" for <see cref="UserGroup" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="EventCalendar.GroupID" /> }.
         /// </summary>
         [DataMember]
@@ -808,7 +838,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<UserGroup> AutoLoadUserGroupRef = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="EventCalendar.UserID" /> }.
         /// </summary>
         [DataMember]
@@ -852,7 +882,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public Func<User> AutoLoadUser_UserID = null;
 
         /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon.
+        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
         /// The corresponding foreign key set is { <see cref="EventCalendar.CreatedUserID" /> }.
         /// </summary>
         [DataMember]
@@ -895,8 +925,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public Func<User> AutoLoadUser_CreatedUserID = null;
 
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="EventCalendarShareCircleSet" /> for data set "EventCalendarShareCircles" of <see cref="EventCalendarShareCircle" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.EventID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarShareCircleSet EventCalendarShareCircles
@@ -916,6 +951,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "EventCalendarShareCircles" of <see cref="EventCalendarShareCircle" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.EventID" /> }.
         /// </summary>
 		public IEnumerable<EventCalendarShareCircle> EventCalendarShareCircleEnum
 		{
@@ -925,6 +961,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="EventCalendarShareCircle" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.EventID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarShareCircle[] ChangedEventCalendarShareCircles
@@ -932,6 +969,49 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+        /// <summary>
+        /// Entitity set <see cref="NotificationTaskScheduleSet" /> for data set "NotificationTaskSchedules" of <see cref="NotificationTaskSchedule" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.EventID" /> }.
+        /// </summary>
+        [DataMember]
+		public NotificationTaskScheduleSet NotificationTaskSchedules
+		{
+			get
+			{
+                if (_NotificationTaskSchedules == null)
+                    _NotificationTaskSchedules = new NotificationTaskScheduleSet();
+				return _NotificationTaskSchedules;
+			}
+            set
+            {
+                _NotificationTaskSchedules = value;
+            }
+		}
+		private NotificationTaskScheduleSet _NotificationTaskSchedules = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "NotificationTaskSchedules" of <see cref="NotificationTaskSchedule" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.EventID" /> }.
+        /// </summary>
+		public IEnumerable<NotificationTaskSchedule> NotificationTaskScheduleEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="NotificationTaskSchedule" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.EventID" /> }.
+        /// </summary>
+        [DataMember]
+		public NotificationTaskSchedule[] ChangedNotificationTaskSchedules
+		{
+			get;
+            set;
+		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -961,7 +1041,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (other == null)
                 return false;
             else
-                return ID == other.ID &&  EventTypeID == other.EventTypeID;
+                return ID == other.ID;
         }              
 
         /// <summary>
@@ -1084,30 +1164,58 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Title == null)
                 Title = "";
             if (!IsEntityChanged)
                 IsEntityChanged = IsEventDurationModified || IsStartDateModified || IsTitleModified || IsDescriptionModified || IsEventStatusModified || IsSubTitleModified;
             if (IsDescriptionModified && !IsDescriptionLoaded)
                 IsDescriptionLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public EventCalendar ShallowCopy(bool allData = false)
+        public EventCalendar ShallowCopy(bool allData = false, bool preserveState = false)
         {
             EventCalendar e = new EventCalendar();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.CreateDate = CreateDate;
             e.EventDuration = EventDuration;
+            if (preserveState)
+                e.IsEventDurationModified = IsEventDurationModified;
+            else
+                e.IsEventDurationModified = false;
             e.StartDate = StartDate;
+            if (preserveState)
+                e.IsStartDateModified = IsStartDateModified;
+            else
+                e.IsStartDateModified = false;
             e.Title = Title;
+            if (preserveState)
+                e.IsTitleModified = IsTitleModified;
+            else
+                e.IsTitleModified = false;
             e.EventStatus = EventStatus;
+            if (preserveState)
+                e.IsEventStatusModified = IsEventStatusModified;
+            else
+                e.IsEventStatusModified = false;
             e.SubTitle = SubTitle;
+            if (preserveState)
+                e.IsSubTitleModified = IsSubTitleModified;
+            else
+                e.IsSubTitleModified = false;
             e.ApplicationID = ApplicationID;
             e.CreatedUserID = CreatedUserID;
             e.EventTypeID = EventTypeID;
@@ -1116,11 +1224,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (allData)
             {
                 e.Description = Description;
+                if (preserveState)
+                    e.IsDescriptionModified = IsDescriptionModified;
+                else
+                    e.IsDescriptionModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
@@ -1168,9 +1283,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@"
   ApplicationID = '" + (ApplicationID != null ? ApplicationID : "null") + @"'
   CreatedUserID = '" + (CreatedUserID != null ? CreatedUserID : "null") + @"'
-  EventTypeID = " + (EventTypeID.HasValue ? EventTypeID.Value.ToString() : "null") + @"");
-            sb.Append(@" (natural id)");
-            sb.Append(@"
+  EventTypeID = " + (EventTypeID.HasValue ? EventTypeID.Value.ToString() : "null") + @"
   GroupID = '" + (GroupID != null ? GroupID : "null") + @"'
   UserID = '" + (UserID != null ? UserID : "null") + @"'
 ");

@@ -104,12 +104,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserAssociationTypeService.AddOrUpdateEntities" />.
@@ -121,6 +121,19 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ID = " + ID + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -168,6 +181,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null.
         /// </summary>
@@ -214,8 +229,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private string _TypeName = default(string);
 
+#endregion
+
+#region Entities that the current one depends upon.
+
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="EventCalendarShareCircleSet" /> for data set "EventCalendarShareCircles" of <see cref="EventCalendarShareCircle" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.AssocTypeID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarShareCircleSet EventCalendarShareCircles
@@ -235,6 +259,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "EventCalendarShareCircles" of <see cref="EventCalendarShareCircle" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.AssocTypeID" /> }.
         /// </summary>
 		public IEnumerable<EventCalendarShareCircle> EventCalendarShareCircleEnum
 		{
@@ -244,6 +269,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="EventCalendarShareCircle" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarShareCircleSet" /> set is { <see cref="EventCalendarShareCircle.AssocTypeID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarShareCircle[] ChangedEventCalendarShareCircles
@@ -254,6 +280,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserAssociationSet" /> for data set "UserAssociations" of <see cref="UserAssociation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.TypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssociationSet UserAssociations
@@ -273,6 +300,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserAssociations" of <see cref="UserAssociation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.TypeID" /> }.
         /// </summary>
 		public IEnumerable<UserAssociation> UserAssociationEnum
 		{
@@ -282,6 +310,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserAssociation" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.TypeID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssociation[] ChangedUserAssociations
@@ -289,6 +318,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -358,25 +389,36 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (TypeName == null)
                 TypeName = "";
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAssociationType ShallowCopy(bool allData = false)
+        public UserAssociationType ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserAssociationType e = new UserAssociationType();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.TypeName = TypeName;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 

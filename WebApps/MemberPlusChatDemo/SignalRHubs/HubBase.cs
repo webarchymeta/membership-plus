@@ -8,8 +8,10 @@ using Microsoft.AspNet.Identity;
 
 namespace MemberAdminMvc5.SignalRHubs
 {
-    public class HubBase : Hub
+    public abstract class HubBase : Hub
     {
+        public abstract string HubIdentity { get; }
+
         protected string UserId
         {
             get 

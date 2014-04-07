@@ -24,7 +24,7 @@ using System.ComponentModel.DataAnnotations;
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
     /// <summary>
-    /// A entity in "UsersInRoles" data set.
+    /// A entity in "MemberCallbacks" data set.
     /// </summary>
     /// <remarks>
     ///  <para>
@@ -35,12 +35,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Primary keys</term><description>Description</description>
     ///    </listheader>
     ///    <item>
-    ///      <term>RoleID</term>
-    ///      <description>See <see cref="UsersInRole.RoleID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <term>HubID</term>
+    ///      <description>See <see cref="MemberCallback.HubID" />. Primary key; intrinsic id; fixed; not null; max-length = 50 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ApplicationID</term>
+    ///      <description>See <see cref="MemberCallback.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///    <item>
     ///      <term>UserID</term>
-    ///      <description>See <see cref="UsersInRole.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <description>See <see cref="MemberCallback.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -48,21 +52,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Intrinsic Identifiers</term><description>Description</description>
     ///    </listheader>
     ///    <item>
-    ///      <term>RoleID</term>
-    ///      <description>See <see cref="UsersInRole.RoleID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <term>HubID</term>
+    ///      <description>See <see cref="MemberCallback.HubID" />. Primary key; intrinsic id; fixed; not null; max-length = 50 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ApplicationID</term>
+    ///      <description>See <see cref="MemberCallback.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///    <item>
     ///      <term>UserID</term>
-    ///      <description>See <see cref="UsersInRole.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
-    ///    </item>
-    ///  </list>
-    ///  <list type="table">
-    ///    <listheader>
-    ///       <term>None editable properties</term><description>Description</description>
-    ///    </listheader>
-    ///    <item>
-    ///      <term>AssignDate</term>
-    ///      <description>See <see cref="UsersInRole.AssignDate" />. Fixed; not null.</description>
+    ///      <description>See <see cref="MemberCallback.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -70,12 +69,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Editable properties</term><description>Description</description>
     ///    </listheader>
     ///    <item>
-    ///      <term>SubPriority</term>
-    ///      <description>See <see cref="UsersInRole.SubPriority" />. Editable; not null.</description>
+    ///      <term>IsDisconnected</term>
+    ///      <description>See <see cref="MemberCallback.IsDisconnected" />. Editable; not null.</description>
     ///    </item>
     ///    <item>
-    ///      <term>LastModified</term>
-    ///      <description>See <see cref="UsersInRole.LastModified" />. Editable; nullable.</description>
+    ///      <term>LastActiveDate</term>
+    ///      <description>See <see cref="MemberCallback.LastActiveDate" />. Editable; not null.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ConnectionID</term>
+    ///      <description>See <see cref="MemberCallback.ConnectionID" />. Editable; nullable; max-length = 50 characters.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -83,16 +86,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Foreign keys</term><description>Description</description>
     ///    </listheader>
     ///    <item>
-    ///      <term>RoleID</term>
-    ///      <description>See <see cref="UsersInRole.RoleID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
+    ///      <term>ApplicationID</term>
+    ///      <description>See <see cref="MemberCallback.ApplicationID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///    <item>
     ///      <term>UserID</term>
-    ///      <description>See <see cref="UsersInRole.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
-    ///    </item>
-    ///    <item>
-    ///      <term>AdminID</term>
-    ///      <description>See <see cref="UsersInRole.AdminID" />. Editable; nullable; foreign key.</description>
+    ///      <description>See <see cref="MemberCallback.UserID" />. Primary key; intrinsic id; fixed; not null; foreign key.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -100,21 +99,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>This entity depends on</term><description>Description</description>
     ///    </listheader>
     ///    <item>
-    ///      <term>RoleRef</term>
-    ///      <description>See <see cref="UsersInRole.RoleRef" />, which is a member of the data set "Roles" for <see cref="Role" />.</description>
-    ///    </item>
-    ///    <item>
-    ///      <term>User_UserID</term>
-    ///      <description>See <see cref="UsersInRole.User_UserID" />, which is a member of the data set "Users" for <see cref="User" />.</description>
-    ///    </item>
-    ///    <item>
-    ///      <term>User_AdminID</term>
-    ///      <description>See <see cref="UsersInRole.User_AdminID" />, which is a member of the data set "Users" for <see cref="User" />. Nullable.</description>
+    ///      <term>UserAppMemberRef</term>
+    ///      <description>See <see cref="MemberCallback.UserAppMemberRef" />, which is a member of the data set "UserAppMembers" for <see cref="UserAppMember" />.</description>
     ///    </item>
     ///  </list>
     /// </remarks>
     [DataContract]
-    public class UsersInRole : IDbEntity 
+    public class MemberCallback : IDbEntity 
     {
         /// <summary>
         /// For internal use only.
@@ -128,7 +119,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             get
             {
-                return this.RoleID.ToString() + ":" + this.UserID;
+                return this.ApplicationID + ":" + this.HubID + ":" + this.UserID;
             }
         }
 
@@ -154,7 +145,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private bool _startAutoUpdating = false;
 
         /// <summary>
-        /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUsersInRoleService.AddOrUpdateEntities" />.
+        /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IMemberCallbackService.AddOrUpdateEntities" />.
         /// </summary>
         [DataMember]
         public int UpdateIndex
@@ -172,14 +163,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             get
             {
                 string str = "";
-                str += "RoleID = " + RoleID + "\r\n";
+                str += "HubID = " + HubID + "\r\n";
+                str += "ApplicationID = " + ApplicationID + "\r\n";
                 str += "UserID = " + UserID + "\r\n";
-                if (IsSubPriorityModified)
-                    str += "Modified [SubPriority] = " + SubPriority + "\r\n";
-                if (IsLastModifiedModified)
-                    str += "Modified [LastModified] = " + LastModified + "\r\n";
-                if (IsAdminIDModified)
-                    str += "Modified [AdminID] = " + AdminID + "\r\n";;
+                if (IsIsDisconnectedModified)
+                    str += "Modified [IsDisconnected] = " + IsDisconnected + "\r\n";
+                if (IsLastActiveDateModified)
+                    str += "Modified [LastActiveDate] = " + LastActiveDate + "\r\n";
+                if (IsConnectionIDModified)
+                    str += "Modified [ConnectionID] = " + ConnectionID + "\r\n";;
                 return str.Trim();
             }
         }
@@ -205,9 +197,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         private string GetDistinctString(bool ShowPathInfo)
         {
-            LoadUser_UserID();
-            LoadRoleRef();
-            return String.Format(@"{0} as {1}", (User_UserID != null ? User_UserID.DistinctString : ""), (RoleRef != null ? RoleRef.DistinctString : ""));
+            return String.Format(@"HubID = {0}, ApplicationID = {1}, UserID = {2}", HubID.Trim(), ApplicationID.Trim(), UserID.Trim());
         }
 
         /// <summary>
@@ -235,27 +225,50 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #region Properties of the current entity
 
         /// <summary>
-        /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
+        /// Meta-info: primary key; intrinsic id; fixed; not null; max-length = 50 characters.
         /// </summary>
         [Key]
         [Required]
         [Editable(false)]
+        [StringLength(50)]
         [DataMember(IsRequired = true)]
-        public int RoleID
+        public string HubID
         { 
             get
             {
-                return _RoleID;
+                return _HubID;
             }
             set
             {
-                if (_RoleID != value)
+                if (_HubID != value)
                 {
-                    _RoleID = value;
+                    _HubID = value;
                 }
             }
         }
-        private int _RoleID = default(int);
+        private string _HubID = default(string);
+
+        /// <summary>
+        /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
+        /// </summary>
+        [Key]
+        [Editable(false)]
+        [DataMember(IsRequired = true)]
+        public string ApplicationID
+        { 
+            get
+            {
+                return _ApplicationID;
+            }
+            set
+            {
+                if (_ApplicationID != value)
+                {
+                    _ApplicationID = value;
+                }
+            }
+        }
+        private string _ApplicationID = default(string);
 
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null; foreign key.
@@ -280,26 +293,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private string _UserID = default(string);
 
         /// <summary>
-        /// Meta-info: fixed; not null.
+        /// Meta-info: editable; not null.
         /// </summary>
         [Required]
-        [Editable(false)]
+        [Editable(true)]
         [DataMember(IsRequired = true)]
-        public DateTime AssignDate
+        public bool IsDisconnected
         { 
             get
             {
-                return _AssignDate;
+                return _IsDisconnected;
             }
             set
             {
-                if (_AssignDate != value)
+                if (_IsDisconnected != value)
                 {
-                    _AssignDate = value;
+                    _IsDisconnected = value;
+                    if (StartAutoUpdating)
+                        IsIsDisconnectedModified = true;
                 }
             }
         }
-        private DateTime _AssignDate = default(DateTime);
+        private bool _IsDisconnected = default(bool);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="IsDisconnected" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="IsDisconnected" /> only if this is set to true no matter what
+        /// the actual value of <see cref="IsDisconnected" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsIsDisconnectedModified
+        { 
+            get
+            {
+                return _isIsDisconnectedModified;
+            }
+            set
+            {
+                _isIsDisconnectedModified = value;
+            }
+        }
+        private bool _isIsDisconnectedModified = false;
 
         /// <summary>
         /// Meta-info: editable; not null.
@@ -307,258 +341,131 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [Required]
         [Editable(true)]
         [DataMember(IsRequired = true)]
-        public int SubPriority
+        public DateTime LastActiveDate
         { 
             get
             {
-                return _SubPriority;
+                return _LastActiveDate;
             }
             set
             {
-                if (_SubPriority != value)
+                if (_LastActiveDate != value)
                 {
-                    _SubPriority = value;
+                    _LastActiveDate = value;
                     if (StartAutoUpdating)
-                        IsSubPriorityModified = true;
+                        IsLastActiveDateModified = true;
                 }
             }
         }
-        private int _SubPriority = default(int);
+        private DateTime _LastActiveDate = default(DateTime);
 
         /// <summary>
-        /// Wether or not the value of <see cref="SubPriority" /> was changed compared to what it was loaded last time. 
-        /// Note: the backend data source updates the changed <see cref="SubPriority" /> only if this is set to true no matter what
-        /// the actual value of <see cref="SubPriority" /> is.
+        /// Wether or not the value of <see cref="LastActiveDate" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="LastActiveDate" /> only if this is set to true no matter what
+        /// the actual value of <see cref="LastActiveDate" /> is.
         /// </summary>
         [DataMember]
-        public bool IsSubPriorityModified
+        public bool IsLastActiveDateModified
         { 
             get
             {
-                return _isSubPriorityModified;
+                return _isLastActiveDateModified;
             }
             set
             {
-                _isSubPriorityModified = value;
+                _isLastActiveDateModified = value;
             }
         }
-        private bool _isSubPriorityModified = false;
+        private bool _isLastActiveDateModified = false;
 
         /// <summary>
-        /// Meta-info: editable; nullable.
+        /// Meta-info: editable; nullable; max-length = 50 characters.
         /// </summary>
         [Editable(true)]
+        [StringLength(50)]
         [DataMember(IsRequired = false)]
-        public System.Nullable<DateTime> LastModified
+        public string ConnectionID
         { 
             get
             {
-                return _LastModified;
+                return _ConnectionID;
             }
             set
             {
-                if (_LastModified != value)
+                if (_ConnectionID != value)
                 {
-                    _LastModified = value;
+                    _ConnectionID = value;
                     if (StartAutoUpdating)
-                        IsLastModifiedModified = true;
+                        IsConnectionIDModified = true;
                 }
             }
         }
-        private System.Nullable<DateTime> _LastModified = default(System.Nullable<DateTime>);
+        private string _ConnectionID = default(string);
 
         /// <summary>
-        /// Wether or not the value of <see cref="LastModified" /> was changed compared to what it was loaded last time. 
-        /// Note: the backend data source updates the changed <see cref="LastModified" /> only if this is set to true no matter what
-        /// the actual value of <see cref="LastModified" /> is.
+        /// Wether or not the value of <see cref="ConnectionID" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="ConnectionID" /> only if this is set to true no matter what
+        /// the actual value of <see cref="ConnectionID" /> is.
         /// </summary>
         [DataMember]
-        public bool IsLastModifiedModified
+        public bool IsConnectionIDModified
         { 
             get
             {
-                return _isLastModifiedModified;
+                return _isConnectionIDModified;
             }
             set
             {
-                _isLastModifiedModified = value;
+                _isConnectionIDModified = value;
             }
         }
-        private bool _isLastModifiedModified = false;
-
-        /// <summary>
-        /// Meta-info: editable; nullable; foreign key.
-        /// </summary>
-        [Editable(true)]
-        [DataMember(IsRequired = false)]
-        public string AdminID
-        { 
-            get
-            {
-                return _AdminID;
-            }
-            set
-            {
-                if (_AdminID != value)
-                {
-                    _AdminID = value;
-                    if (StartAutoUpdating)
-                        IsAdminIDModified = true;
-                }
-            }
-        }
-        private string _AdminID = default(string);
-
-        /// <summary>
-        /// Wether or not the value of <see cref="AdminID" /> was changed compared to what it was loaded last time. 
-        /// Note: the backend data source updates the changed <see cref="AdminID" /> only if this is set to true no matter what
-        /// the actual value of <see cref="AdminID" /> is.
-        /// </summary>
-        [DataMember]
-        public bool IsAdminIDModified
-        { 
-            get
-            {
-                return _isAdminIDModified;
-            }
-            set
-            {
-                _isAdminIDModified = value;
-            }
-        }
-        private bool _isAdminIDModified = false;
+        private bool _isConnectionIDModified = false;
 
 #endregion
 
 #region Entities that the current one depends upon.
 
         /// <summary>
-        /// Entity in data set "Roles" for <see cref="Role" /> that this entity depend upon through .
-        /// The corresponding foreign key set is { <see cref="UsersInRole.RoleID" /> }.
+        /// Entity in data set "UserAppMembers" for <see cref="UserAppMember" /> that this entity depend upon through .
+        /// The corresponding foreign key set is { <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }.
         /// </summary>
         [DataMember]
-        public Role RoleRef
+        public UserAppMember UserAppMemberRef
         {
             get 
             {
-                if (_RoleRef == null && AutoLoadRoleRef != null)
-                    _RoleRef = AutoLoadRoleRef();
-                return _RoleRef; 
+                if (_UserAppMemberRef == null && AutoLoadUserAppMemberRef != null)
+                    _UserAppMemberRef = AutoLoadUserAppMemberRef();
+                return _UserAppMemberRef; 
             }
             set 
             { 
-                _RoleRef = value; 
+                _UserAppMemberRef = value; 
             }
         }
-        private Role _RoleRef = null;
+        private UserAppMember _UserAppMemberRef = null;
 
         /// <summary>
-        /// <see cref="UsersInRole.RoleRef" /> is not initialized when the entity is created. Clients could call this method to load it provided a proper delegate <see cref="UsersInRole.DelLoadRoleRef" /> was setup
+        /// <see cref="MemberCallback.UserAppMemberRef" /> is not initialized when the entity is created. Clients could call this method to load it provided a proper delegate <see cref="MemberCallback.DelLoadUserAppMemberRef" /> was setup
         /// before calling it.
         /// </summary>
-        public void LoadRoleRef()
+        public void LoadUserAppMemberRef()
         {
-            if (_RoleRef != null)
+            if (_UserAppMemberRef != null)
                 return;
-            if (DelLoadRoleRef != null)
-                _RoleRef = DelLoadRoleRef();
+            if (DelLoadUserAppMemberRef != null)
+                _UserAppMemberRef = DelLoadUserAppMemberRef();
         }
 
         /// <summary>
-        /// A delegate to load <see cref="UsersInRole.RoleRef" />.
+        /// A delegate to load <see cref="MemberCallback.UserAppMemberRef" />.
         /// </summary>
-        public Func<Role> DelLoadRoleRef = null;
+        public Func<UserAppMember> DelLoadUserAppMemberRef = null;
 
         /// <summary>
-        /// A delegate to load <see cref="UsersInRole.RoleRef" /> automatically when it is referred to at the first time.
+        /// A delegate to load <see cref="MemberCallback.UserAppMemberRef" /> automatically when it is referred to at the first time.
         /// </summary>
-        public Func<Role> AutoLoadRoleRef = null;
-
-        /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
-        /// The corresponding foreign key set is { <see cref="UsersInRole.UserID" /> }.
-        /// </summary>
-        [DataMember]
-        public User User_UserID
-        {
-            get 
-            {
-                if (_User_UserID == null && AutoLoadUser_UserID != null)
-                    _User_UserID = AutoLoadUser_UserID();
-                return _User_UserID; 
-            }
-            set 
-            { 
-                _User_UserID = value; 
-            }
-        }
-        private User _User_UserID = null;
-
-        /// <summary>
-        /// <see cref="UsersInRole.User_UserID" /> is not initialized when the entity is created. Clients could call this method to load it provided a proper delegate <see cref="UsersInRole.DelLoadUser_UserID" /> was setup
-        /// before calling it.
-        /// </summary>
-        public void LoadUser_UserID()
-        {
-            if (_User_UserID != null)
-                return;
-            if (DelLoadUser_UserID != null)
-                _User_UserID = DelLoadUser_UserID();
-        }
-
-        /// <summary>
-        /// A delegate to load <see cref="UsersInRole.User_UserID" />.
-        /// </summary>
-        public Func<User> DelLoadUser_UserID = null;
-
-        /// <summary>
-        /// A delegate to load <see cref="UsersInRole.User_UserID" /> automatically when it is referred to at the first time.
-        /// </summary>
-        public Func<User> AutoLoadUser_UserID = null;
-
-        /// <summary>
-        /// Entity in data set "Users" for <see cref="User" /> that this entity depend upon through .
-        /// The corresponding foreign key set is { <see cref="UsersInRole.AdminID" /> }.
-        /// </summary>
-        [DataMember]
-        public User User_AdminID
-        {
-            get 
-            {
-                if (AdminID == null)
-                    return null;
-                else if (_User_AdminID == null && AutoLoadUser_AdminID != null)
-                    _User_AdminID = AutoLoadUser_AdminID();
-                return _User_AdminID; 
-            }
-            set 
-            { 
-                _User_AdminID = value; 
-            }
-        }
-        private User _User_AdminID = null;
-
-        /// <summary>
-        /// <see cref="UsersInRole.User_AdminID" /> is not initialized when the entity is created. Clients could call this method to load it provided a proper delegate <see cref="UsersInRole.DelLoadUser_AdminID" /> was setup
-        /// before calling it.
-        /// </summary>
-        public void LoadUser_AdminID()
-        {
-            if (AdminID == null || _User_AdminID != null)
-                return;
-            if (DelLoadUser_AdminID != null)
-                _User_AdminID = DelLoadUser_AdminID();
-        }
-
-        /// <summary>
-        /// A delegate to load <see cref="UsersInRole.User_AdminID" />.
-        /// </summary>
-        public Func<User> DelLoadUser_AdminID = null;
-
-        /// <summary>
-        /// A delegate to load <see cref="UsersInRole.User_AdminID" /> automatically when it is referred to at the first time.
-        /// </summary>
-        public Func<User> AutoLoadUser_AdminID = null;
+        public Func<UserAppMember> AutoLoadUserAppMemberRef = null;
 
 #endregion
 
@@ -573,11 +480,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   The result of comparison.
         /// </returns>
-        public bool IsEntityIdentical(UsersInRole other)
+        public bool IsEntityIdentical(MemberCallback other)
         {
             if (other == null)
                 return false;
-            if (RoleID != other.RoleID)
+            if (HubID != other.HubID)
+                return false;
+            if (ApplicationID != other.ApplicationID)
                 return false;
             if (UserID != other.UserID)
                 return false;
@@ -591,12 +500,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <returns>
         ///   The result of comparison.
         /// </returns>
-        public bool IsEntityTheSame(UsersInRole other)
+        public bool IsEntityTheSame(MemberCallback other)
         {
             if (other == null)
                 return false;
             else
-                return RoleID == other.RoleID &&  UserID == other.UserID;
+                return HubID == other.HubID &&  ApplicationID == other.ApplicationID &&  UserID == other.UserID;
         }              
 
         /// <summary>
@@ -606,38 +515,38 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="to">The "new" entity which inherits changes made in <paramref name="from" />.</param>
         /// <returns>
         /// </returns>
-        public static void MergeChanges(UsersInRole from, UsersInRole to)
+        public static void MergeChanges(MemberCallback from, MemberCallback to)
         {
             if (to.IsPersisted)
             {
-                if (from.IsSubPriorityModified && !to.IsSubPriorityModified)
+                if (from.IsIsDisconnectedModified && !to.IsIsDisconnectedModified)
                 {
-                    to.SubPriority = from.SubPriority;
-                    to.IsSubPriorityModified = true;
+                    to.IsDisconnected = from.IsDisconnected;
+                    to.IsIsDisconnectedModified = true;
                 }
-                if (from.IsLastModifiedModified && !to.IsLastModifiedModified)
+                if (from.IsLastActiveDateModified && !to.IsLastActiveDateModified)
                 {
-                    to.LastModified = from.LastModified;
-                    to.IsLastModifiedModified = true;
+                    to.LastActiveDate = from.LastActiveDate;
+                    to.IsLastActiveDateModified = true;
                 }
-                if (from.IsAdminIDModified && !to.IsAdminIDModified)
+                if (from.IsConnectionIDModified && !to.IsConnectionIDModified)
                 {
-                    to.AdminID = from.AdminID;
-                    to.IsAdminIDModified = true;
+                    to.ConnectionID = from.ConnectionID;
+                    to.IsConnectionIDModified = true;
                 }
             }
             else
             {
                 to.IsPersisted = from.IsPersisted;
-                to.RoleID = from.RoleID;
+                to.HubID = from.HubID;
+                to.ApplicationID = from.ApplicationID;
                 to.UserID = from.UserID;
-                to.AssignDate = from.AssignDate;
-                to.SubPriority = from.SubPriority;
-                to.IsSubPriorityModified = from.IsSubPriorityModified;
-                to.LastModified = from.LastModified;
-                to.IsLastModifiedModified = from.IsLastModifiedModified;
-                to.AdminID = from.AdminID;
-                to.IsAdminIDModified = from.IsAdminIDModified;
+                to.IsDisconnected = from.IsDisconnected;
+                to.IsIsDisconnectedModified = from.IsIsDisconnectedModified;
+                to.LastActiveDate = from.LastActiveDate;
+                to.IsLastActiveDateModified = from.IsLastActiveDateModified;
+                to.ConnectionID = from.ConnectionID;
+                to.IsConnectionIDModified = from.IsConnectionIDModified;
             }
         }
 
@@ -647,19 +556,25 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <param name="newdata">The "new" entity acting as the source of the changes, if any.</param>
         /// <returns>
         /// </returns>
-        public void UpdateChanges(UsersInRole newdata)
+        public void UpdateChanges(MemberCallback newdata)
         {
             int cnt = 0;
-            if (SubPriority != newdata.SubPriority)
+            if (IsDisconnected != newdata.IsDisconnected)
             {
-                SubPriority = newdata.SubPriority;
-                IsSubPriorityModified = true;
+                IsDisconnected = newdata.IsDisconnected;
+                IsIsDisconnectedModified = true;
                 cnt++;
             }
-            if (LastModified != newdata.LastModified)
+            if (LastActiveDate != newdata.LastActiveDate)
             {
-                LastModified = newdata.LastModified;
-                IsLastModifiedModified = true;
+                LastActiveDate = newdata.LastActiveDate;
+                IsLastActiveDateModified = true;
+                cnt++;
+            }
+            if (ConnectionID != newdata.ConnectionID)
+            {
+                ConnectionID = newdata.ConnectionID;
+                IsConnectionIDModified = true;
                 cnt++;
             }
             IsEntityChanged = cnt > 0;
@@ -672,7 +587,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             StartAutoUpdating = false;
             if (!IsEntityChanged)
-                IsEntityChanged = IsSubPriorityModified || IsLastModifiedModified || IsAdminIDModified;
+                IsEntityChanged = IsIsDisconnectedModified || IsLastActiveDateModified || IsConnectionIDModified;
             StartAutoUpdating = true;
         }
 
@@ -687,28 +602,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UsersInRole ShallowCopy(bool allData = false, bool preserveState = false)
+        public MemberCallback ShallowCopy(bool allData = false, bool preserveState = false)
         {
-            UsersInRole e = new UsersInRole();
+            MemberCallback e = new MemberCallback();
             e.StartAutoUpdating = false;
-            e.RoleID = RoleID;
+            e.HubID = HubID;
+            e.ApplicationID = ApplicationID;
             e.UserID = UserID;
-            e.AssignDate = AssignDate;
-            e.SubPriority = SubPriority;
+            e.IsDisconnected = IsDisconnected;
             if (preserveState)
-                e.IsSubPriorityModified = IsSubPriorityModified;
+                e.IsIsDisconnectedModified = IsIsDisconnectedModified;
             else
-                e.IsSubPriorityModified = false;
-            e.LastModified = LastModified;
+                e.IsIsDisconnectedModified = false;
+            e.LastActiveDate = LastActiveDate;
             if (preserveState)
-                e.IsLastModifiedModified = IsLastModifiedModified;
+                e.IsLastActiveDateModified = IsLastActiveDateModified;
             else
-                e.IsLastModifiedModified = false;
-            e.AdminID = AdminID;
+                e.IsLastActiveDateModified = false;
+            e.ConnectionID = ConnectionID;
             if (preserveState)
-                e.IsAdminIDModified = IsAdminIDModified;
+                e.IsConnectionIDModified = IsConnectionIDModified;
             else
-                e.IsAdminIDModified = false;
+                e.IsConnectionIDModified = false;
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;
             if (preserveState)
@@ -726,28 +641,30 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append(@"
-----===== [[UsersInRole]] =====----
-  RoleID = " + RoleID + @"");
+----===== [[MemberCallback]] =====----
+  HubID = '" + HubID + @"'");
+            sb.Append(@" (natural id)");
+            sb.Append(@"
+  ApplicationID = '" + ApplicationID + @"'");
             sb.Append(@" (natural id)");
             sb.Append(@"
   UserID = '" + UserID + @"'");
             sb.Append(@" (natural id)");
             sb.Append(@"
-  AssignDate = " + AssignDate + @"
-  SubPriority = " + SubPriority + @"");
-            if (IsSubPriorityModified)
+  IsDisconnected = " + IsDisconnected + @"");
+            if (IsIsDisconnectedModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
-  LastModified = " + (LastModified.HasValue ? LastModified.Value.ToString() : "null") + @"");
-            if (IsLastModifiedModified)
+  LastActiveDate = " + LastActiveDate + @"");
+            if (IsLastActiveDateModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
-  AdminID = '" + (AdminID != null ? AdminID : "null") + @"'");
-            if (IsAdminIDModified)
+  ConnectionID = '" + (ConnectionID != null ? ConnectionID : "null") + @"'");
+            if (IsConnectionIDModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
@@ -759,10 +676,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     }
 
     ///<summary>
-    ///The result of an add or update of type <see cref="UsersInRole" />.
+    ///The result of an add or update of type <see cref="MemberCallback" />.
     ///</summary>
     [DataContract]
-    public class UsersInRoleUpdateResult : IUpdateResult
+    public class MemberCallbackUpdateResult : IUpdateResult
     {
         /// <summary>
         /// Status of add, update or delete operation
@@ -790,7 +707,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// The updated entity.
         /// </summary>
         [DataMember]
-        public UsersInRole UpdatedItem
+        public MemberCallback UpdatedItem
         {
             get;
             set;
@@ -802,7 +719,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// agent. The client software should resolve the conflict.
         /// </summary>
         [DataMember]
-        public UsersInRole ConflictItem
+        public MemberCallback ConflictItem
         {
             get;
             set;

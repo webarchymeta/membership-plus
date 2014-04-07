@@ -151,6 +151,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="User.EventCalendar_CreatedUserIDs" />, which is a sub-set of the data set "EventCalendar" for <see cref="EventCalendar" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>MemberNotifications</term>
+    ///      <description>See <see cref="User.MemberNotifications" />, which is a sub-set of the data set "MemberNotifications" for <see cref="MemberNotification" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>NotificationTaskSchedules</term>
+    ///      <description>See <see cref="User.NotificationTaskSchedules" />, which is a sub-set of the data set "NotificationTaskSchedules" for <see cref="NotificationTaskSchedule" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserAppMembers</term>
     ///      <description>See <see cref="User.UserAppMembers" />, which is a sub-set of the data set "UserAppMembers" for <see cref="UserAppMember" />.</description>
     ///    </item>
@@ -233,12 +241,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserService.AddOrUpdateEntities" />.
@@ -250,6 +258,53 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "Username = " + Username + "\r\n";
+                if (IsPasswordModified)
+                    str += "Modified [Password] = " + Password + "\r\n";
+                if (IsPasswordFormatModified)
+                    str += "Modified [PasswordFormat] = " + PasswordFormat + "\r\n";
+                if (IsPasswordQuestionModified)
+                    str += "Modified [PasswordQuestion] = " + PasswordQuestion + "\r\n";
+                if (IsPasswordAnswerModified)
+                    str += "Modified [PasswordAnswer] = " + PasswordAnswer + "\r\n";
+                if (IsPasswordSaltModified)
+                    str += "Modified [PasswordSalt] = " + PasswordSalt + "\r\n";
+                if (IsFirstNameModified)
+                    str += "Modified [FirstName] = " + FirstName + "\r\n";
+                if (IsLastNameModified)
+                    str += "Modified [LastName] = " + LastName + "\r\n";
+                if (IsIsAnonymousModified)
+                    str += "Modified [IsAnonymous] = " + IsAnonymous + "\r\n";
+                if (IsIsApprovedModified)
+                    str += "Modified [IsApproved] = " + IsApproved + "\r\n";
+                if (IsStatusModified)
+                    str += "Modified [Status] = " + Status + "\r\n";
+                if (IsTimeZoneModified)
+                    str += "Modified [TimeZone] = " + TimeZone + "\r\n";
+                if (IsFailedPasswordAnswerAttemptCountModified)
+                    str += "Modified [FailedPasswordAnswerAttemptCount] = " + FailedPasswordAnswerAttemptCount + "\r\n";
+                if (IsFailedPasswordAnswerAttemptWindowStartModified)
+                    str += "Modified [FailedPasswordAnswerAttemptWindowStart] = " + FailedPasswordAnswerAttemptWindowStart + "\r\n";
+                if (IsFailedPasswordAttemptCountModified)
+                    str += "Modified [FailedPasswordAttemptCount] = " + FailedPasswordAttemptCount + "\r\n";
+                if (IsFailedPasswordAttemptWindowStartModified)
+                    str += "Modified [FailedPasswordAttemptWindowStart] = " + FailedPasswordAttemptWindowStart + "\r\n";
+                if (IsLastLoginDateModified)
+                    str += "Modified [LastLoginDate] = " + LastLoginDate + "\r\n";
+                if (IsLastPasswordChangedDateModified)
+                    str += "Modified [LastPasswordChangedDate] = " + LastPasswordChangedDate + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -297,6 +352,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region Properties of the current entity
+
         /// <summary>
         /// Meta-info: primary key; fixed; not null.
         /// </summary>
@@ -337,7 +394,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Password != value)
                 {
                     _Password = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordModified = true;
                 }
             }
@@ -381,7 +438,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_PasswordFormat != value)
                 {
                     _PasswordFormat = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordFormatModified = true;
                 }
             }
@@ -424,7 +481,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_PasswordQuestion != value)
                 {
                     _PasswordQuestion = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordQuestionModified = true;
                 }
             }
@@ -467,7 +524,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_PasswordAnswer != value)
                 {
                     _PasswordAnswer = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordAnswerModified = true;
                 }
             }
@@ -511,7 +568,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_PasswordSalt != value)
                 {
                     _PasswordSalt = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordSaltModified = true;
                 }
             }
@@ -554,7 +611,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FirstName != value)
                 {
                     _FirstName = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFirstNameModified = true;
                 }
             }
@@ -597,7 +654,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastName != value)
                 {
                     _LastName = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastNameModified = true;
                 }
             }
@@ -686,7 +743,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IsAnonymous != value)
                 {
                     _IsAnonymous = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIsAnonymousModified = true;
                 }
             }
@@ -729,7 +786,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IsApproved != value)
                 {
                     _IsApproved = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIsApprovedModified = true;
                 }
             }
@@ -773,7 +830,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Status != value)
                 {
                     _Status = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsStatusModified = true;
                 }
             }
@@ -815,7 +872,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_TimeZone != value)
                 {
                     _TimeZone = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsTimeZoneModified = true;
                 }
             }
@@ -857,7 +914,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FailedPasswordAnswerAttemptCount != value)
                 {
                     _FailedPasswordAnswerAttemptCount = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFailedPasswordAnswerAttemptCountModified = true;
                 }
             }
@@ -899,7 +956,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FailedPasswordAnswerAttemptWindowStart != value)
                 {
                     _FailedPasswordAnswerAttemptWindowStart = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFailedPasswordAnswerAttemptWindowStartModified = true;
                 }
             }
@@ -941,7 +998,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FailedPasswordAttemptCount != value)
                 {
                     _FailedPasswordAttemptCount = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFailedPasswordAttemptCountModified = true;
                 }
             }
@@ -983,7 +1040,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FailedPasswordAttemptWindowStart != value)
                 {
                     _FailedPasswordAttemptWindowStart = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFailedPasswordAttemptWindowStartModified = true;
                 }
             }
@@ -1025,7 +1082,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastLoginDate != value)
                 {
                     _LastLoginDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastLoginDateModified = true;
                 }
             }
@@ -1067,7 +1124,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastPasswordChangedDate != value)
                 {
                     _LastPasswordChangedDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastPasswordChangedDateModified = true;
                 }
             }
@@ -1093,8 +1150,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isLastPasswordChangedDateModified = false;
 
+#endregion
+
+#region Entities that the current one depends upon.
+
+#endregion
+
+#region Entities that depend on the current one.
+
         /// <summary>
         /// Entitity set <see cref="AnnouncementSet" /> for data set "Announcements" of <see cref="Announcement" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.CreatedUserID" /> }.
         /// </summary>
         [DataMember]
 		public AnnouncementSet Announcements
@@ -1114,6 +1180,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "Announcements" of <see cref="Announcement" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.CreatedUserID" /> }.
         /// </summary>
 		public IEnumerable<Announcement> AnnouncementEnum
 		{
@@ -1123,6 +1190,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="Announcement" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="AnnouncementSet" /> set is { <see cref="Announcement.CreatedUserID" /> }.
         /// </summary>
         [DataMember]
 		public Announcement[] ChangedAnnouncements
@@ -1133,6 +1201,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="CommunicationSet" /> for data set "Communications" of <see cref="Communication" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.UserID" /> }.
         /// </summary>
         [DataMember]
 		public CommunicationSet Communications
@@ -1152,6 +1221,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "Communications" of <see cref="Communication" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.UserID" /> }.
         /// </summary>
 		public IEnumerable<Communication> CommunicationEnum
 		{
@@ -1161,6 +1231,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="Communication" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="CommunicationSet" /> set is { <see cref="Communication.UserID" /> }.
         /// </summary>
         [DataMember]
 		public Communication[] ChangedCommunications
@@ -1171,6 +1242,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="EventCalendarSet" /> for data set "EventCalendar" of <see cref="EventCalendar" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.UserID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarSet EventCalendar_UserIDs
@@ -1190,6 +1262,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "EventCalendar" of <see cref="EventCalendar" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.UserID" /> }.
         /// </summary>
 		public IEnumerable<EventCalendar> EventCalendar_UserIDEnum
 		{
@@ -1199,6 +1272,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="EventCalendar" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.UserID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendar[] ChangedEventCalendar_UserIDs
@@ -1209,6 +1283,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="EventCalendarSet" /> for data set "EventCalendar" of <see cref="EventCalendar" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.CreatedUserID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendarSet EventCalendar_CreatedUserIDs
@@ -1228,6 +1303,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "EventCalendar" of <see cref="EventCalendar" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.CreatedUserID" /> }.
         /// </summary>
 		public IEnumerable<EventCalendar> EventCalendar_CreatedUserIDEnum
 		{
@@ -1237,6 +1313,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="EventCalendar" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="EventCalendarSet" /> set is { <see cref="EventCalendar.CreatedUserID" /> }.
         /// </summary>
         [DataMember]
 		public EventCalendar[] ChangedEventCalendar_CreatedUserIDs
@@ -1246,7 +1323,90 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 		}
 
         /// <summary>
+        /// Entitity set <see cref="MemberNotificationSet" /> for data set "MemberNotifications" of <see cref="MemberNotification" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="MemberNotificationSet" /> set is { <see cref="MemberNotification.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public MemberNotificationSet MemberNotifications
+		{
+			get
+			{
+                if (_MemberNotifications == null)
+                    _MemberNotifications = new MemberNotificationSet();
+				return _MemberNotifications;
+			}
+            set
+            {
+                _MemberNotifications = value;
+            }
+		}
+		private MemberNotificationSet _MemberNotifications = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "MemberNotifications" of <see cref="MemberNotification" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="MemberNotificationSet" /> set is { <see cref="MemberNotification.UserID" /> }.
+        /// </summary>
+		public IEnumerable<MemberNotification> MemberNotificationEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="MemberNotification" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="MemberNotificationSet" /> set is { <see cref="MemberNotification.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public MemberNotification[] ChangedMemberNotifications
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="NotificationTaskScheduleSet" /> for data set "NotificationTaskSchedules" of <see cref="NotificationTaskSchedule" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+        [DataMember]
+		public NotificationTaskScheduleSet NotificationTaskSchedules
+		{
+			get
+			{
+                if (_NotificationTaskSchedules == null)
+                    _NotificationTaskSchedules = new NotificationTaskScheduleSet();
+				return _NotificationTaskSchedules;
+			}
+            set
+            {
+                _NotificationTaskSchedules = value;
+            }
+		}
+		private NotificationTaskScheduleSet _NotificationTaskSchedules = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "NotificationTaskSchedules" of <see cref="NotificationTaskSchedule" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+		public IEnumerable<NotificationTaskSchedule> NotificationTaskScheduleEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="NotificationTaskSchedule" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+        [DataMember]
+		public NotificationTaskSchedule[] ChangedNotificationTaskSchedules
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
         /// Entitity set <see cref="UserAppMemberSet" /> for data set "UserAppMembers" of <see cref="UserAppMember" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAppMemberSet" /> set is { <see cref="UserAppMember.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAppMemberSet UserAppMembers
@@ -1266,6 +1426,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserAppMembers" of <see cref="UserAppMember" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAppMemberSet" /> set is { <see cref="UserAppMember.UserID" /> }.
         /// </summary>
 		public IEnumerable<UserAppMember> UserAppMemberEnum
 		{
@@ -1275,6 +1436,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserAppMember" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserAppMemberSet" /> set is { <see cref="UserAppMember.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAppMember[] ChangedUserAppMembers
@@ -1285,6 +1447,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserAssociationSet" /> for data set "UserAssociations" of <see cref="UserAssociation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.FromUserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssociationSet UserAssociation_FromUserIDs
@@ -1304,6 +1467,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserAssociations" of <see cref="UserAssociation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.FromUserID" /> }.
         /// </summary>
 		public IEnumerable<UserAssociation> UserAssociation_FromUserIDEnum
 		{
@@ -1313,6 +1477,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserAssociation" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.FromUserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssociation[] ChangedUserAssociation_FromUserIDs
@@ -1323,6 +1488,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserAssociationSet" /> for data set "UserAssociations" of <see cref="UserAssociation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.ToUserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssociationSet UserAssociation_ToUserIDs
@@ -1342,6 +1508,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserAssociations" of <see cref="UserAssociation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.ToUserID" /> }.
         /// </summary>
 		public IEnumerable<UserAssociation> UserAssociation_ToUserIDEnum
 		{
@@ -1351,6 +1518,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserAssociation" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserAssociationSet" /> set is { <see cref="UserAssociation.ToUserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssociation[] ChangedUserAssociation_ToUserIDs
@@ -1361,6 +1529,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserAssocInvitationSet" /> for data set "UserAssocInvitations" of <see cref="UserAssocInvitation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssocInvitationSet" /> set is { <see cref="UserAssocInvitation.FromUserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssocInvitationSet UserAssocInvitation_FromUserIDs
@@ -1380,6 +1549,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserAssocInvitations" of <see cref="UserAssocInvitation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssocInvitationSet" /> set is { <see cref="UserAssocInvitation.FromUserID" /> }.
         /// </summary>
 		public IEnumerable<UserAssocInvitation> UserAssocInvitation_FromUserIDEnum
 		{
@@ -1389,6 +1559,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserAssocInvitation" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserAssocInvitationSet" /> set is { <see cref="UserAssocInvitation.FromUserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssocInvitation[] ChangedUserAssocInvitation_FromUserIDs
@@ -1399,6 +1570,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserAssocInvitationSet" /> for data set "UserAssocInvitations" of <see cref="UserAssocInvitation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssocInvitationSet" /> set is { <see cref="UserAssocInvitation.ToUserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssocInvitationSet UserAssocInvitation_ToUserIDs
@@ -1418,6 +1590,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserAssocInvitations" of <see cref="UserAssocInvitation" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserAssocInvitationSet" /> set is { <see cref="UserAssocInvitation.ToUserID" /> }.
         /// </summary>
 		public IEnumerable<UserAssocInvitation> UserAssocInvitation_ToUserIDEnum
 		{
@@ -1427,6 +1600,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserAssocInvitation" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserAssocInvitationSet" /> set is { <see cref="UserAssocInvitation.ToUserID" /> }.
         /// </summary>
         [DataMember]
 		public UserAssocInvitation[] ChangedUserAssocInvitation_ToUserIDs
@@ -1437,6 +1611,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserDetailSet" /> for data set "UserDetails" of <see cref="UserDetail" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserDetailSet" /> set is { <see cref="UserDetail.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UserDetailSet UserDetails
@@ -1456,6 +1631,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserDetails" of <see cref="UserDetail" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserDetailSet" /> set is { <see cref="UserDetail.UserID" /> }.
         /// </summary>
 		public IEnumerable<UserDetail> UserDetailEnum
 		{
@@ -1465,6 +1641,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserDetail" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserDetailSet" /> set is { <see cref="UserDetail.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UserDetail[] ChangedUserDetails
@@ -1475,6 +1652,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserGroupMemberSet" /> for data set "UserGroupMembers" of <see cref="UserGroupMember" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupMemberSet" /> set is { <see cref="UserGroupMember.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupMemberSet UserGroupMembers
@@ -1494,6 +1672,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserGroupMembers" of <see cref="UserGroupMember" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupMemberSet" /> set is { <see cref="UserGroupMember.UserID" /> }.
         /// </summary>
 		public IEnumerable<UserGroupMember> UserGroupMemberEnum
 		{
@@ -1503,6 +1682,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserGroupMember" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserGroupMemberSet" /> set is { <see cref="UserGroupMember.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UserGroupMember[] ChangedUserGroupMembers
@@ -1513,6 +1693,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UserProfileSet" /> for data set "UserProfiles" of <see cref="UserProfile" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UserProfileSet UserProfiles
@@ -1532,6 +1713,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UserProfiles" of <see cref="UserProfile" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.UserID" /> }.
         /// </summary>
 		public IEnumerable<UserProfile> UserProfileEnum
 		{
@@ -1541,6 +1723,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UserProfile" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UserProfileSet" /> set is { <see cref="UserProfile.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UserProfile[] ChangedUserProfiles
@@ -1551,6 +1734,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UsersInRoleSet" /> for data set "UsersInRoles" of <see cref="UsersInRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UsersInRoleSet UsersInRole_UserIDs
@@ -1570,6 +1754,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UsersInRoles" of <see cref="UsersInRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.UserID" /> }.
         /// </summary>
 		public IEnumerable<UsersInRole> UsersInRole_UserIDEnum
 		{
@@ -1579,6 +1764,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UsersInRole" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UsersInRole[] ChangedUsersInRole_UserIDs
@@ -1589,6 +1775,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UsersInRoleSet" /> for data set "UsersInRoles" of <see cref="UsersInRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.AdminID" /> }.
         /// </summary>
         [DataMember]
 		public UsersInRoleSet UsersInRole_AdminIDs
@@ -1608,6 +1795,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UsersInRoles" of <see cref="UsersInRole" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.AdminID" /> }.
         /// </summary>
 		public IEnumerable<UsersInRole> UsersInRole_AdminIDEnum
 		{
@@ -1617,6 +1805,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UsersInRole" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UsersInRoleSet" /> set is { <see cref="UsersInRole.AdminID" /> }.
         /// </summary>
         [DataMember]
 		public UsersInRole[] ChangedUsersInRole_AdminIDs
@@ -1627,6 +1816,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UsersRoleHistorySet" /> for data set "UsersRoleHistories" of <see cref="UsersRoleHistory" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UsersRoleHistorySet UsersRoleHistory_UserIDs
@@ -1646,6 +1836,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UsersRoleHistories" of <see cref="UsersRoleHistory" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.UserID" /> }.
         /// </summary>
 		public IEnumerable<UsersRoleHistory> UsersRoleHistory_UserIDEnum
 		{
@@ -1655,6 +1846,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UsersRoleHistory" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.UserID" /> }.
         /// </summary>
         [DataMember]
 		public UsersRoleHistory[] ChangedUsersRoleHistory_UserIDs
@@ -1665,6 +1857,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitity set <see cref="UsersRoleHistorySet" /> for data set "UsersRoleHistories" of <see cref="UsersRoleHistory" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.OperatorID" /> }.
         /// </summary>
         [DataMember]
 		public UsersRoleHistorySet UsersRoleHistory_OperatorIDs
@@ -1684,6 +1877,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// Entitites enumeration expression for data set "UsersRoleHistories" of <see cref="UsersRoleHistory" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.OperatorID" /> }.
         /// </summary>
 		public IEnumerable<UsersRoleHistory> UsersRoleHistory_OperatorIDEnum
 		{
@@ -1693,6 +1887,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         /// <summary>
         /// A list of <see cref="UsersRoleHistory" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="UsersRoleHistorySet" /> set is { <see cref="UsersRoleHistory.OperatorID" /> }.
         /// </summary>
         [DataMember]
 		public UsersRoleHistory[] ChangedUsersRoleHistory_OperatorIDs
@@ -1700,6 +1895,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 			get;
             set;
 		}
+
+#endregion
 
         /// <summary>
         /// Whether or not the present entity is identitical to <paramref name="other" />, in the sense that they have the same (set of) primary key(s).
@@ -1991,7 +2188,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Password == null)
                 Password = "";
             if (PasswordFormat == null)
@@ -2004,40 +2201,119 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 Status = "";
             if (!IsEntityChanged)
                 IsEntityChanged = IsPasswordModified || IsPasswordFormatModified || IsPasswordQuestionModified || IsPasswordAnswerModified || IsPasswordSaltModified || IsFirstNameModified || IsLastNameModified || IsIsAnonymousModified || IsIsApprovedModified || IsStatusModified || IsTimeZoneModified || IsFailedPasswordAnswerAttemptCountModified || IsFailedPasswordAnswerAttemptWindowStartModified || IsFailedPasswordAttemptCountModified || IsFailedPasswordAttemptWindowStartModified || IsLastLoginDateModified || IsLastPasswordChangedDateModified;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public User ShallowCopy(bool allData = false)
+        public User ShallowCopy(bool allData = false, bool preserveState = false)
         {
             User e = new User();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.Password = Password;
+            if (preserveState)
+                e.IsPasswordModified = IsPasswordModified;
+            else
+                e.IsPasswordModified = false;
             e.PasswordFormat = PasswordFormat;
+            if (preserveState)
+                e.IsPasswordFormatModified = IsPasswordFormatModified;
+            else
+                e.IsPasswordFormatModified = false;
             e.PasswordQuestion = PasswordQuestion;
+            if (preserveState)
+                e.IsPasswordQuestionModified = IsPasswordQuestionModified;
+            else
+                e.IsPasswordQuestionModified = false;
             e.PasswordAnswer = PasswordAnswer;
+            if (preserveState)
+                e.IsPasswordAnswerModified = IsPasswordAnswerModified;
+            else
+                e.IsPasswordAnswerModified = false;
             e.PasswordSalt = PasswordSalt;
+            if (preserveState)
+                e.IsPasswordSaltModified = IsPasswordSaltModified;
+            else
+                e.IsPasswordSaltModified = false;
             e.FirstName = FirstName;
+            if (preserveState)
+                e.IsFirstNameModified = IsFirstNameModified;
+            else
+                e.IsFirstNameModified = false;
             e.LastName = LastName;
+            if (preserveState)
+                e.IsLastNameModified = IsLastNameModified;
+            else
+                e.IsLastNameModified = false;
             e.CreateOn = CreateOn;
             e.Username = Username;
             e.IsAnonymous = IsAnonymous;
+            if (preserveState)
+                e.IsIsAnonymousModified = IsIsAnonymousModified;
+            else
+                e.IsIsAnonymousModified = false;
             e.IsApproved = IsApproved;
+            if (preserveState)
+                e.IsIsApprovedModified = IsIsApprovedModified;
+            else
+                e.IsIsApprovedModified = false;
             e.Status = Status;
+            if (preserveState)
+                e.IsStatusModified = IsStatusModified;
+            else
+                e.IsStatusModified = false;
             e.TimeZone = TimeZone;
+            if (preserveState)
+                e.IsTimeZoneModified = IsTimeZoneModified;
+            else
+                e.IsTimeZoneModified = false;
             e.FailedPasswordAnswerAttemptCount = FailedPasswordAnswerAttemptCount;
+            if (preserveState)
+                e.IsFailedPasswordAnswerAttemptCountModified = IsFailedPasswordAnswerAttemptCountModified;
+            else
+                e.IsFailedPasswordAnswerAttemptCountModified = false;
             e.FailedPasswordAnswerAttemptWindowStart = FailedPasswordAnswerAttemptWindowStart;
+            if (preserveState)
+                e.IsFailedPasswordAnswerAttemptWindowStartModified = IsFailedPasswordAnswerAttemptWindowStartModified;
+            else
+                e.IsFailedPasswordAnswerAttemptWindowStartModified = false;
             e.FailedPasswordAttemptCount = FailedPasswordAttemptCount;
+            if (preserveState)
+                e.IsFailedPasswordAttemptCountModified = IsFailedPasswordAttemptCountModified;
+            else
+                e.IsFailedPasswordAttemptCountModified = false;
             e.FailedPasswordAttemptWindowStart = FailedPasswordAttemptWindowStart;
+            if (preserveState)
+                e.IsFailedPasswordAttemptWindowStartModified = IsFailedPasswordAttemptWindowStartModified;
+            else
+                e.IsFailedPasswordAttemptWindowStartModified = false;
             e.LastLoginDate = LastLoginDate;
+            if (preserveState)
+                e.IsLastLoginDateModified = IsLastLoginDateModified;
+            else
+                e.IsLastLoginDateModified = false;
             e.LastPasswordChangedDate = LastPasswordChangedDate;
+            if (preserveState)
+                e.IsLastPasswordChangedDateModified = IsLastPasswordChangedDateModified;
+            else
+                e.IsLastPasswordChangedDateModified = false;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
