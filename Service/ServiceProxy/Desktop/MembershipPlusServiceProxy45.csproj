@@ -57,6 +57,7 @@
         <Compile Include="EventCalendarDatabase.cs" />
         <Compile Include="EventCalendarShareCircleDatabase.cs" />
         <Compile Include="EventTypeDatabase.cs" />
+        <Compile Include="MemberCallbackDatabase.cs" />
         <Compile Include="MemberNotificationDatabase.cs" />
         <Compile Include="MemberNotificationTypeDatabase.cs" />
         <Compile Include="NotificationTaskScheduleDatabase.cs" />

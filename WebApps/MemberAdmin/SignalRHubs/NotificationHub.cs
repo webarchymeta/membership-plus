@@ -18,6 +18,10 @@ namespace MemberAdminMvc5.SignalRHubs
 {
     public class NotificationHub : HubBase
     {
+        public override string HubIdentity
+        {
+            get { return "SystemNotification"; }
+        }
     }
 }
 #endif

@@ -80,7 +80,9 @@ namespace MemberAdminMvc5.Controllers
             {
                 var member = await NotificationContext.SetNotification(uid, OpResult.notices);
 #if !NO_SIGNALR
-                if (IsSignalREnabled && !string.IsNullOrEmpty(member.ConnectionID))
+                var nhub = new SignalRHubs.NotificationHub();
+                var mbhub =(from d in member.ChangedMemberCallbacks where d.HubID == nhub.HubIdentity select d).SingleOrDefault();
+                if (IsSignalREnabled && mbhub != null && mbhub.ConnectionID != null && !mbhub.IsDisconnected)
                 {
                     var lcateg = await NotificationContext.GetRecentCategorized(uid, OpResult.notices, 15);
                     List<dynamic> lmsg = new List<dynamic>();
@@ -113,7 +115,7 @@ namespace MemberAdminMvc5.Controllers
                             list = l.ToArray()
                         });
                     }
-                    NoticeContext.Clients.Client(member.ConnectionID).serverNotifications(lmsg.ToArray(), categs);
+                    NoticeContext.Clients.Client(mbhub.ConnectionID).serverNotifications(lmsg.ToArray(), categs);
                 }
 #endif
             }

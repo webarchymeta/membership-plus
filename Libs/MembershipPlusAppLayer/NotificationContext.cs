@@ -32,9 +32,11 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         public static async Task<UserAppMember> SetNotification(string userId, SimpleMessage[] msgs)
         {
             UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
-            var memb = await mbsvc.LoadEntityByKeyAsync(Cntx, AppId, userId);
+            var cntx = Cntx;
+            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, userId);
             if (memb != null)
             {
+                memb.ChangedMemberCallbacks = (await mbsvc.MaterializeAllMemberCallbacksAsync(cntx, memb)).ToArray();
                 var notices = new List<MemberNotification>();
                 foreach (var msg in msgs)
                 {

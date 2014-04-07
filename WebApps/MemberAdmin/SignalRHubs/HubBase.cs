@@ -8,8 +8,10 @@ using Archymeta.Web.MembershipPlus.AppLayer;
 
 namespace MemberAdminMvc5.SignalRHubs
 {
-    public class HubBase : Hub
+    public abstract class HubBase : Hub
     {
+        public abstract string HubIdentity { get; }
+
         protected string UserId
         {
             get 
@@ -45,7 +47,7 @@ namespace MemberAdminMvc5.SignalRHubs
         public override async Task OnConnected()
         {
             var langs = Context.Request.Headers["Accept-Language"];
-            await ConnectionContext.OnUserConnected(UserId, Context.ConnectionId, langs);
+            await ConnectionContext.OnUserConnected(HubIdentity, UserId, Context.ConnectionId, langs);
             await base.OnConnected();
         }
 
@@ -53,13 +55,13 @@ namespace MemberAdminMvc5.SignalRHubs
         {
             await base.OnDisconnected();
             if (TrackDisconnectState)
-                await ConnectionContext.OnUserDisconnected(Context.ConnectionId);
+                await ConnectionContext.OnUserDisconnected(HubIdentity, Context.ConnectionId);
         }
 
         public override async Task OnReconnected()
         {
             var langs = Context.Request.Headers["Accept-Language"];
-            await ConnectionContext.OnUserReconnected(UserId, Context.ConnectionId, langs);
+            await ConnectionContext.OnUserReconnected(HubIdentity, UserId, Context.ConnectionId, langs);
             await base.OnReconnected();
         }
     }

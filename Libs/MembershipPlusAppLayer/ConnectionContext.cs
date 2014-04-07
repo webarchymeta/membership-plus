@@ -34,70 +34,109 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
 
         public const string UserAppMemberKey = "CurrUserAppMember";
 
-        protected static UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
-
-        public static async Task OnUserConnected(string userId, string connectId, string languages)
+        public static async Task OnUserConnected(string hubId, string userId, string connectId, string languages)
         {
+            var mbsvc = new UserAppMemberServiceProxy();
             var cntx = Cntx;
             cntx.AcceptLanguages = languages;
-            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, userId);
+            var memb = await mbsvc.LoadEntityGraphRecursAsync(cntx, AppId, userId, null, null);
             if (memb != null)
             {
                 memb.StartAutoUpdating = true;
-                memb.ConnectionID = connectId;
                 memb.LastActivityDate = DateTime.UtcNow;
                 memb.AcceptLanguages = languages;
+                List<MemberCallback> callbacks;
+                if (memb.ChangedMemberCallbacks == null)
+                    callbacks = new List<MemberCallback>();
+                else
+                    callbacks = new List<MemberCallback>(memb.ChangedMemberCallbacks);
+                var cbk = (from d in callbacks where d.HubID == hubId select d).SingleOrDefault();
+                if (cbk == null)
+                {
+                    cbk = new MemberCallback
+                    {
+                        ApplicationID = AppId,
+                        UserID = userId,
+                        HubID = hubId,
+                        ConnectionID = connectId,
+                        IsDisconnected = false,
+                        LastActiveDate = DateTime.UtcNow
+                    };
+                    callbacks.Add(cbk);
+                    memb.ChangedMemberCallbacks = callbacks.ToArray();
+                }
+                else
+                {
+                    // it is very important to turn this on, otherwise the property will not be marked as modified.
+                    // and the service will not save the change!
+                    cbk.StartAutoUpdating = true; 
+                    cbk.ConnectionID = connectId;
+                    cbk.IsDisconnected = false;
+                    cbk.LastActiveDate = DateTime.UtcNow;
+                    // other more explicit way of doing so is given in the following:
+                    //cbk.ConnectionID = connectId;
+                    //cbk.IsConnectionIDModified = true;
+                    //cbk.IsDisconnected = false;
+                    //cbk.IsIsDisconnectedModified = true;
+                    //cbk.LastActiveDate = DateTime.UtcNow;
+                    //cbk.IsLastActiveDateModified = true;
+                }
                 await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
             }
         }
 
-        public static async Task OnUserDisconnected(string connectId)
+        public static async Task OnUserDisconnected(string hubId, string connectId)
         {
             if (string.IsNullOrEmpty(connectId))
                 return;
             var cntx = Cntx;
+            MemberCallbackServiceProxy cbksvc = new MemberCallbackServiceProxy();
             QueryExpresion qexpr = new QueryExpresion();
             qexpr.OrderTks = new List<QToken>(new QToken[] { 
                 new QToken { TkName = "UserID" },
                 new QToken { TkName = "asc" }
             });
             qexpr.FilterTks = new List<QToken>(new QToken[] { 
-                new QToken { TkName = "ConnectionID == \"" + connectId + "\"" }
+                new QToken { TkName = "ApplicationID == \"" + AppId + "\" && HubID == \"" + hubId + "\" && ConnectionID == \"" + connectId + "\"" }
             });
-            var memb = (await mbsvc.QueryDatabaseAsync(cntx, new UserAppMemberSet(), qexpr)).FirstOrDefault();
-            if (memb != null)
+            var cbk = (await cbksvc.QueryDatabaseAsync(cntx, new MemberCallbackSet(), qexpr)).FirstOrDefault();
+            if (cbk != null)
             {
-                memb.StartAutoUpdating = true;
-                memb.ConnectionID = null;
-                memb.LastActivityDate = DateTime.UtcNow;
-                await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
+                // top level entity does not need to set 'StartAutoUpdating' since it is done by the proxy:
+                // cbk.StartAutoUpdating = true; 
+                cbk.ConnectionID = null;
+                cbk.LastActiveDate = DateTime.UtcNow;
+                cbk.IsDisconnected = true;
+                await cbksvc.AddOrUpdateEntitiesAsync(cntx, new MemberCallbackSet(), new MemberCallback[] { cbk });
             }
         }
 
         public static async Task UserConnectionClosed(string userId, string languages)
         {
+            var mbsvc = new UserAppMemberServiceProxy();
             var cntx = Cntx;
             cntx.AcceptLanguages = languages;
-            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, userId);
+            var memb = await mbsvc.LoadEntityGraphRecursAsync(cntx, AppId, userId, null, null);
             if (memb != null)
             {
-                memb.ConnectionID = null;
                 memb.LastActivityDate = DateTime.UtcNow;
+                if (memb.ChangedMemberCallbacks!=null)
+                {
+                    foreach (var c in memb.ChangedMemberCallbacks)
+                    {
+                        c.StartAutoUpdating = true;
+                        c.ConnectionID = null;
+                        c.IsDisconnected = true;
+                        c.LastActiveDate = DateTime.UtcNow;
+                    }
+                }
                 await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
             }
         }
 
-        public static async Task OnUserReconnected(string userId, string connectId, string languages)
+        public static Task OnUserReconnected(string hubId, string userId, string connectId, string languages)
         {
-            var cntx = Cntx;
-            cntx.AcceptLanguages = languages;
-            var memb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, userId);
-            if (memb != null)
-            {
-                memb.ConnectionID = connectId;
-                memb.AcceptLanguages = languages;
-                await mbsvc.AddOrUpdateEntitiesAsync(cntx, new UserAppMemberSet(), new UserAppMember[] { memb });
-            }
+            return OnUserConnected(hubId, userId, connectId, languages);
         }
     }
 }

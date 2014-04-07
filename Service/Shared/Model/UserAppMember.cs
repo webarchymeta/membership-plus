@@ -73,10 +73,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="UserAppMember.Comment" />. Editable; nullable; load delayed.</description>
     ///    </item>
     ///    <item>
-    ///      <term>ConnectionID</term>
-    ///      <description>See <see cref="UserAppMember.ConnectionID" />. Editable; nullable; max-length = 50 characters.</description>
-    ///    </item>
-    ///    <item>
     ///      <term>IconImg</term>
     ///      <description>See <see cref="UserAppMember.IconImg" />. Editable; nullable; load delayed.</description>
     ///    </item>
@@ -129,6 +125,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>UserRef</term>
     ///      <description>See <see cref="UserAppMember.UserRef" />, which is a member of the data set "Users" for <see cref="User" />.</description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
+    ///       <term>The following entity sets depend on this entity</term><description>Description</description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>MemberCallbacks</term>
+    ///      <description>See <see cref="UserAppMember.MemberCallbacks" />, which is a sub-set of the data set "MemberCallbacks" for <see cref="MemberCallback" />.</description>
     ///    </item>
     ///  </list>
     /// </remarks>
@@ -199,8 +204,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     str += "Modified [AcceptLanguages] = " + AcceptLanguages + "\r\n";
                 if (IsCommentModified)
                     str += "Modified [Comment] = " + Comment + "\r\n";
-                if (IsConnectionIDModified)
-                    str += "Modified [ConnectionID] = " + ConnectionID + "\r\n";
                 if (IsIconImgModified)
                     str += "Modified [IconImg] = " + IconImg + "\r\n";
                 if (IsIconLastModifiedModified)
@@ -459,49 +462,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isCommentLoaded = false;
-
-        /// <summary>
-        /// Meta-info: editable; nullable; max-length = 50 characters.
-        /// </summary>
-        [Editable(true)]
-        [StringLength(50)]
-        [DataMember(IsRequired = false)]
-        public string ConnectionID
-        { 
-            get
-            {
-                return _ConnectionID;
-            }
-            set
-            {
-                if (_ConnectionID != value)
-                {
-                    _ConnectionID = value;
-                    if (StartAutoUpdating)
-                        IsConnectionIDModified = true;
-                }
-            }
-        }
-        private string _ConnectionID = default(string);
-
-        /// <summary>
-        /// Wether or not the value of <see cref="ConnectionID" /> was changed compared to what it was loaded last time. 
-        /// Note: the backend data source updates the changed <see cref="ConnectionID" /> only if this is set to true no matter what
-        /// the actual value of <see cref="ConnectionID" /> is.
-        /// </summary>
-        [DataMember]
-        public bool IsConnectionIDModified
-        { 
-            get
-            {
-                return _isConnectionIDModified;
-            }
-            set
-            {
-                _isConnectionIDModified = value;
-            }
-        }
-        private bool _isConnectionIDModified = false;
 
         /// <summary>
         /// Meta-info: editable; nullable; load delayed.
@@ -909,6 +869,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #region Entities that depend on the current one.
 
+        /// <summary>
+        /// Entitity set <see cref="MemberCallbackSet" /> for data set "MemberCallbacks" of <see cref="MemberCallback" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="MemberCallbackSet" /> set is { <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public MemberCallbackSet MemberCallbacks
+		{
+			get
+			{
+                if (_MemberCallbacks == null)
+                    _MemberCallbacks = new MemberCallbackSet();
+				return _MemberCallbacks;
+			}
+            set
+            {
+                _MemberCallbacks = value;
+            }
+		}
+		private MemberCallbackSet _MemberCallbacks = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "MemberCallbacks" of <see cref="MemberCallback" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="MemberCallbackSet" /> set is { <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }.
+        /// </summary>
+		public IEnumerable<MemberCallback> MemberCallbackEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="MemberCallback" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="MemberCallbackSet" /> set is { <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public MemberCallback[] ChangedMemberCallbacks
+		{
+			get;
+            set;
+		}
+
 #endregion
 
         /// <summary>
@@ -970,11 +971,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.Comment = from.Comment;
                     to.IsCommentModified = true;
                 }
-                if (from.IsConnectionIDModified && !to.IsConnectionIDModified)
-                {
-                    to.ConnectionID = from.ConnectionID;
-                    to.IsConnectionIDModified = true;
-                }
                 if (from.IsIconImgModified && !to.IsIconImgModified)
                 {
                     to.IconImg = from.IconImg;
@@ -1022,8 +1018,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.IsAcceptLanguagesModified = from.IsAcceptLanguagesModified;
                 to.Comment = from.Comment;
                 to.IsCommentModified = from.IsCommentModified;
-                to.ConnectionID = from.ConnectionID;
-                to.IsConnectionIDModified = from.IsConnectionIDModified;
                 to.IconImg = from.IconImg;
                 to.IsIconImgModified = from.IsIconImgModified;
                 to.IconLastModified = from.IconLastModified;
@@ -1066,12 +1060,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 Comment = newdata.Comment;
                 IsCommentModified = true;
-                cnt++;
-            }
-            if (ConnectionID != newdata.ConnectionID)
-            {
-                ConnectionID = newdata.ConnectionID;
-                IsConnectionIDModified = true;
                 cnt++;
             }
             bool bIconImg = IconImg == null && newdata.IconImg != null ||
@@ -1140,7 +1128,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (Email == null)
                 Email = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsEmailModified || IsAcceptLanguagesModified || IsCommentModified || IsConnectionIDModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
+                IsEntityChanged = IsEmailModified || IsAcceptLanguagesModified || IsCommentModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
             if (IsCommentModified && !IsCommentLoaded)
                 IsCommentLoaded = true;
             if (IsIconImgModified && !IsIconImgLoaded)
@@ -1175,11 +1163,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsAcceptLanguagesModified = IsAcceptLanguagesModified;
             else
                 e.IsAcceptLanguagesModified = false;
-            e.ConnectionID = ConnectionID;
-            if (preserveState)
-                e.IsConnectionIDModified = IsConnectionIDModified;
-            else
-                e.IsConnectionIDModified = false;
             e.IconLastModified = IconLastModified;
             if (preserveState)
                 e.IsIconLastModifiedModified = IsIconLastModifiedModified;
@@ -1255,12 +1238,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@"
   AcceptLanguages = '" + (AcceptLanguages != null ? AcceptLanguages : "null") + @"'");
             if (IsAcceptLanguagesModified)
-                sb.Append(@" (modified)");
-            else
-                sb.Append(@" (unchanged)");
-            sb.Append(@"
-  ConnectionID = '" + (ConnectionID != null ? ConnectionID : "null") + @"'");
-            if (IsConnectionIDModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");

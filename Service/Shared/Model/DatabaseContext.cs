@@ -74,6 +74,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [EnumMember]
         EventType,
         /// <summary>
+        /// It represents data set <c>MemberCallbacks</c> (see <see cref="MemberCallback" />).
+        /// </summary>
+        [EnumMember]
+        MemberCallback,
+        /// <summary>
         /// It represents data set <c>MemberNotifications</c> (see <see cref="MemberNotification" />).
         /// </summary>
         [EnumMember]

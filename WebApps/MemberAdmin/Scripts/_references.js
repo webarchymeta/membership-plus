@@ -222,3 +222,4 @@
 /// <reference path="ckeditor/plugins/a11yhelp/dialogs/lang/zh.js" />
 /// <reference path="dataservice/notificationsearchpage.js" />
 /// <reference path="jquery.signalr-2.0.3.js" />
+/// <reference path="jquery.jgrowl.js" />
