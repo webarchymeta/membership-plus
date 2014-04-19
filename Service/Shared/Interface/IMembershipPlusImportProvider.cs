@@ -106,6 +106,26 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
 
         /// <summary>
+        /// When implemeneted, the <c>ShortMessageAttachment</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<ShortMessageAttachment> GetShortMessageAttachments();
+
+        /// <summary>
+        /// When implemeneted, the <c>ShortMessageAudience</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<ShortMessageAudience> GetShortMessageAudiences();
+
+        /// <summary>
+        /// When implemeneted, the <c>ShortMessage</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<ShortMessage> GetShortMessages();
+
+        /// <summary>
+        /// When implemeneted, the <c>ShortMessageType</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<ShortMessageType> GetShortMessageTypes();
+
+        /// <summary>
         /// When implemeneted, the <c>SignalRHostState</c> enumerator used to fetch the corresponding entities from the data source.
         /// </summary>
         IEnumerable<SignalRHostState> GetSignalRHostStates();

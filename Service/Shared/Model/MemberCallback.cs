@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -34,6 +35,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <listheader>
     ///       <term>Primary keys</term><description>Description</description>
     ///    </listheader>
+    ///    <item>
+    ///      <term>ChannelID</term>
+    ///      <description>See <see cref="MemberCallback.ChannelID" />. Primary key; intrinsic id; fixed; not null; max-length = 80 characters.</description>
+    ///    </item>
     ///    <item>
     ///      <term>HubID</term>
     ///      <description>See <see cref="MemberCallback.HubID" />. Primary key; intrinsic id; fixed; not null; max-length = 50 characters.</description>
@@ -51,6 +56,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <listheader>
     ///       <term>Intrinsic Identifiers</term><description>Description</description>
     ///    </listheader>
+    ///    <item>
+    ///      <term>ChannelID</term>
+    ///      <description>See <see cref="MemberCallback.ChannelID" />. Primary key; intrinsic id; fixed; not null; max-length = 80 characters.</description>
+    ///    </item>
     ///    <item>
     ///      <term>HubID</term>
     ///      <description>See <see cref="MemberCallback.HubID" />. Primary key; intrinsic id; fixed; not null; max-length = 50 characters.</description>
@@ -80,6 +89,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>ConnectionID</term>
     ///      <description>See <see cref="MemberCallback.ConnectionID" />. Editable; nullable; max-length = 50 characters.</description>
     ///    </item>
+    ///    <item>
+    ///      <term>SupervisorMode</term>
+    ///      <description>See <see cref="MemberCallback.SupervisorMode" />. Editable; nullable.</description>
+    ///    </item>
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
@@ -105,6 +118,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class MemberCallback : IDbEntity 
     {
         /// <summary>
@@ -119,7 +133,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             get
             {
-                return this.ApplicationID + ":" + this.HubID + ":" + this.UserID;
+                return this.ApplicationID + ":" + this.ChannelID + ":" + this.HubID + ":" + this.UserID;
             }
         }
 
@@ -163,6 +177,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             get
             {
                 string str = "";
+                str += "ChannelID = " + ChannelID + "\r\n";
                 str += "HubID = " + HubID + "\r\n";
                 str += "ApplicationID = " + ApplicationID + "\r\n";
                 str += "UserID = " + UserID + "\r\n";
@@ -171,7 +186,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (IsLastActiveDateModified)
                     str += "Modified [LastActiveDate] = " + LastActiveDate + "\r\n";
                 if (IsConnectionIDModified)
-                    str += "Modified [ConnectionID] = " + ConnectionID + "\r\n";;
+                    str += "Modified [ConnectionID] = " + ConnectionID + "\r\n";
+                if (IsSupervisorModeModified)
+                    str += "Modified [SupervisorMode] = " + SupervisorMode + "\r\n";;
                 return str.Trim();
             }
         }
@@ -197,7 +214,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         private string GetDistinctString(bool ShowPathInfo)
         {
-            return String.Format(@"HubID = {0}, ApplicationID = {1}, UserID = {2}", HubID.Trim(), ApplicationID.Trim(), UserID.Trim());
+            return String.Format(@"HubID = {0}, ApplicationID = {1}, UserID = {2}, ChannelID = {3}", HubID.Trim(), ApplicationID.Trim(), UserID.Trim(), ChannelID.Trim());
         }
 
         /// <summary>
@@ -222,7 +239,72 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public MemberCallback()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public MemberCallback(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(MemberCallback));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as MemberCallback;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(MemberCallback));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
+
 #region Properties of the current entity
+
+        /// <summary>
+        /// Meta-info: primary key; intrinsic id; fixed; not null; max-length = 80 characters.
+        /// </summary>
+        [Key]
+        [Required]
+        [Editable(false)]
+        [StringLength(80)]
+        [DataMember(IsRequired = true)]
+        public string ChannelID
+        { 
+            get
+            {
+                return _ChannelID;
+            }
+            set
+            {
+                if (_ChannelID != value)
+                {
+                    _ChannelID = value;
+                }
+            }
+        }
+        private string _ChannelID = default(string);
 
         /// <summary>
         /// Meta-info: primary key; intrinsic id; fixed; not null; max-length = 50 characters.
@@ -421,6 +503,48 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isConnectionIDModified = false;
 
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> SupervisorMode
+        { 
+            get
+            {
+                return _SupervisorMode;
+            }
+            set
+            {
+                if (_SupervisorMode != value)
+                {
+                    _SupervisorMode = value;
+                    if (StartAutoUpdating)
+                        IsSupervisorModeModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _SupervisorMode = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="SupervisorMode" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="SupervisorMode" /> only if this is set to true no matter what
+        /// the actual value of <see cref="SupervisorMode" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsSupervisorModeModified
+        { 
+            get
+            {
+                return _isSupervisorModeModified;
+            }
+            set
+            {
+                _isSupervisorModeModified = value;
+            }
+        }
+        private bool _isSupervisorModeModified = false;
+
 #endregion
 
 #region Entities that the current one depends upon.
@@ -484,6 +608,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             if (other == null)
                 return false;
+            if (ChannelID != other.ChannelID)
+                return false;
             if (HubID != other.HubID)
                 return false;
             if (ApplicationID != other.ApplicationID)
@@ -505,7 +631,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (other == null)
                 return false;
             else
-                return HubID == other.HubID &&  ApplicationID == other.ApplicationID &&  UserID == other.UserID;
+                return ChannelID == other.ChannelID &&  HubID == other.HubID &&  ApplicationID == other.ApplicationID &&  UserID == other.UserID;
         }              
 
         /// <summary>
@@ -534,10 +660,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.ConnectionID = from.ConnectionID;
                     to.IsConnectionIDModified = true;
                 }
+                if (from.IsSupervisorModeModified && !to.IsSupervisorModeModified)
+                {
+                    to.SupervisorMode = from.SupervisorMode;
+                    to.IsSupervisorModeModified = true;
+                }
             }
             else
             {
                 to.IsPersisted = from.IsPersisted;
+                to.ChannelID = from.ChannelID;
                 to.HubID = from.HubID;
                 to.ApplicationID = from.ApplicationID;
                 to.UserID = from.UserID;
@@ -547,6 +679,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.IsLastActiveDateModified = from.IsLastActiveDateModified;
                 to.ConnectionID = from.ConnectionID;
                 to.IsConnectionIDModified = from.IsConnectionIDModified;
+                to.SupervisorMode = from.SupervisorMode;
+                to.IsSupervisorModeModified = from.IsSupervisorModeModified;
             }
         }
 
@@ -577,6 +711,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsConnectionIDModified = true;
                 cnt++;
             }
+            if (SupervisorMode != newdata.SupervisorMode)
+            {
+                SupervisorMode = newdata.SupervisorMode;
+                IsSupervisorModeModified = true;
+                cnt++;
+            }
             IsEntityChanged = cnt > 0;
         }
 
@@ -587,7 +727,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             StartAutoUpdating = false;
             if (!IsEntityChanged)
-                IsEntityChanged = IsIsDisconnectedModified || IsLastActiveDateModified || IsConnectionIDModified;
+                IsEntityChanged = IsIsDisconnectedModified || IsLastActiveDateModified || IsConnectionIDModified || IsSupervisorModeModified;
             StartAutoUpdating = true;
         }
 
@@ -606,6 +746,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             MemberCallback e = new MemberCallback();
             e.StartAutoUpdating = false;
+            e.ChannelID = ChannelID;
             e.HubID = HubID;
             e.ApplicationID = ApplicationID;
             e.UserID = UserID;
@@ -624,6 +765,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsConnectionIDModified = IsConnectionIDModified;
             else
                 e.IsConnectionIDModified = false;
+            e.SupervisorMode = SupervisorMode;
+            if (preserveState)
+                e.IsSupervisorModeModified = IsSupervisorModeModified;
+            else
+                e.IsSupervisorModeModified = false;
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;
             if (preserveState)
@@ -642,6 +788,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append(@"
 ----===== [[MemberCallback]] =====----
+  ChannelID = '" + ChannelID + @"'");
+            sb.Append(@" (natural id)");
+            sb.Append(@"
   HubID = '" + HubID + @"'");
             sb.Append(@" (natural id)");
             sb.Append(@"
@@ -669,6 +818,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
+  SupervisorMode = " + (SupervisorMode.HasValue ? SupervisorMode.Value.ToString() : "null") + @"");
+            if (IsSupervisorModeModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
 ");
             return sb.ToString();
         }
@@ -679,6 +834,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="MemberCallback" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class MemberCallbackUpdateResult : IUpdateResult
     {
         /// <summary>

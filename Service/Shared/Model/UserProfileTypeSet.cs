@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "UserProfileTypes".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UserProfileTypeSet
     {
         /// <summary>

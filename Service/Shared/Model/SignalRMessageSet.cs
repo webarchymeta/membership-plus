@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing possible combination of foreign key constraint of the data set of "SignalRMessages".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class SignalRMessageSetConstraints
     {
         /// <summary>
@@ -76,6 +77,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a limited set of available constraints of "SignalRMessages".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class SignalRMessageSetConstraintsColl
     {
         /// <summary>
@@ -115,6 +117,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "SignalRMessages".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class SignalRMessageSet
     {
         /// <summary>

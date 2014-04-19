@@ -60,16 +60,22 @@
   <ItemGroup>
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="ConnectionContext.cs" />
+    <Compile Include="GroupChatContext.cs" />
     <Compile Include="MemberAdminContext.cs" />
     <Compile Include="MemberViewContext.cs" />
     <Compile Include="MemberRoleContext.cs" />
     <Compile Include="MembershipContext.cs" />
+    <Compile Include="Models\ChatContextVM.cs" />
+    <Compile Include="Models\ChatRoomVM.cs" />
     <Compile Include="Models\ContentRecord.cs" />
     <Compile Include="Models\NotificationViewModels.cs" />
+    <Compile Include="Models\PeerConnectionStatus.cs" />
+    <Compile Include="Models\ShotMessageNotice.cs" />
     <Compile Include="Models\SimpleMessage.cs" />
     <Compile Include="Models\UserDetailsVM.cs" />
     <Compile Include="NotificationContext.cs" />
     <Compile Include="PasswordGenerator.cs" />
+    <Compile Include="PrivateChatContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies\DataServiceProxy.cs" />
     <Compile Include="Configuration\QueryCustomizationCfg.cs" />

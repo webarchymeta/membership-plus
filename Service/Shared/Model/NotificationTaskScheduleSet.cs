@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing possible combination of foreign key constraint of the data set of "NotificationTaskSchedules".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class NotificationTaskScheduleSetConstraints
     {
         /// <summary>
@@ -94,6 +95,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a limited set of available constraints of "NotificationTaskSchedules".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class NotificationTaskScheduleSetConstraintsColl
     {
         /// <summary>
@@ -133,6 +135,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "NotificationTaskSchedules".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class NotificationTaskScheduleSet
     {
         /// <summary>

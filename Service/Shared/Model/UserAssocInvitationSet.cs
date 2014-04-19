@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing possible combination of foreign key constraint of the data set of "UserAssocInvitations".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UserAssocInvitationSetConstraints
     {
         /// <summary>
@@ -85,6 +86,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a limited set of available constraints of "UserAssocInvitations".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UserAssocInvitationSetConstraintsColl
     {
         /// <summary>
@@ -124,6 +126,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "UserAssocInvitations".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UserAssocInvitationSet
     {
         /// <summary>

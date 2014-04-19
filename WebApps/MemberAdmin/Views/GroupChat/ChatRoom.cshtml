@@ -1,0 +1,257 @@
+﻿@using CryptoGateway.RDB.Data.MembershipPlus;
+@using Archymeta.Web.MembershipPlus.AppLayer.Models;
+@using Microsoft.AspNet.Identity;
+@using Archymeta.Web.Security.Resources;
+@model ChatRoomVM
+@{
+    ViewBag.Title = ResourceUtils.GetString("16a418a65e5ac52ac98bcaf6b82fb9ab", "Chat Room");
+}
+@section scripts {
+    @Styles.Render("~/Content/themes/base/css")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/signalR")
+    @Scripts.Render("~/bundles/jqueryui")
+    <script src="/signalr/hubs"></script>
+    <script src="@Url.Content("~/Scripts/App/GroupChatRoom.js")"></script>
+    <script type="text/javascript">
+        appRoot = '@Url.Content("~/")';
+        roomId = '@Model.ID';
+        userId = '@Context.User.Identity.GetUserId()';
+        @if (Model.DialogMode)
+        {
+        <text>
+        dialogMode = true;
+        </text>
+        }
+        else
+        {
+        <text>
+        dialogMode = false;
+        </text>
+        }
+        function addInitialMembers(root) {
+            root.ConnectedCount(@Model.ActivePeers.Length);
+            root.RoomInfo('');
+            @foreach (var m in Model.ActivePeers)
+            {
+      <text>root.Members.push(new ChatPeer(@Html.Raw(m)));</text>
+            }
+        }
+
+        function addInitialMessages(root) {
+            @foreach (var m in Model.RecentMsgs)
+            {
+      <text>root.Messages.push(new ChatMessage(@Html.Raw(m)));</text>
+            }
+        }
+    </script>
+}
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+            <a href="@Url.Content("~/GroupChat/Start")"><span class="glyphicon glyphicon-circle-arrow-left"></span></a>&nbsp;
+        @if (Model.DialogMode)
+        { 
+            <a href="@Url.Content("~/GroupChat/ChatRoom?id=" + Model.ID + "&seq=true")" title="@ResourceUtils.GetString("4acb374f8c23fe9c6536868559ab2ab6", "Go to time sequence mode ...")">
+            <span class="ion-shuffle"></span></a>
+        }
+        else
+        {
+            <a href="@Url.Content("~/GroupChat/ChatRoom?id=" + Model.ID + "&seq=false")" title="@ResourceUtils.GetString("dcdf45c04567f5171cae87ba5a4f3b05", "Go to dialogue mode ...")">
+            <span class="ion-shuffle"></span></a>
+        }
+            <span>@ResourceUtils.GetString("16a418a65e5ac52ac98bcaf6b82fb9ab", "Chat Room")</span>
+            <!-- ko if: IsSubscriber -->
+            <a href="#" data-bind="click: Unsubscribe" title="@ResourceUtils.GetString("2341ce5e3f8c1dcc99d8913f9d5e94cc", "Unsubscribe to notifications from this room ...")">
+                <span class="ion-social-rss-outline"></span>
+            </a>
+            <!-- ko if: IsNotifying -->
+            <a href="#" data-bind="click: ToggleNotifications" title="@ResourceUtils.GetString("df9f6b30878d5a6135f7f67103a7a920", "Cancel interactive notification for this room ...")">
+                <span class="ion-ios7-chatbubble-outline"></span>
+            </a>
+            <!-- /ko -->
+            <!-- ko ifnot: IsNotifying -->
+            <a href="#" data-bind="click: ToggleNotifications" title="@ResourceUtils.GetString("2479835d3bbac5ccaa1bc268059692b6", "Enable interactive notification for this room ...")">
+                <span class="ion-ios7-chatbubble"></span>
+            </a>
+            <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko ifnot: IsSubscriber -->
+            <a href="#" data-bind="click: Subscribe" title="@ResourceUtils.GetString("b5ec8a5ccd96437a383095810b20e472", "Subscribe to notifications from this room ...")">
+                <span class="ion-social-rss"></span>
+            </a>
+            <!-- /ko -->
+        </h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 chat-room-path">
+        <ol class="breadcrumb">
+            @for (int i = 0; i < Model.RoomPath.Length; i++)
+            {
+                if (i < Model.RoomPath.Length - 1)
+                {
+                    <li><a href="#">@Model.RoomPath[i]</a></li>
+                }
+                else
+                {
+                    <li class="active"><span>@Model.RoomPath[i]</span></li>
+                }
+            }
+        </ol>
+    </div>
+</div>
+<div class="row chat-room">
+    <div class="col-md-9">
+        <div class="message-panel">
+            <!-- ko if: Joined -->
+            <div class="message-list">
+                <script id="msgListTempl" type="text/html">
+                    <!-- ko if: self -->
+                    <tr class="self">
+                        <td>
+                            <div class="msg">
+                                <div class="msg-sender">
+                                    <a data-bind="attr: {name: id}"><label>@ResourceUtils.GetString("ab86a1e1ef70dff97959067b723c5c25", "me")</label></a>
+                                    <span class="ion-android-volume"></span>
+                                </div>
+                                <div class="msg-time">
+                                    <span data-bind="localdatetime: jsonDate"></span>
+                                    <span class="glyphicon glyphicon-heart"></span>
+                                    <span data-bind="text: score"></span>
+                                </div>
+                                <div class="msg-body" data-bind="html: text"></div>
+                                <!-- ko if: Replies().length > 0 -->
+                                <div class="reply-message-list" data-bind="attr: {id: id}">
+                                    <table>
+                                        <tbody data-bind="template: {name: 'msgListTempl', foreach: Replies}"></tbody>
+                                    </table>
+                                </div>
+                                <!-- /ko -->
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- /ko -->
+                    <!-- ko ifnot: self -->
+                    <tr>
+                        <td>
+                            <div class="msg">
+                                <div class="msg-sender">
+                                    <a href="#" data-bind="click: ToggleReplyArea"><span class="ion-ios7-undo"></span></a>
+                                    <a data-bind="attr: {name: id}">
+                                        <label data-bind="text: from"></label>
+                                    </a>
+                                    <span class="ion-android-volume"></span>
+                                </div>
+                                <div class="msg-time">
+                                    <span data-bind="localdatetime: jsonDate"></span>
+                                    <span class="glyphicon glyphicon-heart"></span>
+                                    <span data-bind="text: score"></span>
+                                </div>
+                                <div class="msg-body" data-bind="html: text"></div>
+                                <div class="msg-cmds">
+                                    <a href="#" data-bind="click: VoteUp"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+                                    <a href="#" data-bind="click: VoteDown"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+                                </div>
+                                <!-- ko if: checked -->
+                                <div class="input-group input-area">
+                                    <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" data-bind="click: SendSimpleMessageToAll, enable: IsSendReady">
+                                            @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+                                        </button>
+                                    </span>
+                                </div>
+                                <!-- /ko -->
+                                <!-- ko if: Replies().length > 0 -->
+                                <div class="reply-message-list" data-bind="attr: {id: id}">
+                                    <table>
+                                        <tbody data-bind="template: {name: 'msgListTempl', foreach: Replies}"></tbody>
+                                    </table>
+                                </div>
+                                <!-- /ko -->
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- /ko -->
+                </script>
+                <table>
+                    <tbody data-bind="template: {name: 'msgListTempl', foreach: Messages}"></tbody>
+                </table>
+            </div>
+            <div class="input-group input-area">
+                <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" data-bind="click: SendSimpleMessageToAll, enable: IsSendReady">
+                        @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+                    </button>
+                </span>
+            </div>
+            <!-- /ko -->
+            <!-- ko ifnot: Joined -->
+            <div>
+                <div><button></button></div>
+                <div>
+                    <div data-bind="html: RoomInfo"></div>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <div class="col-md-3">
+        @if (Model.DialogMode)
+        {
+        <div class="peer-list panel panel-default">
+            <div class="panel-heading">
+                <h4 style="display:inline">@ResourceUtils.GetString("a274f4d4670213a9045ce258c6c56b81", "Notifications")</h4>
+                <a style="float:right" href="#" data-bind="click: ClearMsgLinks"><span class="glyphicon glyphicon-trash"></span></a>
+            </div>
+            <div class="panel-body">
+                <table>
+                    <tbody data-bind="foreach:MessageLinks">
+                        <tr>
+                            <td>
+                                <span class="glyphicon glyphicon-envelope"></span>
+                                <a data-bind="attr: {href: link}"><span data-bind="text: title"></span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        }
+        <div class="peer-list panel panel-default">
+            <div class="panel-heading">
+                <h4 style="display:inline">@ResourceUtils.GetString("1a251c48ba363c8527523220c7c097d6", "Active members:")</h4>
+            </div>
+            <div class="panel-body">
+                <table>
+                    <tbody data-bind="foreach:Members">
+                        <tr>
+                            <td style="width:1px;">
+                                <!-- ko if: isSelf -->
+                                &nbsp;
+                                <!-- /ko -->
+                                <!-- ko ifnot: isSelf -->
+                               <a data-bind="attr: {href: chatUrl}" target="_blank">
+                                    <span class="glyphicon glyphicon-earphone" title="@ResourceUtils.GetString("9f1c1dc68860a044552c943ac3c426bb", "Start a private chat ...")"></span>
+                                </a>
+                                <!-- /ko -->
+                            </td>
+                            <td>
+                                <!-- ko if: isSelf -->
+                                <span class="glyphicon glyphicon-user self-style"></span>
+                                <span data-bind="attr: {title: lastActive}" class="self-style">@ResourceUtils.GetString("ab86a1e1ef70dff97959067b723c5c25", "me")</span>
+                                <!-- /ko -->
+                                <!-- ko ifnot: isSelf -->
+                                <span class="ion-android-contact"></span>
+                                <span data-bind="text: name, attr: {title: lastActive}"></span>
+                                <!-- /ko -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

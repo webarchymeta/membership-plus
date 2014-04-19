@@ -137,6 +137,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Delay Loaded Properties</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Properties that are loaded on demand.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (loading)</term>
+    ///      <description>
+    ///         <see cref="IUserGroupService.LoadEntityGroupDescription" />
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (uploading)</term>
+    ///      <description>
+    ///         <see cref="IUserGroupService.UpdateEntityGroupDescription" />
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Entity Hierarchy</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -183,7 +206,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserGroupService.MaterializeAnnouncements" />, <see cref="IUserGroupService.MaterializeEventCalendars" />, <see cref="IUserGroupService.MaterializeUserGroupAdminRoles" />, <see cref="IUserGroupService.MaterializeUserGroupMembers" />, <see cref="IUserGroupService.MaterializeUserGroups" />.
+    ///        <see cref="IUserGroupService.MaterializeAnnouncements" />, <see cref="IUserGroupService.MaterializeEventCalendars" />, <see cref="IUserGroupService.MaterializeShortMessages" />, <see cref="IUserGroupService.MaterializeUserGroupAdminRoles" />, <see cref="IUserGroupService.MaterializeUserGroupMembers" />, <see cref="IUserGroupService.MaterializeUserGroups" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -293,7 +316,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -349,7 +372,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -661,6 +684,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         IEnumerable<EventCalendar> MaterializeAllEventCalendars(CallContext cntx, UserGroup entity);
 
         /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeShortMessages")]
+        ShortMessageSet MaterializeShortMessages(CallContext cntx, UserGroup entity);
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeAllShortMessages")]
+        IEnumerable<ShortMessage> MaterializeAllShortMessages(CallContext cntx, UserGroup entity);
+
+        /// <summary>
         ///   Load the set of depending entities "UserGroupAdminRoles" of type <see cref="UserGroupAdminRoleSet" /> of the entity. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -941,6 +999,43 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         EntityAbs<UserGroup> LoadEntityHierarchyRecurs(CallContext cntx, UserGroup entity, int uplev, int lowlev);
 
         /// <summary>
+        ///  Load the delay loaded property <see cref="UserGroup.GroupDescription" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/LoadEntityGroupDescription")]
+        string LoadEntityGroupDescription(CallContext cntx, string _ID);
+
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserGroup.GroupDescription" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/UpdateEntityGroupDescription")]
+        void UpdateEntityGroupDescription(CallContext cntx, string _ID, string data);
+
+        /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -1088,6 +1183,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Delay Loaded Properties</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Properties that are loaded on demand.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (loading)</term>
+    ///      <description>
+    ///         <see cref="IUserGroupService2.LoadEntityGroupDescription" />
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (uploading)</term>
+    ///      <description>
+    ///         <see cref="IUserGroupService2.UpdateEntityGroupDescription" />
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Entity Hierarchy</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -1134,7 +1252,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IUserGroupService2.MaterializeAnnouncements" />, <see cref="IUserGroupService2.MaterializeEventCalendars" />, <see cref="IUserGroupService2.MaterializeUserGroupAdminRoles" />, <see cref="IUserGroupService2.MaterializeUserGroupMembers" />, <see cref="IUserGroupService2.MaterializeUserGroups" />.
+    ///        <see cref="IUserGroupService2.MaterializeAnnouncements" />, <see cref="IUserGroupService2.MaterializeEventCalendars" />, <see cref="IUserGroupService2.MaterializeShortMessages" />, <see cref="IUserGroupService2.MaterializeUserGroupAdminRoles" />, <see cref="IUserGroupService2.MaterializeUserGroupMembers" />, <see cref="IUserGroupService2.MaterializeUserGroups" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -1275,7 +1393,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1315,7 +1433,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1367,7 +1485,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1417,7 +1535,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1875,6 +1993,58 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        ShortMessageSet MaterializeShortMessages(CallContext cntx, UserGroup entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<ShortMessageSet> MaterializeShortMessagesAsync(CallContext cntx, UserGroup entity);
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        [OperationContract]
+        IEnumerable<ShortMessage> MaterializeAllShortMessages(CallContext cntx, UserGroup entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<IEnumerable<ShortMessage>> MaterializeAllShortMessagesAsync(CallContext cntx, UserGroup entity);
+#endif
+
+        /// <summary>
         ///   Load the set of depending entities "UserGroupAdminRoles" of type <see cref="UserGroupAdminRoleSet" /> of the entity. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -2306,6 +2476,62 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<EntityAbs<UserGroup>> LoadEntityHierarchyRecursAsync(CallContext cntx, UserGroup entity, int uplev, int lowlev);
+#endif
+
+        /// <summary>
+        ///  Load the delay loaded property <see cref="UserGroup.GroupDescription" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        string LoadEntityGroupDescription(CallContext cntx, string _ID);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Load the delay loaded property <see cref="UserGroup.GroupDescription" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<string> LoadEntityGroupDescriptionAsync(CallContext cntx, string _ID);
+#endif
+
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserGroup.GroupDescription" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        void UpdateEntityGroupDescription(CallContext cntx, string _ID, string data);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserGroup.GroupDescription" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task UpdateEntityGroupDescriptionAsync(CallContext cntx, string _ID, string data);
 #endif
 
         /// <summary>

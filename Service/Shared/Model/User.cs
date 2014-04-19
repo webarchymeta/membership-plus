@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -159,6 +160,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="User.NotificationTaskSchedules" />, which is a sub-set of the data set "NotificationTaskSchedules" for <see cref="NotificationTaskSchedule" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>ShortMessageAudiences</term>
+    ///      <description>See <see cref="User.ShortMessageAudiences" />, which is a sub-set of the data set "ShortMessageAudiences" for <see cref="ShortMessageAudience" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ShortMessage_FromIDs</term>
+    ///      <description>See <see cref="User.ShortMessage_FromIDs" />, which is a sub-set of the data set "ShortMessages" for <see cref="ShortMessage" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ShortMessage_ToIDs</term>
+    ///      <description>See <see cref="User.ShortMessage_ToIDs" />, which is a sub-set of the data set "ShortMessages" for <see cref="ShortMessage" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserAppMembers</term>
     ///      <description>See <see cref="User.UserAppMembers" />, which is a sub-set of the data set "UserAppMembers" for <see cref="UserAppMember" />.</description>
     ///    </item>
@@ -209,6 +222,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class User : IDbEntity 
     {
         /// <summary>
@@ -351,6 +365,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public User()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public User(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(User));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as User;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(User));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
 
 #region Properties of the current entity
 
@@ -1405,6 +1460,129 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 		}
 
         /// <summary>
+        /// Entitity set <see cref="ShortMessageAudienceSet" /> for data set "ShortMessageAudiences" of <see cref="ShortMessageAudience" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageAudienceSet" /> set is { <see cref="ShortMessageAudience.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageAudienceSet ShortMessageAudiences
+		{
+			get
+			{
+                if (_ShortMessageAudiences == null)
+                    _ShortMessageAudiences = new ShortMessageAudienceSet();
+				return _ShortMessageAudiences;
+			}
+            set
+            {
+                _ShortMessageAudiences = value;
+            }
+		}
+		private ShortMessageAudienceSet _ShortMessageAudiences = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessageAudiences" of <see cref="ShortMessageAudience" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageAudienceSet" /> set is { <see cref="ShortMessageAudience.UserID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessageAudience> ShortMessageAudienceEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessageAudience" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageAudienceSet" /> set is { <see cref="ShortMessageAudience.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageAudience[] ChangedShortMessageAudiences
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="ShortMessageSet" /> for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.FromID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageSet ShortMessage_FromIDs
+		{
+			get
+			{
+                if (_ShortMessage_FromIDs == null)
+                    _ShortMessage_FromIDs = new ShortMessageSet();
+				return _ShortMessage_FromIDs;
+			}
+            set
+            {
+                _ShortMessage_FromIDs = value;
+            }
+		}
+		private ShortMessageSet _ShortMessage_FromIDs = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.FromID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessage> ShortMessage_FromIDEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessage" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.FromID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessage[] ChangedShortMessage_FromIDs
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="ShortMessageSet" /> for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ToID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageSet ShortMessage_ToIDs
+		{
+			get
+			{
+                if (_ShortMessage_ToIDs == null)
+                    _ShortMessage_ToIDs = new ShortMessageSet();
+				return _ShortMessage_ToIDs;
+			}
+            set
+            {
+                _ShortMessage_ToIDs = value;
+            }
+		}
+		private ShortMessageSet _ShortMessage_ToIDs = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ToID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessage> ShortMessage_ToIDEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessage" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ToID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessage[] ChangedShortMessage_ToIDs
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
         /// Entitity set <see cref="UserAppMemberSet" /> for data set "UserAppMembers" of <see cref="UserAppMember" /> that depend on the current entity.
         /// The corresponding foreign key in <see cref="UserAppMemberSet" /> set is { <see cref="UserAppMember.UserID" /> }.
         /// </summary>
@@ -2442,6 +2620,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="User" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class UserUpdateResult : IUpdateResult
     {
         /// <summary>

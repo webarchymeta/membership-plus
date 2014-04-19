@@ -17,9 +17,27 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("77a3f553666ab77020a502e5079335c9", "Membership")<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-submenu">
-                            <a href="#">@ResourceUtils.GetString("13348442cc6a27032d2b4aa28b75a5d4","Search")</a>
+                            <a href="#">@ResourceUtils.GetString("13348442cc6a27032d2b4aa28b75a5d4", "Search")</a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>@Html.ActionLink(@ResourceUtils.GetString("ef53538ae41a651c7f72ab6cb1135d8d", "Members"), "SearchMembers", "Query")</li>
+                                <li>@Html.ActionLink(ResourceUtils.GetString("ef53538ae41a651c7f72ab6cb1135d8d", "Members"), "SearchMembers", "Query")</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("07a3dd247ad6bec7fe401aa1161995a0", "Communication")<b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-submenu">
+                            <a href="#">@ResourceUtils.GetString("b54fa74b22da5a748eae3d55ad26419a", "Messaging")</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink(ResourceUtils.GetString("c41bd4a897a72c15332aa063685bf0a2", "Group Chat"), "Start", "GroupChat")</li>
+                                <li class="dropdown-submenu">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("e9b58070003826eb74265c9ff2815e81", "Private Chat")</a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>@Html.ActionLink(ResourceUtils.GetString("8dff9be37a347cab463edab00c45f32a", "Search Online Members"), "Search", "PrivateChat")</li>
+                                        <li>@Html.ActionLink(ResourceUtils.GetString("2a89bceab3e4e9fcefbdfcf12bdb172b", "Online Contacts"), "Contacts", "PrivateChat")</li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
                     </ul>

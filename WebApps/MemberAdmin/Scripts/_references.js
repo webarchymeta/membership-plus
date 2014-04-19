@@ -223,3 +223,7 @@
 /// <reference path="dataservice/notificationsearchpage.js" />
 /// <reference path="jquery.signalr-2.0.3.js" />
 /// <reference path="jquery.jgrowl.js" />
+/// <reference path="app/groupchatentrance.js" />
+/// <reference path="app/groupchatroom.js" />
+/// <reference path="app/privatechatpage.js" />
+/// <reference path="app/privatechatsearch.js" />

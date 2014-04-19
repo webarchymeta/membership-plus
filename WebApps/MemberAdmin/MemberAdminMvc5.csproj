@@ -21,6 +21,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -164,10 +165,12 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CallbacksController.cs" />
+    <Compile Include="Controllers\GroupChatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JavaScriptController.cs" />
     <Compile Include="Controllers\MemberAdminController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
+    <Compile Include="Controllers\PrivateChatController.cs" />
     <Compile Include="Controllers\QueryController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Global.asax.cs">
@@ -175,8 +178,10 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignalRHubs\GroupChatHub.cs" />
     <Compile Include="SignalRHubs\HubBase.cs" />
     <Compile Include="SignalRHubs\NotificationHub.cs" />
+    <Compile Include="SignalRHubs\PrivateChatHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +193,8 @@
     <Content Include="Content\fonts\ionicons.svg" />
     <Content Include="Content\ionicons\ionicons.css" />
     <Content Include="Content\ionicons\ionicons.min.css" />
+    <Content Include="Content\jquery.jgrowl.css" />
+    <Content Include="Content\jquery.jgrowl.min.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -309,6 +316,10 @@
     <Content Include="Content\bootstrap\breadcrumbs.less" />
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
+    <Content Include="Scripts\App\GroupChatEntrance.js" />
+    <Content Include="Scripts\App\GroupChatRoom.js" />
+    <Content Include="Scripts\App\PrivateChatPage.js" />
+    <Content Include="Scripts\App\PrivateChatSearch.js" />
     <Content Include="Scripts\ckeditor\adapters\jquery.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
@@ -677,6 +688,8 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
+    <Content Include="Scripts\jquery.jgrowl.js" />
+    <Content Include="Scripts\jquery.jgrowl.min.js" />
     <Content Include="Scripts\jquery.signalR-2.0.3.js" />
     <Content Include="Scripts\jquery.signalR-2.0.3.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -739,6 +752,14 @@
     <Content Include="Views\Callbacks\_SysNotificationWraper.cshtml" />
     <Content Include="Views\Notification\Index.cshtml" />
     <Content Include="Views\Notification\CategorizedQuery.cshtml" />
+    <Content Include="Views\GroupChat\ChatRoom.cshtml" />
+    <Content Include="Views\GroupChat\Start.cshtml" />
+    <Content Include="Views\PrivateChat\ChatPopup.cshtml" />
+    <Content Include="Views\PrivateChat\Search.cshtml" />
+    <Content Include="Views\PrivateChat\_MemberDetailsPartial.cshtml" />
+    <Content Include="Views\PrivateChat\ChatPage.cshtml" />
+    <Content Include="Views\PrivateChat\Contacts.cshtml" />
+    <Content Include="Views\PrivateChat\_ChatPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\JavaScript\" />

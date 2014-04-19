@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a block of pages.
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UserAppMemberPageBlock
     {
         /// <summary>
@@ -86,6 +87,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a page of entity <see cref="UserAppMember" />.
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UserAppMemberPage
     {
         /// <summary>

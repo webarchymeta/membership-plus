@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing possible combination of foreign key constraint of the data set of "UsersRoleHistories".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UsersRoleHistorySetConstraints
     {
         /// <summary>
@@ -94,6 +95,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a limited set of available constraints of "UsersRoleHistories".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UsersRoleHistorySetConstraintsColl
     {
         /// <summary>
@@ -133,6 +135,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "UsersRoleHistories".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UsersRoleHistorySet
     {
         /// <summary>

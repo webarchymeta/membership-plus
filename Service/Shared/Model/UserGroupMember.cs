@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -58,6 +59,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Editable properties</term><description>Description</description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>AccessDenied</term>
+    ///      <description>See <see cref="UserGroupMember.AccessDenied" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ActivityNotification</term>
+    ///      <description>See <see cref="UserGroupMember.ActivityNotification" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>SubscribedTo</term>
+    ///      <description>See <see cref="UserGroupMember.SubscribedTo" />. Editable; nullable.</description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Foreign keys</term><description>Description</description>
     ///    </listheader>
     ///    <item>
@@ -84,6 +102,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class UserGroupMember : IDbEntity 
     {
         /// <summary>
@@ -143,7 +162,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 string str = "";
                 str += "UserGroupID = " + UserGroupID + "\r\n";
-                str += "UserID = " + UserID + "\r\n";;
+                str += "UserID = " + UserID + "\r\n";
+                if (IsAccessDeniedModified)
+                    str += "Modified [AccessDenied] = " + AccessDenied + "\r\n";
+                if (IsActivityNotificationModified)
+                    str += "Modified [ActivityNotification] = " + ActivityNotification + "\r\n";
+                if (IsSubscribedToModified)
+                    str += "Modified [SubscribedTo] = " + SubscribedTo + "\r\n";;
                 return str.Trim();
             }
         }
@@ -196,6 +221,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public UserGroupMember()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public UserGroupMember(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(UserGroupMember));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as UserGroupMember;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(UserGroupMember));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
+
 #region Properties of the current entity
 
         /// <summary>
@@ -241,6 +307,132 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private string _UserID = default(string);
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> AccessDenied
+        { 
+            get
+            {
+                return _AccessDenied;
+            }
+            set
+            {
+                if (_AccessDenied != value)
+                {
+                    _AccessDenied = value;
+                    if (StartAutoUpdating)
+                        IsAccessDeniedModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _AccessDenied = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="AccessDenied" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="AccessDenied" /> only if this is set to true no matter what
+        /// the actual value of <see cref="AccessDenied" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsAccessDeniedModified
+        { 
+            get
+            {
+                return _isAccessDeniedModified;
+            }
+            set
+            {
+                _isAccessDeniedModified = value;
+            }
+        }
+        private bool _isAccessDeniedModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> ActivityNotification
+        { 
+            get
+            {
+                return _ActivityNotification;
+            }
+            set
+            {
+                if (_ActivityNotification != value)
+                {
+                    _ActivityNotification = value;
+                    if (StartAutoUpdating)
+                        IsActivityNotificationModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _ActivityNotification = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="ActivityNotification" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="ActivityNotification" /> only if this is set to true no matter what
+        /// the actual value of <see cref="ActivityNotification" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsActivityNotificationModified
+        { 
+            get
+            {
+                return _isActivityNotificationModified;
+            }
+            set
+            {
+                _isActivityNotificationModified = value;
+            }
+        }
+        private bool _isActivityNotificationModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> SubscribedTo
+        { 
+            get
+            {
+                return _SubscribedTo;
+            }
+            set
+            {
+                if (_SubscribedTo != value)
+                {
+                    _SubscribedTo = value;
+                    if (StartAutoUpdating)
+                        IsSubscribedToModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _SubscribedTo = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="SubscribedTo" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="SubscribedTo" /> only if this is set to true no matter what
+        /// the actual value of <see cref="SubscribedTo" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsSubscribedToModified
+        { 
+            get
+            {
+                return _isSubscribedToModified;
+            }
+            set
+            {
+                _isSubscribedToModified = value;
+            }
+        }
+        private bool _isSubscribedToModified = false;
 
 #endregion
 
@@ -380,12 +572,33 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             if (to.IsPersisted)
             {
+                if (from.IsAccessDeniedModified && !to.IsAccessDeniedModified)
+                {
+                    to.AccessDenied = from.AccessDenied;
+                    to.IsAccessDeniedModified = true;
+                }
+                if (from.IsActivityNotificationModified && !to.IsActivityNotificationModified)
+                {
+                    to.ActivityNotification = from.ActivityNotification;
+                    to.IsActivityNotificationModified = true;
+                }
+                if (from.IsSubscribedToModified && !to.IsSubscribedToModified)
+                {
+                    to.SubscribedTo = from.SubscribedTo;
+                    to.IsSubscribedToModified = true;
+                }
             }
             else
             {
                 to.IsPersisted = from.IsPersisted;
                 to.UserGroupID = from.UserGroupID;
                 to.UserID = from.UserID;
+                to.AccessDenied = from.AccessDenied;
+                to.IsAccessDeniedModified = from.IsAccessDeniedModified;
+                to.ActivityNotification = from.ActivityNotification;
+                to.IsActivityNotificationModified = from.IsActivityNotificationModified;
+                to.SubscribedTo = from.SubscribedTo;
+                to.IsSubscribedToModified = from.IsSubscribedToModified;
             }
         }
 
@@ -398,6 +611,24 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void UpdateChanges(UserGroupMember newdata)
         {
             int cnt = 0;
+            if (AccessDenied != newdata.AccessDenied)
+            {
+                AccessDenied = newdata.AccessDenied;
+                IsAccessDeniedModified = true;
+                cnt++;
+            }
+            if (ActivityNotification != newdata.ActivityNotification)
+            {
+                ActivityNotification = newdata.ActivityNotification;
+                IsActivityNotificationModified = true;
+                cnt++;
+            }
+            if (SubscribedTo != newdata.SubscribedTo)
+            {
+                SubscribedTo = newdata.SubscribedTo;
+                IsSubscribedToModified = true;
+                cnt++;
+            }
             IsEntityChanged = cnt > 0;
         }
 
@@ -407,6 +638,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void NormalizeValues()
         {
             StartAutoUpdating = false;
+            if (!IsEntityChanged)
+                IsEntityChanged = IsAccessDeniedModified || IsActivityNotificationModified || IsSubscribedToModified;
             StartAutoUpdating = true;
         }
 
@@ -427,6 +660,21 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.StartAutoUpdating = false;
             e.UserGroupID = UserGroupID;
             e.UserID = UserID;
+            e.AccessDenied = AccessDenied;
+            if (preserveState)
+                e.IsAccessDeniedModified = IsAccessDeniedModified;
+            else
+                e.IsAccessDeniedModified = false;
+            e.ActivityNotification = ActivityNotification;
+            if (preserveState)
+                e.IsActivityNotificationModified = IsActivityNotificationModified;
+            else
+                e.IsActivityNotificationModified = false;
+            e.SubscribedTo = SubscribedTo;
+            if (preserveState)
+                e.IsSubscribedToModified = IsSubscribedToModified;
+            else
+                e.IsSubscribedToModified = false;
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;
             if (preserveState)
@@ -451,6 +699,24 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
   UserID = '" + UserID + @"'");
             sb.Append(@" (natural id)");
             sb.Append(@"
+  AccessDenied = " + (AccessDenied.HasValue ? AccessDenied.Value.ToString() : "null") + @"");
+            if (IsAccessDeniedModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  ActivityNotification = " + (ActivityNotification.HasValue ? ActivityNotification.Value.ToString() : "null") + @"");
+            if (IsActivityNotificationModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  SubscribedTo = " + (SubscribedTo.HasValue ? SubscribedTo.Value.ToString() : "null") + @"");
+            if (IsSubscribedToModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
 ");
             return sb.ToString();
         }
@@ -461,6 +727,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="UserGroupMember" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class UserGroupMemberUpdateResult : IUpdateResult
     {
         /// <summary>

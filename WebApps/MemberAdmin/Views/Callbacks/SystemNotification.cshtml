@@ -17,15 +17,22 @@
     <script type="text/javascript">
         $(function () {
             var notice = $.connection.notificationHub;
-            notice.client.serverNotifications = function (msgs, categs) {
-                if (parent && parent.serverNotifications) {
-                    parent.serverNotifications(msgs, categs);
+            notice.client.serverNotifications = function (typeId, msgs, categs) {
+                if (parent && typeof parent.serverNotifications != 'undefined') {
+                    parent.serverNotifications(typeId, msgs, categs, __chat_invitation_handler);
                 }
             };
             $.connection.hub.start().done(function () {
-
+                isChatHubStarted = true;
             });
         });
+
+        var isChatHubStarted = false;
+
+        function __chat_invitation_handler(respType, peerId, connectionId, msg) {
+            var chat = $.connection.privateChatHub;
+            chat.server.userConnectResponse(respType, peerId, connectionId, msg);
+        }
     </script>
 }
 </body>

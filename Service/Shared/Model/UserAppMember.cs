@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -63,6 +64,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Email</term>
     ///      <description>See <see cref="UserAppMember.Email" />. Editable; not null; max-length = 128 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>AcceptChatInvitation</term>
+    ///      <description>See <see cref="UserAppMember.AcceptChatInvitation" />. Editable; nullable.</description>
     ///    </item>
     ///    <item>
     ///      <term>AcceptLanguages</term>
@@ -138,6 +143,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class UserAppMember : IDbEntity 
     {
         /// <summary>
@@ -200,6 +206,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 str += "UserID = " + UserID + "\r\n";
                 if (IsEmailModified)
                     str += "Modified [Email] = " + Email + "\r\n";
+                if (IsAcceptChatInvitationModified)
+                    str += "Modified [AcceptChatInvitation] = " + AcceptChatInvitation + "\r\n";
                 if (IsAcceptLanguagesModified)
                     str += "Modified [AcceptLanguages] = " + AcceptLanguages + "\r\n";
                 if (IsCommentModified)
@@ -269,6 +277,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public UserAppMember()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public UserAppMember(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(UserAppMember));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as UserAppMember;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(UserAppMember));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
 
 #region Properties of the current entity
 
@@ -359,6 +408,48 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isEmailModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> AcceptChatInvitation
+        { 
+            get
+            {
+                return _AcceptChatInvitation;
+            }
+            set
+            {
+                if (_AcceptChatInvitation != value)
+                {
+                    _AcceptChatInvitation = value;
+                    if (StartAutoUpdating)
+                        IsAcceptChatInvitationModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _AcceptChatInvitation = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="AcceptChatInvitation" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="AcceptChatInvitation" /> only if this is set to true no matter what
+        /// the actual value of <see cref="AcceptChatInvitation" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsAcceptChatInvitationModified
+        { 
+            get
+            {
+                return _isAcceptChatInvitationModified;
+            }
+            set
+            {
+                _isAcceptChatInvitationModified = value;
+            }
+        }
+        private bool _isAcceptChatInvitationModified = false;
 
         /// <summary>
         /// Meta-info: editable; nullable; max-length = 50 characters.
@@ -961,6 +1052,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.Email = from.Email;
                     to.IsEmailModified = true;
                 }
+                if (from.IsAcceptChatInvitationModified && !to.IsAcceptChatInvitationModified)
+                {
+                    to.AcceptChatInvitation = from.AcceptChatInvitation;
+                    to.IsAcceptChatInvitationModified = true;
+                }
                 if (from.IsAcceptLanguagesModified && !to.IsAcceptLanguagesModified)
                 {
                     to.AcceptLanguages = from.AcceptLanguages;
@@ -1014,6 +1110,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.UserID = from.UserID;
                 to.Email = from.Email;
                 to.IsEmailModified = from.IsEmailModified;
+                to.AcceptChatInvitation = from.AcceptChatInvitation;
+                to.IsAcceptChatInvitationModified = from.IsAcceptChatInvitationModified;
                 to.AcceptLanguages = from.AcceptLanguages;
                 to.IsAcceptLanguagesModified = from.IsAcceptLanguagesModified;
                 to.Comment = from.Comment;
@@ -1048,6 +1146,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 Email = newdata.Email;
                 IsEmailModified = true;
+                cnt++;
+            }
+            if (AcceptChatInvitation != newdata.AcceptChatInvitation)
+            {
+                AcceptChatInvitation = newdata.AcceptChatInvitation;
+                IsAcceptChatInvitationModified = true;
                 cnt++;
             }
             if (AcceptLanguages != newdata.AcceptLanguages)
@@ -1128,7 +1232,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (Email == null)
                 Email = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsEmailModified || IsAcceptLanguagesModified || IsCommentModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
+                IsEntityChanged = IsEmailModified || IsAcceptChatInvitationModified || IsAcceptLanguagesModified || IsCommentModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
             if (IsCommentModified && !IsCommentLoaded)
                 IsCommentLoaded = true;
             if (IsIconImgModified && !IsIconImgLoaded)
@@ -1158,6 +1262,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsEmailModified = IsEmailModified;
             else
                 e.IsEmailModified = false;
+            e.AcceptChatInvitation = AcceptChatInvitation;
+            if (preserveState)
+                e.IsAcceptChatInvitationModified = IsAcceptChatInvitationModified;
+            else
+                e.IsAcceptChatInvitationModified = false;
             e.AcceptLanguages = AcceptLanguages;
             if (preserveState)
                 e.IsAcceptLanguagesModified = IsAcceptLanguagesModified;
@@ -1236,6 +1345,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
+  AcceptChatInvitation = " + (AcceptChatInvitation.HasValue ? AcceptChatInvitation.Value.ToString() : "null") + @"");
+            if (IsAcceptChatInvitationModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
   AcceptLanguages = '" + (AcceptLanguages != null ? AcceptLanguages : "null") + @"'");
             if (IsAcceptLanguagesModified)
                 sb.Append(@" (modified)");
@@ -1288,6 +1403,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="UserAppMember" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class UserAppMemberUpdateResult : IUpdateResult
     {
         /// <summary>

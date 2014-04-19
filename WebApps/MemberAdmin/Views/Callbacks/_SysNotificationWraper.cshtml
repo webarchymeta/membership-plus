@@ -1,43 +1,75 @@
 ﻿@using Archymeta.Web.Security.Resources;
 <script type="text/javascript">
-    function serverNotifications(msgs, categs) {
-        $("#system-alert").removeClass("notice");
-        $("#system-alert").addClass("notice-alert");
-        var _msgs = msgs.sort(function (a, b) { return b.priority - a.priority; });
-        var txt = '<ul class="notice-brief">\r\n';
-        for (var i = 0; i < _msgs.length; i++) {
-            txt += '    <li>' + _msgs[i].title + '</li>\r\n';
-        }
-        txt += '</ul>';
-        if (categs.length > 0) {
-            txt += '\r\n<div>\r\n';
-            for (var i = 0; i < categs.length; i++) {
-                txt += '<fieldset><legend>' + categs[i].name + '</legend><ul class="notice-brief">\r\n';
-                for (var j = 0; j < categs[i].list.length; j++) {
-                    txt += '<li>' + categs[i].list[j].title + '</li>\r\n';
+    function serverNotifications(typeId, msgs, categs, callback) {
+        switch (typeId) {
+            case 1:
+                {
+                    $("#system-alert").removeClass("notice");
+                    $("#system-alert").addClass("notice-alert");
+                    var _msgs = msgs.sort(function (a, b) { return b.priority - a.priority; });
+                    var txt = '<ul class="notice-brief">\r\n';
+                    for (var i = 0; i < _msgs.length; i++) {
+                        txt += '    <li>' + _msgs[i].title + '</li>\r\n';
+                    }
+                    txt += '</ul>';
+                    if (categs.length > 0) {
+                        txt += '\r\n<div>\r\n';
+                        for (var i = 0; i < categs.length; i++) {
+                            txt += '<fieldset><legend>' + categs[i].name + '</legend><ul class="notice-brief">\r\n';
+                            for (var j = 0; j < categs[i].list.length; j++) {
+                                txt += '<li>' + categs[i].list[j].title + '</li>\r\n';
+                            }
+                            txt += '</ul></fieldset>\r\n';
+                        }
+                        txt += '</div>';
+                    }
+                    $("#system-alert").qtip({
+                        overwrite: true,
+                        content: {
+                            title: '@ResourceUtils.GetString("7c2dacaa9087a974daac882c90ec1e65", "System notifications")',
+                            text: txt
+                        },
+                        position: {
+                            my: 'right top',
+                            at: 'bottom left',
+                        }
+                    });
+                    $.jGrowl(txt, { sticky: true });
                 }
-                txt += '</ul></fieldset>\r\n';
-            }
-            txt += '</div>';
+                break;
+            case 2:
+                break;
+            case 3:
+                {
+                    __chat_invitation_handler = callback;
+                    msg = JSON.parse(msgs);
+                    var text = '<div class="chat-invitation">' +
+                                    '<div class="msg"><span>' + msg.msg + '</span</div>' +
+                                    '<div class="response"><input id="resp-msg" type="text" /></div>' +
+                                    '<div class="action">' +
+                                        '<a href="#" onclick="javascript:chat_invitation_handler(1, \'' + msg.peerId + '\', \'' + msg.connectId + '\')" >Accept</a>' +
+                                        '<a href="#" onclick="javascript:chat_invitation_handler(2, \'' + msg.peerId + '\', \'' + msg.connectId + '\')" >Hold</a>' +
+                                        '<a href="#" onclick="javascript:chat_invitation_handler(3, \'' + msg.peerId + '\', \'' + msg.connectId + '\')" >Busy</a>' +
+                                        '<a href="#" onclick="javascript:chat_invitation_handler(4, \'' + msg.peerId + '\', \'' + msg.connectId + '\')" >Reject</a>' +
+                                     '</div>' +
+                               '</div>';
+                    $.jGrowl(text, { sticky: true });
+                }
+                break;
         }
-        $("#system-alert").qtip({
-            overwrite: true,
-            content: {
-                title: '@ResourceUtils.GetString("7c2dacaa9087a974daac882c90ec1e65", "System notifications")',
-                text: txt
-            },
-            position: {
-                my: 'right top',
-                at: 'bottom left',
-            }
-        });
-        $.jGrowl(txt, { sticky: true });
         if (typeof handleNotification != 'undefined') {
             handelNotification(_msgs);
         }
     }
+
+    var __chat_invitation_handler = null;
+
+    function chat_invitation_handler(respType, peerId, connectionId) {
+        if (__chat_invitation_handler != null) {
+            var msg = $("#resp-msg").val();
+            __chat_invitation_handler(respType, peerId, connectionId, msg);
+        }
+    }
+
 </script>
-<fieldset>
-    <legend></legend>
-</fieldset>
 <iframe src="@Url.Content("~/Callbacks/SystemNotification")" style="display:none; height:0px;width:0px;"></iframe>

@@ -77,7 +77,24 @@ namespace MemberAdminMvc5.Controllers
         public async Task<ActionResult> LogOff()
         {
             string langs = Request.Headers["Accept-Language"];
-            await ConnectionContext.UserConnectionClosed(User.Identity.GetUserId(), langs);
+            var callbacks = await ConnectionContext.UserConnectionClosed(User.Identity.GetUserId(), langs);
+            // handle group chat ...
+            {
+                var gchub = new SignalRHubs.GroupChatHub();
+                var nhub = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<SignalRHubs.GroupChatHub>();
+                if (nhub != null)
+                {
+                    foreach (var c in from d in callbacks where d.HubID == gchub.HubIdentity select d)
+                    {
+                        var peers = await GroupChatContext.ListConnectIds(gchub.HubIdentity, c.ChannelID);
+                        if (peers.Length > 0)
+                        {
+                            var cids = (from d in peers select d.ConnectionID).ToArray();
+                            nhub.Clients.Clients(cids).userDisConnected(GroupChatContext.GetJsonPeer(c));
+                        }
+                    }
+                }
+            }
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }

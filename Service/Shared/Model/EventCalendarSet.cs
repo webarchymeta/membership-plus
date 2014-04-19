@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing possible combination of foreign key constraint of the data set of "EventCalendar".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class EventCalendarSetConstraints
     {
         /// <summary>
@@ -112,6 +113,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a limited set of available constraints of "EventCalendar".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class EventCalendarSetConstraintsColl
     {
         /// <summary>
@@ -151,6 +153,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "EventCalendar".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class EventCalendarSet
     {
         /// <summary>

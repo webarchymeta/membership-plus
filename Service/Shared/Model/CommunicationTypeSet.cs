@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "CommunicationTypes".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class CommunicationTypeSet
     {
         /// <summary>

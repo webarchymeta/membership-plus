@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A enumeration of data entity sets.
     /// </summary>
     [DataContract]
+    [Serializable]
     public enum EntitySetType
     {
         /// <summary>
@@ -98,6 +99,26 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [EnumMember]
         Role,
+        /// <summary>
+        /// It represents data set <c>ShortMessageAttachments</c> (see <see cref="ShortMessageAttachment" />).
+        /// </summary>
+        [EnumMember]
+        ShortMessageAttachment,
+        /// <summary>
+        /// It represents data set <c>ShortMessageAudiences</c> (see <see cref="ShortMessageAudience" />).
+        /// </summary>
+        [EnumMember]
+        ShortMessageAudience,
+        /// <summary>
+        /// It represents data set <c>ShortMessages</c> (see <see cref="ShortMessage" />).
+        /// </summary>
+        [EnumMember]
+        ShortMessage,
+        /// <summary>
+        /// It represents data set <c>ShortMessageTypes</c> (see <see cref="ShortMessageType" />).
+        /// </summary>
+        [EnumMember]
+        ShortMessageType,
         /// <summary>
         /// It represents data set <c>SignalRHostStates</c> (see <see cref="SignalRHostState" />).
         /// </summary>
@@ -185,6 +206,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// </summary>
     [Flags]
     [DataContract]
+    [Serializable]
     public enum EntityOpStatus
     {
         [EnumMember]
@@ -244,6 +266,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// Correlated sets info.
     /// </summary>
     [DataContract]
+    [Serializable]
     public class EntitySetRelation
     {
     /// <summary>
@@ -275,6 +298,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  The type of the foreign key.
     /// </typeparam>
     [DataContract]
+    [Serializable]
     public class ForeignKeyData<T>
     {
         /// <summary>
@@ -300,6 +324,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// An pointer to a non-empty constraint.
     /// </summary>
     [DataContract]
+    [Serializable]
     public class ConstraintsPtr
     {
         /// <summary>
@@ -333,6 +358,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// the system could be configured to only cover a part of an entire relational data source and some entity sets becomes local root ones.
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class RootFKInfo
     {
         /// <summary>
@@ -374,6 +400,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// the system could be configured to only cover a part of an entire relational data source and some entity sets becomes local root ones.
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class RootEntityInfo
     {
         /// <summary>
@@ -416,6 +443,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A class representing a relational data source.
     /// </summary>
     [DataContract]
+    [Serializable]
     public class DBInformation
     {
         /// <summary>
@@ -464,6 +492,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     lk.Clear();
                     l.Add(item);
                     item = new RootEntityInfo{ EntityName = "MemberNotificationType", TrueRoot = true };
+                    item.Fkeys = lk.ToArray();
+                    lk.Clear();
+                    l.Add(item);
+                    item = new RootEntityInfo{ EntityName = "ShortMessageType", TrueRoot = true };
                     item.Fkeys = lk.ToArray();
                     lk.Clear();
                     l.Add(item);
@@ -565,6 +597,25 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private MemberNotificationTypeSet _MemberNotificationTypes = null;
+
+        /// <summary>
+        /// Root entity set <see cref="ShortMessageTypeSet" />. See also <see cref="RootEntityInfo" />.
+        /// </summary>
+        [DataMember]
+        public ShortMessageTypeSet ShortMessageTypes
+        {
+            get
+            {
+                if (_ShortMessageTypes == null)
+                    _ShortMessageTypes = new ShortMessageTypeSet();
+                return _ShortMessageTypes;
+            }
+            set
+            {
+                _ShortMessageTypes = value;
+            }
+        }
+        private ShortMessageTypeSet _ShortMessageTypes = null;
 
         /// <summary>
         /// Root entity set <see cref="UserAssociationTypeSet" />. See also <see cref="RootEntityInfo" />.

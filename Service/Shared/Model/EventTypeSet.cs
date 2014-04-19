@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "EventTypes".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class EventTypeSet
     {
         /// <summary>

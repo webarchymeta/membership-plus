@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a block of pages.
     /// </summary>
     [DataContract]
+    [Serializable]
     public class CommunicationPageBlock
     {
         /// <summary>
@@ -86,6 +87,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a page of entity <see cref="Communication" />.
     /// </summary>
     [DataContract]
+    [Serializable]
     public class CommunicationPage
     {
         /// <summary>

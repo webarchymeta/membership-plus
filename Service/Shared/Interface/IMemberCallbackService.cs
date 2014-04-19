@@ -490,9 +490,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         UserAppMember MaterializeUserAppMemberRef(CallContext cntx, MemberCallback entity);
 
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Primary key <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
@@ -505,12 +506,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByKey")]
-        MemberCallback LoadEntityByKey(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
+        MemberCallback LoadEntityByKey(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID);
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Primary key <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
@@ -549,12 +551,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityGraphRecurs")]
-        MemberCallback LoadEntityGraphRecurs(CallContext cntx, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        MemberCallback LoadEntityGraphRecurs(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Intrinsic id <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Intrinsic id <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Intrinsic id <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Intrinsic id <see cref="MemberCallback.UserID" />.</param>
@@ -572,7 +575,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByNature")]
-        List<MemberCallback> LoadEntityByNature(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
+        List<MemberCallback> LoadEntityByNature(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID);
 
         /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
@@ -1265,9 +1268,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Primary key <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
@@ -1275,12 +1279,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity found.
         /// </returns>
         [OperationContract]
-        MemberCallback LoadEntityByKey(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
+        MemberCallback LoadEntityByKey(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
+        ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Primary key <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
@@ -1288,13 +1293,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity found.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<MemberCallback> LoadEntityByKeyAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
+        System.Threading.Tasks.Task<MemberCallback> LoadEntityByKeyAsync(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID);
 #endif
 
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Primary key <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
@@ -1328,12 +1334,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity graph found.
         /// </returns>
         [OperationContract]
-        MemberCallback LoadEntityGraphRecurs(CallContext cntx, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        MemberCallback LoadEntityGraphRecurs(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
+        ///  Load a selected entity graph from the data source starting at an entity having specified primary key(s): { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Primary key <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Primary key <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Primary key <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Primary key <see cref="MemberCallback.UserID" />.</param>
@@ -1367,13 +1374,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or the entity graph found.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<MemberCallback> LoadEntityGraphRecursAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
+        System.Threading.Tasks.Task<MemberCallback> LoadEntityGraphRecursAsync(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 #endif
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Intrinsic id <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Intrinsic id <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Intrinsic id <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Intrinsic id <see cref="MemberCallback.UserID" />.</param>
@@ -1386,12 +1394,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
-        List<MemberCallback> LoadEntityByNature(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
+        List<MemberCallback> LoadEntityByNature(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="MemberCallback.ChannelID" />, <see cref="MemberCallback.HubID" />, <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChannelID">Intrinsic id <see cref="MemberCallback.ChannelID" />.</param>
         /// <param name="_HubID">Intrinsic id <see cref="MemberCallback.HubID" />.</param>
         /// <param name="_ApplicationID">Intrinsic id <see cref="MemberCallback.ApplicationID" />.</param>
         /// <param name="_UserID">Intrinsic id <see cref="MemberCallback.UserID" />.</param>
@@ -1404,7 +1413,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   Null or zero or one entity.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<List<MemberCallback>> LoadEntityByNatureAsync(CallContext cntx, string _HubID, string _ApplicationID, string _UserID);
+        System.Threading.Tasks.Task<List<MemberCallback>> LoadEntityByNatureAsync(CallContext cntx, string _ChannelID, string _HubID, string _ApplicationID, string _UserID);
 #endif
 
         /// <summary>

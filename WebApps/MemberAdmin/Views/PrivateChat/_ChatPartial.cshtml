@@ -1,0 +1,22 @@
+﻿<!-- ko if: status() == 'Notifiable' || status == 'MessageSent' -->
+<div class="row wait-block">
+    <div class="col-sm-7">
+        <div class="wait-anim">
+            <canvas id='WaitArea' width="800" height="800"></canvas>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <div class="resp-messages">
+            <ul data-bind="foreach: respondMsgs">
+                <li><span data-bind="text: msg"></span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
+<script type="text/javascript">
+    appRoot = '@Url.Content("~/")';
+    appName = '@ViewBag.AppName';
+    userId = '@ViewBag.UserID';
+    peerId = '@ViewBag.PeerID';
+</script>

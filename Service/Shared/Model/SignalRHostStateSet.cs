@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing possible combination of foreign key constraint of the data set of "SignalRHostStates".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class SignalRHostStateSetConstraints
     {
         /// <summary>
@@ -76,6 +77,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a limited set of available constraints of "SignalRHostStates".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class SignalRHostStateSetConstraintsColl
     {
         /// <summary>
@@ -115,6 +117,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "SignalRHostStates".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class SignalRHostStateSet
     {
         /// <summary>

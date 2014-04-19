@@ -25,6 +25,8 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     return ResourceUtils.GetString("d8987bcb34881d89920c06a08a5b26f2", "Admin Status Changed", acceptLangs);
                 case 2:
                     return ResourceUtils.GetString("a644e8cd597f2b92aa52861632c0363e", "New Messages", acceptLangs);
+                case 3:
+                    return ResourceUtils.GetString("1ff98aa30fa8b84e5e2bfba04ee67438", "Chat Invitation", acceptLangs);
             }
             return type.TypeName;
         }
@@ -135,7 +137,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             return json;
         }
 
-        public static async Task<List<MemberNotificationType>> GetRecentCategorized(string userId, SimpleMessage[] msgs, int max)
+        public static async Task<List<MemberNotificationType>> GetRecentCategorized(string userId, SimpleMessage[] msgs, int? typeId, int max)
         {
             var cntx = Cntx;
             MembershipPlusServiceProxy svc = new MembershipPlusServiceProxy();
@@ -146,6 +148,8 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             DateTime dt = DateTime.UtcNow.AddDays(-1);
             foreach (var categ in categs)
             {
+                if (typeId.HasValue && categ.ID != typeId.Value)
+                    continue;
                 var cond = new MemberNotificationSetConstraints
                 {
                     ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = AppId },
