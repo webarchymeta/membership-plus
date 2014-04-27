@@ -323,6 +323,9 @@ namespace Archymeta.Web.Security
                 await usvc.AddOrUpdateEntitiesAsync(cctx, new UserSet(), new User[] { u });
                 memb.LastActivityDate = u.LastLoginDate;
                 memb.IsLastActivityDateModified = true;
+#if MemberPlus
+                memb.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];
+#endif
                 await mbsvc.AddOrUpdateEntitiesAsync(cctx, membs, new UserAppMember[] { memb });
             }
             return found;

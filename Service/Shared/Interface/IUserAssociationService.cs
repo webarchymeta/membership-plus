@@ -137,6 +137,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Delay Loaded Properties</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Properties that are loaded on demand.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (loading)</term>
+    ///      <description>
+    ///         <see cref="IUserAssociationService.LoadEntityAssocMemo" />
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (uploading)</term>
+    ///      <description>
+    ///         <see cref="IUserAssociationService.UpdateEntityAssocMemo" />
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Upstream Navigation</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -633,6 +656,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         List<UserAssociation> LoadEntityByNature(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID);
 
         /// <summary>
+        ///  Load the delay loaded property <see cref="UserAssociation.AssocMemo" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/LoadEntityAssocMemo")]
+        string LoadEntityAssocMemo(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID);
+
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserAssociation.AssocMemo" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/UpdateEntityAssocMemo")]
+        void UpdateEntityAssocMemo(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID, string data);
+
+        /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -775,6 +839,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>Methods</term>
     ///      <description>
     ///         <see cref="IUserAssociationService2.GetNextSorterOps" /> and <see cref="IUserAssociationService2.GetNextFilterOps" />.
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
+    ///       <term>Delay Loaded Properties</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Properties that are loaded on demand.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (loading)</term>
+    ///      <description>
+    ///         <see cref="IUserAssociationService2.LoadEntityAssocMemo" />
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (uploading)</term>
+    ///      <description>
+    ///         <see cref="IUserAssociationService2.UpdateEntityAssocMemo" />
     ///      </description>
     ///    </item>
     ///  </list>
@@ -1552,6 +1639,70 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<List<UserAssociation>> LoadEntityByNatureAsync(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID);
+#endif
+
+        /// <summary>
+        ///  Load the delay loaded property <see cref="UserAssociation.AssocMemo" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        string LoadEntityAssocMemo(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Load the delay loaded property <see cref="UserAssociation.AssocMemo" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<string> LoadEntityAssocMemoAsync(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID);
+#endif
+
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserAssociation.AssocMemo" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        void UpdateEntityAssocMemo(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID, string data);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserAssociation.AssocMemo" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task UpdateEntityAssocMemoAsync(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID, string data);
 #endif
 
         /// <summary>

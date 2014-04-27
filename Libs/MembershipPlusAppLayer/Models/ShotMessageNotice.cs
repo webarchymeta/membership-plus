@@ -16,4 +16,10 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Models
         public List<MemberCallback> callbacks;
     }
 
+    public class PeerShotMessage
+    {
+        public string msg;
+        public MemberCallback peer;
+    }
+
 }

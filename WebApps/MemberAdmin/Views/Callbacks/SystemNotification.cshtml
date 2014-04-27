@@ -24,6 +24,7 @@
             };
             $.connection.hub.start().done(function () {
                 isChatHubStarted = true;
+                parent.__systemNotifier = notice.server;
             });
         });
 

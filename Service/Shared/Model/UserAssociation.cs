@@ -79,8 +79,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Editable properties</term><description>Description</description>
     ///    </listheader>
     ///    <item>
+    ///      <term>AssocCount</term>
+    ///      <description>See <see cref="UserAssociation.AssocCount" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>AssocMemo</term>
-    ///      <description>See <see cref="UserAssociation.AssocMemo" />. Editable; nullable; max-length = 50 characters.</description>
+    ///      <description>See <see cref="UserAssociation.AssocMemo" />. Editable; nullable; load delayed; max-length = 500 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>InteractCount</term>
+    ///      <description>See <see cref="UserAssociation.InteractCount" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>LastAssoc</term>
+    ///      <description>See <see cref="UserAssociation.LastAssoc" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>LastInteract</term>
+    ///      <description>See <see cref="UserAssociation.LastInteract" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Votes</term>
+    ///      <description>See <see cref="UserAssociation.Votes" />. Editable; nullable.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -181,8 +201,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 str += "FromUserID = " + FromUserID + "\r\n";
                 str += "ToUserID = " + ToUserID + "\r\n";
                 str += "TypeID = " + TypeID + "\r\n";
+                if (IsAssocCountModified)
+                    str += "Modified [AssocCount] = " + AssocCount + "\r\n";
                 if (IsAssocMemoModified)
-                    str += "Modified [AssocMemo] = " + AssocMemo + "\r\n";;
+                    str += "Modified [AssocMemo] = " + AssocMemo + "\r\n";
+                if (IsInteractCountModified)
+                    str += "Modified [InteractCount] = " + InteractCount + "\r\n";
+                if (IsLastAssocModified)
+                    str += "Modified [LastAssoc] = " + LastAssoc + "\r\n";
+                if (IsLastInteractModified)
+                    str += "Modified [LastInteract] = " + LastInteract + "\r\n";
+                if (IsVotesModified)
+                    str += "Modified [Votes] = " + Votes + "\r\n";;
                 return str.Trim();
             }
         }
@@ -369,10 +399,52 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private DateTime _CreateDate = default(DateTime);
 
         /// <summary>
-        /// Meta-info: editable; nullable; max-length = 50 characters.
+        /// Meta-info: editable; nullable.
         /// </summary>
         [Editable(true)]
-        [StringLength(50)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<int> AssocCount
+        { 
+            get
+            {
+                return _AssocCount;
+            }
+            set
+            {
+                if (_AssocCount != value)
+                {
+                    _AssocCount = value;
+                    if (StartAutoUpdating)
+                        IsAssocCountModified = true;
+                }
+            }
+        }
+        private System.Nullable<int> _AssocCount = default(System.Nullable<int>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="AssocCount" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="AssocCount" /> only if this is set to true no matter what
+        /// the actual value of <see cref="AssocCount" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsAssocCountModified
+        { 
+            get
+            {
+                return _isAssocCountModified;
+            }
+            set
+            {
+                _isAssocCountModified = value;
+            }
+        }
+        private bool _isAssocCountModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable; load delayed; max-length = 500 characters.
+        /// </summary>
+        [Editable(true)]
+        [StringLength(500)]
         [DataMember(IsRequired = false)]
         public string AssocMemo
         { 
@@ -410,6 +482,192 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isAssocMemoModified = false;
+
+        /// <summary>
+        /// Wether or not the value of the delay loaded "AssocMemo" is Loaded. Clients are responsible for keeping 
+        /// track of loading status of delay loading properties.
+        /// </summary>
+        [DataMember]
+        public bool IsAssocMemoLoaded
+        { 
+            get
+            {
+                return _isAssocMemoLoaded;
+            }
+            set
+            {
+                _isAssocMemoLoaded = value;
+            }
+        }
+        private bool _isAssocMemoLoaded = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<int> InteractCount
+        { 
+            get
+            {
+                return _InteractCount;
+            }
+            set
+            {
+                if (_InteractCount != value)
+                {
+                    _InteractCount = value;
+                    if (StartAutoUpdating)
+                        IsInteractCountModified = true;
+                }
+            }
+        }
+        private System.Nullable<int> _InteractCount = default(System.Nullable<int>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="InteractCount" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="InteractCount" /> only if this is set to true no matter what
+        /// the actual value of <see cref="InteractCount" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsInteractCountModified
+        { 
+            get
+            {
+                return _isInteractCountModified;
+            }
+            set
+            {
+                _isInteractCountModified = value;
+            }
+        }
+        private bool _isInteractCountModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<DateTime> LastAssoc
+        { 
+            get
+            {
+                return _LastAssoc;
+            }
+            set
+            {
+                if (_LastAssoc != value)
+                {
+                    _LastAssoc = value;
+                    if (StartAutoUpdating)
+                        IsLastAssocModified = true;
+                }
+            }
+        }
+        private System.Nullable<DateTime> _LastAssoc = default(System.Nullable<DateTime>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="LastAssoc" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="LastAssoc" /> only if this is set to true no matter what
+        /// the actual value of <see cref="LastAssoc" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsLastAssocModified
+        { 
+            get
+            {
+                return _isLastAssocModified;
+            }
+            set
+            {
+                _isLastAssocModified = value;
+            }
+        }
+        private bool _isLastAssocModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<DateTime> LastInteract
+        { 
+            get
+            {
+                return _LastInteract;
+            }
+            set
+            {
+                if (_LastInteract != value)
+                {
+                    _LastInteract = value;
+                    if (StartAutoUpdating)
+                        IsLastInteractModified = true;
+                }
+            }
+        }
+        private System.Nullable<DateTime> _LastInteract = default(System.Nullable<DateTime>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="LastInteract" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="LastInteract" /> only if this is set to true no matter what
+        /// the actual value of <see cref="LastInteract" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsLastInteractModified
+        { 
+            get
+            {
+                return _isLastInteractModified;
+            }
+            set
+            {
+                _isLastInteractModified = value;
+            }
+        }
+        private bool _isLastInteractModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<int> Votes
+        { 
+            get
+            {
+                return _Votes;
+            }
+            set
+            {
+                if (_Votes != value)
+                {
+                    _Votes = value;
+                    if (StartAutoUpdating)
+                        IsVotesModified = true;
+                }
+            }
+        }
+        private System.Nullable<int> _Votes = default(System.Nullable<int>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="Votes" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="Votes" /> only if this is set to true no matter what
+        /// the actual value of <see cref="Votes" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsVotesModified
+        { 
+            get
+            {
+                return _isVotesModified;
+            }
+            set
+            {
+                _isVotesModified = value;
+            }
+        }
+        private bool _isVotesModified = false;
 
 #endregion
 
@@ -593,10 +851,35 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             if (to.IsPersisted)
             {
+                if (from.IsAssocCountModified && !to.IsAssocCountModified)
+                {
+                    to.AssocCount = from.AssocCount;
+                    to.IsAssocCountModified = true;
+                }
                 if (from.IsAssocMemoModified && !to.IsAssocMemoModified)
                 {
                     to.AssocMemo = from.AssocMemo;
                     to.IsAssocMemoModified = true;
+                }
+                if (from.IsInteractCountModified && !to.IsInteractCountModified)
+                {
+                    to.InteractCount = from.InteractCount;
+                    to.IsInteractCountModified = true;
+                }
+                if (from.IsLastAssocModified && !to.IsLastAssocModified)
+                {
+                    to.LastAssoc = from.LastAssoc;
+                    to.IsLastAssocModified = true;
+                }
+                if (from.IsLastInteractModified && !to.IsLastInteractModified)
+                {
+                    to.LastInteract = from.LastInteract;
+                    to.IsLastInteractModified = true;
+                }
+                if (from.IsVotesModified && !to.IsVotesModified)
+                {
+                    to.Votes = from.Votes;
+                    to.IsVotesModified = true;
                 }
             }
             else
@@ -606,8 +889,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.ToUserID = from.ToUserID;
                 to.TypeID = from.TypeID;
                 to.CreateDate = from.CreateDate;
+                to.AssocCount = from.AssocCount;
+                to.IsAssocCountModified = from.IsAssocCountModified;
                 to.AssocMemo = from.AssocMemo;
                 to.IsAssocMemoModified = from.IsAssocMemoModified;
+                to.InteractCount = from.InteractCount;
+                to.IsInteractCountModified = from.IsInteractCountModified;
+                to.LastAssoc = from.LastAssoc;
+                to.IsLastAssocModified = from.IsLastAssocModified;
+                to.LastInteract = from.LastInteract;
+                to.IsLastInteractModified = from.IsLastInteractModified;
+                to.Votes = from.Votes;
+                to.IsVotesModified = from.IsVotesModified;
             }
         }
 
@@ -620,10 +913,40 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void UpdateChanges(UserAssociation newdata)
         {
             int cnt = 0;
+            if (AssocCount != newdata.AssocCount)
+            {
+                AssocCount = newdata.AssocCount;
+                IsAssocCountModified = true;
+                cnt++;
+            }
             if (AssocMemo != newdata.AssocMemo)
             {
                 AssocMemo = newdata.AssocMemo;
                 IsAssocMemoModified = true;
+                cnt++;
+            }
+            if (InteractCount != newdata.InteractCount)
+            {
+                InteractCount = newdata.InteractCount;
+                IsInteractCountModified = true;
+                cnt++;
+            }
+            if (LastAssoc != newdata.LastAssoc)
+            {
+                LastAssoc = newdata.LastAssoc;
+                IsLastAssocModified = true;
+                cnt++;
+            }
+            if (LastInteract != newdata.LastInteract)
+            {
+                LastInteract = newdata.LastInteract;
+                IsLastInteractModified = true;
+                cnt++;
+            }
+            if (Votes != newdata.Votes)
+            {
+                Votes = newdata.Votes;
+                IsVotesModified = true;
                 cnt++;
             }
             IsEntityChanged = cnt > 0;
@@ -636,7 +959,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             StartAutoUpdating = false;
             if (!IsEntityChanged)
-                IsEntityChanged = IsAssocMemoModified;
+                IsEntityChanged = IsAssocCountModified || IsAssocMemoModified || IsInteractCountModified || IsLastAssocModified || IsLastInteractModified || IsVotesModified;
+            if (IsAssocMemoModified && !IsAssocMemoLoaded)
+                IsAssocMemoLoaded = true;
             StartAutoUpdating = true;
         }
 
@@ -659,11 +984,39 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.ToUserID = ToUserID;
             e.TypeID = TypeID;
             e.CreateDate = CreateDate;
-            e.AssocMemo = AssocMemo;
+            e.AssocCount = AssocCount;
             if (preserveState)
-                e.IsAssocMemoModified = IsAssocMemoModified;
+                e.IsAssocCountModified = IsAssocCountModified;
             else
-                e.IsAssocMemoModified = false;
+                e.IsAssocCountModified = false;
+            e.InteractCount = InteractCount;
+            if (preserveState)
+                e.IsInteractCountModified = IsInteractCountModified;
+            else
+                e.IsInteractCountModified = false;
+            e.LastAssoc = LastAssoc;
+            if (preserveState)
+                e.IsLastAssocModified = IsLastAssocModified;
+            else
+                e.IsLastAssocModified = false;
+            e.LastInteract = LastInteract;
+            if (preserveState)
+                e.IsLastInteractModified = IsLastInteractModified;
+            else
+                e.IsLastInteractModified = false;
+            e.Votes = Votes;
+            if (preserveState)
+                e.IsVotesModified = IsVotesModified;
+            else
+                e.IsVotesModified = false;
+            if (allData)
+            {
+                e.AssocMemo = AssocMemo;
+                if (preserveState)
+                    e.IsAssocMemoModified = IsAssocMemoModified;
+                else
+                    e.IsAssocMemoModified = false;
+            }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;
             if (preserveState)
@@ -692,8 +1045,32 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@" (natural id)");
             sb.Append(@"
   CreateDate = " + CreateDate + @"
-  AssocMemo = '" + (AssocMemo != null ? AssocMemo : "null") + @"'");
-            if (IsAssocMemoModified)
+  AssocCount = " + (AssocCount.HasValue ? AssocCount.Value.ToString() : "null") + @"");
+            if (IsAssocCountModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  InteractCount = " + (InteractCount.HasValue ? InteractCount.Value.ToString() : "null") + @"");
+            if (IsInteractCountModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  LastAssoc = " + (LastAssoc.HasValue ? LastAssoc.Value.ToString() : "null") + @"");
+            if (IsLastAssocModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  LastInteract = " + (LastInteract.HasValue ? LastInteract.Value.ToString() : "null") + @"");
+            if (IsLastInteractModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  Votes = " + (Votes.HasValue ? Votes.Value.ToString() : "null") + @"");
+            if (IsVotesModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");

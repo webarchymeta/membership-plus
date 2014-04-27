@@ -139,6 +139,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Delay Loaded Properties</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Properties that are loaded on demand.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (loading)</term>
+    ///      <description>
+    ///         <see cref="UserAssociationServiceProxy.LoadEntityAssocMemo" />
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (uploading)</term>
+    ///      <description>
+    ///         <see cref="UserAssociationServiceProxy.UpdateEntityAssocMemo" />
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Upstream Navigation</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -1382,6 +1405,110 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 HandleError(ex);
                 return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///  Load the delay loaded property <see cref="UserAssociation.AssocMemo" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        public string LoadEntityAssocMemo(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID)
+        {
+            try
+            {
+                return Channel.LoadEntityAssocMemo(cntx, _FromUserID, _ToUserID, _TypeID);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Load the delay loaded property <see cref="UserAssociation.AssocMemo" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        public async System.Threading.Tasks.Task<string> LoadEntityAssocMemoAsync(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID)
+        {
+            try
+            {
+                return await Channel.LoadEntityAssocMemoAsync(cntx, _FromUserID, _ToUserID, _TypeID);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserAssociation.AssocMemo" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        public void UpdateEntityAssocMemo(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID, string data)
+        {
+            try
+            {
+                Channel.UpdateEntityAssocMemo(cntx, _FromUserID, _ToUserID, _TypeID, data);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserAssociation.AssocMemo" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_FromUserID">Primary key <see cref="UserAssociation.FromUserID" />.</param>
+        /// <param name="_ToUserID">Primary key <see cref="UserAssociation.ToUserID" />.</param>
+        /// <param name="_TypeID">Primary key <see cref="UserAssociation.TypeID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        public async System.Threading.Tasks.Task UpdateEntityAssocMemoAsync(CallContext cntx, string _FromUserID, string _ToUserID, int _TypeID, string data)
+        {
+            try
+            {
+                await Channel.UpdateEntityAssocMemoAsync(cntx, _FromUserID, _ToUserID, _TypeID, data);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
             }
         }
 #endif

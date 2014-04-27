@@ -22,6 +22,23 @@ namespace MemberAdminMvc5.SignalRHubs
         {
             get { return "SystemNotification"; }
         }
+
+        public async Task UserCancelInteraction(string PeerId)
+        {
+            var langs = Context.Request.Headers["Accept-Language"];
+            var status = await PrivateChatContext.UserCancelInteraction(
+                                       HubIdentity,
+                                       (new PrivateChatHub()).HubIdentity,
+                                       PeerId,
+                                       UserId,
+                                       Context.ConnectionId,
+                                       langs);
+            if (status != null && status.peerNotifier != null)
+            {
+                var nhub = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+                nhub.Clients.Client(status.peerNotifier.ConnectionID).serverNotifications(3, status.noticeMsg, new dynamic[] { });
+            }
+        }
     }
 }
 #endif

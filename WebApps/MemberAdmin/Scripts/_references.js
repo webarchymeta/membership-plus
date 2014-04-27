@@ -227,3 +227,7 @@
 /// <reference path="app/groupchatroom.js" />
 /// <reference path="app/privatechatpage.js" />
 /// <reference path="app/privatechatsearch.js" />
+/// <reference path="ckeditor/lang/tt.js" />
+/// <reference path="ckeditor/plugins/a11yhelp/dialogs/lang/tt.js" />
+/// <reference path="ckeditor/plugins/specialchar/dialogs/lang/tt.js" />
+/// <reference path="app/groupprivatechat.js" />

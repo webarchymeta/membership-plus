@@ -11,13 +11,16 @@
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/ionicons")
 </head>
-<body>
+<body class="popup">
     @Html.Partial("_ChatPartial")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/signalR")
-    <script src="/signalr/hubs"></script>
+    <script src="@Url.Content("~/signalr/hubs")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/App/PrivateChatPage.js")"></script>
+    <script type="text/javascript">
+        popupMode = true;
+    </script>
 </body>
 </html>

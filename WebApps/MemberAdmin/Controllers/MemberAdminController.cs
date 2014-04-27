@@ -71,15 +71,11 @@ namespace MemberAdminMvc5.Controllers
         [Authorize(Roles = "Administrators")]
         public ActionResult OnlineUsers()
         {
-            string val = ConfigurationManager.AppSettings["OnlineUserInactiveTimeInMinutes"] == null ? "20" : ConfigurationManager.AppSettings["OnlineUserInactiveTimeInMinutes"];
-            int minutes;
-            if (!int.TryParse(val, out minutes))
-                minutes = 20;
             var svc = new MembershipPlusServiceProxy();
             string filter = "UserAppMember.Application_Ref.ID == \"" + ApplicationContext.App.ID + "\" && ( UserAppMember.SearchListing is null || UserAppMember.SearchListing == true ) && ";
             filter += "UserAppMember.ConnectionID is not null && UserAppMember.LastActivityDate > ";
             ViewBag.SetFilter = filter;
-            ViewBag.TimeWindow = minutes;
+            ViewBag.TimeWindow = ApplicationContext.OnlineUserInactiveTime;
             ViewBag.AppNam = ApplicationContext.App.Name;
             return View();
         }

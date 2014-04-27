@@ -260,6 +260,66 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             return m;
         }
 
+        public static async Task<string[]> LoadMessages(string groupId, string userId, int maxMessages, bool dialog)
+        {
+            var gsvc = new UserGroupServiceProxy();
+            var svc = new MembershipPlusServiceProxy();
+            var msgsvc = new ShortMessageServiceProxy();
+            var cntx = Cntx;
+            var g = await gsvc.LoadEntityByKeyAsync(cntx, groupId);
+            DateTime dt = DateTime.UtcNow.AddMinutes(-InitMsgTimeWindow);
+            var cond = new ShortMessageSetConstraints
+            {
+                ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = AppId },
+                TypeIDWrap = new ForeignKeyData<int> { KeyValue = 1 },
+                GroupIDWrap = new ForeignKeyData<string> { KeyValue = groupId },
+                ToIDWrap = new ForeignKeyData<string> { KeyValue = null }
+            };
+            var qexpr = new QueryExpresion();
+            qexpr.OrderTks = new List<QToken>(new QToken[] { 
+                new QToken { TkName = "CreatedDate" },
+                new QToken { TkName = "desc" }
+            });
+            qexpr.FilterTks = new List<QToken>(new QToken[] {
+                new QToken { TkName = "CreatedDate > " + svc.FormatRepoDateTime(dt) }
+            });
+            if (dialog)
+            {
+                qexpr.FilterTks.Add(new QToken { TkName = " && ReplyToID is null" });
+            }
+            var msgs = (await msgsvc.ConstraintQueryLimitedAsync(cntx, new ShortMessageSet(), cond, qexpr, maxMessages)).ToArray();
+            List<string> jsonMsgs = new List<string>();
+            if (msgs.Length > 0)
+            {
+                for (int i = msgs.Length - 1; i >= 0; i--)
+                {
+                    EntitySetType[] excludes;
+                    if (dialog)
+                    {
+                        excludes = new EntitySetType[]
+                                {
+                                    EntitySetType.UserGroup,
+                                    //EntitySetType.ShortMessageAudience,
+                                    EntitySetType.ShortMessageAttachment
+                                };
+                    }
+                    else
+                    {
+                        excludes = new EntitySetType[]
+                                {
+                                    EntitySetType.UserGroup,
+                                    //EntitySetType.ShortMessageAudience,
+                                    EntitySetType.ShortMessageAttachment,
+                                    EntitySetType.ShortMessage
+                                };
+                    }
+                    msgs[i] = await msgsvc.LoadEntityGraphRecursAsync(cntx, msgs[i].ID, excludes, null);
+                    jsonMsgs.Add(GetJsonMessage(msgs[i], userId, g, dialog));
+                }
+            }
+            return jsonMsgs.ToArray();
+        }
+
         public static async Task<MemberCallback> UserConnected(string hubId, string groupId, string userId, string connectId, string languages)
         {
             var mbsvc = new UserAppMemberServiceProxy();
@@ -536,6 +596,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
         public static async Task<int> VoteOnMessage(string msgId, string userId, int del)
         {
             var cntx = Cntx;
+            cntx.DirectDataAccess = true;
             ShortMessageAudienceServiceProxy audsvc = new ShortMessageAudienceServiceProxy();
             var aud = await audsvc.LoadEntityByKeyAsync(cntx, msgId, userId);
             if (aud == null)
@@ -562,11 +623,15 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
 
         public static string GetJsonPeer(MemberCallback peer)
         {
+            bool hasIcon = false;
+            if (peer.UserAppMemberRef != null)
+                hasIcon = !string.IsNullOrEmpty(peer.UserAppMemberRef.IconMime);
             string json = "{ ";
             json += @"""id"": """ + peer.UserID + @""", ";
             json += @"""name"": """ + (peer.UserAppMemberRef != null ? peer.UserAppMemberRef.UserRef.Username : "") + @""", ";
             json += @"""email"": """ + (peer.UserAppMemberRef != null && peer.UserAppMemberRef.Email != null ? peer.UserAppMemberRef.Email : "") + @""", ";
             json += @"""active"": " + (peer.IsDisconnected ? "false" : "true") + @", ";
+            json += @"""icon"": " + (hasIcon ? "true" : "false") + @", ";
             json += @"""lastActive"": " + getUnixJsonTime(peer.LastActiveDate) + @"";
             json += " }";
             return json;
@@ -631,6 +696,8 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
 
         private static QueryExpresion getConnectedGroupMemberFilter(string hubId, string groupId, bool supervisor = false)
         {
+            MembershipPlusServiceProxy svc = new MembershipPlusServiceProxy();
+            DateTime dt = DateTime.UtcNow.AddMinutes(-ApplicationContext.OnlineUserInactiveTime);
             QueryExpresion qexpr = new QueryExpresion();
             qexpr.OrderTks = new List<QToken>(new QToken[] { 
                 new QToken { TkName = "UserID" },
@@ -641,7 +708,9 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                 new QToken { TkName = "&&" },
                 new QToken { TkName = "ApplicationID == \"" + AppId + "\"" },
                 new QToken { TkName = "&&" },
-                new QToken { TkName = "UserAppMemberRef.UserRef.UserGroupMember.UserGroupID == \"" + groupId + "\"" }
+                new QToken { TkName = "UserAppMemberRef.UserRef.UserGroupMember.UserGroupID == \"" + groupId + "\"" },
+                new QToken { TkName = "&&" },
+                new QToken { TkName = "UserAppMemberRef.LastActivityDate > " + svc.FormatRepoDateTime(dt) }
             });
             return qexpr;
         }

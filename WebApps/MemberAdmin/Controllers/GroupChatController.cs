@@ -72,6 +72,14 @@ namespace MemberAdminMvc5.Controllers
                 return new HttpStatusCodeResult(404, "Not Found");
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> LoadMessages(string id, bool? seq)
+        {
+            var msgs = await GroupChatContext.LoadMessages(id, User.Identity.GetUserId(), MaxInitMsgs, !seq.HasValue || !seq.Value);
+            return Json(msgs, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<ActionResult> Subscribe(string id)

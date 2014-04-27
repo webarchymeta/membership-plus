@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Configuration;
 using System.Threading.Tasks;
 using CryptoGateway.RDB.Data.MembershipPlus;
 
@@ -10,6 +11,8 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
 {
     public class ApplicationContext
     {
+        public const int ChatAssocTypeId = 12;
+
         internal static object SyncRoot = new object();
 
         public static CallContext ClientContext
@@ -34,6 +37,18 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             set { _clientContext = value; }
         }
         private static CallContext _clientContext = null;
+
+        public static int OnlineUserInactiveTime
+        {
+            get
+            {
+                string val = ConfigurationManager.AppSettings["OnlineUserInactiveTimeInMinutes"] == null ? "20" : ConfigurationManager.AppSettings["OnlineUserInactiveTimeInMinutes"];
+                int minutes;
+                if (!int.TryParse(val, out minutes))
+                    minutes = 20;
+                return minutes;
+            }
+        }
 
         public static Application_ App
         {

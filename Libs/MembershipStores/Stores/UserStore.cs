@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Configuration;
+using System.Web;
 using System.Web.Configuration;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -285,6 +286,9 @@ namespace Archymeta.Web.Security
                     memb.MemberStatus = ums.MemberStatusValues[0];
                     memb.LastStatusChange = createDate;
                     memb.LastActivityDate = createDate;
+#if MemberPlus
+                    memb.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];
+#endif
                     memb.Comment = "";
                     udata.ChangedUserAppMembers = new UserAppMember[] { memb };
                     var v = await usvc.AddOrUpdateEntitiesAsync(cctx, us, new User[] { udata });
@@ -320,6 +324,9 @@ namespace Archymeta.Web.Security
                         memb.UserID = udata.ID;
                         memb.MemberStatus = ums.MemberStatusValues[0];
                         memb.LastActivityDate = createDate;
+#if MemberPlus
+                        memb.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];
+#endif
                         var v = membsvc.AddOrUpdateEntities(cctx, ums, new UserAppMember[] { memb });
                         if (v.ChangedEntities.Length == 1 && IsValidUpdate(v.ChangedEntities[0].OpStatus))
                         {

@@ -1,22 +1,228 @@
-﻿<!-- ko if: status() == 'Notifiable' || status == 'MessageSent' -->
-<div class="row wait-block">
-    <div class="col-sm-7">
-        <div class="wait-anim">
-            <canvas id='WaitArea' width="800" height="800"></canvas>
+﻿@using Archymeta.Web.Security.Resources;
+<!-- ko if: status() == 'Notifiable' || status() == 'MessageSent' -->
+<table class="wait-block">
+    <tr>
+        <td>
+            <div class="wait-anim" style="text-align:center;">
+                <canvas id='WaitArea' width="200" height="200"></canvas>
+            </div>
+        </td>
+        <td>
+            <h4>@ResourceUtils.GetString("f8d469674c7b664a70cc8b048b7750a6", "Respond Messages")</h4>
+            <div class="resp-messages">
+                <ul class="list-group" data-bind="foreach: respondMsgs">
+                    <li class="list-group-item"><span data-bind="text: msg"></span></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<!-- /ko -->
+<!-- ko if: status() == 'Connected' -->
+<div class="chat-room">
+    <div class="message-panel">
+        <div class="message-cmds">
+            <a href="#" data-bind="click: SyncRecordState">
+                <!-- ko if: recordSession -->
+                <span class="glyphicon glyphicon-record" style="color:red;"></span>
+                <!-- /ko -->
+                <!-- ko ifnot: recordSession -->
+                <span class="glyphicon glyphicon-record"></span>
+                <!-- /ko -->
+            </a>
+            <!-- ko if: recordSession -->
+            <a href="#" data-bind="click: RefreshMessages"><span class="ion-refresh"></span></a>
+            <!-- /ko -->
         </div>
-    </div>
-    <div class="col-sm-5">
-        <div class="resp-messages">
-            <ul data-bind="foreach: respondMsgs">
-                <li><span data-bind="text: msg"></span></li>
-            </ul>
+        <div class="@ViewBag.ListStyle">
+            <script id="msgListTempl" type="text/html">
+                <!-- ko if: self -->
+                <tr class="self">
+                    <td>
+                        <div class="msg">
+                            <table>
+                                <tr>
+                                    <td rowspan="3" class="icon-style">
+                                        <!-- ko if: fromObj() == null -->
+                                        <span class="ion-android-social-user"></span>
+                                        <!-- /ko -->
+                                        <!-- ko ifnot: fromObj() == null -->
+                                        <!-- ko if: fromObj().icon -->
+                                        <img data-bind="attr: {src: fromObj().iconUrl}" />
+                                        <!-- /ko -->
+                                        <!-- ko ifnot: fromObj().icon -->
+                                        <span class="ion-android-contact"></span>
+                                        <!-- /ko -->
+                                        <!-- /ko -->
+                                    </td>
+                                    <td>
+                                        <div class="msg-sender">
+                                            <a data-bind="attr: {name: id}"><label>@ResourceUtils.GetString("ab86a1e1ef70dff97959067b723c5c25", "me")</label></a>
+                                            <span class="ion-volume-medium"></span>
+                                        </div>
+                                        <div class="msg-time">
+                                            <span data-bind="localdatetime: jsonDate"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="msg-body" data-bind="html: text"></div>
+                                    </td>
+                                </tr>
+                                <!-- ko if: Replies().length > 0 -->
+                                <tr>
+                                    <td>
+                                        <div class="@ViewBag.ReplyListStyle" data-bind="attr: {id: id}">
+                                            <table>
+                                                <tbody data-bind="template: {name: 'msgListTempl', foreach: Replies}"></tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                <!-- ko ifnot: self -->
+                <tr>
+                    <td>
+                        <div class="msg">
+                            <table>
+                                <tr>
+                                    <td rowspan="4" class="icon-style">
+                                        <a href="#" data-bind="click: ToggleReplyArea">
+                                            <!-- ko if: fromObj() == null -->
+                                            <span class="ion-android-social-user"></span>
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: fromObj() == null -->
+                                            <!-- ko if: fromObj().icon -->
+                                            <img data-bind="attr: {src: fromObj().iconUrl}" />
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: fromObj().icon -->
+                                            <span class="ion-android-contact"></span>
+                                            <!-- /ko -->
+                                            <!-- /ko -->
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="msg-sender">
+                                            <a href="#" data-bind="click: ToggleReplyArea"><span class="ion-ios7-undo"></span></a>
+                                            <a data-bind="attr: {name: id}">
+                                                <label data-bind="text: from"></label>
+                                            </a>
+                                            <span class="ion-volume-medium"></span>
+                                        </div>
+                                        <div class="msg-time">
+                                            <span data-bind="localdatetime: jsonDate"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="msg-body" data-bind="html: text"></div>
+                                    </td>
+                                </tr>
+                                <!-- ko if: checked -->
+                                <tr>
+                                    <td>
+                                        <div class="input-group input-area">
+                                            <!-- ko if: $root.peerActive -->
+                                            <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" data-bind="click: SendSimpleMessage, enable: IsSendReady">
+                                                    @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+                                                </button>
+                                            </span>
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: $root.peerActive -->
+                                            <h4>
+                                                <span class="ion-alert-circled"></span>
+                                                <span>@ResourceUtils.GetString("0e3b76d7b97dc0e6890ce5e168deba54", "The other party hung up.")</span>
+                                            </h4>
+                                            <!-- /ko -->
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                                <!-- ko if: Replies().length > 0 -->
+                                <tr>
+                                    <td>
+                                        <div class="@ViewBag.ReplyListStyle" data-bind="attr: {id: id}">
+                                            <table>
+                                                <tbody data-bind="template: {name: 'msgListTempl', foreach: Replies}"></tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <!-- /ko -->
+            </script>
+            <table>
+                <tbody data-bind="template: { name: 'msgListTempl', foreach: Messages }"></tbody>
+            </table>
+        </div>
+        <div class="input-group input-area">
+            <!-- ko if: peerActive -->
+            <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" data-bind="click: SendSimpleMessage, enable: IsSendReady">
+                    @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+                </button>
+            </span>
+            <!-- /ko -->
+            <!-- ko ifnot: peerActive -->
+            <h4>
+                <span class="ion-alert-circled"></span>
+                <span>@ResourceUtils.GetString("0e3b76d7b97dc0e6890ce5e168deba54", "The other party hung up.")</span>
+            </h4>
+            <!-- /ko -->
         </div>
     </div>
 </div>
+<!-- /ko -->
+<!-- ko if: status() == 'Failed' -->
+<table class="wait-block">
+    <tr>
+        <td>
+            <div class="wait-anim" style="text-align:center; vertical-align:top;">
+<h3>@ResourceUtils.GetString("c5d6c35096c7061fd32ba310fada5eae", "The other party did not accept the call")</h3>
+<!-- ko if: peerState() == 0 -->
+<p>???</p>
+<!-- /ko -->
+<!-- ko if: peerState() == 3 -->
+<p>@ResourceUtils.GetString("42b81918482764462bba86c696f4954a", "He/She is busy.")</p>
+<!-- /ko -->
+<!-- ko if: peerState() == 4 -->
+<p>@ResourceUtils.GetString("3cfcc4719b28629177ff46a745e18311", "He/She rejected the invitation.")</p>
+<!-- /ko -->
+<!-- ko if: peerState() == 5 -->
+<p>@ResourceUtils.GetString("247085867bee888c8c64e8b8c1f2877d", "He/She is not reachable at present.")</p>
+<!-- /ko -->
+            </div>
+        </td>
+        <td>
+            <h4>@ResourceUtils.GetString("f8d469674c7b664a70cc8b048b7750a6", "Respond Messages")</h4>
+            <div class="resp-messages">
+                <ul class="list-group" data-bind="foreach: respondMsgs">
+                    <li class="list-group-item"><span data-bind="text: msg"></span></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
 <!-- /ko -->
 <script type="text/javascript">
     appRoot = '@Url.Content("~/")';
     appName = '@ViewBag.AppName';
     userId = '@ViewBag.UserID';
+    userObj = @Html.Raw(ViewBag.User) 
     peerId = '@ViewBag.PeerID';
+    peerObj = @Html.Raw(ViewBag.Peer)
 </script>

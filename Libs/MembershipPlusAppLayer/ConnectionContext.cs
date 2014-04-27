@@ -41,7 +41,8 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             {
                 memb.StartAutoUpdating = true;
                 memb.LastActivityDate = DateTime.UtcNow;
-                memb.AcceptLanguages = languages;
+                if (languages != null)
+                    memb.AcceptLanguages = languages;
                 List<MemberCallback> callbacks;
                 if (memb.ChangedMemberCallbacks == null)
                     callbacks = new List<MemberCallback>();

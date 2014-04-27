@@ -35,19 +35,44 @@ toJsonDate = function (dt) {
 
 function ChatPeer(data) {
     var self = this;
+    self.data = data;
     self.selected = ko.observable(false);
     self.checked = ko.observable(false);
     self.id = data.id;
     self.name = data.name;
     self.email = data.email;
+    self.icon = data.icon;
+    self.iconUrl = ko.computed(function () {
+        if (self.icon) {
+            return appRoot + 'Account/GetMemberIcon?id=' + self.id;
+        } else {
+            return "";
+        }
+    });
     self.active = ko.observable(data.active);
-    self.lastActive = ko.observable(getDateVal(data.lastActive));
+    self.lastActive = ko.observable(data.lastActive);
     self.isSelf = ko.computed(function () {
         return self.id == userId;
     });
     self.chatUrl = ko.computed(function () {
         return appRoot + 'PrivateChat/Chat?toId=' + self.id;
     });
+    updateMsgSender(root.Messages, self, true);
+}
+
+function updateMsgSender(msgList, peer, join) {
+    for (var i = 0; i < msgList().length; i++) {
+        if (msgList()[i].fromId == peer.id) {
+            if (join) {
+                msgList()[i].fromObj(peer);
+            } else {
+                msgList()[i].fromObj(null);
+            }
+        }
+        if (msgList()[i].Replies().length > 0) {
+            updateMsgSender(msgList()[i].Replies, peer, join);
+        }
+    }
 }
 
 function ChatMessage(data) {
@@ -57,6 +82,13 @@ function ChatMessage(data) {
     self.id = data.id;
     self.from = data.from;
     self.fromId = data.fromId;
+    self.fromObj = ko.observable(null);
+    for (var i = 0; i < root.Members().length; i++) {
+        if (root.Members()[i].id == data.fromId) {
+            self.fromObj = ko.observable(root.Members()[i]);
+            break;
+        }
+    }
     self.to = data.to;
     self.toId = data.toId;
     self.replyToId = data.replyToId;
@@ -133,6 +165,23 @@ function ChatRoom(id) {
     self.ClearMsgLinks = function () {
         self.MessageLinks.removeAll();
     }
+    self.RefreshMessages = function () {
+        $.ajax({
+            url: appRoot + "GroupChat/LoadMessages?id=" + self.id + (dialogMode ? '' : '&seq=true'),
+            type: "GET",
+            success: function (content) {
+                self.Messages.removeAll();
+                for (var i = 0; i < content.length; i++) {
+                    var msg = JSON.parse(content[i]);
+                    self.Messages.push(new ChatMessage(msg));
+                }
+            },
+            error: function (jqxhr, textStatus) {
+                alert(jqxhr.responseText);
+                callback(false);
+            }
+        });
+    }
     self.SendSimpleMessageToAll = function () {
         if (!self.Started() || self.chatHub == null) {
             return;
@@ -164,6 +213,7 @@ function registerClientMethods(hub) {
     hub.client.userDisConnected = function (p) {
         try {
             var peer = JSON.parse(p);
+            updateMsgSender(root.Messages, peer, false);
             root.Members.remove(function (item) {
                 return item.id == peer.id;
             });
@@ -180,7 +230,9 @@ function registerClientMethods(hub) {
             if (msgObj.replyToId == null || msgObj.replyToId == '' || !dialogMode) {
                 root.Messages.push(new ChatMessage(msgObj));
                 var div = $(".message-list")[0];
-                div.scrollTop = div.scrollHeight;
+                if (typeof div != 'undefined' && div != null) {
+                    div.scrollTop = div.scrollHeight;
+                }
             } else {
                 appendMessage(root.Messages, msgObj);
                 //var div = $("#" + msgObj.replyToId)[0];
