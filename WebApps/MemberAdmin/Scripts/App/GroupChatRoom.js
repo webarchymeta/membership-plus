@@ -95,8 +95,9 @@ function ChatMessage(data) {
     self.date = getDateVal(data.date);
     self.jsonDate = data.date;
     self.self = data.self;
-    self.text = data.text;
+    self.text = unescape(data.text);
     self.score = ko.observable(data.score);
+    self.RichEditor = ko.observable(false);
     self.CurrentMessage = ko.observable('');
     self.IsSendReady = ko.computed(function () {
         return self.CurrentMessage().length > 0;
@@ -114,8 +115,12 @@ function ChatMessage(data) {
             self.checked(true);
         }
     }
+    self.ToggleEditor = function () {
+        self.RichEditor(!self.RichEditor());
+    }
     self.SendSimpleMessageToAll = function () {
-        root.chatHub.server.sendSimpleMessageToAll(root.id, self.id, { title: "", body: self.CurrentMessage() });
+        var msg = escape(self.CurrentMessage());
+        root.chatHub.server.sendSimpleMessageToAll(root.id, self.id, { title: "", body: msg });
         self.CurrentMessage('');
         self.checked(false);
     }
@@ -143,6 +148,7 @@ function ChatRoom(id) {
     self.Joined = ko.observable(false);
     self.IsSubscriber = ko.observable(false);
     self.IsNotifying = ko.observable(false);
+    self.RichEditor = ko.observable(false);
     self.ConnectedCount = ko.observable(0);
     self.SubscriberCount = ko.observable(0);
     self.Members = ko.observableArray();
@@ -161,6 +167,9 @@ function ChatRoom(id) {
     }
     self.ToggleNotifications = function () {
 
+    }
+    self.ToggleEditor = function () {
+        self.RichEditor(!self.RichEditor());
     }
     self.ClearMsgLinks = function () {
         self.MessageLinks.removeAll();
@@ -186,7 +195,8 @@ function ChatRoom(id) {
         if (!self.Started() || self.chatHub == null) {
             return;
         }
-        self.chatHub.server.sendSimpleMessageToAll(self.id, null, { title: "test", body: self.CurrentMessage() });
+        var msg = escape(self.CurrentMessage());
+        self.chatHub.server.sendSimpleMessageToAll(self.id, null, { title: "test", body: msg });
         self.CurrentMessage('');
     }
 }

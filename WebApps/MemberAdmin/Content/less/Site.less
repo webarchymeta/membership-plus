@@ -725,7 +725,7 @@ table.figure-frame {
             }
         }
 
-        height: 330px;
+        height: 420px;
         overflow-y: auto;
     }
 
@@ -828,8 +828,19 @@ table.figure-frame {
             width: 100%;
         }
 
+        textarea {
+            display: inline-block;
+            max-width: none;
+            width: 100%;
+            height: 60px;
+        }
+
         button {
             display: inline-block;
+        }
+
+        span {
+            vertical-align: top;
         }
 
         margin: 1px 0 10px 0;
@@ -864,14 +875,15 @@ table.figure-frame {
             padding: 0 2px;
         }
 
-        td:nth-of-type(2n+1){
-            border-bottom: 1px solid @gray-light;
-        }
+            td:nth-of-type(2n+1) {
+                border-bottom: 1px solid @gray-light;
+            }
 
         span.self-style {
             color: gray;
         }
-        width:100%;
+
+        width: 100%;
         border-collapse: collapse;
     }
 }
@@ -885,7 +897,7 @@ table.figure-frame {
         vertical-align:top;
     }
     width:100%;
-    margin-top:5px;
+    margin-top:0;
 }
 
 .chat-invitation {
@@ -914,6 +926,11 @@ table.figure-frame {
         }
     }
 }
+
+/*.modal .modal-body {
+    max-height: 520px;
+    overflow-y: auto;
+}*/
 
 .role-path {
     margin: 10px 0;

@@ -130,7 +130,22 @@
                                     <td>
                                         <div class="input-group input-area">
                                             <!-- ko if: $root.peerActive -->
+                                            <span class="input-group-addon">
+                                                <a href="#" data-bind="click: ToggleEditor">
+                                                    <!-- ko ifnot: RichEditor -->
+                                                    <span class="ion-compose"></span>
+                                                    <!-- /ko -->
+                                                    <!-- ko if: RichEditor -->
+                                                    <span class="ion-edit"></span>
+                                                    <!-- /ko -->
+                                                </a>
+                                            </span>
+                                            <!-- ko if: RichEditor -->
+                                            <textarea id="append-editor" data-bind="attr: {id: id}, simpleHtmlEditor: CurrentMessage"></textarea>
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: RichEditor -->
                                             <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+                                            <!-- /ko -->
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default" data-bind="click: SendSimpleMessage, enable: IsSendReady">
                                                     @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
@@ -168,9 +183,24 @@
                 <tbody data-bind="template: { name: 'msgListTempl', foreach: Messages }"></tbody>
             </table>
         </div>
-        <div class="input-group input-area">
+        <div class="input-group input-area" style="overflow-y:auto;">
             <!-- ko if: peerActive -->
+            <span class="input-group-addon">
+                <a href="#" data-bind="click: ToggleEditor">
+                    <!-- ko ifnot: RichEditor -->
+                    <span class="ion-compose"></span>
+                    <!-- /ko -->
+                    <!-- ko if: RichEditor -->
+                    <span class="ion-edit"></span>
+                    <!-- /ko -->
+                </a>
+            </span>
+            <!-- ko if: RichEditor -->
+            <textarea id="append-editor" data-bind="simpleHtmlEditor: CurrentMessage"></textarea>
+            <!-- /ko -->
+            <!-- ko ifnot: RichEditor -->
             <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+            <!-- /ko -->
             <span class="input-group-btn">
                 <button type="button" class="btn btn-default" data-bind="click: SendSimpleMessage, enable: IsSendReady">
                     @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")

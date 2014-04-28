@@ -33,6 +33,10 @@
                 dateFormat: 'yy-mm-dd'
             });
             ko.applyBindings(vm, $('#channels')[0]);
+            CKEDITOR.replace("Description", {
+                toolbar: 'Standard',
+                uiColor: '#F49A68'
+            })
         });
     </script>
 }
@@ -168,7 +172,7 @@ else
                                     <tbody>
                                         <tr>
                                             <td>
-                                                @Html.TextAreaFor(m => m.Description, new { @class = "ckeditor" })
+                                                @Html.TextAreaFor(m => m.Description)
                                             </td>
                                         </tr>
                                         <tr>

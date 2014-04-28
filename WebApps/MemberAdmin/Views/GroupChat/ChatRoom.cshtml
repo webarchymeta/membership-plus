@@ -11,6 +11,7 @@
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/signalR")
     @Scripts.Render("~/bundles/jqueryui")
+    <script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
     <script src="@Url.Content("~/signalr/hubs")"></script>
     <script src="@Url.Content("~/Scripts/App/GroupChatRoom.js")"></script>
     <script src="@Url.Content("~/Scripts/App/GroupPrivateChat.js")"></script>
@@ -218,7 +219,22 @@
                                     <tr>
                                         <td>
                                             <div class="input-group input-area">
+                                                <span class="input-group-addon">
+                                                    <a href="#" data-bind="click: ToggleEditor">
+                                                        <!-- ko ifnot: RichEditor -->
+                                                        <span class="ion-compose"></span>
+                                                        <!-- /ko -->
+                                                        <!-- ko if: RichEditor -->
+                                                        <span class="ion-edit"></span>
+                                                        <!-- /ko -->
+                                                    </a>
+                                                </span>
+                                                <!-- ko if: RichEditor -->
+                                                <textarea data-bind="attr: {id: id}, simpleHtmlEditor: CurrentMessage"></textarea>
+                                                <!-- /ko -->
+                                                <!-- ko ifnot: RichEditor -->
                                                 <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+                                                <!-- /ko -->
                                                 <span class="input-group-btn">
                                                     <button type="button" class="btn btn-default" data-bind="click: SendSimpleMessageToAll, enable: IsSendReady">
                                                         @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
@@ -250,7 +266,22 @@
                 </table>
             </div>
             <div class="input-group input-area">
-                <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+                <span class="input-group-addon">
+                    <a href="#" data-bind="click: ToggleEditor">
+                        <!-- ko ifnot: RichEditor -->
+                        <span class="ion-compose"></span>
+                        <!-- /ko -->
+                        <!-- ko if: RichEditor -->
+                        <span class="ion-edit"></span>
+                        <!-- /ko -->
+                    </a>
+                </span>
+                <!-- ko if: RichEditor -->
+                <textarea id="append-editor" data-bind="simpleHtmlEditor: CurrentMessage"></textarea>
+                <!-- /ko -->
+                <!-- ko ifnot: RichEditor -->
+                <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />    
+                <!-- /ko -->
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" data-bind="click: SendSimpleMessageToAll, enable: IsSendReady">
                         @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
@@ -348,7 +379,7 @@
                 <h4 class="modal-title"><span id="userName"></span></h4>
             </div>
             <div class="modal-body">
-                <iframe id="chatPage" style="width: 560px; height: 400px; border:none" scrolling="no"></iframe>
+                <iframe id="chatPage" style="width: 560px; height: 500px; border:none" scrolling="auto"></iframe>
             </div>
         </div>
     </div>

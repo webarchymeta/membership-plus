@@ -85,8 +85,9 @@ function ChatMessage(data) {
             self.fromObj(null);
         }
     }
-    self.text = data.text;
+    self.text = unescape(data.text);
     self.score = ko.observable(data.score);
+    self.RichEditor = ko.observable(false);
     self.CurrentMessage = ko.observable('');
     self.IsSendReady = ko.computed(function () {
         return self.CurrentMessage().length > 0;
@@ -107,8 +108,13 @@ function ChatMessage(data) {
         }
     }
 
+    self.ToggleEditor = function () {
+        self.RichEditor(!self.RichEditor());
+    }
+
     self.SendSimpleMessage = function () {
-        root.chatHub.server.sendSimpleMessage(root.peerId, self.id, { title: "", body: self.CurrentMessage() }, root.recordSession());
+        var msg = escape(self.CurrentMessage());
+        root.chatHub.server.sendSimpleMessage(root.peerId, self.id, { title: "", body: msg }, root.recordSession());
         self.CurrentMessage('');
         self.checked(false);
     }
@@ -127,9 +133,14 @@ ChatContext = function (uid, pid) {
     self.respondMsgs = ko.observableArray();
     self.Messages = ko.observableArray();
     self.CurrentMessage = ko.observable('');
+    self.RichEditor = ko.observable(false);
     self.IsSendReady = ko.computed(function () {
         return self.CurrentMessage().length > 0;
     })
+
+    self.ToggleEditor = function () {
+        self.RichEditor(!self.RichEditor());
+    }
 
     self.SyncRecordState = function () {
         self.recordSession(!self.recordSession());
@@ -153,7 +164,8 @@ ChatContext = function (uid, pid) {
     }
 
     self.SendSimpleMessage = function () {
-        self.chatHub.server.sendSimpleMessage(peerId, null, { title: "", body: self.CurrentMessage() }, self.recordSession());
+        var msg = escape(self.CurrentMessage());
+        self.chatHub.server.sendSimpleMessage(peerId, null, { title: "", body: msg }, self.recordSession());
         self.CurrentMessage('');
     }
 
