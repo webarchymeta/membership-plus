@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="ConnectionContext.cs" />
+    <Compile Include="ContactContext.cs" />
     <Compile Include="GroupChatContext.cs" />
     <Compile Include="MemberAdminContext.cs" />
     <Compile Include="MemberViewContext.cs" />

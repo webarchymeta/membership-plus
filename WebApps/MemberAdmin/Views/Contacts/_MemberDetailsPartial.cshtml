@@ -1,0 +1,127 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Archymeta.Web.Security.Resources;
+<div class="head">
+    <div class="title">
+        <h2>
+            <!-- ko if: hasIcon -->
+            <img data-bind="attr: {src: iconUrl}" style="height: 28px; display:inline" />
+            <!-- /ko -->
+            <!-- ko ifnot: hasIcon -->
+            <span class="ion-person"></span>&nbsp;
+            <!-- /ko -->
+            <span data-bind="text: data.Username"></span>
+        </h2>
+    </div>
+</div>
+<div class="body">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table attributes">
+                        <tr>
+                            <td>
+                                @ResourceUtils.GetString("bc910f8bdf70f29374f496f05be0330d", "First Name")
+                            </td>
+                            <td>
+                                <span data-bind="text: data.FirstName"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @ResourceUtils.GetString("77587239bf4c54ea493c7033e1dbf637", "Last Name")
+                            </td>
+                            <td>
+                                <span data-bind="text: data.LastName"></span>
+                            </td>
+                        </tr>
+                        <!-- ko if: more() != null -->
+                        <!-- ko if: more().hasDetails -->
+                        <tr>
+                            <td>
+                                @ResourceUtils.GetString("019ec3132cdf8ee0f2e2a75cf5d3e45a", "Gender")
+                            </td>
+                            <td>
+                                <span data-bind="text: more().details.gender"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @ResourceUtils.GetString("0cea578e6129986e369e0052fdb89c2d", "Birth Date")@ResourceUtils.GetString("0cea578e6129986e369e0052fdb89c2d", "Birth Date")
+                            </td>
+                            <td>
+                                <span data-bind="localdatetime: more().details.birthdate"></span>
+                            </td>
+                        </tr>
+                        <!-- /ko -->
+                        <!-- /ko -->
+                        <tr>
+                            <td>
+                                @ResourceUtils.GetString("136494b7688c10b70cd6126c93d375df", "Member Status")
+                            </td>
+                            <td>
+                                <span data-bind="text: member.MemberStatus"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @ResourceUtils.GetString("32829ce3587fc0e82056bc8f6b971605", "Last Login")
+                            </td>
+                            <td>
+                                <span data-bind="localdatetime: data.LastLoginDate"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @ResourceUtils.GetString("b32a44eacdc49c3939c6a61405d25651", "Last Active")
+                            </td>
+                            <td>
+                                <span data-bind="localdatetime: member.LastActiveDate"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <!-- ko ifnot: more() == null -->
+                    <!-- ko foreach: more().channels -->
+                    <fieldset>
+                        <legend><span data-bind="text: name"></span></legend>
+                        <ul data-bind="foreach: addresses">
+                            <li><span data-bind="text: address"></span></li>
+                        </ul>
+                    </fieldset>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="photo">
+                <!-- ko ifnot: more() == null -->
+                <!-- ko if: more().hasDetails -->
+                <!-- ko if: more().details.hasPhoto -->
+                <img data-bind="attr: {src: more().details.photoUrl}" />
+                <!-- /ko -->
+                <!-- ko ifnot: more().details.hasPhoto -->
+                <span class="ion-ios7-contact placeholder"></span>
+                <!-- /ko -->
+                <!-- /ko -->
+                <!-- ko ifnot: more().hasDetails -->
+                <span class="ion-ios7-contact placeholder"></span>
+                <!-- /ko -->
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+    <!-- ko ifnot: more() == null -->
+    <!-- ko if: more().hasDetails -->
+    <div class="about">
+        <div class="row">
+            <div class="col-md-12">
+                <div data-bind="html: more().details.description"></div>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+</div>

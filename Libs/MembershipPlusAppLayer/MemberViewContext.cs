@@ -54,12 +54,11 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             var result = await svc.GetPageItemsAsync(Cntx, _set, _qexpr, _prevlast);
             var ar = new List<dynamic>();
             string appId = ApplicationContext.App.ID;
-            UsersInRoleServiceProxy uirsvc = new UsersInRoleServiceProxy();
+            UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
             foreach (var e in result)
             {
                 //var membs = svc.MaterializeAllUserAppMembers(Cntx, e);
                 //var memb = (from d in membs where d.ApplicationID == appId select d).SingleOrDefault();
-                UserAppMemberServiceProxy mbsvc = new UserAppMemberServiceProxy();
                 var cond = new UserAppMemberSetConstraints 
                 { 
                     ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = appId }, 

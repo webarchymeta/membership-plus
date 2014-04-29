@@ -1,0 +1,270 @@
+﻿@using Archymeta.Web.Security.Resources;
+@using Microsoft.AspNet.Identity;
+@using MemberAdminMvc5;
+@using MemberAdminMvc5.Models;
+@model MemberAdminMvc5.Models.ContactsQueryOpts
+@{
+    ViewBag.Title = ResourceUtils.GetString("1ca1386cd5aeebe3e11a3ff80f04f5b2", "Personal contacts");
+}
+@section prestyles
+{
+    @Styles.Render("~/Content/themes/base/css")
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/knockout")
+    <script src="@Url.Content("~/JavaScript/QueryCustomization?src=")"></script>
+    <script src="@Url.Content("~/Scripts/DataService/ContactSearchPage.js")"></script>
+    <script src="@Url.Content("~/Scripts/App/PrivateChatSearch.js")"></script>
+<script type="text/javascript">
+    appRoot = '@Url.Content("~/")';
+    serviceUrl = appRoot + 'Services/DataService/DataServiceProxy.svc';
+    dataSourceId = '';
+    setName = 'User';
+    appName = '@ViewBag.AppName';
+    $(function () {
+        window.onerror = function () {
+            window.status = '@ResourceUtils.GetString("f4df67025ce1852c05bc18cb1a9d27df", "There were errors getting this page. Try refreshing this page.")';
+            return true;
+        }
+        @foreach (var t in Model.Types)
+        {
+        <text>
+        assocTypes.push(new AssocType(@t.Id, '@t.Name'));
+        </text>
+        }
+        userSet = new UserSet(serviceUrl);
+        @if (Model.Outgoing)
+        {
+            if (Model.TypeId != -1)
+            {
+        <text>
+        userSet.SetFilter = 'UserAssociation_ToUserID.TypeID == @Model.TypeId && ';
+        </text>
+            }
+            else
+            {
+        <text>
+        userSet.SetFilter = '';
+        </text>
+            }
+        <text>
+        userSet.SetFilter += 'UserAssociation_ToUserID.User_FromUserID.ID == "@Model.UserId"';
+        </text>
+        }
+        else
+        {
+            if (Model.TypeId != -1)
+            {
+        <text>
+        userSet.SetFilter = 'UserAssociation_FromUserID.TypeID == @Model.TypeId && ';
+        </text>
+            }
+            else
+            {
+        <text>
+        userSet.SetFilter = '';
+        </text>
+            }
+        <text>
+        userSet.SetFilter += 'UserAssociation_FromUserID.User_ToUserID.ID == "@Model.UserId"';
+        </text>
+        }
+        userSet.GetSetInfo();
+        ko.applyBindings(userSet);
+        initsortinput(userSet);
+        initfilterinput(userSet);
+        $('.ui-autocomplete').addClass('AutoCompleteMenu');
+    });
+</script>
+}
+<div class="row">
+    <div class="col-md-12">
+        <h3>
+            <span class="ion-android-contacts"></span>
+            @ResourceUtils.GetString("1ca1386cd5aeebe3e11a3ff80f04f5b2", "Personal contacts")
+        </h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">@ResourceUtils.GetString("af1b98adf7f686b84cd0b443e022b7a1", "Categories")</div>
+            <div class="panel-body">
+                <div class="list-group">
+                    @if (Model.TypeId == -1)
+                    {
+                    <a href="#" class="list-group-item active">@ResourceUtils.GetString("0d015d96f63a8c12d96b8399482b5940", "Uncategorized")</a>
+                    }
+                    else
+                    {
+                    <a href="@Url.Content("~/Contacts/Search" + (Model.Outgoing ? "" : "?outgoing=false"))" class="list-group-item">@ResourceUtils.GetString("0d015d96f63a8c12d96b8399482b5940", "Uncategorized")</a>
+                    }
+                    @foreach (var t in Model.Types)
+                    {
+                        if (t.Id == Model.TypeId)
+                        {
+                    <a href="#" class="list-group-item active">@t.Name</a>
+                        }
+                        else
+                        {
+                    <a href="@Url.Content("~/Contacts/Search?typeId=" + t.Id + (Model.Outgoing ? "" : "&outgoing=false"))" class="list-group-item">@t.Name</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-10">
+        <table class="QueryHead">
+            <tbody>
+                <tr>
+                    <td>
+                        <button id="queryExec" onclick="showlist()" class="btn btn-default">
+                            @ResourceUtils.GetString("9b569c28e72a27376d286d6f72c67fdd", "Start querying")
+                        </button>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td><label for="setSize">@ResourceUtils.GetString("3e26229363fee0953001a220377ff63a", "Set Size:")</label></td>
+                                <td><span id="setSize" data-bind="text: TotalEntities" style="padding-right:5px;"></span></td>
+                                <td>
+                                    <label for="pageBlockSize">@ResourceUtils.GetString("0974d2c2f4c6420089275c2a41c4b41d", "Pages:")</label>
+                                </td>
+                                <td>
+                                    <input id="pageBlockSize" type="text" data-bind="value: PageBlockSize" />
+                                </td>
+                                <td>
+                                    <label for="pageSize">@ResourceUtils.GetString("a5a9679d8e8ef2c129aa9f4480f09dbd", "User No.:")</label>
+                                </td>
+                                <td>
+                                    <input id="pageSize" type="text" data-bind="value: PageSize_" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        @Html.Partial("~/Views/Shared/_QueryComposerPartial.cshtml")
+        <!-- ko if: IsQueryInitialized() -->
+        <div class="EntityListPanel">
+            <table class="gridview table-hover table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            @ResourceUtils.GetString("987dce661afca3372aa3e05702fb1d07", "User name")
+                        </th>
+                        <th>
+                            @ResourceUtils.GetString("fbc97786af4bf30dc5b07809a950792d", "Relationship")
+                        </th>
+                        <th>
+                            @ResourceUtils.GetString("32829ce3587fc0e82056bc8f6b971605", "Last Login")
+                        </th>
+                        <th>
+                            @ResourceUtils.GetString("b32a44eacdc49c3939c6a61405d25651", "Last Active")
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: CurrentPage().Items">
+                    <tr data-bind="css: {selected: IsEntitySelected()}, click: function(data, event) { selectUser(data, event); }">
+                        <td>
+                            <!-- ko if: hasIcon -->
+                            <img data-bind="attr: {src: iconUrl}" style="height: 18px; display:inline" />
+                            <!-- /ko -->
+                            <!-- ko ifnot: hasIcon -->
+                            <span class="ion-person"></span>&nbsp;
+                            <!-- /ko -->
+                            <span data-bind="text: data.Username"></span>
+                        </td>
+                        <td>
+                            <!-- ko foreach: assocTypes -->
+                            <span data-bind="text: name"></span>,
+                            <!-- /ko -->
+                        </td>
+                        <td>
+                            <span data-bind="localdatetime: data.LastLoginDate"></span>
+                        </td>
+                        <td>
+                            <span data-bind="localdatetime: member.LastActivityDate"></span>
+                        </td>
+                        <td>
+                            <!-- ko if: notify -->
+                            <a href="#" data-bind="click: function(data,event) { startPrivateChat(data, event) }">
+                                <span class="glyphicon glyphicon-earphone" title="@ResourceUtils.GetString("9f1c1dc68860a044552c943ac3c426bb", "Start a private chat ...")"></span>
+                            </a>
+                            <!-- /ko -->
+                            <!-- ko ifnot: notify -->
+                            &nbsp;
+                            <!-- /ko -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="pagelist">
+                <div class="label-default status">
+                    <span>@ResourceUtils.GetString("bb84a8b9d441c2b0af6526488d137b43", "Matches:")</span>&nbsp;<span data-bind="text: EntityCount"></span>
+                </div>
+                <div class="list">
+                    <ul class="pagination-sm">
+                        <!-- ko if: PrevBlock() != null -->
+                        <li>
+                            <a href="javascript:prevPageBlock()" title="@ResourceUtils.GetString("a1e906e40a6b90e76e960f4d236bbccf", "Load previous page block ...")">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- ko foreach: PagesWindow -->
+                        <!-- ko if: IsPageSelected() -->
+                        <li class="active">
+                            <span class="selected"
+                                  data-bind="text: PageNumber"></span>
+                        </li>
+                        <!-- /ko -->
+                        <!-- ko ifnot: IsPageSelected() -->
+                        <li>
+                            <a data-bind="attr: {href: PageLink}">
+                                <span data-bind="text: PageNumber"></span>
+                            </a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- /ko -->
+                        <!-- ko if: MoreNextBlock() -->
+                        <li>
+                            <a href="javascript:nextPageBlock()" title="@ResourceUtils.GetString("4eeaea99bac9d050ef5cdd42fe603d7e", "Load next page block ...")">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </li>
+                        <!-- /ko -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="privateChatPopup" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><span id="userName"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="chatPage" style="width: 560px; height: 500px; border:none" scrolling="auto"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <div id="user-details" data-bind="with: CurrentPage">
+            <!-- ko if: typeof CurrentItem != 'undefined' -->
+            <!-- ko if: CurrentItem() != null -->
+            <div class="user-details" data-bind="with: CurrentItem">
+                @Html.Partial("_MemberDetailsPartial")
+            </div>
+            <!-- /ko -->
+            <!-- /ko -->
+        </div>
+    </div>
+</div>

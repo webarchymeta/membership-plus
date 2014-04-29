@@ -231,3 +231,5 @@
 /// <reference path="ckeditor/plugins/a11yhelp/dialogs/lang/tt.js" />
 /// <reference path="ckeditor/plugins/specialchar/dialogs/lang/tt.js" />
 /// <reference path="app/groupprivatechat.js" />
+/// <reference path="jquery.autoheight.js" />
+/// <reference path="dataservice/contactsearchpage.js" />

@@ -59,15 +59,6 @@ namespace MemberAdminMvc5.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult Contacts()
-        {
-            ViewBag.AppName = Startup.App.Name;
-            ViewBag.HubId = (new NotificationHub()).HubIdentity;
-            return View();
-        }
-
-        [HttpGet]
-        [Authorize]
         public async Task<ActionResult> ChatPage(string toId)
         {
             if (string.IsNullOrEmpty(toId))
