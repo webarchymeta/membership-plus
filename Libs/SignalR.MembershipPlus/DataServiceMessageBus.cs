@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
+using System.ServiceModel;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.AspNet.SignalR.Client;
@@ -16,7 +17,8 @@ using CryptoGateway.RDB.Data.MembershipPlus;
 
 namespace Archymeta.Web.MembershipPlus.SignalR
 {
-    public class DataServiceMessageBus : ScaleoutMessageBus
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
+    public class DataServiceMessageBus : ScaleoutMessageBus, IServiceNotificationCallback
     {
         private static CallContext Cntx
         {
@@ -74,23 +76,64 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             base.Dispose(disposing);
         }
 
+        //private IHubProxy hubProxy = null;
+        //private HubConnection hubConn = null;
+        private MembershipPlusServiceProxy svc = null;
+
+        public void EntityChanged(EntitySetType SetType, int Status, string Entity)
+        {
+            if ((Status & (int)EntityOpStatus.Added) != 0)
+            {
+                switch (SetType)
+                {
+                    case EntitySetType.SignalRMessage:
+                        {
+                            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(SignalRMessage));
+                            byte[] bf = Encoding.UTF8.GetBytes(Entity);
+                            MemoryStream strm = new MemoryStream(bf);
+                            strm.Position = 0;
+                            var e = ser.ReadObject(strm) as SignalRMessage;
+                            if (e.ApplicationID == config.App.ID)
+                            {
+                                ulong msgId = (ulong)e.ID;
+                                try
+                                {
+                                    forwardMessage(msgId, ScaleoutMessage.FromBytes(e.MesssageData));
+                                }
+                                catch
+                                {
+
+                                }
+                                LastMessageId = msgId;
+                                IsLastMessageIdChanged = true;
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
         private void Initialize()
         {
             Initialized = false;
             var cntx = Cntx;
             var msgsvc = new SignalRMessageServiceProxy();
             ProcOldMessages(cntx, msgsvc);
+            /*
             string url = config.BackPlaneUrl;
             if (string.IsNullOrEmpty(url))
             {
                 url = msgsvc.Endpoint.Address.Uri.ToString();
                 url = url.Substring(0, url.IndexOf("/Services"));
             }
-            var hubConn = new HubConnection(url);
-            var hubProxy = hubConn.CreateHubProxy("NotificationHub");
+            hubConn = new HubConnection(url);
+            hubProxy = hubConn.CreateHubProxy("NotificationHub");
             hubConn.Start().Wait();
             hubProxy.Invoke("JoinGroup", EntitySetType.SignalRMessage.ToString()).Wait();
             hubProxy.On<dynamic>("entityChanged", (dmsg) => ProcMessage(cntx, dmsg));
+            */
+            svc = new MembershipPlusServiceProxy(new InstanceContext(this));
+            svc.SubscribeToUpdates(cntx.CallerID, new EntitySetType[] { EntitySetType.SignalRMessage });
             MessageQueue = new BlockingCollection<IList<Message>>(new ConcurrentQueue<IList<Message>>(), config.MaxQueueLength);
             Task.Factory.StartNew(SendMessageThread);
             Initialized = true;
@@ -128,7 +171,8 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                 IsLastMessageIdChanged = true;
                 foreach (var e in from d in msgs orderby d.ID ascending select d)
                 {
-                    OnReceived(0, (ulong)e.ID, ScaleoutMessage.FromBytes(e.MesssageData));
+                    var smsg = ScaleoutMessage.FromBytes(e.MesssageData);
+                    forwardMessage((ulong)e.ID, smsg);
                 }
             }
         }
@@ -139,9 +183,26 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             var message = GetJsonMessage(dmsg, out msgId);
             if (message != null)
             {
-                OnReceived(0, msgId, message);
+                try
+                {
+                    forwardMessage(msgId, message);
+                }
+                catch
+                {
+
+                }
                 LastMessageId = msgId;
                 IsLastMessageIdChanged = true;
+            }
+        }
+
+        private object _recvLock = new object();
+
+        private void forwardMessage(ulong id, ScaleoutMessage smsg)
+        {
+            //lock (_recvLock)
+            {
+                OnReceived(0, id, smsg);
             }
         }
 
@@ -253,5 +314,6 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             return null;
 
         }
+
     }
 }

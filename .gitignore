@@ -159,4 +159,5 @@ $RECYCLE.BIN/
 
 #
 WebApps/MemberAdmin/App_Data/__backups/
+*.pubxml
 

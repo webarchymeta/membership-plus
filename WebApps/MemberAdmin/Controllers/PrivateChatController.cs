@@ -99,6 +99,7 @@ namespace MemberAdminMvc5.Controllers
 
         [HttpGet]
         [Authorize]
+        [OutputCache(NoStore = true, Duration = 0)]
         public async Task<ActionResult> LoadMessages(string toId, bool? seq)
         {
             var msgs = await PrivateChatContext.LoadMessages(toId, User.Identity.GetUserId(), MaxInitMsgs, !seq.HasValue || !seq.Value);
