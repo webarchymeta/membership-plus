@@ -15,16 +15,19 @@ namespace MemberAdminMvc5
             ConfigureAuth(app);
             if (MemberInitSuccess)
             {
-                DataServiceConfiguration config = new DataServiceConfiguration
+                if (ConfigurationManager.AppSettings["ScaleOutSignalR"].ToLower() == "true")
                 {
-                    App = App,
-                    HostName = Environment.MachineName,
-                    TimeWindowInHours = 2,
-                    MaxBacklogMessages = 300,
-                    MaxQueueLength = 50,
-                    HostStateUpdateIntervalInSeconds = 30
-                };
-                GlobalHost.DependencyResolver.UseDataService(config, ClientContext);
+                    DataServiceConfiguration config = new DataServiceConfiguration
+                    {
+                        App = App,
+                        HostName = Environment.MachineName,
+                        TimeWindowInHours = 2,
+                        MaxBacklogMessages = 300,
+                        MaxQueueLength = 50,
+                        HostStateUpdateIntervalInSeconds = 30
+                    };
+                    GlobalHost.DependencyResolver.UseDataService(config, ClientContext);
+                }
                 app.MapSignalR();
             }
         }

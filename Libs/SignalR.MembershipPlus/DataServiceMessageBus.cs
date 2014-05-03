@@ -48,6 +48,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
 
         private readonly TraceSource _trace;
         private bool Initialized = false;
+        private bool CallbackFailed = false;
 
         private BlockingCollection<IList<Message>> MessageQueue = null;
         
@@ -78,48 +79,17 @@ namespace Archymeta.Web.MembershipPlus.SignalR
 
         //private IHubProxy hubProxy = null;
         //private HubConnection hubConn = null;
-        private MembershipPlusServiceProxy svc = null;
-
-        public void EntityChanged(EntitySetType SetType, int Status, string Entity)
-        {
-            if ((Status & (int)EntityOpStatus.Added) != 0)
-            {
-                switch (SetType)
-                {
-                    case EntitySetType.SignalRMessage:
-                        {
-                            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(SignalRMessage));
-                            byte[] bf = Encoding.UTF8.GetBytes(Entity);
-                            MemoryStream strm = new MemoryStream(bf);
-                            strm.Position = 0;
-                            var e = ser.ReadObject(strm) as SignalRMessage;
-                            if (e.ApplicationID == config.App.ID)
-                            {
-                                ulong msgId = (ulong)e.ID;
-                                try
-                                {
-                                    forwardMessage(msgId, ScaleoutMessage.FromBytes(e.MesssageData));
-                                }
-                                catch
-                                {
-
-                                }
-                                LastMessageId = msgId;
-                                IsLastMessageIdChanged = true;
-                            }
-                        }
-                        break;
-                }
-            }
-        }
+        private static MembershipPlusServiceProxy svc = null;
+        private static InstanceContext _notifier = null;
+        private static EventHandler _delClosed = null;
+        private static DataServiceMessageBus Current = null;
 
         private void Initialize()
         {
             Initialized = false;
-            var cntx = Cntx;
-            var msgsvc = new SignalRMessageServiceProxy();
-            ProcOldMessages(cntx, msgsvc);
             /*
+            var msgsvc = new SignalRMessageServiceProxy();
+            //ProcOldMessages(cntx, msgsvc);
             string url = config.BackPlaneUrl;
             if (string.IsNullOrEmpty(url))
             {
@@ -132,14 +102,46 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             hubProxy.Invoke("JoinGroup", EntitySetType.SignalRMessage.ToString()).Wait();
             hubProxy.On<dynamic>("entityChanged", (dmsg) => ProcMessage(cntx, dmsg));
             */
-            svc = new MembershipPlusServiceProxy(new InstanceContext(this));
-            svc.SubscribeToUpdates(cntx.CallerID, new EntitySetType[] { EntitySetType.SignalRMessage });
+            Subscribe();
             MessageQueue = new BlockingCollection<IList<Message>>(new ConcurrentQueue<IList<Message>>(), config.MaxQueueLength);
             Task.Factory.StartNew(SendMessageThread);
             Initialized = true;
+            Current = this;
+        }
+        
+        private void Subscribe()
+        {
+            if (_notifier != null)
+            {
+                _trace.TraceWarning("Callback channel is broken. Try to re-establish ... ");
+                _notifier.Closed -= _delClosed;
+                _notifier.Faulted -= _delClosed;
+            }
+            _notifier = new InstanceContext(this);
+            _notifier.Closed += _delClosed;
+            _notifier.Faulted += _delClosed;
+            try
+            {
+                svc = new MembershipPlusServiceProxy(_notifier);
+                svc.SubscribeToUpdates(Cntx.CallerID, new EntitySetType[] { EntitySetType.SignalRMessage });
+                _trace.TraceWarning("Subscription done.");
+                CallbackFailed = false;
+            }
+            catch
+            {
+                _trace.TraceWarning("Subscription failed.");
+                CallbackFailed = true;
+                // the data service is down ... wait and try again ...
+            }
         }
 
-        private void ProcOldMessages(CallContext cntx, SignalRMessageServiceProxy msgsvc)
+        private void _notifier_Closed(object sender, EventArgs e)
+        {
+            Subscribe();
+        }
+
+        // currently not used ...
+        private void PollMessages(CallContext cntx, SignalRMessageServiceProxy msgsvc)
         {
             var hsvc = new SignalRHostStateServiceProxy();
             var host = hsvc.LoadEntityByNature(cntx, config.HostName, config.App.ID).SingleOrDefault();
@@ -177,6 +179,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             }
         }
 
+        // it is used to handle SignalR notifications
         private void ProcMessage(CallContext cntx, dynamic dmsg)
         {
             ulong msgId;
@@ -196,6 +199,60 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             }
         }
 
+        private ScaleoutMessage GetJsonMessage(dynamic msg, out ulong msgId)
+        {
+            msgId = 0;
+            if ((string)msg["status"] == "added")
+            {
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(SignalRMessage));
+                byte[] bf = Encoding.UTF8.GetBytes((string)msg["data"]);
+                MemoryStream strm = new MemoryStream(bf);
+                strm.Position = 0;
+                var e = ser.ReadObject(strm) as SignalRMessage;
+                if (e.ApplicationID == config.App.ID)
+                {
+                    msgId = (ulong)e.ID;
+                    return ScaleoutMessage.FromBytes(e.MesssageData);
+                }
+                else
+                    return null;
+            }
+            return null;
+        }
+
+        public void EntityChanged(EntitySetType SetType, int Status, string Entity)
+        {
+            if ((Status & (int)EntityOpStatus.Added) != 0)
+            {
+                switch (SetType)
+                {
+                    case EntitySetType.SignalRMessage:
+                        {
+                            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(SignalRMessage));
+                            byte[] bf = Encoding.UTF8.GetBytes(Entity);
+                            MemoryStream strm = new MemoryStream(bf);
+                            strm.Position = 0;
+                            var e = ser.ReadObject(strm) as SignalRMessage;
+                            if (e.ApplicationID == config.App.ID)
+                            {
+                                ulong msgId = (ulong)e.ID;
+                                try
+                                {
+                                    forwardMessage(msgId, ScaleoutMessage.FromBytes(e.MesssageData));
+                                }
+                                catch
+                                {
+
+                                }
+                                LastMessageId = msgId;
+                                IsLastMessageIdChanged = true;
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
         private object _recvLock = new object();
 
         private void forwardMessage(ulong id, ScaleoutMessage smsg)
@@ -212,7 +269,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             {
                 if (LastMessageIdUpdateThread == null || !LastMessageIdUpdateThread.IsAlive)
                 {
-                    LastMessageIdUpdateThread = new Thread(LastIdUpdateThread);
+                    LastMessageIdUpdateThread = new Thread(KeepAliveThread);
                     LastMessageIdUpdateThread.IsBackground = true;
                     LastMessageIdUpdateThread.Priority = ThreadPriority.BelowNormal;
                     LastMessageIdUpdateThread.Start();
@@ -221,13 +278,14 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             }
         }
 
-        private static void LastIdUpdateThread()
+        private static void KeepAliveThread()
         {
             var hsvc = new SignalRHostStateServiceProxy();
             SignalRHostStateSet set = new SignalRHostStateSet();
             try
             {
                 evt.Set();
+                int failCount = 0;
                 while (true)
                 {
                     Thread.Sleep(1000 * config.HostStateUpdateIntervalInSeconds);
@@ -245,10 +303,31 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                         {
                             hsvc.AddOrUpdateEntities(Cntx, set, new SignalRHostState[] { host });
                             IsLastMessageIdChanged = false;
+                            if (failCount > 0)
+                            {
+                                Current.Subscribe();
+                                failCount = 0;
+                            }
                         }
                         catch
                         {
-
+                            failCount++;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            hsvc.QueryEntityCount(Cntx, set, null);
+                            if (failCount > 0)
+                            {
+                                Current.Subscribe();
+                                failCount = 0;
+                            }
+                        }
+                        catch
+                        {
+                            failCount++;
                         }
                     }
                 }
@@ -293,27 +372,6 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             }
         }
 
-        private ScaleoutMessage GetJsonMessage(dynamic msg, out ulong msgId)
-        {
-            msgId = 0;
-            if ((string)msg["status"] == "added")
-            {
-                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(SignalRMessage));
-                byte[] bf = Encoding.UTF8.GetBytes((string)msg["data"]);
-                MemoryStream strm = new MemoryStream(bf);
-                strm.Position = 0;
-                var e = ser.ReadObject(strm) as SignalRMessage;
-                if (e.ApplicationID == config.App.ID)
-                {
-                    msgId = (ulong)e.ID;
-                    return ScaleoutMessage.FromBytes(e.MesssageData);
-                }
-                else
-                    return null;
-            }
-            return null;
-
-        }
 
     }
 }
