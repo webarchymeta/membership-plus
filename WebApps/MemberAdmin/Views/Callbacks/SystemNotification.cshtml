@@ -15,14 +15,33 @@
     <script src="@Url.Content("~/signalr/hubs")"></script>
 
     <script type="text/javascript">
+
+        var _conn = null;
+
+        function conn() {
+            if (_conn == null) {
+                var conn;
+                if (typeof parent != 'undefined' && parent != null) {
+                    if (parent.s_connection == null) {
+                        parent.s_connection = $.connection;
+                    }
+                    _conn = parent.s_connection;
+                } else {
+                    _conn = $.connection;
+                }
+            }
+            return _conn;
+        }
+
         $(function () {
-            var notice = $.connection.notificationHub;
-            notice.client.serverNotifications = function (typeId, msgs, categs) {
+            var notice = conn().notificationHub;
+            //function (typeId, msgs, categs) {
+            notice.on("serverNotifications", function (typeId, msgs, categs) {
                 if (parent && typeof parent.serverNotifications != 'undefined') {
                     parent.serverNotifications(typeId, msgs, categs, __chat_invitation_handler);
                 }
-            };
-            $.connection.hub.start().done(function () {
+            });
+            conn().hub.start().done(function () {
                 isChatHubStarted = true;
                 parent.__systemNotifier = notice.server;
             });
@@ -31,7 +50,7 @@
         var isChatHubStarted = false;
 
         function __chat_invitation_handler(respType, peerId, connectionId, msg) {
-            var chat = $.connection.privateChatHub;
+            var chat = conn().privateChatHub;
             chat.server.userConnectResponse(respType, peerId, connectionId, msg);
         }
     </script>

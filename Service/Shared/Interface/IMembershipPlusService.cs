@@ -167,7 +167,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// <summary>
     /// It is bound to basicHttp end points accessed by clients other than a web browser.
     /// </summary>
+#if !NON_DUPLEX_MODE
     [ServiceContract(Namespace = "http://relationaldb.archymeta.com/MembershipPlus/", SessionMode = SessionMode.Allowed, CallbackContract = typeof(IServiceNotificationCallback))]
+#else
+    [ServiceContract(Namespace = "http://relationaldb.archymeta.com/MembershipPlus/", SessionMode = SessionMode.Allowed)]
+#endif
     public interface IMembershipPlusService2
     {
         /// <summary>

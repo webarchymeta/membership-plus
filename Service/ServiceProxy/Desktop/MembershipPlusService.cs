@@ -26,6 +26,8 @@ using System.ServiceModel.Channels;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
+#if !NON_DUPLEX_MODE
+
     /// <summary>
     /// A dummy callback.
     /// </summary>
@@ -43,11 +45,19 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
     }
 
+#endif
+
     /// <summary>
     /// Proxy for <see cref="IMembershipPlusService2" /> service.
     /// </summary>
+#if !NON_DUPLEX_MODE
     public class MembershipPlusServiceProxy : DuplexClientBase<IMembershipPlusService2>, IMembershipPlusService2
+#else
+    public class MembershipPlusServiceProxy : ClientBase<IMembershipPlusService2>, IMembershipPlusService2
+#endif
     {
+#if !NON_DUPLEX_MODE
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -91,6 +101,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Initializes a new instance using the specified binding and target address. 
         /// </summary>
+        /// <param name="binding">The binding with which to make calls to the service.</param>
+        /// <param name="remoteAddress">The address of the service endpoint.</param>
+        public MembershipPlusServiceProxy(Binding binding, EndpointAddress remoteAddress)
+            : base(new DummyCallback(), binding, remoteAddress)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance using the specified binding and target address. 
+        /// </summary>
         /// <param name="callback">The client callback.</param>
         /// <param name="binding">The binding with which to make calls to the service.</param>
         /// <param name="remoteAddress">The address of the service endpoint.</param>
@@ -99,6 +120,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
 
         }
+#else
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public MembershipPlusServiceProxy() 
+            : base("HTTP")
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="svcConfig">The name of the configuration node for the end point.</param>
+        public MembershipPlusServiceProxy(string svcConfig) 
+            : base(svcConfig)
+        {
+
+        }
+
+#endif
 
         /// <summary>
         /// Client attached error handler.

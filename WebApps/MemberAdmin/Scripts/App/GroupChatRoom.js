@@ -203,9 +203,10 @@ function ChatRoom(id) {
 
 function registerClientMethods(hub) {
 
-    hub.client.userConnected = tryAddPeer;
-
-    hub.client.userReconnected = tryAddPeer;
+    //hub.client.userConnected = tryAddPeer;
+    hub.on("userConnected", tryAddPeer);
+    //hub.client.userReconnected = tryAddPeer;
+    hub.on("userReconnected", tryAddPeer);
 
     function tryAddPeer(p) {
         try {
@@ -220,7 +221,8 @@ function registerClientMethods(hub) {
         }
     }
 
-    hub.client.userDisConnected = function (p) {
+    //hub.client.userDisConnected = function (p) {
+    hub.on("userDisConnected", function (p) {
         try {
             var peer = JSON.parse(p);
             updateMsgSender(root.Messages, peer, false);
@@ -231,9 +233,10 @@ function registerClientMethods(hub) {
         catch (ex) {
             alert(e.message);
         }
-    }
+    });
 
-    hub.client.messageReceived = function (user, msg) {
+    //hub.client.messageReceived = function (user, msg) {
+    hub.on("messageReceived", function (user, msg) {
         try {
             var msgObj = JSON.parse(msg);
             msgObj.self = msgObj.fromId == userId;
@@ -260,15 +263,17 @@ function registerClientMethods(hub) {
         catch (e) {
             alert(e.message);
         }
-    }
+    });
 
-    hub.client.onUserVoteMessage = function (msgId, del) {
+    //hub.client.onUserVoteMessage = function (msgId, del) {
+    hub.on("onUserVoteMessage", function (msgId, del) {
         updateVote(root.Messages, msgId, del);
-    }
+    });
 
-    hub.client.sendError = function (error) {
+    //hub.client.sendError = function (error) {
+    hub.on("sendError", function (error) {
         alert(error);
-    }
+    });
 
     function appendMessage(parents, msg) {
         for (var i = 0; i < parents().length; i++) {
@@ -338,15 +343,19 @@ function registerClientMethods(hub) {
 var root;
 var roomId;
 var dialogMode;
+var s_connection = null;
 
 $(function () {
     root = new ChatRoom(roomId);
     addInitialMembers(root);
     addInitialMessages(root);
     ko.applyBindings(root);
-    root.chatHub = $.connection.groupChatHub;
+    if (s_connection == null) {
+        s_connection = $.connection;
+    }
+    root.chatHub = s_connection.groupChatHub;
     registerClientMethods(root.chatHub);
-    $.connection.hub.start().done(function () {
+    s_connection.hub.start().done(function () {
         root.chatHub.server.userConnected(roomId);
         root.Started(true);
         root.Joined(true);

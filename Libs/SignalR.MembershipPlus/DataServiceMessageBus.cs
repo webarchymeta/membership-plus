@@ -65,6 +65,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
         }
 
         private bool IsDisposed = false;
+
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed)
@@ -84,6 +85,9 @@ namespace Archymeta.Web.MembershipPlus.SignalR
         private static EventHandler _delClosed = null;
         private static DataServiceMessageBus Current = null;
 
+        private DateTime lastReceived = DateTime.MinValue;
+        private DateTime lastSent = DateTime.MinValue;
+
         private void Initialize()
         {
             Initialized = false;
@@ -102,6 +106,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             hubProxy.Invoke("JoinGroup", EntitySetType.SignalRMessage.ToString()).Wait();
             hubProxy.On<dynamic>("entityChanged", (dmsg) => ProcMessage(cntx, dmsg));
             */
+            _delClosed = new EventHandler(_notifier_Closed);
             Subscribe();
             MessageQueue = new BlockingCollection<IList<Message>>(new ConcurrentQueue<IList<Message>>(), config.MaxQueueLength);
             Task.Factory.StartNew(SendMessageThread);
@@ -140,22 +145,9 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             Subscribe();
         }
 
-        // currently not used ...
-        private void PollMessages(CallContext cntx, SignalRMessageServiceProxy msgsvc)
+        private bool PollMessages(CallContext cntx, ulong lastId)
         {
-            var hsvc = new SignalRHostStateServiceProxy();
-            var host = hsvc.LoadEntityByNature(cntx, config.HostName, config.App.ID).SingleOrDefault();
-            if (host == null)
-            {
-                host = new SignalRHostState
-                {
-                    HostName = config.HostName,
-                    ApplicationID = config.App.ID,
-                    LastMsgId = 0
-                };
-                var x = hsvc.AddOrUpdateEntities(cntx, new SignalRHostStateSet(), new SignalRHostState[] { host });
-                host = x.ChangedEntities[0].UpdatedItem;
-            }
+            var msgsvc = new SignalRMessageServiceProxy();
             DateTime dt = DateTime.UtcNow.AddHours(-config.TimeWindowInHours);
             QueryExpresion qexpr = new QueryExpresion();
             qexpr.OrderTks = new List<QToken>(new QToken[] { 
@@ -163,13 +155,12 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                 new QToken { TkName = "desc" }
             });
             qexpr.FilterTks = new List<QToken>(new QToken[] { 
-                new QToken { TkName = "ApplicationID == \"" + config.App.ID + "\" && ID > " + host.LastMsgId + " && TimeStamp > " + dt.Ticks }
+                new QToken { TkName = "ApplicationID == \"" + config.App.ID + "\" && ID > " + lastId + " && TimeStamp > " + dt.Ticks }
             });
             var msgs = msgsvc.QueryDatabaseLimited(cntx, new SignalRMessageSet(), qexpr, config.MaxBacklogMessages).ToArray();
             if (msgs.Length > 0)
             {
-                host.LastMsgId = msgs[0].ID;
-                LastMessageId = (ulong)host.LastMsgId;
+                LastMessageId = (ulong)msgs[0].ID;
                 IsLastMessageIdChanged = true;
                 foreach (var e in from d in msgs orderby d.ID ascending select d)
                 {
@@ -177,6 +168,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                     forwardMessage((ulong)e.ID, smsg);
                 }
             }
+            return msgs.Length > 0;
         }
 
         // it is used to handle SignalR notifications
@@ -260,6 +252,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             //lock (_recvLock)
             {
                 OnReceived(0, id, smsg);
+                lastReceived = DateTime.Now;
             }
         }
 
@@ -280,18 +273,32 @@ namespace Archymeta.Web.MembershipPlus.SignalR
 
         private static void KeepAliveThread()
         {
-            var hsvc = new SignalRHostStateServiceProxy();
             SignalRHostStateSet set = new SignalRHostStateSet();
             try
             {
                 evt.Set();
                 int failCount = 0;
+                var cntx = Cntx;
+                var hsvc = new SignalRHostStateServiceProxy();
+                var host = hsvc.LoadEntityByNature(cntx, config.HostName, config.App.ID).SingleOrDefault();
+                if (host == null)
+                {
+                    host = new SignalRHostState
+                    {
+                        HostName = config.HostName,
+                        ApplicationID = config.App.ID,
+                        LastMsgId = 0
+                    };
+                    var x = hsvc.AddOrUpdateEntities(cntx, new SignalRHostStateSet(), new SignalRHostState[] { host });
+                    host = x.ChangedEntities[0].UpdatedItem;
+                }
                 while (true)
                 {
                     Thread.Sleep(1000 * config.HostStateUpdateIntervalInSeconds);
+                    hsvc = new SignalRHostStateServiceProxy();
                     if (IsLastMessageIdChanged)
                     {
-                        SignalRHostState host = new SignalRHostState
+                        host = new SignalRHostState
                         {
                             IsPersisted = true,
                             HostName = config.HostName,
@@ -301,7 +308,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                         };
                         try
                         {
-                            hsvc.AddOrUpdateEntities(Cntx, set, new SignalRHostState[] { host });
+                            hsvc.AddOrUpdateEntities(cntx, set, new SignalRHostState[] { host });
                             IsLastMessageIdChanged = false;
                             if (failCount > 0)
                             {
@@ -318,12 +325,24 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                     {
                         try
                         {
-                            hsvc.QueryEntityCount(Cntx, set, null);
-                            if (failCount > 0)
+                            bool b = Current.PollMessages(cntx, LastMessageId);
+                            if (b || (Current.lastSent - Current.lastReceived) > TimeSpan.FromSeconds(20) || failCount > 0)
                             {
                                 Current.Subscribe();
                                 failCount = 0;
                             }
+                        }
+                        catch
+                        {
+                            failCount++;
+                        }
+                    }
+                    if (Current.CallbackFailed)
+                    {
+                        try
+                        {
+                            Current.Subscribe();
+                            failCount = 0;
                         }
                         catch
                         {
@@ -363,6 +382,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                     try
                     {
                         msgsvc.AddOrUpdateEntities(cntx, set, new SignalRMessage[] { entity });
+                        lastSent = DateTime.Now;
                     }
                     catch
                     {

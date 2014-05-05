@@ -205,7 +205,8 @@ function updateMsgSender(msgList, peer, join) {
 
 function registerClientMethods(hub) {
 
-    hub.client.peerConnectResponse = function (msg) {
+    //hub.client.peerConnectResponse = function (msg) {
+    hub.on("peerConnectResponse", function (msg) {
         switch (msg.status) {
             case 1:
                 return;
@@ -228,13 +229,15 @@ function registerClientMethods(hub) {
                 break;
         }
         root.status("Failed");
-    }
+    });
 
-    hub.client.onSyncRecordState = function (record) {
+    //hub.client.onSyncRecordState = function (record) {
+    hub.on("onSyncRecordState", function (record) {
         root.recordSession(record);
-    }
+    });
 
-    hub.client.onConnectAck = function () {
+    //hub.client.onConnectAck = function () {
+    hub.on("onConnectAck", function () {
         root.status("Connected");
         if (typeof parent != 'undefined' && parent != null && typeof parent.__open_chat_handlers != 'undefined') {
             parent.__open_chat_handlers[peerId] = openChatHandler;
@@ -243,9 +246,10 @@ function registerClientMethods(hub) {
         }
         root.peerActive(true);
         updateMsgSender(root.Messages, peerObj, true);
-    }
+    });
 
-    hub.client.messageReceived = function (user, msg) {
+    //hub.client.messageReceived = function (user, msg) {
+    hub.on("messageReceived", function (user, msg) {
         try {
             var msgObj = JSON.parse(msg);
             if (msgObj.fromId == userId)
@@ -267,11 +271,7 @@ function registerClientMethods(hub) {
         catch (e) {
             alert(e.message);
         }
-    }
-
-    hub.client.userDisConnected = function (peer) {
-        alert('fired');
-    }
+    });
 }
 
 var openChatHandler = function (peerId) {
@@ -290,9 +290,20 @@ var popupMode = true;
 $(function () {
     root = new ChatContext(userId, peerId);
     ko.applyBindings(root);
-    root.chatHub = $.connection.privateChatHub;
+    var conn;
+    var started = typeof parent != 'undefined' && parent != null;
+    if (started) {
+        //if (parent.s_connection == null) {
+        //    parent.s_connection = $.connection;
+        //}
+        //conn = parent.s_connection;
+        conn = $.connection;
+    } else {
+        conn = $.connection;
+    }
+    root.chatHub = conn.privateChatHub;
     registerClientMethods(root.chatHub);
-    $.connection.hub.start().done(function () {
+    conn.hub.start().done(function () {
         root.chatHub.server.userConnected(peerId).done(function (r) {
             if (r.status != 'DeadEnd') {
                 root.status(r.status);
@@ -333,4 +344,4 @@ $(function () {
     }).fail(function () {
         root.status('Failed');
     });
-})
+});
