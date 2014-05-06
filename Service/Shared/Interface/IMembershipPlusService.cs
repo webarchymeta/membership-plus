@@ -150,9 +150,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     }
 
     /// <summary>
+    /// Interface for data change notification callbacks.
+    /// </summary>
+    public interface IServiceNotificationCallback
+    {
+        /// <summary>
+        /// Change notification callback.
+        /// </summary>
+        /// <param name="SetType">The type of the changed entity.</param>
+        /// <param name="Status">The type of changes of the entity.</param>
+        /// <param name="Entity">The changed entity.</param>
+        [OperationContract(IsOneWay = true)]
+        void EntityChanged(EntitySetType SetType, int Status, string Entity);
+    }
+
+    /// <summary>
     /// It is bound to basicHttp end points accessed by clients other than a web browser.
     /// </summary>
+#if !NON_DUPLEX_MODE
+    [ServiceContract(Namespace = "http://relationaldb.archymeta.com/MembershipPlus/", SessionMode = SessionMode.Allowed, CallbackContract = typeof(IServiceNotificationCallback))]
+#else
     [ServiceContract(Namespace = "http://relationaldb.archymeta.com/MembershipPlus/", SessionMode = SessionMode.Allowed)]
+#endif
     public interface IMembershipPlusService2
     {
         /// <summary>
@@ -192,6 +211,40 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<CallContext> SignInServiceAsync(CallContext cntx, CallerCredentials credentials);
+#endif
+
+        /// <summary>
+        /// Register a subscription to notification of data source changes.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
+        /// about all data sets will be sent to the client.</param>
+        [OperationContract]
+        void SubscribeToUpdates(string clientID, EntitySetType[] sets);
+#if SUPPORT_ASYNC
+        /// <summary>
+        /// Register a subscription to notification of data source changes.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
+        /// about all data sets will be sent to the client.</param>
+        [OperationContract]
+        System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, EntitySetType[] sets);
+#endif
+
+        /// <summary>
+        /// un-register a subscription to data source change notifications.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        [OperationContract]
+        void UnsubscribeToUpdates(string clientID);
+#if SUPPORT_ASYNC
+        /// <summary>
+        /// un-register a subscription to data source change notifications.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        [OperationContract]
+        System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(string clientID);
 #endif
 
         /// <summary>

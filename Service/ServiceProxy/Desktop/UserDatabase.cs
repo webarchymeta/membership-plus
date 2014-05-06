@@ -132,7 +132,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="UserServiceProxy.MaterializeAnnouncements" />, <see cref="UserServiceProxy.MaterializeCommunications" />, <see cref="UserServiceProxy.MaterializeEventCalendar_UserIDs" />, <see cref="UserServiceProxy.MaterializeEventCalendar_CreatedUserIDs" />, <see cref="UserServiceProxy.MaterializeMemberNotifications" />, <see cref="UserServiceProxy.MaterializeUserAppMembers" />, <see cref="UserServiceProxy.MaterializeUserAssociation_FromUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssociation_ToUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssocInvitation_FromUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssocInvitation_ToUserIDs" />, <see cref="UserServiceProxy.MaterializeUserDetails" />, <see cref="UserServiceProxy.MaterializeUserGroupMembers" />, <see cref="UserServiceProxy.MaterializeUserProfiles" />, <see cref="UserServiceProxy.MaterializeUsersInRole_UserIDs" />, <see cref="UserServiceProxy.MaterializeUsersInRole_AdminIDs" />, <see cref="UserServiceProxy.MaterializeUsersRoleHistory_UserIDs" />, <see cref="UserServiceProxy.MaterializeUsersRoleHistory_OperatorIDs" />.
+    ///        <see cref="UserServiceProxy.MaterializeAnnouncements" />, <see cref="UserServiceProxy.MaterializeCommunications" />, <see cref="UserServiceProxy.MaterializeEventCalendar_UserIDs" />, <see cref="UserServiceProxy.MaterializeEventCalendar_CreatedUserIDs" />, <see cref="UserServiceProxy.MaterializeMemberNotifications" />, <see cref="UserServiceProxy.MaterializeNotificationTaskSchedules" />, <see cref="UserServiceProxy.MaterializeShortMessageAudiences" />, <see cref="UserServiceProxy.MaterializeShortMessage_FromIDs" />, <see cref="UserServiceProxy.MaterializeShortMessage_ToIDs" />, <see cref="UserServiceProxy.MaterializeUserAppMembers" />, <see cref="UserServiceProxy.MaterializeUserAssociation_FromUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssociation_ToUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssocInvitation_FromUserIDs" />, <see cref="UserServiceProxy.MaterializeUserAssocInvitation_ToUserIDs" />, <see cref="UserServiceProxy.MaterializeUserDetails" />, <see cref="UserServiceProxy.MaterializeUserGroupMembers" />, <see cref="UserServiceProxy.MaterializeUserProfiles" />, <see cref="UserServiceProxy.MaterializeUsersInRole_UserIDs" />, <see cref="UserServiceProxy.MaterializeUsersInRole_AdminIDs" />, <see cref="UserServiceProxy.MaterializeUsersRoleHistory_UserIDs" />, <see cref="UserServiceProxy.MaterializeUsersRoleHistory_OperatorIDs" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -186,6 +186,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         }
 
+        /// <summary>
+        /// Client attached error handler.
+        /// </summary>
         public Action<Exception> DelHandleError = null;
         /// <summary>
         ///   Retrieve information about the entity set: "Users". 
@@ -254,7 +257,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedShortMessageAudiences" />, <see cref="User.ChangedShortMessage_FromIDs" />, <see cref="User.ChangedShortMessage_ToIDs" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -301,7 +304,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedShortMessageAudiences" />, <see cref="User.ChangedShortMessage_FromIDs" />, <see cref="User.ChangedShortMessage_ToIDs" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -359,7 +362,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedShortMessageAudiences" />, <see cref="User.ChangedShortMessage_FromIDs" />, <see cref="User.ChangedShortMessage_ToIDs" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -415,7 +418,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="User.ChangedAnnouncements" />, <see cref="User.ChangedCommunications" />, <see cref="User.ChangedEventCalendar_UserIDs" />, <see cref="User.ChangedEventCalendar_CreatedUserIDs" />, <see cref="User.ChangedMemberNotifications" />, <see cref="User.ChangedNotificationTaskSchedules" />, <see cref="User.ChangedShortMessageAudiences" />, <see cref="User.ChangedShortMessage_FromIDs" />, <see cref="User.ChangedShortMessage_ToIDs" />, <see cref="User.ChangedUserAppMembers" />, <see cref="User.ChangedUserAssociation_FromUserIDs" />, <see cref="User.ChangedUserAssociation_ToUserIDs" />, <see cref="User.ChangedUserAssocInvitation_FromUserIDs" />, <see cref="User.ChangedUserAssocInvitation_ToUserIDs" />, <see cref="User.ChangedUserDetails" />, <see cref="User.ChangedUserGroupMembers" />, <see cref="User.ChangedUserProfiles" />, <see cref="User.ChangedUsersInRole_UserIDs" />, <see cref="User.ChangedUsersInRole_AdminIDs" />, <see cref="User.ChangedUsersRoleHistory_UserIDs" />, <see cref="User.ChangedUsersRoleHistory_OperatorIDs" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -571,7 +574,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return Channel.GetPageItems(cntx, set, qexpr, prevlast);
+                return Channel.GetPageItems(cntx, set, qexpr, prevlast).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -601,7 +604,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast);
+                return (await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -670,7 +673,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabase(cntx, set, qexpr);
+                return Channel.QueryDatabase(cntx, set, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -693,7 +696,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseAsync(cntx, set, qexpr);
+                return (await Channel.QueryDatabaseAsync(cntx, set, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -717,7 +720,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords);
+                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -741,7 +744,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords);
+                return (await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -813,7 +816,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllAnnouncements(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllAnnouncements(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -835,7 +838,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllAnnouncementsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllAnnouncementsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -907,7 +910,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllCommunications(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllCommunications(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -929,7 +932,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllCommunicationsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllCommunicationsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1001,7 +1004,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllEventCalendar_UserIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllEventCalendar_UserIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1023,7 +1026,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllEventCalendar_UserIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllEventCalendar_UserIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1095,7 +1098,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllEventCalendar_CreatedUserIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllEventCalendar_CreatedUserIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1117,7 +1120,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllEventCalendar_CreatedUserIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllEventCalendar_CreatedUserIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1189,7 +1192,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllMemberNotifications(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllMemberNotifications(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1211,7 +1214,383 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllMemberNotificationsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllMemberNotificationsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        public NotificationTaskScheduleSet MaterializeNotificationTaskSchedules(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeNotificationTaskSchedules(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<NotificationTaskScheduleSet> MaterializeNotificationTaskSchedulesAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return await Channel.MaterializeNotificationTaskSchedulesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        public IEnumerable<NotificationTaskSchedule> MaterializeAllNotificationTaskSchedules(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllNotificationTaskSchedules(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<NotificationTaskSchedule>> MaterializeAllNotificationTaskSchedulesAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllNotificationTaskSchedulesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessageAudiences" of type <see cref="ShortMessageAudienceSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageAudienceSet" />.
+        /// </returns>
+        public ShortMessageAudienceSet MaterializeShortMessageAudiences(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeShortMessageAudiences(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessageAudiences" of type <see cref="ShortMessageAudienceSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageAudienceSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<ShortMessageAudienceSet> MaterializeShortMessageAudiencesAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return await Channel.MaterializeShortMessageAudiencesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessageAudiences" of type <see cref="IEnumerable{ShortMessageAudience}" /> (T = <see cref="ShortMessageAudience" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessageAudience}" /> (T = <see cref="ShortMessageAudience" />).
+        /// </returns>
+        public IEnumerable<ShortMessageAudience> MaterializeAllShortMessageAudiences(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllShortMessageAudiences(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessageAudiences" of type <see cref="IEnumerable{ShortMessageAudience}" /> (T = <see cref="ShortMessageAudience" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessageAudience}" /> (T = <see cref="ShortMessageAudience" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<ShortMessageAudience>> MaterializeAllShortMessageAudiencesAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllShortMessageAudiencesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessage_FromIDs" of type <see cref="ShortMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        public ShortMessageSet MaterializeShortMessage_FromIDs(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeShortMessage_FromIDs(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessage_FromIDs" of type <see cref="ShortMessageSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<ShortMessageSet> MaterializeShortMessage_FromIDsAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return await Channel.MaterializeShortMessage_FromIDsAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessage_FromIDs" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        public IEnumerable<ShortMessage> MaterializeAllShortMessage_FromIDs(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllShortMessage_FromIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessage_FromIDs" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<ShortMessage>> MaterializeAllShortMessage_FromIDsAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllShortMessage_FromIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessage_ToIDs" of type <see cref="ShortMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        public ShortMessageSet MaterializeShortMessage_ToIDs(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeShortMessage_ToIDs(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessage_ToIDs" of type <see cref="ShortMessageSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<ShortMessageSet> MaterializeShortMessage_ToIDsAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return await Channel.MaterializeShortMessage_ToIDsAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessage_ToIDs" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        public IEnumerable<ShortMessage> MaterializeAllShortMessage_ToIDs(CallContext cntx, User entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllShortMessage_ToIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessage_ToIDs" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<ShortMessage>> MaterializeAllShortMessage_ToIDsAsync(CallContext cntx, User entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllShortMessage_ToIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1283,7 +1662,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserAppMembers(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserAppMembers(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1305,7 +1684,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserAppMembersAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserAppMembersAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1377,7 +1756,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserAssociation_FromUserIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserAssociation_FromUserIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1399,7 +1778,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserAssociation_FromUserIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserAssociation_FromUserIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1477,7 +1856,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllPersonalRelations(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllPersonalRelations(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1503,7 +1882,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllPersonalRelationsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllPersonalRelationsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1575,7 +1954,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserAssociation_ToUserIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserAssociation_ToUserIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1597,7 +1976,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserAssociation_ToUserIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserAssociation_ToUserIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1669,7 +2048,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserAssocInvitation_FromUserIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserAssocInvitation_FromUserIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1691,7 +2070,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserAssocInvitation_FromUserIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserAssocInvitation_FromUserIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1763,7 +2142,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserAssocInvitation_ToUserIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserAssocInvitation_ToUserIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1785,7 +2164,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserAssocInvitation_ToUserIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserAssocInvitation_ToUserIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1863,7 +2242,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllInvitatingUsers(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllInvitatingUsers(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1889,7 +2268,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllInvitatingUsersAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllInvitatingUsersAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1961,7 +2340,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserDetails(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserDetails(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1983,7 +2362,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserDetailsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserDetailsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2055,7 +2434,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserGroupMembers(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserGroupMembers(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2077,7 +2456,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserGroupMembersAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserGroupMembersAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2149,7 +2528,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserProfiles(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserProfiles(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2171,7 +2550,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserProfilesAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserProfilesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2243,7 +2622,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUsersInRole_UserIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUsersInRole_UserIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2265,7 +2644,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUsersInRole_UserIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUsersInRole_UserIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2343,7 +2722,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllRoles(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllRoles(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2369,7 +2748,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllRolesAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllRolesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2441,7 +2820,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUsersInRole_AdminIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUsersInRole_AdminIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2463,7 +2842,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUsersInRole_AdminIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUsersInRole_AdminIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2535,7 +2914,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUsersRoleHistory_UserIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUsersRoleHistory_UserIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2557,7 +2936,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUsersRoleHistory_UserIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUsersRoleHistory_UserIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2629,7 +3008,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUsersRoleHistory_OperatorIDs(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUsersRoleHistory_OperatorIDs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2651,7 +3030,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUsersRoleHistory_OperatorIDsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUsersRoleHistory_OperatorIDsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2673,7 +3052,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByKey(cntx, _ID);
+                var e = Channel.LoadEntityByKey(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -2695,7 +3077,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                var e = await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -2821,7 +3206,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByNature(cntx, _Username);
+                var list = Channel.LoadEntityByNature(cntx, _Username);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {
@@ -2851,7 +3237,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByNatureAsync(cntx, _Username);
+                var list = await Channel.LoadEntityByNatureAsync(cntx, _Username);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {

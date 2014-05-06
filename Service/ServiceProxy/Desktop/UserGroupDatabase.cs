@@ -139,6 +139,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Delay Loaded Properties</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Properties that are loaded on demand.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (loading)</term>
+    ///      <description>
+    ///         <see cref="UserGroupServiceProxy.LoadEntityGroupDescription" />
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods (uploading)</term>
+    ///      <description>
+    ///         <see cref="UserGroupServiceProxy.UpdateEntityGroupDescription" />
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Entity Hierarchy</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -185,7 +208,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="UserGroupServiceProxy.MaterializeAnnouncements" />, <see cref="UserGroupServiceProxy.MaterializeEventCalendars" />, <see cref="UserGroupServiceProxy.MaterializeUserGroupAdminRoles" />, <see cref="UserGroupServiceProxy.MaterializeUserGroupMembers" />, <see cref="UserGroupServiceProxy.MaterializeUserGroups" />.
+    ///        <see cref="UserGroupServiceProxy.MaterializeAnnouncements" />, <see cref="UserGroupServiceProxy.MaterializeEventCalendars" />, <see cref="UserGroupServiceProxy.MaterializeShortMessages" />, <see cref="UserGroupServiceProxy.MaterializeUserGroupAdminRoles" />, <see cref="UserGroupServiceProxy.MaterializeUserGroupMembers" />, <see cref="UserGroupServiceProxy.MaterializeUserGroups" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -239,6 +262,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         }
 
+        /// <summary>
+        /// Client attached error handler.
+        /// </summary>
         public Action<Exception> DelHandleError = null;
         /// <summary>
         ///   Retrieve information about the entity set: "UserGroups". 
@@ -311,7 +337,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -362,7 +388,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -420,7 +446,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -476,7 +502,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="UserGroup.ChangedAnnouncements" />, <see cref="UserGroup.ChangedEventCalendars" />, <see cref="UserGroup.ChangedShortMessages" />, <see cref="UserGroup.ChangedUserGroupAdminRoles" />, <see cref="UserGroup.ChangedUserGroupMembers" />, <see cref="UserGroup.ChangedUserGroups" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -632,7 +658,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return Channel.GetPageItems(cntx, set, qexpr, prevlast);
+                return Channel.GetPageItems(cntx, set, qexpr, prevlast).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -662,7 +688,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast);
+                return (await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -731,7 +757,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabase(cntx, set, qexpr);
+                return Channel.QueryDatabase(cntx, set, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -754,7 +780,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseAsync(cntx, set, qexpr);
+                return (await Channel.QueryDatabaseAsync(cntx, set, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -778,7 +804,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords);
+                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -802,7 +828,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords);
+                return (await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -922,7 +948,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.ConstraintQuery(cntx, set, constraints, qexpr);
+                return Channel.ConstraintQuery(cntx, set, constraints, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -946,7 +972,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.ConstraintQueryAsync(cntx, set, constraints, qexpr);
+                return (await Channel.ConstraintQueryAsync(cntx, set, constraints, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -971,7 +997,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.ConstraintQueryLimited(cntx, set, constraints, qexpr, maxRecords);
+                return Channel.ConstraintQueryLimited(cntx, set, constraints, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -996,7 +1022,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords);
+                return (await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1021,7 +1047,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1046,7 +1075,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1071,7 +1103,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeUpperRef(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeUpperRef(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1096,7 +1131,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeUpperRefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeUpperRefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1121,7 +1159,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeUserGroupTypeRef(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeUserGroupTypeRef(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1146,7 +1187,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeUserGroupTypeRefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeUserGroupTypeRefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1270,7 +1314,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllAnnouncements(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllAnnouncements(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1292,7 +1336,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllAnnouncementsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllAnnouncementsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1364,7 +1408,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllEventCalendars(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllEventCalendars(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1386,7 +1430,101 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllEventCalendarsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllEventCalendarsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        public ShortMessageSet MaterializeShortMessages(CallContext cntx, UserGroup entity)
+        {
+            try
+            {
+                return Channel.MaterializeShortMessages(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<ShortMessageSet> MaterializeShortMessagesAsync(CallContext cntx, UserGroup entity)
+        {
+            try
+            {
+                return await Channel.MaterializeShortMessagesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        public IEnumerable<ShortMessage> MaterializeAllShortMessages(CallContext cntx, UserGroup entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllShortMessages(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<ShortMessage>> MaterializeAllShortMessagesAsync(CallContext cntx, UserGroup entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllShortMessagesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1458,7 +1596,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserGroupAdminRoles(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserGroupAdminRoles(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1480,7 +1618,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserGroupAdminRolesAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserGroupAdminRolesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1552,7 +1690,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserGroupMembers(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserGroupMembers(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1574,7 +1712,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserGroupMembersAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserGroupMembersAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1646,7 +1784,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserGroups(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserGroups(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1668,7 +1806,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserGroupsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserGroupsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1690,7 +1828,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByKey(cntx, _ID);
+                var e = Channel.LoadEntityByKey(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1712,7 +1853,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                var e = await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1835,7 +1979,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByNature(cntx, _ID);
+                var list = Channel.LoadEntityByNature(cntx, _ID);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {
@@ -1862,7 +2007,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByNatureAsync(cntx, _ID);
+                var list = await Channel.LoadEntityByNatureAsync(cntx, _ID);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {
@@ -1886,7 +2032,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntitySetRoots(cntx);
+                return Channel.LoadEntitySetRoots(cntx).Select(d => { d.DataBehind.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1910,7 +2056,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntitySetRootsAsync(cntx);
+                return (await Channel.LoadEntitySetRootsAsync(cntx)).Select(d => { d.DataBehind.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1934,7 +2080,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityParent(cntx, node);
+                var p = Channel.LoadEntityParent(cntx, node);
+                if (p != null)
+                    p.DataBehind.StartAutoUpdating = true;
+                return p;
             }
             catch (Exception ex)
             {
@@ -1958,7 +2107,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityParentAsync(cntx, node);
+                var p = await Channel.LoadEntityParentAsync(cntx, node);
+                if (p != null)
+                    p.DataBehind.StartAutoUpdating = true;
+                return p;
             }
             catch (Exception ex)
             {
@@ -1982,7 +2134,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityChildren(cntx, node);
+                return Channel.LoadEntityChildren(cntx, node).Select(d => { d.DataBehind.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2006,7 +2158,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityChildrenAsync(cntx, node);
+                return (await Channel.LoadEntityChildrenAsync(cntx, node)).Select(d => { d.DataBehind.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -2031,7 +2183,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityFullHierarchyRecurs(cntx, entity.ShallowCopy());
+                var r = Channel.LoadEntityFullHierarchyRecurs(cntx, entity.ShallowCopy());
+                if (r != null)
+                    setupTreeNode(r);
+                return r;
             }
             catch (Exception ex)
             {
@@ -2056,7 +2211,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityFullHierarchyRecursAsync(cntx, entity.ShallowCopy());
+                var r = await Channel.LoadEntityFullHierarchyRecursAsync(cntx, entity.ShallowCopy());
+                if (r != null)
+                    setupTreeNode(r);
+                return r;
             }
             catch (Exception ex)
             {
@@ -2085,7 +2243,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityHierarchyRecurs(cntx, entity.ShallowCopy(), uplev, lowlev);
+                var r = Channel.LoadEntityHierarchyRecurs(cntx, entity.ShallowCopy(), uplev, lowlev);
+                if (r != null)
+                    setupTreeNode(r);
+                return r;
             }
             catch (Exception ex)
             {
@@ -2114,12 +2275,121 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityHierarchyRecursAsync(cntx, entity.ShallowCopy(), uplev, lowlev);
+                var r = await Channel.LoadEntityHierarchyRecursAsync(cntx, entity.ShallowCopy(), uplev, lowlev);
+                if (r != null)
+                    setupTreeNode(r);
+                return r;
             }
             catch (Exception ex)
             {
                 HandleError(ex);
                 return null;
+            }
+        }
+#endif
+
+        private void setupTreeNode(EntityAbs<UserGroup> n)
+        {
+            n.DataBehind.StartAutoUpdating = true;
+            if (n.ChildEntities != null && n.ChildEntities.Count > 0)
+            {
+                foreach (var c in n.ChildEntities)
+                    setupTreeNode(c);
+            }
+        }
+
+        /// <summary>
+        ///  Load the delay loaded property <see cref="UserGroup.GroupDescription" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        public string LoadEntityGroupDescription(CallContext cntx, string _ID)
+        {
+            try
+            {
+                return Channel.LoadEntityGroupDescription(cntx, _ID);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Load the delay loaded property <see cref="UserGroup.GroupDescription" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        public async System.Threading.Tasks.Task<string> LoadEntityGroupDescriptionAsync(CallContext cntx, string _ID)
+        {
+            try
+            {
+                return await Channel.LoadEntityGroupDescriptionAsync(cntx, _ID);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserGroup.GroupDescription" />. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        public void UpdateEntityGroupDescription(CallContext cntx, string _ID, string data)
+        {
+            try
+            {
+                Channel.UpdateEntityGroupDescription(cntx, _ID, data);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Update the delay loaded property <see cref="UserGroup.GroupDescription" />. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ID">Primary key <see cref="UserGroup.ID" />.</param>
+        /// <param name="data">The updated value.</param>
+        /// <remarks>
+        /// </remarks>
+        /// <returns>
+        ///   The value of the property.
+        /// </returns>
+        public async System.Threading.Tasks.Task UpdateEntityGroupDescriptionAsync(CallContext cntx, string _ID, string data)
+        {
+            try
+            {
+                await Channel.UpdateEntityGroupDescriptionAsync(cntx, _ID, data);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
             }
         }
 #endif

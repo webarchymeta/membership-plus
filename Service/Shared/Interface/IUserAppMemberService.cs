@@ -177,6 +177,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Downstream Navigation</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Load and/or navigates to entity sets that depend on an entity in the current entity set.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods</term>
+    ///      <description>
+    ///        <see cref="IUserAppMemberService.MaterializeMemberCallbacks" />.
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Entity graph building</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -281,6 +298,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="UserAppMember.ChangedMemberCallbacks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -331,6 +352,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="UserAppMember.Application_Ref" />, <see cref="UserAppMember.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="UserAppMember.ChangedMemberCallbacks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -550,6 +575,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/QuerySetConstraints")]
         UserAppMemberSetConstraintsColl QuerySetConstraints(CallContext cntx, UserAppMemberSet set, QueryExpresion qexpr, int max, string nextId);
+
+        /// <summary>
+        ///   Load the set of depending entities "MemberCallbacks" of type <see cref="MemberCallbackSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="MemberCallbackSet" />.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeMemberCallbacks")]
+        MemberCallbackSet MaterializeMemberCallbacks(CallContext cntx, UserAppMember entity);
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllMemberCallbacks" of type <see cref="IEnumerable{MemberCallback}" /> (T = <see cref="MemberCallback" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{MemberCallback}" /> (T = <see cref="MemberCallback" />).
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeAllMemberCallbacks")]
+        IEnumerable<MemberCallback> MaterializeAllMemberCallbacks(CallContext cntx, UserAppMember entity);
 
         /// <summary>
         ///  Load an entity from the entity set having specified primary key(s): { <see cref="UserAppMember.ApplicationID" />, <see cref="UserAppMember.UserID" /> }. 
@@ -901,6 +961,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Downstream Navigation</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Load and/or navigates to entity sets that depend on an entity in the current entity set.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods</term>
+    ///      <description>
+    ///        <see cref="IUserAppMemberService2.MaterializeMemberCallbacks" />.
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Entity graph building</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -1036,6 +1113,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="UserAppMember.ChangedMemberCallbacks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -1070,6 +1151,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="UserAppMember.Application_Ref" />, <see cref="UserAppMember.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="UserAppMember.ChangedMemberCallbacks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -1120,6 +1205,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="UserAppMember.ChangedMemberCallbacks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -1164,6 +1253,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="UserAppMember.Application_Ref" />, <see cref="UserAppMember.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="UserAppMember.ChangedMemberCallbacks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -1484,6 +1577,58 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <remarks>It will throw an exception if the <see cref="UserAppMemberSet.SetFilter" /> of <paramref name="set" /> is null or empty.</remarks>
         [OperationContract]
         System.Threading.Tasks.Task<UserAppMemberSetConstraintsColl> QuerySetConstraintsAsync(CallContext cntx, UserAppMemberSet set, QueryExpresion qexpr, int max, string nextId);
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "MemberCallbacks" of type <see cref="MemberCallbackSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="MemberCallbackSet" />.
+        /// </returns>
+        [OperationContract]
+        MemberCallbackSet MaterializeMemberCallbacks(CallContext cntx, UserAppMember entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "MemberCallbacks" of type <see cref="MemberCallbackSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="MemberCallbackSet" />.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<MemberCallbackSet> MaterializeMemberCallbacksAsync(CallContext cntx, UserAppMember entity);
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllMemberCallbacks" of type <see cref="IEnumerable{MemberCallback}" /> (T = <see cref="MemberCallback" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{MemberCallback}" /> (T = <see cref="MemberCallback" />).
+        /// </returns>
+        [OperationContract]
+        IEnumerable<MemberCallback> MaterializeAllMemberCallbacks(CallContext cntx, UserAppMember entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllMemberCallbacks" of type <see cref="IEnumerable{MemberCallback}" /> (T = <see cref="MemberCallback" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{MemberCallback}" /> (T = <see cref="MemberCallback" />).
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<IEnumerable<MemberCallback>> MaterializeAllMemberCallbacksAsync(CallContext cntx, UserAppMember entity);
 #endif
 
         /// <summary>

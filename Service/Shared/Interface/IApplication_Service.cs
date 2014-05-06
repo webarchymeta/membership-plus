@@ -130,7 +130,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IApplication_Service.MaterializeAnnouncements" />, <see cref="IApplication_Service.MaterializeCommunications" />, <see cref="IApplication_Service.MaterializeEventCalendars" />, <see cref="IApplication_Service.MaterializeMemberNotifications" />, <see cref="IApplication_Service.MaterializeRoles" />, <see cref="IApplication_Service.MaterializeUserAppMembers" />, <see cref="IApplication_Service.MaterializeUserDetails" />, <see cref="IApplication_Service.MaterializeUserGroups" />, <see cref="IApplication_Service.MaterializeUserProfiles" />.
+    ///        <see cref="IApplication_Service.MaterializeAnnouncements" />, <see cref="IApplication_Service.MaterializeCommunications" />, <see cref="IApplication_Service.MaterializeEventCalendars" />, <see cref="IApplication_Service.MaterializeMemberNotifications" />, <see cref="IApplication_Service.MaterializeRoles" />, <see cref="IApplication_Service.MaterializeShortMessages" />, <see cref="IApplication_Service.MaterializeSignalRHostStates" />, <see cref="IApplication_Service.MaterializeSignalRMessages" />, <see cref="IApplication_Service.MaterializeUserAppMembers" />, <see cref="IApplication_Service.MaterializeUserDetails" />, <see cref="IApplication_Service.MaterializeUserGroups" />, <see cref="IApplication_Service.MaterializeUserProfiles" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -236,7 +236,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -288,7 +288,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -553,6 +553,111 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/MaterializeAllRoles")]
         IEnumerable<Role> MaterializeAllRoles(CallContext cntx, Application_ entity);
+
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeShortMessages")]
+        ShortMessageSet MaterializeShortMessages(CallContext cntx, Application_ entity);
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeAllShortMessages")]
+        IEnumerable<ShortMessage> MaterializeAllShortMessages(CallContext cntx, Application_ entity);
+
+        /// <summary>
+        ///   Load the set of depending entities "SignalRHostStates" of type <see cref="SignalRHostStateSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRHostStateSet" />.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeSignalRHostStates")]
+        SignalRHostStateSet MaterializeSignalRHostStates(CallContext cntx, Application_ entity);
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRHostStates" of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />).
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeAllSignalRHostStates")]
+        IEnumerable<SignalRHostState> MaterializeAllSignalRHostStates(CallContext cntx, Application_ entity);
+
+        /// <summary>
+        ///   Load the set of depending entities "SignalRMessages" of type <see cref="SignalRMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeSignalRMessages")]
+        SignalRMessageSet MaterializeSignalRMessages(CallContext cntx, Application_ entity);
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRMessages" of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />).
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeAllSignalRMessages")]
+        IEnumerable<SignalRMessage> MaterializeAllSignalRMessages(CallContext cntx, Application_ entity);
 
         /// <summary>
         ///   Load the set of depending entities "UserAppMembers" of type <see cref="UserAppMemberSet" /> of the entity. 
@@ -957,7 +1062,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="IApplication_Service2.MaterializeAnnouncements" />, <see cref="IApplication_Service2.MaterializeCommunications" />, <see cref="IApplication_Service2.MaterializeEventCalendars" />, <see cref="IApplication_Service2.MaterializeMemberNotifications" />, <see cref="IApplication_Service2.MaterializeRoles" />, <see cref="IApplication_Service2.MaterializeUserAppMembers" />, <see cref="IApplication_Service2.MaterializeUserDetails" />, <see cref="IApplication_Service2.MaterializeUserGroups" />, <see cref="IApplication_Service2.MaterializeUserProfiles" />.
+    ///        <see cref="IApplication_Service2.MaterializeAnnouncements" />, <see cref="IApplication_Service2.MaterializeCommunications" />, <see cref="IApplication_Service2.MaterializeEventCalendars" />, <see cref="IApplication_Service2.MaterializeMemberNotifications" />, <see cref="IApplication_Service2.MaterializeRoles" />, <see cref="IApplication_Service2.MaterializeShortMessages" />, <see cref="IApplication_Service2.MaterializeSignalRHostStates" />, <see cref="IApplication_Service2.MaterializeSignalRMessages" />, <see cref="IApplication_Service2.MaterializeUserAppMembers" />, <see cref="IApplication_Service2.MaterializeUserDetails" />, <see cref="IApplication_Service2.MaterializeUserGroups" />, <see cref="IApplication_Service2.MaterializeUserProfiles" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -1094,7 +1199,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1130,7 +1235,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1178,7 +1283,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1224,7 +1329,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1607,6 +1712,162 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<IEnumerable<Role>> MaterializeAllRolesAsync(CallContext cntx, Application_ entity);
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        ShortMessageSet MaterializeShortMessages(CallContext cntx, Application_ entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<ShortMessageSet> MaterializeShortMessagesAsync(CallContext cntx, Application_ entity);
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        [OperationContract]
+        IEnumerable<ShortMessage> MaterializeAllShortMessages(CallContext cntx, Application_ entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<IEnumerable<ShortMessage>> MaterializeAllShortMessagesAsync(CallContext cntx, Application_ entity);
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "SignalRHostStates" of type <see cref="SignalRHostStateSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRHostStateSet" />.
+        /// </returns>
+        [OperationContract]
+        SignalRHostStateSet MaterializeSignalRHostStates(CallContext cntx, Application_ entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "SignalRHostStates" of type <see cref="SignalRHostStateSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRHostStateSet" />.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<SignalRHostStateSet> MaterializeSignalRHostStatesAsync(CallContext cntx, Application_ entity);
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRHostStates" of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />).
+        /// </returns>
+        [OperationContract]
+        IEnumerable<SignalRHostState> MaterializeAllSignalRHostStates(CallContext cntx, Application_ entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRHostStates" of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />).
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<IEnumerable<SignalRHostState>> MaterializeAllSignalRHostStatesAsync(CallContext cntx, Application_ entity);
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "SignalRMessages" of type <see cref="SignalRMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        SignalRMessageSet MaterializeSignalRMessages(CallContext cntx, Application_ entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "SignalRMessages" of type <see cref="SignalRMessageSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRMessageSet" />.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<SignalRMessageSet> MaterializeSignalRMessagesAsync(CallContext cntx, Application_ entity);
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRMessages" of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />).
+        /// </returns>
+        [OperationContract]
+        IEnumerable<SignalRMessage> MaterializeAllSignalRMessages(CallContext cntx, Application_ entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRMessages" of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />).
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<IEnumerable<SignalRMessage>> MaterializeAllSignalRMessagesAsync(CallContext cntx, Application_ entity);
 #endif
 
         /// <summary>

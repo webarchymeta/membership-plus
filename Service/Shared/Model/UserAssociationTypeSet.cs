@@ -26,11 +26,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "UserAssociationTypes".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UserAssociationTypeSet
     {
         /// <summary>
         /// The value of entity property <see cref="UserAssociationType.TypeName" /> is descrete (expandable). 
-        /// This is the possible options: { "Family", "Friend", "Work", "Social", "Peer", "Father", "Mother", "Son", "Daughter", "Manager", "Staff", "Other" }
+        /// This is the possible options: { "Family", "Friend", "Work", "Social", "Peer", "Father", "Mother", "Son", "Daughter", "Manager", "Staff", "Chatting", "Other" }
         /// </summary>
         [DataMember]
         public string[] TypeNameValues
@@ -51,6 +52,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                                   "Daughter",
                                   "Manager",
                                   "Staff",
+                                  "Chatting",
                                   "Other"
                     };
                 }

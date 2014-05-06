@@ -179,6 +179,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Downstream Navigation</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Load and/or navigates to entity sets that depend on an entity in the current entity set.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods</term>
+    ///      <description>
+    ///        <see cref="MemberNotificationServiceProxy.MaterializeNotificationTaskSchedules" />.
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Entity graph building</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -227,6 +244,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         }
 
+        /// <summary>
+        /// Client attached error handler.
+        /// </summary>
         public Action<Exception> DelHandleError = null;
         /// <summary>
         ///   Retrieve information about the entity set: "MemberNotifications". 
@@ -299,6 +319,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -344,6 +368,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -399,6 +427,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  Warning: Please do not use this method when new entities are to be added and information about these updated enitities, like auto generated primary keys, are needed for 
         ///  proceeding to the next steps.
         ///  </para>
+        ///  <para>
+        ///  Clients can set some of the member entities in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
+        ///  </para>
         /// </remarks>
         /// <returns>
         /// </returns>
@@ -447,6 +482,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Warning: Please do not use this method when new entities are to be added and information about these updated enitities, like auto generated primary keys, are needed for 
         ///  proceeding to the next steps.
+        ///  </para>
+        ///  <para>
+        ///  Clients can set some of the member entities in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
         /// <returns>
@@ -598,7 +640,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return Channel.GetPageItems(cntx, set, qexpr, prevlast);
+                return Channel.GetPageItems(cntx, set, qexpr, prevlast).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -628,7 +670,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast);
+                return (await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -697,7 +739,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabase(cntx, set, qexpr);
+                return Channel.QueryDatabase(cntx, set, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -720,7 +762,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseAsync(cntx, set, qexpr);
+                return (await Channel.QueryDatabaseAsync(cntx, set, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -744,7 +786,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords);
+                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -768,7 +810,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords);
+                return (await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -888,7 +930,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.ConstraintQuery(cntx, set, constraints, qexpr);
+                return Channel.ConstraintQuery(cntx, set, constraints, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -912,7 +954,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.ConstraintQueryAsync(cntx, set, constraints, qexpr);
+                return (await Channel.ConstraintQueryAsync(cntx, set, constraints, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -937,7 +979,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.ConstraintQueryLimited(cntx, set, constraints, qexpr, maxRecords);
+                return Channel.ConstraintQueryLimited(cntx, set, constraints, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -962,7 +1004,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords);
+                return (await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -987,7 +1029,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1012,7 +1057,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1037,7 +1085,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeMemberNotificationTypeRef(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeMemberNotificationTypeRef(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1062,7 +1113,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeMemberNotificationTypeRefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeMemberNotificationTypeRefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1087,7 +1141,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeUserRef(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeUserRef(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1112,7 +1169,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeUserRefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeUserRefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1175,6 +1235,100 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        public NotificationTaskScheduleSet MaterializeNotificationTaskSchedules(CallContext cntx, MemberNotification entity)
+        {
+            try
+            {
+                return Channel.MaterializeNotificationTaskSchedules(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<NotificationTaskScheduleSet> MaterializeNotificationTaskSchedulesAsync(CallContext cntx, MemberNotification entity)
+        {
+            try
+            {
+                return await Channel.MaterializeNotificationTaskSchedulesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        public IEnumerable<NotificationTaskSchedule> MaterializeAllNotificationTaskSchedules(CallContext cntx, MemberNotification entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllNotificationTaskSchedules(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<NotificationTaskSchedule>> MaterializeAllNotificationTaskSchedulesAsync(CallContext cntx, MemberNotification entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllNotificationTaskSchedulesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
         ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberNotification.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -1186,7 +1340,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByKey(cntx, _ID);
+                var e = Channel.LoadEntityByKey(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1208,7 +1365,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                var e = await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1331,7 +1491,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByNature(cntx, _ID);
+                var list = Channel.LoadEntityByNature(cntx, _ID);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {
@@ -1358,7 +1519,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByNatureAsync(cntx, _ID);
+                var list = await Channel.LoadEntityByNatureAsync(cntx, _ID);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {

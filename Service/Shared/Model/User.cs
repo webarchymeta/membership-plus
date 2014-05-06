@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -155,6 +156,22 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="User.MemberNotifications" />, which is a sub-set of the data set "MemberNotifications" for <see cref="MemberNotification" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>NotificationTaskSchedules</term>
+    ///      <description>See <see cref="User.NotificationTaskSchedules" />, which is a sub-set of the data set "NotificationTaskSchedules" for <see cref="NotificationTaskSchedule" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ShortMessageAudiences</term>
+    ///      <description>See <see cref="User.ShortMessageAudiences" />, which is a sub-set of the data set "ShortMessageAudiences" for <see cref="ShortMessageAudience" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ShortMessage_FromIDs</term>
+    ///      <description>See <see cref="User.ShortMessage_FromIDs" />, which is a sub-set of the data set "ShortMessages" for <see cref="ShortMessage" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ShortMessage_ToIDs</term>
+    ///      <description>See <see cref="User.ShortMessage_ToIDs" />, which is a sub-set of the data set "ShortMessages" for <see cref="ShortMessage" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserAppMembers</term>
     ///      <description>See <see cref="User.UserAppMembers" />, which is a sub-set of the data set "UserAppMembers" for <see cref="UserAppMember" />.</description>
     ///    </item>
@@ -205,6 +222,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class User : IDbEntity 
     {
         /// <summary>
@@ -237,12 +255,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserService.AddOrUpdateEntities" />.
@@ -254,6 +272,53 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "Username = " + Username + "\r\n";
+                if (IsPasswordModified)
+                    str += "Modified [Password] = " + Password + "\r\n";
+                if (IsPasswordFormatModified)
+                    str += "Modified [PasswordFormat] = " + PasswordFormat + "\r\n";
+                if (IsPasswordQuestionModified)
+                    str += "Modified [PasswordQuestion] = " + PasswordQuestion + "\r\n";
+                if (IsPasswordAnswerModified)
+                    str += "Modified [PasswordAnswer] = " + PasswordAnswer + "\r\n";
+                if (IsPasswordSaltModified)
+                    str += "Modified [PasswordSalt] = " + PasswordSalt + "\r\n";
+                if (IsFirstNameModified)
+                    str += "Modified [FirstName] = " + FirstName + "\r\n";
+                if (IsLastNameModified)
+                    str += "Modified [LastName] = " + LastName + "\r\n";
+                if (IsIsAnonymousModified)
+                    str += "Modified [IsAnonymous] = " + IsAnonymous + "\r\n";
+                if (IsIsApprovedModified)
+                    str += "Modified [IsApproved] = " + IsApproved + "\r\n";
+                if (IsStatusModified)
+                    str += "Modified [Status] = " + Status + "\r\n";
+                if (IsTimeZoneModified)
+                    str += "Modified [TimeZone] = " + TimeZone + "\r\n";
+                if (IsFailedPasswordAnswerAttemptCountModified)
+                    str += "Modified [FailedPasswordAnswerAttemptCount] = " + FailedPasswordAnswerAttemptCount + "\r\n";
+                if (IsFailedPasswordAnswerAttemptWindowStartModified)
+                    str += "Modified [FailedPasswordAnswerAttemptWindowStart] = " + FailedPasswordAnswerAttemptWindowStart + "\r\n";
+                if (IsFailedPasswordAttemptCountModified)
+                    str += "Modified [FailedPasswordAttemptCount] = " + FailedPasswordAttemptCount + "\r\n";
+                if (IsFailedPasswordAttemptWindowStartModified)
+                    str += "Modified [FailedPasswordAttemptWindowStart] = " + FailedPasswordAttemptWindowStart + "\r\n";
+                if (IsLastLoginDateModified)
+                    str += "Modified [LastLoginDate] = " + LastLoginDate + "\r\n";
+                if (IsLastPasswordChangedDateModified)
+                    str += "Modified [LastPasswordChangedDate] = " + LastPasswordChangedDate + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -301,6 +366,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public User()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public User(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(User));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as User;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(User));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
+
 #region Properties of the current entity
 
         /// <summary>
@@ -343,7 +449,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Password != value)
                 {
                     _Password = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordModified = true;
                 }
             }
@@ -387,7 +493,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_PasswordFormat != value)
                 {
                     _PasswordFormat = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordFormatModified = true;
                 }
             }
@@ -430,7 +536,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_PasswordQuestion != value)
                 {
                     _PasswordQuestion = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordQuestionModified = true;
                 }
             }
@@ -473,7 +579,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_PasswordAnswer != value)
                 {
                     _PasswordAnswer = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordAnswerModified = true;
                 }
             }
@@ -517,7 +623,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_PasswordSalt != value)
                 {
                     _PasswordSalt = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsPasswordSaltModified = true;
                 }
             }
@@ -560,7 +666,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FirstName != value)
                 {
                     _FirstName = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFirstNameModified = true;
                 }
             }
@@ -603,7 +709,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastName != value)
                 {
                     _LastName = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastNameModified = true;
                 }
             }
@@ -692,7 +798,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IsAnonymous != value)
                 {
                     _IsAnonymous = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIsAnonymousModified = true;
                 }
             }
@@ -735,7 +841,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IsApproved != value)
                 {
                     _IsApproved = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIsApprovedModified = true;
                 }
             }
@@ -779,7 +885,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Status != value)
                 {
                     _Status = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsStatusModified = true;
                 }
             }
@@ -821,7 +927,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_TimeZone != value)
                 {
                     _TimeZone = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsTimeZoneModified = true;
                 }
             }
@@ -863,7 +969,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FailedPasswordAnswerAttemptCount != value)
                 {
                     _FailedPasswordAnswerAttemptCount = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFailedPasswordAnswerAttemptCountModified = true;
                 }
             }
@@ -905,7 +1011,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FailedPasswordAnswerAttemptWindowStart != value)
                 {
                     _FailedPasswordAnswerAttemptWindowStart = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFailedPasswordAnswerAttemptWindowStartModified = true;
                 }
             }
@@ -947,7 +1053,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FailedPasswordAttemptCount != value)
                 {
                     _FailedPasswordAttemptCount = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFailedPasswordAttemptCountModified = true;
                 }
             }
@@ -989,7 +1095,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_FailedPasswordAttemptWindowStart != value)
                 {
                     _FailedPasswordAttemptWindowStart = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsFailedPasswordAttemptWindowStartModified = true;
                 }
             }
@@ -1031,7 +1137,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastLoginDate != value)
                 {
                     _LastLoginDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastLoginDateModified = true;
                 }
             }
@@ -1073,7 +1179,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastPasswordChangedDate != value)
                 {
                     _LastPasswordChangedDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastPasswordChangedDateModified = true;
                 }
             }
@@ -1307,6 +1413,170 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [DataMember]
 		public MemberNotification[] ChangedMemberNotifications
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="NotificationTaskScheduleSet" /> for data set "NotificationTaskSchedules" of <see cref="NotificationTaskSchedule" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+        [DataMember]
+		public NotificationTaskScheduleSet NotificationTaskSchedules
+		{
+			get
+			{
+                if (_NotificationTaskSchedules == null)
+                    _NotificationTaskSchedules = new NotificationTaskScheduleSet();
+				return _NotificationTaskSchedules;
+			}
+            set
+            {
+                _NotificationTaskSchedules = value;
+            }
+		}
+		private NotificationTaskScheduleSet _NotificationTaskSchedules = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "NotificationTaskSchedules" of <see cref="NotificationTaskSchedule" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+		public IEnumerable<NotificationTaskSchedule> NotificationTaskScheduleEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="NotificationTaskSchedule" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="NotificationTaskScheduleSet" /> set is { <see cref="NotificationTaskSchedule.AssignerID" /> }.
+        /// </summary>
+        [DataMember]
+		public NotificationTaskSchedule[] ChangedNotificationTaskSchedules
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="ShortMessageAudienceSet" /> for data set "ShortMessageAudiences" of <see cref="ShortMessageAudience" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageAudienceSet" /> set is { <see cref="ShortMessageAudience.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageAudienceSet ShortMessageAudiences
+		{
+			get
+			{
+                if (_ShortMessageAudiences == null)
+                    _ShortMessageAudiences = new ShortMessageAudienceSet();
+				return _ShortMessageAudiences;
+			}
+            set
+            {
+                _ShortMessageAudiences = value;
+            }
+		}
+		private ShortMessageAudienceSet _ShortMessageAudiences = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessageAudiences" of <see cref="ShortMessageAudience" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageAudienceSet" /> set is { <see cref="ShortMessageAudience.UserID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessageAudience> ShortMessageAudienceEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessageAudience" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageAudienceSet" /> set is { <see cref="ShortMessageAudience.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageAudience[] ChangedShortMessageAudiences
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="ShortMessageSet" /> for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.FromID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageSet ShortMessage_FromIDs
+		{
+			get
+			{
+                if (_ShortMessage_FromIDs == null)
+                    _ShortMessage_FromIDs = new ShortMessageSet();
+				return _ShortMessage_FromIDs;
+			}
+            set
+            {
+                _ShortMessage_FromIDs = value;
+            }
+		}
+		private ShortMessageSet _ShortMessage_FromIDs = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.FromID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessage> ShortMessage_FromIDEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessage" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.FromID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessage[] ChangedShortMessage_FromIDs
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="ShortMessageSet" /> for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ToID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageSet ShortMessage_ToIDs
+		{
+			get
+			{
+                if (_ShortMessage_ToIDs == null)
+                    _ShortMessage_ToIDs = new ShortMessageSet();
+				return _ShortMessage_ToIDs;
+			}
+            set
+            {
+                _ShortMessage_ToIDs = value;
+            }
+		}
+		private ShortMessageSet _ShortMessage_ToIDs = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ToID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessage> ShortMessage_ToIDEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessage" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ToID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessage[] ChangedShortMessage_ToIDs
 		{
 			get;
             set;
@@ -2096,7 +2366,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Password == null)
                 Password = "";
             if (PasswordFormat == null)
@@ -2109,40 +2379,119 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 Status = "";
             if (!IsEntityChanged)
                 IsEntityChanged = IsPasswordModified || IsPasswordFormatModified || IsPasswordQuestionModified || IsPasswordAnswerModified || IsPasswordSaltModified || IsFirstNameModified || IsLastNameModified || IsIsAnonymousModified || IsIsApprovedModified || IsStatusModified || IsTimeZoneModified || IsFailedPasswordAnswerAttemptCountModified || IsFailedPasswordAnswerAttemptWindowStartModified || IsFailedPasswordAttemptCountModified || IsFailedPasswordAttemptWindowStartModified || IsLastLoginDateModified || IsLastPasswordChangedDateModified;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public User ShallowCopy(bool allData = false)
+        public User ShallowCopy(bool allData = false, bool preserveState = false)
         {
             User e = new User();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.Password = Password;
+            if (preserveState)
+                e.IsPasswordModified = IsPasswordModified;
+            else
+                e.IsPasswordModified = false;
             e.PasswordFormat = PasswordFormat;
+            if (preserveState)
+                e.IsPasswordFormatModified = IsPasswordFormatModified;
+            else
+                e.IsPasswordFormatModified = false;
             e.PasswordQuestion = PasswordQuestion;
+            if (preserveState)
+                e.IsPasswordQuestionModified = IsPasswordQuestionModified;
+            else
+                e.IsPasswordQuestionModified = false;
             e.PasswordAnswer = PasswordAnswer;
+            if (preserveState)
+                e.IsPasswordAnswerModified = IsPasswordAnswerModified;
+            else
+                e.IsPasswordAnswerModified = false;
             e.PasswordSalt = PasswordSalt;
+            if (preserveState)
+                e.IsPasswordSaltModified = IsPasswordSaltModified;
+            else
+                e.IsPasswordSaltModified = false;
             e.FirstName = FirstName;
+            if (preserveState)
+                e.IsFirstNameModified = IsFirstNameModified;
+            else
+                e.IsFirstNameModified = false;
             e.LastName = LastName;
+            if (preserveState)
+                e.IsLastNameModified = IsLastNameModified;
+            else
+                e.IsLastNameModified = false;
             e.CreateOn = CreateOn;
             e.Username = Username;
             e.IsAnonymous = IsAnonymous;
+            if (preserveState)
+                e.IsIsAnonymousModified = IsIsAnonymousModified;
+            else
+                e.IsIsAnonymousModified = false;
             e.IsApproved = IsApproved;
+            if (preserveState)
+                e.IsIsApprovedModified = IsIsApprovedModified;
+            else
+                e.IsIsApprovedModified = false;
             e.Status = Status;
+            if (preserveState)
+                e.IsStatusModified = IsStatusModified;
+            else
+                e.IsStatusModified = false;
             e.TimeZone = TimeZone;
+            if (preserveState)
+                e.IsTimeZoneModified = IsTimeZoneModified;
+            else
+                e.IsTimeZoneModified = false;
             e.FailedPasswordAnswerAttemptCount = FailedPasswordAnswerAttemptCount;
+            if (preserveState)
+                e.IsFailedPasswordAnswerAttemptCountModified = IsFailedPasswordAnswerAttemptCountModified;
+            else
+                e.IsFailedPasswordAnswerAttemptCountModified = false;
             e.FailedPasswordAnswerAttemptWindowStart = FailedPasswordAnswerAttemptWindowStart;
+            if (preserveState)
+                e.IsFailedPasswordAnswerAttemptWindowStartModified = IsFailedPasswordAnswerAttemptWindowStartModified;
+            else
+                e.IsFailedPasswordAnswerAttemptWindowStartModified = false;
             e.FailedPasswordAttemptCount = FailedPasswordAttemptCount;
+            if (preserveState)
+                e.IsFailedPasswordAttemptCountModified = IsFailedPasswordAttemptCountModified;
+            else
+                e.IsFailedPasswordAttemptCountModified = false;
             e.FailedPasswordAttemptWindowStart = FailedPasswordAttemptWindowStart;
+            if (preserveState)
+                e.IsFailedPasswordAttemptWindowStartModified = IsFailedPasswordAttemptWindowStartModified;
+            else
+                e.IsFailedPasswordAttemptWindowStartModified = false;
             e.LastLoginDate = LastLoginDate;
+            if (preserveState)
+                e.IsLastLoginDateModified = IsLastLoginDateModified;
+            else
+                e.IsLastLoginDateModified = false;
             e.LastPasswordChangedDate = LastPasswordChangedDate;
+            if (preserveState)
+                e.IsLastPasswordChangedDateModified = IsLastPasswordChangedDateModified;
+            else
+                e.IsLastPasswordChangedDateModified = false;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
@@ -2271,6 +2620,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="User" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class UserUpdateResult : IUpdateResult
     {
         /// <summary>

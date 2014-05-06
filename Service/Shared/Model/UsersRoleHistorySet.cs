@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing possible combination of foreign key constraint of the data set of "UsersRoleHistories".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UsersRoleHistorySetConstraints
     {
         /// <summary>
@@ -94,6 +95,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a limited set of available constraints of "UsersRoleHistories".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UsersRoleHistorySetConstraintsColl
     {
         /// <summary>
@@ -133,11 +135,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "UsersRoleHistories".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class UsersRoleHistorySet
     {
         /// <summary>
-        /// The value of entity property <see cref="UsersRoleHistory.Operation" /> is descrete (fixed). 
-        /// This is the allowed values: { "Added", "Modified", "Deleted" }
+        /// The value of entity property <see cref="UsersRoleHistory.Operation" /> is descrete (expandable). 
+        /// This is the possible options: { "Added", "Modified", "Deleted" }
         /// </summary>
         [DataMember]
         public string[] OperationValues

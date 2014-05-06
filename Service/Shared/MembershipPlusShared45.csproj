@@ -110,6 +110,14 @@
         <Compile Include="Model\EventType.cs">
             <DependentUpon>EventTypePage.cs</DependentUpon>
         </Compile>
+        <Compile Include="Interface\IMemberCallbackService.cs" />
+        <Compile Include="Model\MemberCallbackSet.cs" />
+        <Compile Include="Model\MemberCallbackPage.cs">
+            <DependentUpon>MemberCallbackSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\MemberCallback.cs">
+            <DependentUpon>MemberCallbackPage.cs</DependentUpon>
+        </Compile>
         <Compile Include="Interface\IMemberNotificationService.cs" />
         <Compile Include="Model\MemberNotificationSet.cs" />
         <Compile Include="Model\MemberNotificationPage.cs">
@@ -126,6 +134,14 @@
         <Compile Include="Model\MemberNotificationType.cs">
             <DependentUpon>MemberNotificationTypePage.cs</DependentUpon>
         </Compile>
+        <Compile Include="Interface\INotificationTaskScheduleService.cs" />
+        <Compile Include="Model\NotificationTaskScheduleSet.cs" />
+        <Compile Include="Model\NotificationTaskSchedulePage.cs">
+            <DependentUpon>NotificationTaskScheduleSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\NotificationTaskSchedule.cs">
+            <DependentUpon>NotificationTaskSchedulePage.cs</DependentUpon>
+        </Compile>
         <Compile Include="Interface\IRoleService.cs" />
         <Compile Include="Model\RoleSet.cs" />
         <Compile Include="Model\RolePage.cs">
@@ -133,6 +149,54 @@
         </Compile>
         <Compile Include="Model\Role.cs">
             <DependentUpon>RolePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IShortMessageAttachmentService.cs" />
+        <Compile Include="Model\ShortMessageAttachmentSet.cs" />
+        <Compile Include="Model\ShortMessageAttachmentPage.cs">
+            <DependentUpon>ShortMessageAttachmentSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\ShortMessageAttachment.cs">
+            <DependentUpon>ShortMessageAttachmentPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IShortMessageAudienceService.cs" />
+        <Compile Include="Model\ShortMessageAudienceSet.cs" />
+        <Compile Include="Model\ShortMessageAudiencePage.cs">
+            <DependentUpon>ShortMessageAudienceSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\ShortMessageAudience.cs">
+            <DependentUpon>ShortMessageAudiencePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IShortMessageService.cs" />
+        <Compile Include="Model\ShortMessageSet.cs" />
+        <Compile Include="Model\ShortMessagePage.cs">
+            <DependentUpon>ShortMessageSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\ShortMessage.cs">
+            <DependentUpon>ShortMessagePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IShortMessageTypeService.cs" />
+        <Compile Include="Model\ShortMessageTypeSet.cs" />
+        <Compile Include="Model\ShortMessageTypePage.cs">
+            <DependentUpon>ShortMessageTypeSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\ShortMessageType.cs">
+            <DependentUpon>ShortMessageTypePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\ISignalRHostStateService.cs" />
+        <Compile Include="Model\SignalRHostStateSet.cs" />
+        <Compile Include="Model\SignalRHostStatePage.cs">
+            <DependentUpon>SignalRHostStateSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\SignalRHostState.cs">
+            <DependentUpon>SignalRHostStatePage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\ISignalRMessageService.cs" />
+        <Compile Include="Model\SignalRMessageSet.cs" />
+        <Compile Include="Model\SignalRMessagePage.cs">
+            <DependentUpon>SignalRMessageSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\SignalRMessage.cs">
+            <DependentUpon>SignalRMessagePage.cs</DependentUpon>
         </Compile>
         <Compile Include="Interface\IUserAppMemberService.cs" />
         <Compile Include="Model\UserAppMemberSet.cs" />

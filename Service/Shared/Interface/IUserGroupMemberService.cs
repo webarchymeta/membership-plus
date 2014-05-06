@@ -324,6 +324,28 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         void EnqueueNewOrUpdateEntities(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
 
         /// <summary>
+        ///  Delete a set of entities from the entity set, together with all their dependents, recursively. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="set">The current entity set.</param>
+        /// <param name="entities">The list of entities to be processed.</param>
+        /// <remarks>
+        ///  <para>
+        ///   Care should be taken when deleting an entire inter-dependent object sub-graph.
+        ///  </para>
+        /// </remarks>
+        /// <returns>
+        ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/DeleteEntities")]
+        OperationResults DeleteEntities(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
+
+        /// <summary>
         ///   Count the number of entities inside entity set "UserGroupMembers" of the data source under specified filtering condition. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -1025,6 +1047,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task EnqueueNewOrUpdateEntitiesAsync(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
+#endif
+
+        /// <summary>
+        ///  Delete a set of entities from the entity set, together with all their dependents, recursively. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="set">The current entity set.</param>
+        /// <param name="entities">The list of entities to be processed.</param>
+        /// <remarks>
+        ///  <para>
+        ///   Care should be taken when deleting an entire inter-dependent object sub-graph.
+        ///  </para>
+        /// </remarks>
+        /// <returns>
+        ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
+        /// </returns>
+        [OperationContract]
+        OperationResults DeleteEntities(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///  Delete a set of entities from the entity set, together with all their dependents, recursively. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="set">The current entity set.</param>
+        /// <param name="entities">The list of entities to be processed.</param>
+        /// <remarks>
+        ///  <para>
+        ///   Care should be taken when deleting an entire inter-dependent object sub-graph.
+        ///  </para>
+        /// </remarks>
+        /// <returns>
+        ///   Operation result contained inside an object of type <see cref="OperationResults" /> which contains operation messages, if any.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<OperationResults> DeleteEntitiesAsync(CallContext cntx, UserGroupMemberSet set, UserGroupMember[] entities);
 #endif
 
         /// <summary>

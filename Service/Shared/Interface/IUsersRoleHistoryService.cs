@@ -606,9 +606,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         UsersRoleHistory LoadEntityGraphRecurs(CallContext cntx, int _ID, EntitySetType[] excludedSets, EntitySetRelation[] futherDrillSets);
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UsersRoleHistory.RoleID" />, <see cref="UsersRoleHistory.UserID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UsersRoleHistory.ChangeDate" />, <see cref="UsersRoleHistory.RoleID" />, <see cref="UsersRoleHistory.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChangeDate">Intrinsic id <see cref="UsersRoleHistory.ChangeDate" />.</param>
         /// <param name="_RoleID">Intrinsic id <see cref="UsersRoleHistory.RoleID" />.</param>
         /// <param name="_UserID">Intrinsic id <see cref="UsersRoleHistory.UserID" />.</param>
         /// <remarks>
@@ -628,7 +629,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByNature")]
-        List<UsersRoleHistory> LoadEntityByNature(CallContext cntx, int _RoleID, string _UserID);
+        List<UsersRoleHistory> LoadEntityByNature(CallContext cntx, DateTime _ChangeDate, int _RoleID, string _UserID);
 
         /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
@@ -1508,9 +1509,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UsersRoleHistory.RoleID" />, <see cref="UsersRoleHistory.UserID" /> }. 
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UsersRoleHistory.ChangeDate" />, <see cref="UsersRoleHistory.RoleID" />, <see cref="UsersRoleHistory.UserID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChangeDate">Intrinsic id <see cref="UsersRoleHistory.ChangeDate" />.</param>
         /// <param name="_RoleID">Intrinsic id <see cref="UsersRoleHistory.RoleID" />.</param>
         /// <param name="_UserID">Intrinsic id <see cref="UsersRoleHistory.UserID" />.</param>
         /// <remarks>
@@ -1525,12 +1527,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The list of found entities.
         /// </returns>
         [OperationContract]
-        List<UsersRoleHistory> LoadEntityByNature(CallContext cntx, int _RoleID, string _UserID);
+        List<UsersRoleHistory> LoadEntityByNature(CallContext cntx, DateTime _ChangeDate, int _RoleID, string _UserID);
 #if SUPPORT_ASYNC
         /// <summary>
-        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UsersRoleHistory.RoleID" />, <see cref="UsersRoleHistory.UserID" /> }. Awaitable asynchronous version.
+        ///  Load a set entities from the entity set having specified intrinsic ids: { <see cref="UsersRoleHistory.ChangeDate" />, <see cref="UsersRoleHistory.RoleID" />, <see cref="UsersRoleHistory.UserID" /> }. Awaitable asynchronous version.
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="_ChangeDate">Intrinsic id <see cref="UsersRoleHistory.ChangeDate" />.</param>
         /// <param name="_RoleID">Intrinsic id <see cref="UsersRoleHistory.RoleID" />.</param>
         /// <param name="_UserID">Intrinsic id <see cref="UsersRoleHistory.UserID" />.</param>
         /// <remarks>
@@ -1545,7 +1548,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///   The list of found entities.
         /// </returns>
         [OperationContract]
-        System.Threading.Tasks.Task<List<UsersRoleHistory>> LoadEntityByNatureAsync(CallContext cntx, int _RoleID, string _UserID);
+        System.Threading.Tasks.Task<List<UsersRoleHistory>> LoadEntityByNatureAsync(CallContext cntx, DateTime _ChangeDate, int _RoleID, string _UserID);
 #endif
 
         /// <summary>

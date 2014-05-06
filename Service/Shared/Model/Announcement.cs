@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -118,6 +119,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class Announcement : IDbEntity 
     {
         /// <summary>
@@ -150,12 +152,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IAnnouncementService.AddOrUpdateEntities" />.
@@ -167,6 +169,29 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ID = " + ID + "\r\n";
+                if (IsDescriptionModified)
+                    str += "Modified [Description] = " + Description + "\r\n";
+                if (IsDispOrderModified)
+                    str += "Modified [DispOrder] = " + DispOrder + "\r\n";
+                if (IsTitleModified)
+                    str += "Modified [Title] = " + Title + "\r\n";
+                if (IsExpireDateModified)
+                    str += "Modified [ExpireDate] = " + ExpireDate + "\r\n";
+                if (IsLastModifiedModified)
+                    str += "Modified [LastModified] = " + LastModified + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -213,6 +238,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Announcement()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public Announcement(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Announcement));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as Announcement;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Announcement));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
 
 #region Properties of the current entity
 
@@ -277,7 +343,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Description != value)
                 {
                     _Description = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsDescriptionModified = true;
                 }
             }
@@ -338,7 +404,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_DispOrder != value)
                 {
                     _DispOrder = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsDispOrderModified = true;
                 }
             }
@@ -382,7 +448,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Title != value)
                 {
                     _Title = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsTitleModified = true;
                 }
             }
@@ -424,7 +490,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_ExpireDate != value)
                 {
                     _ExpireDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsExpireDateModified = true;
                 }
             }
@@ -466,7 +532,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastModified != value)
                 {
                     _LastModified = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastModifiedModified = true;
                 }
             }
@@ -833,7 +899,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Description == null)
                 Description = "";
             if (Title == null)
@@ -842,33 +908,64 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsEntityChanged = IsDescriptionModified || IsDispOrderModified || IsTitleModified || IsExpireDateModified || IsLastModifiedModified;
             if (IsDescriptionModified && !IsDescriptionLoaded)
                 IsDescriptionLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public Announcement ShallowCopy(bool allData = false)
+        public Announcement ShallowCopy(bool allData = false, bool preserveState = false)
         {
             Announcement e = new Announcement();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.CreatedDate = CreatedDate;
             e.DispOrder = DispOrder;
+            if (preserveState)
+                e.IsDispOrderModified = IsDispOrderModified;
+            else
+                e.IsDispOrderModified = false;
             e.Title = Title;
+            if (preserveState)
+                e.IsTitleModified = IsTitleModified;
+            else
+                e.IsTitleModified = false;
             e.ExpireDate = ExpireDate;
+            if (preserveState)
+                e.IsExpireDateModified = IsExpireDateModified;
+            else
+                e.IsExpireDateModified = false;
             e.LastModified = LastModified;
+            if (preserveState)
+                e.IsLastModifiedModified = IsLastModifiedModified;
+            else
+                e.IsLastModifiedModified = false;
             e.ApplicationID = ApplicationID;
             e.CreatedUserID = CreatedUserID;
             e.GroupID = GroupID;
             if (allData)
             {
                 e.Description = Description;
+                if (preserveState)
+                    e.IsDescriptionModified = IsDescriptionModified;
+                else
+                    e.IsDescriptionModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
@@ -921,6 +1018,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="Announcement" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class AnnouncementUpdateResult : IUpdateResult
     {
         /// <summary>

@@ -26,11 +26,102 @@ using System.ServiceModel.Channels;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
+#if !NON_DUPLEX_MODE
+
+    /// <summary>
+    /// A dummy callback.
+    /// </summary>
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
+    public class DummyCallback : IServiceNotificationCallback
+    {
+        /// <summary>
+        /// Change notification callback.
+        /// </summary>
+        /// <param name="SetType">The type of the changed entity.</param>
+        /// <param name="Status">The type of changes of the entity.</param>
+        /// <param name="Entity">The changed entity.</param>
+        public void EntityChanged(EntitySetType SetType, int Status, string Entity)
+        {
+        }
+    }
+
+#endif
+
     /// <summary>
     /// Proxy for <see cref="IMembershipPlusService2" /> service.
     /// </summary>
-    public class MembershipPlusServiceProxy : ClientBase<IMembershipPlusService2>
+#if !NON_DUPLEX_MODE
+    public class MembershipPlusServiceProxy : DuplexClientBase<IMembershipPlusService2>, IMembershipPlusService2
+#else
+    public class MembershipPlusServiceProxy : ClientBase<IMembershipPlusService2>, IMembershipPlusService2
+#endif
     {
+#if !NON_DUPLEX_MODE
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public MembershipPlusServiceProxy() 
+            : base(new DummyCallback(), "HTTP")
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="callback">The client callback.</param>
+        public MembershipPlusServiceProxy(InstanceContext callback) 
+            : base(callback, "HTTP")
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="svcConfig">The name of the configuration node for the end point.</param>
+        public MembershipPlusServiceProxy(string svcConfig) 
+            : base(new DummyCallback(), svcConfig)
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="callback">The client callback.</param>
+        /// <param name="svcConfig">The name of the configuration node for the end point.</param>
+        public MembershipPlusServiceProxy(InstanceContext callback, string svcConfig) 
+            : base(callback, svcConfig)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance using the specified binding and target address. 
+        /// </summary>
+        /// <param name="binding">The binding with which to make calls to the service.</param>
+        /// <param name="remoteAddress">The address of the service endpoint.</param>
+        public MembershipPlusServiceProxy(Binding binding, EndpointAddress remoteAddress)
+            : base(new DummyCallback(), binding, remoteAddress)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance using the specified binding and target address. 
+        /// </summary>
+        /// <param name="callback">The client callback.</param>
+        /// <param name="binding">The binding with which to make calls to the service.</param>
+        /// <param name="remoteAddress">The address of the service endpoint.</param>
+        public MembershipPlusServiceProxy(InstanceContext callback, Binding binding, EndpointAddress remoteAddress)
+            : base(callback, binding, remoteAddress)
+        {
+
+        }
+#else
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -50,16 +141,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         }
 
-        /// <summary>
-        /// Initializes a new instance using the specified binding and target address. 
-        /// </summary>
-        /// <param name="binding">The binding with which to make calls to the service.</param>
-        /// <param name="remoteAddress">The address of the service endpoint.</param>
-        public MembershipPlusServiceProxy(Binding binding, EndpointAddress remoteAddress)
-            : base(binding, remoteAddress)
-        {
-
-        }
+#endif
 
         /// <summary>
         /// Client attached error handler.
@@ -124,6 +206,83 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 HandleError(ex);
                 return null;
+            }
+        }
+#endif
+
+
+        /// <summary>
+        /// Register a subscription to notification of data source changes.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
+        /// about all data sets will be sent to the client.</param>
+        public void SubscribeToUpdates(string clientID, EntitySetType[] sets)
+        {
+            try
+            {
+                Channel.SubscribeToUpdates(clientID, sets);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+#if SUPPORT_ASYNC
+
+        /// <summary>
+        /// Register a subscription to notification of data source changes.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
+        /// about all data sets will be sent to the client.</param>
+        public async System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, EntitySetType[] sets)
+        {
+            try
+            {
+                await Channel.SubscribeToUpdatesAsync(clientID, sets);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+#endif
+
+
+        /// <summary>
+        /// un-register a subscription to data source change notifications.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        public void UnsubscribeToUpdates(string clientID)
+        {
+            try
+            {
+                Channel.UnsubscribeToUpdates(clientID);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+#if SUPPORT_ASYNC
+
+        /// <summary>
+        /// un-register a subscription to data source change notifications.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        public async System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(string clientID)
+        {
+
+            try
+            {
+                await Channel.UnsubscribeToUpdatesAsync(clientID);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
             }
         }
 #endif
@@ -390,9 +549,17 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (DelHandleError != null)
                 DelHandleError(ex);
             else
-                throw ex;
+                throw new Exception("server exception", ex);
         }
 
+        /// <summary>
+        /// The data service requires that date and time string for a filter expression should be normalized in particular format and precision
+        /// so that date and time comparison operation will be consistent.
+        /// </summary>
+        /// <param name="dt">The data and time object.</param>
+        /// <param name="tc">The time coordinate. Available options are "Utc" and "Ltc" with the former referring to the Coordinated Universal Time and the 
+        /// later the local time.</param>
+        /// <returns>The normalized date and time string.</returns>
         public string FormatRepoDateTime(DateTime dt, string tc = "Utc")
         {
             return dt.ToString("yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture) + " " + tc;

@@ -177,6 +177,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Downstream Navigation</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Load and/or navigates to entity sets that depend on an entity in the current entity set.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods</term>
+    ///      <description>
+    ///        <see cref="IMemberNotificationService.MaterializeNotificationTaskSchedules" />.
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Entity graph building</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -281,6 +298,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -331,6 +352,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -569,6 +594,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/QuerySetConstraints")]
         MemberNotificationSetConstraintsColl QuerySetConstraints(CallContext cntx, MemberNotificationSet set, QueryExpresion qexpr, int max, string nextId);
+
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeNotificationTaskSchedules")]
+        NotificationTaskScheduleSet MaterializeNotificationTaskSchedules(CallContext cntx, MemberNotification entity);
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeAllNotificationTaskSchedules")]
+        IEnumerable<NotificationTaskSchedule> MaterializeAllNotificationTaskSchedules(CallContext cntx, MemberNotification entity);
 
         /// <summary>
         ///  Load an entity from the entity set having specified primary key(s): { <see cref="MemberNotification.ID" /> }. 
@@ -892,6 +952,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>Downstream Navigation</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Load and/or navigates to entity sets that depend on an entity in the current entity set.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods</term>
+    ///      <description>
+    ///        <see cref="IMemberNotificationService2.MaterializeNotificationTaskSchedules" />.
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Entity graph building</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -1027,6 +1104,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -1061,6 +1142,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -1111,6 +1196,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -1155,6 +1244,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="MemberNotification.Application_Ref" />, <see cref="MemberNotification.MemberNotificationTypeRef" />, <see cref="MemberNotification.UserRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="MemberNotification.ChangedNotificationTaskSchedules" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -1504,6 +1597,58 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <remarks>It will throw an exception if the <see cref="MemberNotificationSet.SetFilter" /> of <paramref name="set" /> is null or empty.</remarks>
         [OperationContract]
         System.Threading.Tasks.Task<MemberNotificationSetConstraintsColl> QuerySetConstraintsAsync(CallContext cntx, MemberNotificationSet set, QueryExpresion qexpr, int max, string nextId);
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        [OperationContract]
+        NotificationTaskScheduleSet MaterializeNotificationTaskSchedules(CallContext cntx, MemberNotification entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "NotificationTaskSchedules" of type <see cref="NotificationTaskScheduleSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="NotificationTaskScheduleSet" />.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<NotificationTaskScheduleSet> MaterializeNotificationTaskSchedulesAsync(CallContext cntx, MemberNotification entity);
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        [OperationContract]
+        IEnumerable<NotificationTaskSchedule> MaterializeAllNotificationTaskSchedules(CallContext cntx, MemberNotification entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllNotificationTaskSchedules" of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{NotificationTaskSchedule}" /> (T = <see cref="NotificationTaskSchedule" />).
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<IEnumerable<NotificationTaskSchedule>> MaterializeAllNotificationTaskSchedulesAsync(CallContext cntx, MemberNotification entity);
 #endif
 
         /// <summary>

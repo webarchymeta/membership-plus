@@ -227,6 +227,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         }
 
+        /// <summary>
+        /// Client attached error handler.
+        /// </summary>
         public Action<Exception> DelHandleError = null;
         /// <summary>
         ///   Retrieve information about the entity set: "Announcements". 
@@ -598,7 +601,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return Channel.GetPageItems(cntx, set, qexpr, prevlast);
+                return Channel.GetPageItems(cntx, set, qexpr, prevlast).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -628,7 +631,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast);
+                return (await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -697,7 +700,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabase(cntx, set, qexpr);
+                return Channel.QueryDatabase(cntx, set, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -720,7 +723,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseAsync(cntx, set, qexpr);
+                return (await Channel.QueryDatabaseAsync(cntx, set, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -744,7 +747,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords);
+                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -768,7 +771,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords);
+                return (await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -888,7 +891,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.ConstraintQuery(cntx, set, constraints, qexpr);
+                return Channel.ConstraintQuery(cntx, set, constraints, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -912,7 +915,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.ConstraintQueryAsync(cntx, set, constraints, qexpr);
+                return (await Channel.ConstraintQueryAsync(cntx, set, constraints, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -937,7 +940,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.ConstraintQueryLimited(cntx, set, constraints, qexpr, maxRecords);
+                return Channel.ConstraintQueryLimited(cntx, set, constraints, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -962,7 +965,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords);
+                return (await Channel.ConstraintQueryLimitedAsync(cntx, set, constraints, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -987,7 +990,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeApplication_Ref(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1012,7 +1018,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeApplication_RefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1037,7 +1046,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeUserGroupRef(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeUserGroupRef(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1062,7 +1074,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeUserGroupRefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeUserGroupRefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1087,7 +1102,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeUserRef(cntx, entity.ShallowCopy());
+                var e = Channel.MaterializeUserRef(cntx, entity.ShallowCopy()); 
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1112,7 +1130,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeUserRefAsync(cntx, entity.ShallowCopy());
+                var e = await Channel.MaterializeUserRefAsync(cntx, entity.ShallowCopy());
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1186,7 +1207,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByKey(cntx, _ID);
+                var e = Channel.LoadEntityByKey(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1208,7 +1232,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                var e = await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1331,7 +1358,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByNature(cntx, _ID);
+                var list = Channel.LoadEntityByNature(cntx, _ID);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {
@@ -1358,7 +1386,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByNatureAsync(cntx, _ID);
+                var list = await Channel.LoadEntityByNatureAsync(cntx, _ID);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {

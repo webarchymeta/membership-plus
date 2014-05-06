@@ -132,7 +132,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="Application_ServiceProxy.MaterializeAnnouncements" />, <see cref="Application_ServiceProxy.MaterializeCommunications" />, <see cref="Application_ServiceProxy.MaterializeEventCalendars" />, <see cref="Application_ServiceProxy.MaterializeMemberNotifications" />, <see cref="Application_ServiceProxy.MaterializeRoles" />, <see cref="Application_ServiceProxy.MaterializeUserAppMembers" />, <see cref="Application_ServiceProxy.MaterializeUserDetails" />, <see cref="Application_ServiceProxy.MaterializeUserGroups" />, <see cref="Application_ServiceProxy.MaterializeUserProfiles" />.
+    ///        <see cref="Application_ServiceProxy.MaterializeAnnouncements" />, <see cref="Application_ServiceProxy.MaterializeCommunications" />, <see cref="Application_ServiceProxy.MaterializeEventCalendars" />, <see cref="Application_ServiceProxy.MaterializeMemberNotifications" />, <see cref="Application_ServiceProxy.MaterializeRoles" />, <see cref="Application_ServiceProxy.MaterializeShortMessages" />, <see cref="Application_ServiceProxy.MaterializeSignalRHostStates" />, <see cref="Application_ServiceProxy.MaterializeSignalRMessages" />, <see cref="Application_ServiceProxy.MaterializeUserAppMembers" />, <see cref="Application_ServiceProxy.MaterializeUserDetails" />, <see cref="Application_ServiceProxy.MaterializeUserGroups" />, <see cref="Application_ServiceProxy.MaterializeUserProfiles" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -186,6 +186,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
         }
 
+        /// <summary>
+        /// Client attached error handler.
+        /// </summary>
         public Action<Exception> DelHandleError = null;
         /// <summary>
         ///   Retrieve information about the entity set: "Applications". 
@@ -254,7 +257,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -301,7 +304,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -359,7 +362,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -415,7 +418,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -571,7 +574,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return Channel.GetPageItems(cntx, set, qexpr, prevlast);
+                return Channel.GetPageItems(cntx, set, qexpr, prevlast).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -601,7 +604,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 if (prevlast != null)
                    prevlast  = prevlast.ShallowCopy();
-                return await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast);
+                return (await Channel.GetPageItemsAsync(cntx, set, qexpr, prevlast)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -670,7 +673,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabase(cntx, set, qexpr);
+                return Channel.QueryDatabase(cntx, set, qexpr).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -693,7 +696,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseAsync(cntx, set, qexpr);
+                return (await Channel.QueryDatabaseAsync(cntx, set, qexpr)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -717,7 +720,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords);
+                return Channel.QueryDatabaseLimited(cntx, set, qexpr, maxRecords).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -741,7 +744,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords);
+                return (await Channel.QueryDatabaseLimitedAsync(cntx, set, qexpr, maxRecords)).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -813,7 +816,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllAnnouncements(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllAnnouncements(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -835,7 +838,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllAnnouncementsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllAnnouncementsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -907,7 +910,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllCommunications(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllCommunications(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -929,7 +932,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllCommunicationsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllCommunicationsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1001,7 +1004,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllEventCalendars(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllEventCalendars(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1023,7 +1026,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllEventCalendarsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllEventCalendarsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1095,7 +1098,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllMemberNotifications(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllMemberNotifications(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1117,7 +1120,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllMemberNotificationsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllMemberNotificationsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1189,7 +1192,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllRoles(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllRoles(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1211,7 +1214,289 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllRolesAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllRolesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        public ShortMessageSet MaterializeShortMessages(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return Channel.MaterializeShortMessages(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessages" of type <see cref="ShortMessageSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<ShortMessageSet> MaterializeShortMessagesAsync(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return await Channel.MaterializeShortMessagesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        public IEnumerable<ShortMessage> MaterializeAllShortMessages(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllShortMessages(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessages" of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessage}" /> (T = <see cref="ShortMessage" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<ShortMessage>> MaterializeAllShortMessagesAsync(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllShortMessagesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "SignalRHostStates" of type <see cref="SignalRHostStateSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRHostStateSet" />.
+        /// </returns>
+        public SignalRHostStateSet MaterializeSignalRHostStates(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return Channel.MaterializeSignalRHostStates(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "SignalRHostStates" of type <see cref="SignalRHostStateSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRHostStateSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<SignalRHostStateSet> MaterializeSignalRHostStatesAsync(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return await Channel.MaterializeSignalRHostStatesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRHostStates" of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />).
+        /// </returns>
+        public IEnumerable<SignalRHostState> MaterializeAllSignalRHostStates(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllSignalRHostStates(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRHostStates" of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRHostState}" /> (T = <see cref="SignalRHostState" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<SignalRHostState>> MaterializeAllSignalRHostStatesAsync(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllSignalRHostStatesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "SignalRMessages" of type <see cref="SignalRMessageSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRMessageSet" />.
+        /// </returns>
+        public SignalRMessageSet MaterializeSignalRMessages(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return Channel.MaterializeSignalRMessages(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "SignalRMessages" of type <see cref="SignalRMessageSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="SignalRMessageSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<SignalRMessageSet> MaterializeSignalRMessagesAsync(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return await Channel.MaterializeSignalRMessagesAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRMessages" of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />).
+        /// </returns>
+        public IEnumerable<SignalRMessage> MaterializeAllSignalRMessages(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllSignalRMessages(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllSignalRMessages" of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{SignalRMessage}" /> (T = <see cref="SignalRMessage" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<SignalRMessage>> MaterializeAllSignalRMessagesAsync(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllSignalRMessagesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1283,7 +1568,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserAppMembers(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserAppMembers(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1305,7 +1590,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserAppMembersAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserAppMembersAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1383,7 +1668,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllAppUsers(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllAppUsers(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1409,7 +1694,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllAppUsersAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllAppUsersAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1481,7 +1766,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserDetails(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserDetails(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1503,7 +1788,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserDetailsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserDetailsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1575,7 +1860,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserGroups(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserGroups(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1597,7 +1882,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserGroupsAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserGroupsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1669,7 +1954,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.MaterializeAllUserProfiles(cntx, entity.ShallowCopy());
+                return Channel.MaterializeAllUserProfiles(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1691,7 +1976,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.MaterializeAllUserProfilesAsync(cntx, entity.ShallowCopy());
+                return (await Channel.MaterializeAllUserProfilesAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {
@@ -1713,7 +1998,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByKey(cntx, _ID);
+                var e = Channel.LoadEntityByKey(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1735,7 +2023,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                var e = await Channel.LoadEntityByKeyAsync(cntx, _ID);
+                if (e != null)
+                    e.StartAutoUpdating = true;
+                return e;
             }
             catch (Exception ex)
             {
@@ -1861,7 +2152,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return Channel.LoadEntityByNature(cntx, _Name);
+                var list = Channel.LoadEntityByNature(cntx, _Name);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {
@@ -1891,7 +2183,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             try
             {
-                return await Channel.LoadEntityByNatureAsync(cntx, _Name);
+                var list = await Channel.LoadEntityByNatureAsync(cntx, _Name);
+                return list == null ? null : list.Select(d => { d.StartAutoUpdating = true; return d; }).ToList();
             }
             catch (Exception ex)
             {

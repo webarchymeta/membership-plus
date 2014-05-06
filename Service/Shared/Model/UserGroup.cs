@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -53,8 +54,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Editable properties</term><description>Description</description>
     ///    </listheader>
     ///    <item>
+    ///      <term>GroupDescription</term>
+    ///      <description>See <see cref="UserGroup.GroupDescription" />. Editable; nullable; load delayed.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>GroupName</term>
     ///      <description>See <see cref="UserGroup.GroupName" />. Editable; nullable; max-length = 80 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>GroupPassphrase</term>
+    ///      <description>See <see cref="UserGroup.GroupPassphrase" />. Editable; nullable; max-length = 120 characters.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -104,6 +113,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="UserGroup.EventCalendars" />, which is a sub-set of the data set "EventCalendar" for <see cref="EventCalendar" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>ShortMessages</term>
+    ///      <description>See <see cref="UserGroup.ShortMessages" />, which is a sub-set of the data set "ShortMessages" for <see cref="ShortMessage" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserGroupAdminRoles</term>
     ///      <description>See <see cref="UserGroup.UserGroupAdminRoles" />, which is a sub-set of the data set "UserGroupAdminRoles" for <see cref="UserGroupAdminRole" />.</description>
     ///    </item>
@@ -118,6 +131,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class UserGroup : IDbEntity 
     {
         /// <summary>
@@ -150,12 +164,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserGroupService.AddOrUpdateEntities" />.
@@ -167,6 +181,25 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ID = " + ID + "\r\n";
+                if (IsGroupDescriptionModified)
+                    str += "Modified [GroupDescription] = " + GroupDescription + "\r\n";
+                if (IsGroupNameModified)
+                    str += "Modified [GroupName] = " + GroupName + "\r\n";
+                if (IsGroupPassphraseModified)
+                    str += "Modified [GroupPassphrase] = " + GroupPassphrase + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -237,6 +270,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         }
         private bool _isDeleted = false;
 
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public UserGroup()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public UserGroup(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(UserGroup));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as UserGroup;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(UserGroup));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
+
 #region Properties of the current entity
 
         /// <summary>
@@ -262,6 +336,66 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private string _ID = default(string);
 
         /// <summary>
+        /// Meta-info: editable; nullable; load delayed.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public string GroupDescription
+        { 
+            get
+            {
+                return _GroupDescription;
+            }
+            set
+            {
+                if (_GroupDescription != value)
+                {
+                    _GroupDescription = value;
+                    if (StartAutoUpdating)
+                        IsGroupDescriptionModified = true;
+                }
+            }
+        }
+        private string _GroupDescription = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="GroupDescription" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="GroupDescription" /> only if this is set to true no matter what
+        /// the actual value of <see cref="GroupDescription" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsGroupDescriptionModified
+        { 
+            get
+            {
+                return _isGroupDescriptionModified;
+            }
+            set
+            {
+                _isGroupDescriptionModified = value;
+            }
+        }
+        private bool _isGroupDescriptionModified = false;
+
+        /// <summary>
+        /// Wether or not the value of the delay loaded "GroupDescription" is Loaded. Clients are responsible for keeping 
+        /// track of loading status of delay loading properties.
+        /// </summary>
+        [DataMember]
+        public bool IsGroupDescriptionLoaded
+        { 
+            get
+            {
+                return _isGroupDescriptionLoaded;
+            }
+            set
+            {
+                _isGroupDescriptionLoaded = value;
+            }
+        }
+        private bool _isGroupDescriptionLoaded = false;
+
+        /// <summary>
         /// Meta-info: editable; nullable; max-length = 80 characters.
         /// </summary>
         [Editable(true)]
@@ -278,7 +412,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_GroupName != value)
                 {
                     _GroupName = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsGroupNameModified = true;
                 }
             }
@@ -303,6 +437,49 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isGroupNameModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable; max-length = 120 characters.
+        /// </summary>
+        [Editable(true)]
+        [StringLength(120)]
+        [DataMember(IsRequired = false)]
+        public string GroupPassphrase
+        { 
+            get
+            {
+                return _GroupPassphrase;
+            }
+            set
+            {
+                if (_GroupPassphrase != value)
+                {
+                    _GroupPassphrase = value;
+                    if (StartAutoUpdating)
+                        IsGroupPassphraseModified = true;
+                }
+            }
+        }
+        private string _GroupPassphrase = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="GroupPassphrase" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="GroupPassphrase" /> only if this is set to true no matter what
+        /// the actual value of <see cref="GroupPassphrase" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsGroupPassphraseModified
+        { 
+            get
+            {
+                return _isGroupPassphraseModified;
+            }
+            set
+            {
+                _isGroupPassphraseModified = value;
+            }
+        }
+        private bool _isGroupPassphraseModified = false;
 
         /// <summary>
         /// Meta-info: fixed; not null; foreign key.
@@ -589,6 +766,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 		}
 
         /// <summary>
+        /// Entitity set <see cref="ShortMessageSet" /> for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.GroupID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageSet ShortMessages
+		{
+			get
+			{
+                if (_ShortMessages == null)
+                    _ShortMessages = new ShortMessageSet();
+				return _ShortMessages;
+			}
+            set
+            {
+                _ShortMessages = value;
+            }
+		}
+		private ShortMessageSet _ShortMessages = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.GroupID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessage> ShortMessageEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessage" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.GroupID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessage[] ChangedShortMessages
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
         /// Entitity set <see cref="UserGroupAdminRoleSet" /> for data set "UserGroupAdminRoles" of <see cref="UserGroupAdminRole" /> that depend on the current entity.
         /// The corresponding foreign key in <see cref="UserGroupAdminRoleSet" /> set is { <see cref="UserGroupAdminRole.GroupID" /> }.
         /// </summary>
@@ -758,18 +976,32 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             if (to.IsPersisted)
             {
+                if (from.IsGroupDescriptionModified && !to.IsGroupDescriptionModified)
+                {
+                    to.GroupDescription = from.GroupDescription;
+                    to.IsGroupDescriptionModified = true;
+                }
                 if (from.IsGroupNameModified && !to.IsGroupNameModified)
                 {
                     to.GroupName = from.GroupName;
                     to.IsGroupNameModified = true;
+                }
+                if (from.IsGroupPassphraseModified && !to.IsGroupPassphraseModified)
+                {
+                    to.GroupPassphrase = from.GroupPassphrase;
+                    to.IsGroupPassphraseModified = true;
                 }
             }
             else
             {
                 to.IsPersisted = from.IsPersisted;
                 to.ID = from.ID;
+                to.GroupDescription = from.GroupDescription;
+                to.IsGroupDescriptionModified = from.IsGroupDescriptionModified;
                 to.GroupName = from.GroupName;
                 to.IsGroupNameModified = from.IsGroupNameModified;
+                to.GroupPassphrase = from.GroupPassphrase;
+                to.IsGroupPassphraseModified = from.IsGroupPassphraseModified;
                 to.ApplicationID = from.ApplicationID;
                 to.GroupTypeID = from.GroupTypeID;
                 to.ParentID = from.ParentID;
@@ -785,10 +1017,22 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void UpdateChanges(UserGroup newdata)
         {
             int cnt = 0;
+            if (GroupDescription != newdata.GroupDescription)
+            {
+                GroupDescription = newdata.GroupDescription;
+                IsGroupDescriptionModified = true;
+                cnt++;
+            }
             if (GroupName != newdata.GroupName)
             {
                 GroupName = newdata.GroupName;
                 IsGroupNameModified = true;
+                cnt++;
+            }
+            if (GroupPassphrase != newdata.GroupPassphrase)
+            {
+                GroupPassphrase = newdata.GroupPassphrase;
+                IsGroupPassphraseModified = true;
                 cnt++;
             }
             IsEntityChanged = cnt > 0;
@@ -799,30 +1043,60 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (ApplicationID == null)
                 ApplicationID = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsGroupNameModified;
-            IsInitializing = false;
+                IsEntityChanged = IsGroupDescriptionModified || IsGroupNameModified || IsGroupPassphraseModified;
+            if (IsGroupDescriptionModified && !IsGroupDescriptionLoaded)
+                IsGroupDescriptionLoaded = true;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserGroup ShallowCopy(bool allData = false)
+        public UserGroup ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserGroup e = new UserGroup();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.GroupName = GroupName;
+            if (preserveState)
+                e.IsGroupNameModified = IsGroupNameModified;
+            else
+                e.IsGroupNameModified = false;
+            e.GroupPassphrase = GroupPassphrase;
+            if (preserveState)
+                e.IsGroupPassphraseModified = IsGroupPassphraseModified;
+            else
+                e.IsGroupPassphraseModified = false;
             e.ApplicationID = ApplicationID;
             e.GroupTypeID = GroupTypeID;
             e.ParentID = ParentID;
+            if (allData)
+            {
+                e.GroupDescription = GroupDescription;
+                if (preserveState)
+                    e.IsGroupDescriptionModified = IsGroupDescriptionModified;
+                else
+                    e.IsGroupDescriptionModified = false;
+            }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
@@ -843,6 +1117,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
+  GroupPassphrase = '" + (GroupPassphrase != null ? GroupPassphrase : "null") + @"'");
+            if (IsGroupPassphraseModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
   ApplicationID = '" + ApplicationID + @"'
   GroupTypeID = " + GroupTypeID + @"
   ParentID = '" + (ParentID != null ? ParentID : "null") + @"'
@@ -856,6 +1136,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="UserGroup" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class UserGroupUpdateResult : IUpdateResult
     {
         /// <summary>

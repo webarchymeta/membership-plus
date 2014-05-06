@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -65,16 +66,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="UserAppMember.Email" />. Editable; not null; max-length = 128 characters.</description>
     ///    </item>
     ///    <item>
+    ///      <term>AcceptChatInvitation</term>
+    ///      <description>See <see cref="UserAppMember.AcceptChatInvitation" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>AcceptLanguages</term>
     ///      <description>See <see cref="UserAppMember.AcceptLanguages" />. Editable; nullable; max-length = 50 characters.</description>
     ///    </item>
     ///    <item>
     ///      <term>Comment</term>
     ///      <description>See <see cref="UserAppMember.Comment" />. Editable; nullable; load delayed.</description>
-    ///    </item>
-    ///    <item>
-    ///      <term>ConnectionID</term>
-    ///      <description>See <see cref="UserAppMember.ConnectionID" />. Editable; nullable; max-length = 50 characters.</description>
     ///    </item>
     ///    <item>
     ///      <term>IconImg</term>
@@ -131,8 +132,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="UserAppMember.UserRef" />, which is a member of the data set "Users" for <see cref="User" />.</description>
     ///    </item>
     ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
+    ///       <term>The following entity sets depend on this entity</term><description>Description</description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>MemberCallbacks</term>
+    ///      <description>See <see cref="UserAppMember.MemberCallbacks" />, which is a sub-set of the data set "MemberCallbacks" for <see cref="MemberCallback" />.</description>
+    ///    </item>
+    ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class UserAppMember : IDbEntity 
     {
         /// <summary>
@@ -165,12 +176,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IUserAppMemberService.AddOrUpdateEntities" />.
@@ -182,6 +193,42 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "ApplicationID = " + ApplicationID + "\r\n";
+                str += "UserID = " + UserID + "\r\n";
+                if (IsEmailModified)
+                    str += "Modified [Email] = " + Email + "\r\n";
+                if (IsAcceptChatInvitationModified)
+                    str += "Modified [AcceptChatInvitation] = " + AcceptChatInvitation + "\r\n";
+                if (IsAcceptLanguagesModified)
+                    str += "Modified [AcceptLanguages] = " + AcceptLanguages + "\r\n";
+                if (IsCommentModified)
+                    str += "Modified [Comment] = " + Comment + "\r\n";
+                if (IsIconImgModified)
+                    str += "Modified [IconImg] = " + IconImg + "\r\n";
+                if (IsIconLastModifiedModified)
+                    str += "Modified [IconLastModified] = " + IconLastModified + "\r\n";
+                if (IsIconMimeModified)
+                    str += "Modified [IconMime] = " + IconMime + "\r\n";
+                if (IsLastActivityDateModified)
+                    str += "Modified [LastActivityDate] = " + LastActivityDate + "\r\n";
+                if (IsLastStatusChangeModified)
+                    str += "Modified [LastStatusChange] = " + LastStatusChange + "\r\n";
+                if (IsMemberStatusModified)
+                    str += "Modified [MemberStatus] = " + MemberStatus + "\r\n";
+                if (IsSearchListingModified)
+                    str += "Modified [SearchListing] = " + SearchListing + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -230,6 +277,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public UserAppMember()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public UserAppMember(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(UserAppMember));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as UserAppMember;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(UserAppMember));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
 
 #region Properties of the current entity
 
@@ -295,7 +383,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Email != value)
                 {
                     _Email = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsEmailModified = true;
                 }
             }
@@ -322,6 +410,48 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private bool _isEmailModified = false;
 
         /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> AcceptChatInvitation
+        { 
+            get
+            {
+                return _AcceptChatInvitation;
+            }
+            set
+            {
+                if (_AcceptChatInvitation != value)
+                {
+                    _AcceptChatInvitation = value;
+                    if (StartAutoUpdating)
+                        IsAcceptChatInvitationModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _AcceptChatInvitation = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="AcceptChatInvitation" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="AcceptChatInvitation" /> only if this is set to true no matter what
+        /// the actual value of <see cref="AcceptChatInvitation" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsAcceptChatInvitationModified
+        { 
+            get
+            {
+                return _isAcceptChatInvitationModified;
+            }
+            set
+            {
+                _isAcceptChatInvitationModified = value;
+            }
+        }
+        private bool _isAcceptChatInvitationModified = false;
+
+        /// <summary>
         /// Meta-info: editable; nullable; max-length = 50 characters.
         /// </summary>
         [Editable(true)]
@@ -338,7 +468,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_AcceptLanguages != value)
                 {
                     _AcceptLanguages = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsAcceptLanguagesModified = true;
                 }
             }
@@ -380,7 +510,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_Comment != value)
                 {
                     _Comment = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsCommentModified = true;
                 }
             }
@@ -425,49 +555,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private bool _isCommentLoaded = false;
 
         /// <summary>
-        /// Meta-info: editable; nullable; max-length = 50 characters.
-        /// </summary>
-        [Editable(true)]
-        [StringLength(50)]
-        [DataMember(IsRequired = false)]
-        public string ConnectionID
-        { 
-            get
-            {
-                return _ConnectionID;
-            }
-            set
-            {
-                if (_ConnectionID != value)
-                {
-                    _ConnectionID = value;
-                    if (!IsInitializing)
-                        IsConnectionIDModified = true;
-                }
-            }
-        }
-        private string _ConnectionID = default(string);
-
-        /// <summary>
-        /// Wether or not the value of <see cref="ConnectionID" /> was changed compared to what it was loaded last time. 
-        /// Note: the backend data source updates the changed <see cref="ConnectionID" /> only if this is set to true no matter what
-        /// the actual value of <see cref="ConnectionID" /> is.
-        /// </summary>
-        [DataMember]
-        public bool IsConnectionIDModified
-        { 
-            get
-            {
-                return _isConnectionIDModified;
-            }
-            set
-            {
-                _isConnectionIDModified = value;
-            }
-        }
-        private bool _isConnectionIDModified = false;
-
-        /// <summary>
         /// Meta-info: editable; nullable; load delayed.
         /// </summary>
         [Editable(true)]
@@ -483,7 +570,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IconImg != value)
                 {
                     _IconImg = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIconImgModified = true;
                 }
             }
@@ -543,7 +630,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IconLastModified != value)
                 {
                     _IconLastModified = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIconLastModifiedModified = true;
                 }
             }
@@ -586,7 +673,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_IconMime != value)
                 {
                     _IconMime = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsIconMimeModified = true;
                 }
             }
@@ -628,7 +715,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastActivityDate != value)
                 {
                     _LastActivityDate = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastActivityDateModified = true;
                 }
             }
@@ -670,7 +757,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_LastStatusChange != value)
                 {
                     _LastStatusChange = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsLastStatusChangeModified = true;
                 }
             }
@@ -713,7 +800,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_MemberStatus != value)
                 {
                     _MemberStatus = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsMemberStatusModified = true;
                 }
             }
@@ -755,7 +842,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_SearchListing != value)
                 {
                     _SearchListing = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsSearchListingModified = true;
                 }
             }
@@ -873,6 +960,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #region Entities that depend on the current one.
 
+        /// <summary>
+        /// Entitity set <see cref="MemberCallbackSet" /> for data set "MemberCallbacks" of <see cref="MemberCallback" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="MemberCallbackSet" /> set is { <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public MemberCallbackSet MemberCallbacks
+		{
+			get
+			{
+                if (_MemberCallbacks == null)
+                    _MemberCallbacks = new MemberCallbackSet();
+				return _MemberCallbacks;
+			}
+            set
+            {
+                _MemberCallbacks = value;
+            }
+		}
+		private MemberCallbackSet _MemberCallbacks = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "MemberCallbacks" of <see cref="MemberCallback" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="MemberCallbackSet" /> set is { <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }.
+        /// </summary>
+		public IEnumerable<MemberCallback> MemberCallbackEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="MemberCallback" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="MemberCallbackSet" /> set is { <see cref="MemberCallback.ApplicationID" />, <see cref="MemberCallback.UserID" /> }.
+        /// </summary>
+        [DataMember]
+		public MemberCallback[] ChangedMemberCallbacks
+		{
+			get;
+            set;
+		}
+
 #endregion
 
         /// <summary>
@@ -924,6 +1052,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.Email = from.Email;
                     to.IsEmailModified = true;
                 }
+                if (from.IsAcceptChatInvitationModified && !to.IsAcceptChatInvitationModified)
+                {
+                    to.AcceptChatInvitation = from.AcceptChatInvitation;
+                    to.IsAcceptChatInvitationModified = true;
+                }
                 if (from.IsAcceptLanguagesModified && !to.IsAcceptLanguagesModified)
                 {
                     to.AcceptLanguages = from.AcceptLanguages;
@@ -933,11 +1066,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 {
                     to.Comment = from.Comment;
                     to.IsCommentModified = true;
-                }
-                if (from.IsConnectionIDModified && !to.IsConnectionIDModified)
-                {
-                    to.ConnectionID = from.ConnectionID;
-                    to.IsConnectionIDModified = true;
                 }
                 if (from.IsIconImgModified && !to.IsIconImgModified)
                 {
@@ -982,12 +1110,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.UserID = from.UserID;
                 to.Email = from.Email;
                 to.IsEmailModified = from.IsEmailModified;
+                to.AcceptChatInvitation = from.AcceptChatInvitation;
+                to.IsAcceptChatInvitationModified = from.IsAcceptChatInvitationModified;
                 to.AcceptLanguages = from.AcceptLanguages;
                 to.IsAcceptLanguagesModified = from.IsAcceptLanguagesModified;
                 to.Comment = from.Comment;
                 to.IsCommentModified = from.IsCommentModified;
-                to.ConnectionID = from.ConnectionID;
-                to.IsConnectionIDModified = from.IsConnectionIDModified;
                 to.IconImg = from.IconImg;
                 to.IsIconImgModified = from.IsIconImgModified;
                 to.IconLastModified = from.IconLastModified;
@@ -1020,6 +1148,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsEmailModified = true;
                 cnt++;
             }
+            if (AcceptChatInvitation != newdata.AcceptChatInvitation)
+            {
+                AcceptChatInvitation = newdata.AcceptChatInvitation;
+                IsAcceptChatInvitationModified = true;
+                cnt++;
+            }
             if (AcceptLanguages != newdata.AcceptLanguages)
             {
                 AcceptLanguages = newdata.AcceptLanguages;
@@ -1030,12 +1164,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 Comment = newdata.Comment;
                 IsCommentModified = true;
-                cnt++;
-            }
-            if (ConnectionID != newdata.ConnectionID)
-            {
-                ConnectionID = newdata.ConnectionID;
-                IsConnectionIDModified = true;
                 cnt++;
             }
             bool bIconImg = IconImg == null && newdata.IconImg != null ||
@@ -1100,45 +1228,100 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Email == null)
                 Email = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsEmailModified || IsAcceptLanguagesModified || IsCommentModified || IsConnectionIDModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
+                IsEntityChanged = IsEmailModified || IsAcceptChatInvitationModified || IsAcceptLanguagesModified || IsCommentModified || IsIconImgModified || IsIconLastModifiedModified || IsIconMimeModified || IsLastActivityDateModified || IsLastStatusChangeModified || IsMemberStatusModified || IsSearchListingModified;
             if (IsCommentModified && !IsCommentLoaded)
                 IsCommentLoaded = true;
             if (IsIconImgModified && !IsIconImgLoaded)
                 IsIconImgLoaded = true;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAppMember ShallowCopy(bool allData = false)
+        public UserAppMember ShallowCopy(bool allData = false, bool preserveState = false)
         {
             UserAppMember e = new UserAppMember();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ApplicationID = ApplicationID;
             e.UserID = UserID;
             e.Email = Email;
+            if (preserveState)
+                e.IsEmailModified = IsEmailModified;
+            else
+                e.IsEmailModified = false;
+            e.AcceptChatInvitation = AcceptChatInvitation;
+            if (preserveState)
+                e.IsAcceptChatInvitationModified = IsAcceptChatInvitationModified;
+            else
+                e.IsAcceptChatInvitationModified = false;
             e.AcceptLanguages = AcceptLanguages;
-            e.ConnectionID = ConnectionID;
+            if (preserveState)
+                e.IsAcceptLanguagesModified = IsAcceptLanguagesModified;
+            else
+                e.IsAcceptLanguagesModified = false;
             e.IconLastModified = IconLastModified;
+            if (preserveState)
+                e.IsIconLastModifiedModified = IsIconLastModifiedModified;
+            else
+                e.IsIconLastModifiedModified = false;
             e.IconMime = IconMime;
+            if (preserveState)
+                e.IsIconMimeModified = IsIconMimeModified;
+            else
+                e.IsIconMimeModified = false;
             e.LastActivityDate = LastActivityDate;
+            if (preserveState)
+                e.IsLastActivityDateModified = IsLastActivityDateModified;
+            else
+                e.IsLastActivityDateModified = false;
             e.LastStatusChange = LastStatusChange;
+            if (preserveState)
+                e.IsLastStatusChangeModified = IsLastStatusChangeModified;
+            else
+                e.IsLastStatusChangeModified = false;
             e.MemberStatus = MemberStatus;
+            if (preserveState)
+                e.IsMemberStatusModified = IsMemberStatusModified;
+            else
+                e.IsMemberStatusModified = false;
             e.SearchListing = SearchListing;
+            if (preserveState)
+                e.IsSearchListingModified = IsSearchListingModified;
+            else
+                e.IsSearchListingModified = false;
             if (allData)
             {
                 e.Comment = Comment;
+                if (preserveState)
+                    e.IsCommentModified = IsCommentModified;
+                else
+                    e.IsCommentModified = false;
                 e.IconImg = IconImg;
+                if (preserveState)
+                    e.IsIconImgModified = IsIconImgModified;
+                else
+                    e.IsIconImgModified = false;
             }
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
@@ -1162,14 +1345,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
-  AcceptLanguages = '" + (AcceptLanguages != null ? AcceptLanguages : "null") + @"'");
-            if (IsAcceptLanguagesModified)
+  AcceptChatInvitation = " + (AcceptChatInvitation.HasValue ? AcceptChatInvitation.Value.ToString() : "null") + @"");
+            if (IsAcceptChatInvitationModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
-  ConnectionID = '" + (ConnectionID != null ? ConnectionID : "null") + @"'");
-            if (IsConnectionIDModified)
+  AcceptLanguages = '" + (AcceptLanguages != null ? AcceptLanguages : "null") + @"'");
+            if (IsAcceptLanguagesModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
@@ -1220,6 +1403,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="UserAppMember" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class UserAppMemberUpdateResult : IUpdateResult
     {
         /// <summary>

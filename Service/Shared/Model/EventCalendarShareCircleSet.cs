@@ -26,6 +26,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing possible combination of foreign key constraint of the data set of "EventCalendarShareCircles".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class EventCalendarShareCircleSetConstraints
     {
         /// <summary>
@@ -85,6 +86,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing a limited set of available constraints of "EventCalendarShareCircles".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class EventCalendarShareCircleSetConstraintsColl
     {
         /// <summary>
@@ -124,6 +126,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     /// A structure representing the data set of "EventCalendarShareCircles".
     /// </summary>
     [DataContract]
+    [Serializable]
     public class EventCalendarShareCircleSet
     {
         /// <summary>

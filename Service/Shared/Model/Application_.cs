@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization.Json;
 
 namespace CryptoGateway.RDB.Data.MembershipPlus
 {
@@ -82,6 +83,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="Application_.Roles" />, which is a sub-set of the data set "Roles" for <see cref="Role" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>ShortMessages</term>
+    ///      <description>See <see cref="Application_.ShortMessages" />, which is a sub-set of the data set "ShortMessages" for <see cref="ShortMessage" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>SignalRHostStates</term>
+    ///      <description>See <see cref="Application_.SignalRHostStates" />, which is a sub-set of the data set "SignalRHostStates" for <see cref="SignalRHostState" />.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>SignalRMessages</term>
+    ///      <description>See <see cref="Application_.SignalRMessages" />, which is a sub-set of the data set "SignalRMessages" for <see cref="SignalRMessage" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>UserAppMembers</term>
     ///      <description>See <see cref="Application_.UserAppMembers" />, which is a sub-set of the data set "UserAppMembers" for <see cref="UserAppMember" />.</description>
     ///    </item>
@@ -100,6 +113,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     /// </remarks>
     [DataContract]
+    [Serializable]
     public class Application_ : IDbEntity 
     {
         /// <summary>
@@ -132,12 +146,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Used internally.
         /// </summary>
-        public bool IsInitializing
+        public bool StartAutoUpdating
         {
-            get { return _isInitializing; }
-            set { _isInitializing = value; }
+            get { return _startAutoUpdating; }
+            set { _startAutoUpdating = value; }
         }
-        private bool _isInitializing = false;
+        private bool _startAutoUpdating = false;
 
         /// <summary>
         /// Used to matching entities in input adding or updating entity list and the returned ones, see <see cref="IApplication_Service.AddOrUpdateEntities" />.
@@ -149,6 +163,21 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _updateIndex = value; }
         }
         private int _updateIndex = -1;
+
+        /// <summary>
+        /// Its value provides a list of value for intrinsic keys and modified properties.
+        /// </summary>
+        public string SignatureString 
+        { 
+            get
+            {
+                string str = "";
+                str += "Name = " + Name + "\r\n";
+                if (IsDisplayNameModified)
+                    str += "Modified [DisplayName] = " + DisplayName + "\r\n";;
+                return str.Trim();
+            }
+        }
 
         /// <summary>
         /// Configured at system generation step, its value provides a short, but characteristic summary of the entity.
@@ -195,6 +224,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set { _isDeleted = value; }
         }
         private bool _isDeleted = false;
+
+#region constructors and serialization
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Application_()
+        {
+        }
+
+        /// <summary>
+        /// Constructor for serialization (<see cref="ISerializable" />).
+        /// </summary>
+        public Application_(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Application_));
+            var strm = new System.IO.MemoryStream();
+            byte[] bf = (byte[])info.GetValue("data", typeof(byte[]));
+            strm.Write(bf, 0, bf.Length);
+            strm.Position = 0;
+            var e = ser.ReadObject(strm) as Application_;
+            IsPersisted = false;
+            StartAutoUpdating = false;
+            MergeChanges(e, this);
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Implementation of the <see cref="ISerializable" /> interface
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Application_));
+            var strm = new System.IO.MemoryStream();
+            ser.WriteObject(strm, ShallowCopy());
+            info.AddValue("data", strm.ToArray(), typeof(byte[]));
+        }
+
+#endregion
 
 #region Properties of the current entity
 
@@ -261,7 +331,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_DisplayName != value)
                 {
                     _DisplayName = value;
-                    if (!IsInitializing)
+                    if (StartAutoUpdating)
                         IsDisplayNameModified = true;
                 }
             }
@@ -495,6 +565,129 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [DataMember]
 		public Role[] ChangedRoles
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="ShortMessageSet" /> for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageSet ShortMessages
+		{
+			get
+			{
+                if (_ShortMessages == null)
+                    _ShortMessages = new ShortMessageSet();
+				return _ShortMessages;
+			}
+            set
+            {
+                _ShortMessages = value;
+            }
+		}
+		private ShortMessageSet _ShortMessages = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessages" of <see cref="ShortMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ApplicationID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessage> ShortMessageEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessage" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageSet" /> set is { <see cref="ShortMessage.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessage[] ChangedShortMessages
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="SignalRHostStateSet" /> for data set "SignalRHostStates" of <see cref="SignalRHostState" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="SignalRHostStateSet" /> set is { <see cref="SignalRHostState.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public SignalRHostStateSet SignalRHostStates
+		{
+			get
+			{
+                if (_SignalRHostStates == null)
+                    _SignalRHostStates = new SignalRHostStateSet();
+				return _SignalRHostStates;
+			}
+            set
+            {
+                _SignalRHostStates = value;
+            }
+		}
+		private SignalRHostStateSet _SignalRHostStates = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "SignalRHostStates" of <see cref="SignalRHostState" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="SignalRHostStateSet" /> set is { <see cref="SignalRHostState.ApplicationID" /> }.
+        /// </summary>
+		public IEnumerable<SignalRHostState> SignalRHostStateEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="SignalRHostState" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="SignalRHostStateSet" /> set is { <see cref="SignalRHostState.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public SignalRHostState[] ChangedSignalRHostStates
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="SignalRMessageSet" /> for data set "SignalRMessages" of <see cref="SignalRMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="SignalRMessageSet" /> set is { <see cref="SignalRMessage.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public SignalRMessageSet SignalRMessages
+		{
+			get
+			{
+                if (_SignalRMessages == null)
+                    _SignalRMessages = new SignalRMessageSet();
+				return _SignalRMessages;
+			}
+            set
+            {
+                _SignalRMessages = value;
+            }
+		}
+		private SignalRMessageSet _SignalRMessages = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "SignalRMessages" of <see cref="SignalRMessage" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="SignalRMessageSet" /> set is { <see cref="SignalRMessage.ApplicationID" /> }.
+        /// </summary>
+		public IEnumerable<SignalRMessage> SignalRMessageEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="SignalRMessage" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="SignalRMessageSet" /> set is { <see cref="SignalRMessage.ApplicationID" /> }.
+        /// </summary>
+        [DataMember]
+		public SignalRMessage[] ChangedSignalRMessages
 		{
 			get;
             set;
@@ -747,28 +940,43 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         public void NormalizeValues()
         {
-            IsInitializing = true;
+            StartAutoUpdating = false;
             if (Name == null)
                 Name = "";
             if (!IsEntityChanged)
                 IsEntityChanged = IsDisplayNameModified;
-            IsInitializing = false;
+            StartAutoUpdating = true;
+        }
+
+        /// <summary>
+        /// Make a shallow copy of the entity.
+        /// </summary>
+        IDbEntity IDbEntity.ShallowCopy(bool preserveState)
+        {
+            return ShallowCopy(false, preserveState);
         }
 
         /// <summary>
         /// Internal use
         /// </summary>
-        public Application_ ShallowCopy(bool allData = false)
+        public Application_ ShallowCopy(bool allData = false, bool preserveState = false)
         {
             Application_ e = new Application_();
-            e.IsInitializing = true;
+            e.StartAutoUpdating = false;
             e.ID = ID;
             e.Name = Name;
             e.DisplayName = DisplayName;
+            if (preserveState)
+                e.IsDisplayNameModified = IsDisplayNameModified;
+            else
+                e.IsDisplayNameModified = false;
             e.DistinctString = GetDistinctString(true);
-            e.IsPersisted = true;
-            e.IsEntityChanged = false;
-            e.IsInitializing = false;
+            e.IsPersisted = IsPersisted;
+            if (preserveState)
+                e.IsEntityChanged = IsEntityChanged;
+            else
+                e.IsEntityChanged = false;
+            e.StartAutoUpdating = true;
             return e;
         }
 
@@ -800,6 +1008,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///The result of an add or update of type <see cref="Application_" />.
     ///</summary>
     [DataContract]
+    [Serializable]
     public class Application_UpdateResult : IUpdateResult
     {
         /// <summary>
