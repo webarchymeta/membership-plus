@@ -120,7 +120,7 @@
                             <div class="msg">
                                 <table>
                                     <tr>
-                                        <td rowspan="3" class="icon-style">
+                                        <td rowspan="2" class="icon-style">
                                             <!-- ko if: fromObj() == null -->
                                             <span class="ion-android-social-user"></span>
                                             <!-- /ko -->
@@ -133,21 +133,58 @@
                                             <!-- /ko -->
                                             <!-- /ko -->
                                         </td>
-                                        <td>
-                                            <div class="msg-sender">
-                                                <a data-bind="attr: {name: id}"><label>@ResourceUtils.GetString("ab86a1e1ef70dff97959067b723c5c25", "me")</label></a>
-                                                <span class="ion-android-volume"></span>
+                                        <td class="msg-content">
+                                            <div class="msg-header">
+                                                <div class="msg-sender">
+                                                    <a data-bind="attr: {name: id}"><label>@ResourceUtils.GetString("ab86a1e1ef70dff97959067b723c5c25", "me")</label></a>
+                                                    <span class="ion-android-volume"></span>
+                                                </div>
+                                                <div class="msg-time">
+                                                    <span data-bind="localdatetime: jsonDate"></span>
+                                                    <span class="glyphicon glyphicon-heart"></span>
+                                                    <span data-bind="text: score"></span>
+                                                </div>
                                             </div>
-                                            <div class="msg-time">
-                                                <span data-bind="localdatetime: jsonDate"></span>
-                                                <span class="glyphicon glyphicon-heart"></span>
-                                                <span data-bind="text: score"></span>
+                                            <div class="msg-body">
+                                                <!-- ko ifnot: editing -->
+                                                <div class="text" data-bind="html: text"></div>
+                                                <!-- /ko -->
+                                                <!-- ko if: editing -->
+                                                <div class="input-group input-area">
+                                                    <span class="input-group-addon">
+                                                        <a href="#" data-bind="click: ToggleEditor">
+                                                            <!-- ko ifnot: RichEditor -->
+                                                            <span class="ion-compose"></span>
+                                                            <!-- /ko -->
+                                                            <!-- ko if: RichEditor -->
+                                                            <span class="ion-edit"></span>
+                                                            <!-- /ko -->
+                                                        </a>
+                                                    </span>
+                                                    <!-- ko if: RichEditor -->
+                                                    <textarea data-bind="attr: {id: id}, simpleHtmlEditor: text"></textarea>
+                                                    <!-- /ko -->
+                                                    <!-- ko ifnot: RichEditor -->
+                                                    <input type="text" class="form-control" data-bind="value: text, valueUpdate:'afterkeydown'" />
+                                                    <!-- /ko -->
+                                                    <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default" data-bind="click: UpdateSimpleMessageToAll, enable: IsTextChanged">
+                                                            @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                                <!-- /ko -->
+                                                <div class="msg-cmds">
+                                                    <a href="#" data-bind="click: ToggleEditing">
+                                                        <!-- ko ifnot: editing -->
+                                                        <span class="ion-edit"></span>
+                                                        <!-- /ko -->
+                                                        <!-- ko if: editing -->
+                                                        <span class="glyphicon glyphicon-ok"></span>
+                                                        <!-- /ko -->
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="msg-body" data-bind="html: text"></div>
                                         </td>
                                     </tr>
                                     <!-- ko if: Replies().length > 0 -->
@@ -172,7 +209,7 @@
                             <div class="msg">
                                 <table>
                                     <tr>
-                                        <td rowspan="5" class="icon-style">
+                                        <td rowspan="3" class="icon-style">
                                             <a href="#" data-bind="click: ToggleReplyArea">
                                                 <!-- ko if: fromObj() == null -->
                                                 <span class="ion-android-social-user"></span>
@@ -187,31 +224,27 @@
                                                 <!-- /ko -->
                                             </a>
                                         </td>
-                                        <td>
-                                            <div class="msg-sender">
-                                                <a href="#" data-bind="click: ToggleReplyArea"><span class="ion-ios7-undo"></span></a>
-                                                <a data-bind="attr: {name: id}">
-                                                    <label data-bind="text: from"></label>
-                                                </a>
-                                                <span class="ion-android-volume"></span>
+                                        <td class="msg-content">
+                                            <div class="msg-header">
+                                                <div class="msg-sender">
+                                                    <a href="#" data-bind="click: ToggleReplyArea"><span class="ion-ios7-undo"></span></a>
+                                                    <a data-bind="attr: {name: id}">
+                                                        <label data-bind="text: from"></label>
+                                                    </a>
+                                                    <span class="ion-android-volume"></span>
+                                                </div>
+                                                <div class="msg-time">
+                                                    <span data-bind="localdatetime: jsonDate"></span>
+                                                    <span class="glyphicon glyphicon-heart"></span>
+                                                    <span data-bind="text: score"></span>
+                                                </div>
                                             </div>
-                                            <div class="msg-time">
-                                                <span data-bind="localdatetime: jsonDate"></span>
-                                                <span class="glyphicon glyphicon-heart"></span>
-                                                <span data-bind="text: score"></span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="msg-body" data-bind="html: text"></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="msg-cmds">
-                                                <a href="#" data-bind="click: VoteUp"><span class="glyphicon glyphicon-thumbs-up"></span></a>
-                                                <a href="#" data-bind="click: VoteDown"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+                                            <div class="msg-body">
+                                                <div class="text" data-bind="html: text"></div>
+                                                <div class="msg-cmds">
+                                                    <a href="#" data-bind="click: VoteUp"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+                                                    <a href="#" data-bind="click: VoteDown"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

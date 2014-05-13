@@ -719,7 +719,7 @@ table.figure-frame {
             margin: 1px 0 10px 5px;
         }
 
-        > table > tbody > tr.self > td > .msg > table > tbody > tr > td > .msg-sender {
+        > table > tbody > tr.self > td > .msg > table > tbody > tr > td > msg-header > .msg-sender {
             span, label {
                 color: gray;
             }
@@ -751,18 +751,20 @@ table.figure-frame {
             width: 100%;
         }
 
-        margin-left: 0px;
-        margin-right: -3px;
+        border-collapse: collapse;
+        margin: 0;
         min-height: 0;
         max-height: none;
         height: auto;
         overflow-y: auto;
+        overflow-x: hidden;
         display: block;
     }
 
     .msg {
         > table {
             width: 100%;
+            border-collapse: collapse;
 
             > tbody > tr > td.icon-style {
                 span {
@@ -779,46 +781,90 @@ table.figure-frame {
                 vertical-align: top;
                 text-align: center;
                 width: 1px;
-                border-right: 1px solid @gray-light;
+                /*border-right: 1px solid @gray-light;*/
+                border-bottom: 1px solid @gray-light;
             }
 
             > tbody > tr > td {
-                .msg-sender {
-                    display: inline-block;
-                    font-weight: bold;
-                }
+                &.msg-content {
+                    .msg-header {
+                        .msg-sender {
+                            display: inline-block;
+                            font-weight: bold;
+                            padding: 0 5px;
+                        }
 
-                .msg-time {
-                    display: inline-block;
-                    font-style: italic;
-                    float: right;
-                }
-
-                .msg-body {
-                    display: block;
-                    color: #555555;
-                    border-top: 1px solid @gray-light;
-                    padding: 2px 5px;
-                }
-
-                .msg-cmds {
-                    a, span {
-                        margin: 5px 5px 2px 0;
+                        .msg-time {
+                            display: inline-block;
+                            font-style: italic;
+                            float: right;
+                            padding-right: 10px;
+                        }
+                        background: @gray-lighter;
                     }
 
-                    text-align: right;
-                    background-color: @gray-lighter;
+                    .msg-body {
+                        &:before {
+                            position: absolute;
+                            content: '';
+                            border: 8px solid;
+                            border-color: lighten(@gray, 22%) lighten(@gray, 22%) transparent transparent;
+                            width: 0;
+                            height: 0;
+                            top: 5px;
+                            left: -15px;
+                        }
+
+                        &:after {
+                            position: absolute;
+                            content: '';
+                            border: 6px solid;
+                            border-color: white white transparent transparent;
+                            width: 0;
+                            height: 0;
+                            top: 7px;
+                            left: -11px;
+                        }
+
+                        position: relative;
+                        display: block;
+                        color: #555555;
+                        border: 1px solid lighten(@gray, 22%);
+                        -webkit-border-radius: 6px;
+                        -moz-border-radius: 6px;
+                        border-radius: 10px;
+                        box-shadow: #ddd 5px 5px;
+                        margin: 10px 10px 10px 15px;
+
+                        .text {
+                            padding: 15px 20px;
+                        }
+
+                        .msg-cmds {
+                            a, span {
+                                margin: 5px 5px 2px 0;
+                            }
+
+                            text-align: right;
+                            background-color: @gray-lighter;
+                            border-radius: 0 0 6px 6px;
+                            margin: 1px;
+                        }
+                    }
+
+                    border-bottom: 1px solid lighten(@gray, 28%);
                 }
             }
         }
 
-        margin: 5px 0px 5px 3px;
-        padding: 3px 5px;
-        border: 1px solid lighten(@gray, 22%);
+        margin: 0; /*5px 0px 5px 3px;*/
+        padding: 0;
+        /*border-collapse:collapse;
+        border: 1px solid lighten(@gray, 28%);
         -webkit-border-radius: 6px;
         -moz-border-radius: 6px;
         border-radius: 6px;
-        box-shadow: lighten(@gray, 35%) 2px 2px;
+        box-shadow: lighten(@gray, 35%) 2px 2px;*/
     }
 
     .input-area {
@@ -901,8 +947,21 @@ table.figure-frame {
 }
 
 .chat-invitation {
+    .header {
+        .peer {
+            color: #00FF00;
+        }
+
+        img {
+            width: 56px;
+            float: left;
+            margin-right: 3px;
+        }
+    }
+
     .msg {
         line-height: @line-height-base;
+        display: block;
     }
 
     .response {
@@ -912,6 +971,10 @@ table.figure-frame {
         }
     }
 
+    .status {
+        display: block;
+    }
+
     .action {
         a {
             background: rgba(250,250,250,0.3);
@@ -919,11 +982,15 @@ table.figure-frame {
             margin: 1px 2px;
             padding: 2px 5px;
             border-radius: 5px;
+
             &:hover {
                 background: rgba(250,250,250,0.95);
                 color: black;
             }
         }
+
+        margin: 5px 0;
+        display: block;
     }
 }
 

@@ -79,6 +79,7 @@ function ChatMessage(data) {
     var self = this;
     self.selected = ko.observable(false);
     self.checked = ko.observable(false);
+    self.editing = ko.observable(false);
     self.id = data.id;
     self.from = data.from;
     self.fromId = data.fromId;
@@ -95,19 +96,29 @@ function ChatMessage(data) {
     self.date = getDateVal(data.date);
     self.jsonDate = data.date;
     self.self = data.self;
-    self.text = unescape(data.text);
+    self.text0 = unescape(data.text);
+    self.text = ko.observable(self.text0);
     self.score = ko.observable(data.score);
     self.RichEditor = ko.observable(false);
     self.CurrentMessage = ko.observable('');
     self.IsSendReady = ko.computed(function () {
         return self.CurrentMessage().length > 0;
     });
+    self.IsTextChanged = ko.computed(function () {
+        if (userId == self.fromId) {
+            return self.text() != self.text0;
+        } else {
+            return false;
+        }
+    })
     self.Replies = ko.observableArray();
+
     if (typeof data.replies != 'undefined' && data.replies.length > 0) {
         for (var i = 0; i < data.replies.length; i++) {
             self.Replies.push(new ChatMessage(data.replies[i]));
         }
     }
+
     self.ToggleReplyArea = function () {
         if (self.checked()) {
             self.checked(false);
@@ -115,14 +126,32 @@ function ChatMessage(data) {
             self.checked(true);
         }
     }
+
+    self.ToggleEditing = function () {
+        if (self.editing()) {
+            self.editing(false);
+        } else {
+            self.editing(true);
+        }
+    }
+
     self.ToggleEditor = function () {
         self.RichEditor(!self.RichEditor());
     }
+
     self.SendSimpleMessageToAll = function () {
         var msg = escape(self.CurrentMessage());
         root.chatHub.server.sendSimpleMessageToAll(root.id, self.id, { title: "", body: msg });
         self.CurrentMessage('');
         self.checked(false);
+    }
+
+    self.UpdateSimpleMessageToAll = function () {
+        if (userId == self.fromId) {
+            var msg = escape(self.text());
+            root.chatHub.server.updateSimpleMessageToAll(root.id, self.id, { title: "", body: msg });
+            self.editing(false);
+        }
     }
 
     self.VoteUp = function () {
@@ -250,7 +279,7 @@ function registerClientMethods(hub) {
                 appendMessage(root.Messages, msgObj);
                 //var div = $("#" + msgObj.replyToId)[0];
                 //div.scrollIntoView();
-                var str = msgObj.text;
+                var str = unescape(msgObj.text);
                 if (str.length > 15) {
                     str = str.substr(0, 15) + '...';
                 }
@@ -259,6 +288,24 @@ function registerClientMethods(hub) {
             beep(10, 2, function () {
 
             });
+        }
+        catch (e) {
+            alert(e.message);
+        }
+    });
+
+    hub.on("messageUpdated", function (user, msgId, msg) {
+        try {
+            var msgObj = JSON.parse(msg);
+            updateMessage(root.Messages, msgId, msgObj);
+            var str = unescape(msgObj.text);
+            if (str.length > 15) {
+                str = str.substr(0, 15) + '...';
+            }
+            root.MessageLinks.push(new ChatMsgLink(msgObj.id, '[' + msgObj.from + ']: ' + str));
+            //beep(10, 2, function () {
+
+            //});
         }
         catch (e) {
             alert(e.message);
@@ -285,6 +332,24 @@ function registerClientMethods(hub) {
         for (var i = 0; i < parents().length; i++) {
             if (parents()[i].Replies().length > 0) {
                 if (appendMessage(parents()[i].Replies, msg)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function updateMessage(parents, msgId, msg) {
+        for (var i = 0; i < parents().length; i++) {
+            if (msgId == parents()[i].id) {
+                parents()[i].text0 = unescape(msg.text);
+                parents()[i].text(parents()[i].text0);
+                return true;
+            }
+        }
+        for (var i = 0; i < parents().length; i++) {
+            if (parents()[i].Replies().length > 0) {
+                if (updateMessage(parents()[i].Replies, msgId, msg)) {
                     return true;
                 }
             }

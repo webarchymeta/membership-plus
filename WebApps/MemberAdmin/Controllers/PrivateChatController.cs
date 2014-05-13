@@ -59,6 +59,28 @@ namespace MemberAdminMvc5.Controllers
 
         [HttpGet]
         [Authorize]
+        public ActionResult UnreadMessages()
+        {
+            ViewBag.AppName = Startup.App.Name;
+            //ViewBag.HubId = (new NotificationHub()).HubIdentity;
+            //DateTime dt = DateTime.UtcNow.AddMinutes(-ApplicationContext.OnlineUserInactiveTime);
+            //ViewBag.TimeThreshold = (new MembershipPlusServiceProxy()).FormatRepoDateTime(dt);
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult SearchMessages()
+        {
+            ViewBag.AppName = Startup.App.Name;
+            //ViewBag.HubId = (new NotificationHub()).HubIdentity;
+            //DateTime dt = DateTime.UtcNow.AddMinutes(-ApplicationContext.OnlineUserInactiveTime);
+            //ViewBag.TimeThreshold = (new MembershipPlusServiceProxy()).FormatRepoDateTime(dt);
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
         public async Task<ActionResult> ChatPage(string toId)
         {
             if (string.IsNullOrEmpty(toId))
@@ -80,6 +102,26 @@ namespace MemberAdminMvc5.Controllers
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> ChatPopup(string toId)
+        {
+            if (string.IsNullOrEmpty(toId))
+                return new HttpStatusCodeResult(404, "Not Found");
+            else
+            {
+                string approot = VirtualPathUtility.ToAbsolute("~/");
+                ViewBag.AppName = Startup.App.Name;
+                ViewBag.UserID = User.Identity.GetUserId();
+                ViewBag.User = await PrivateChatContext.LoadUserInfo(ViewBag.UserID, approot) + ";";
+                ViewBag.PeerID = toId;
+                ViewBag.Peer = await PrivateChatContext.LoadUserInfo(toId, approot) + ";";
+                ViewBag.ListStyle = "popup-message-list";
+                ViewBag.ReplyListStyle = "popup-reply-message-list";
+                return View();
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> MessagePopup(string toId)
         {
             if (string.IsNullOrEmpty(toId))
                 return new HttpStatusCodeResult(404, "Not Found");

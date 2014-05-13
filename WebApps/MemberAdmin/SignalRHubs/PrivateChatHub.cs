@@ -41,15 +41,15 @@ namespace MemberAdminMvc5.SignalRHubs
                         Clients.Client(status.peer.ConnectionID).sendMessage("Hello");
                         return new { status = status.status.ToString(), msg = "" };
                     case PeerStatus.Notifiable:
+                    case PeerStatus.NotifyButBlock:
                         {
                             var nhub = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
-                            nhub.Clients.Client(status.peerNotifier.ConnectionID).serverNotifications(3, status.noticeMsg, new dynamic[] { });
+                            nhub.Clients.Client(status.peerNotifier.ConnectionID).serverNotifications(ApplicationContext.PrivateChatNoticeTypeId, status.noticeMsg, new dynamic[] { });
                         }
                         return new { status = status.status.ToString(), msg = "" };
-                    case PeerStatus.MessageSent:
+                    default:
                         return new { status = status.status.ToString(), msg = "" };
                 }
-                return new { status = status.status.ToString(), msg = "" };
             }
             else
             {
@@ -94,6 +94,11 @@ namespace MemberAdminMvc5.SignalRHubs
             Clients.Client(connectionId).peerConnectResponse(new { status = respType, msg = msg, connectId = Context.ConnectionId });
         }
 
+        public async Task TogglePeerStatus(int statusType, string peerId)
+        {
+            await PrivateChatContext.TogglePeerStatus(statusType, Context.Request.User.Identity.GetUserId(), peerId);
+        }
+
         public async Task SyncRecordState(string peerId, bool record)
         {
             var peer = await PrivateChatContext.FindPeer(HubIdentity, Context.Request.User.Identity.GetUserId(), peerId);
@@ -111,6 +116,37 @@ namespace MemberAdminMvc5.SignalRHubs
                 if (msg.peer != null)
                     Clients.Client(msg.peer.ConnectionID).messageReceived(id.Name, msg.msg);
                 Clients.Caller.messageReceived(id.Name, msg.msg);
+            }
+            catch (Exception ex)
+            {
+                Clients.Caller.sendError(ex.Message);
+            }
+        }
+
+        public async Task UpdateSimpleMessage(string peerId, string msgId, dynamic msgObj)
+        {
+            var id = Context.Request.User.Identity;
+            try
+            {
+                string msgbody = msgObj.body;
+                var msg = await PrivateChatContext.UpdateUserMessage(HubIdentity, id.GetUserId(), peerId, msgId, msgbody);
+                if (msg.peer != null)
+                    Clients.Client(msg.peer.ConnectionID).messageUpdated(id.Name, msgId, msg.msg);
+                Clients.Caller.messageUpdated(id.Name, msgId, msg.msg);
+            }
+            catch (Exception ex)
+            {
+                Clients.Caller.sendError(ex.Message);
+            }
+        }
+
+        public async Task LeaveSimpleMessage(string peerId, string replyId, dynamic msgObj)
+        {
+            var id = Context.Request.User.Identity;
+            try
+            {
+                string msgbody = msgObj.body;
+                await PrivateChatContext.LeaveUserMessage(HubIdentity, id.GetUserId(), peerId, replyId, msgbody);
             }
             catch (Exception ex)
             {

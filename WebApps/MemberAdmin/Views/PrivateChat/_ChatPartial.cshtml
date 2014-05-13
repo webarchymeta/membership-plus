@@ -1,5 +1,5 @@
 ﻿@using Archymeta.Web.Security.Resources;
-<!-- ko if: status() == 'Notifiable' || status() == 'MessageSent' -->
+<!-- ko if: status() == 'Notifiable' -->
 <table class="wait-block">
     <tr>
         <td>
@@ -42,7 +42,7 @@
                         <div class="msg">
                             <table>
                                 <tr>
-                                    <td rowspan="3" class="icon-style">
+                                    <td rowspan="2" class="icon-style">
                                         <!-- ko if: fromObj() == null -->
                                         <span class="ion-android-social-user"></span>
                                         <!-- /ko -->
@@ -55,19 +55,56 @@
                                         <!-- /ko -->
                                         <!-- /ko -->
                                     </td>
-                                    <td>
-                                        <div class="msg-sender">
-                                            <a data-bind="attr: {name: id}"><label>@ResourceUtils.GetString("ab86a1e1ef70dff97959067b723c5c25", "me")</label></a>
-                                            <span class="ion-volume-medium"></span>
+                                    <td class="msg-content">
+                                        <div class="msg-header">
+                                            <div class="msg-sender">
+                                                <a data-bind="attr: {name: id}"><label>@ResourceUtils.GetString("ab86a1e1ef70dff97959067b723c5c25", "me")</label></a>
+                                                <span class="ion-volume-medium"></span>
+                                            </div>
+                                            <div class="msg-time">
+                                                <span data-bind="localdatetime: jsonDate"></span>
+                                            </div>
                                         </div>
-                                        <div class="msg-time">
-                                            <span data-bind="localdatetime: jsonDate"></span>
+                                        <div class="msg-body">
+                                            <!-- ko ifnot: editing -->
+                                            <div class="text" data-bind="html: text"></div>
+                                            <!-- /ko -->
+                                            <!-- ko if: editing -->
+                                            <div class="input-group input-area">
+                                                <span class="input-group-addon">
+                                                    <a href="#" data-bind="click: ToggleEditor">
+                                                        <!-- ko ifnot: RichEditor -->
+                                                        <span class="ion-compose"></span>
+                                                        <!-- /ko -->
+                                                        <!-- ko if: RichEditor -->
+                                                        <span class="ion-edit"></span>
+                                                        <!-- /ko -->
+                                                    </a>
+                                                </span>
+                                                <!-- ko if: RichEditor -->
+                                                <textarea data-bind="attr: {id: id}, simpleHtmlEditor: text"></textarea>
+                                                <!-- /ko -->
+                                                <!-- ko ifnot: RichEditor -->
+                                                <input type="text" class="form-control" data-bind="value: text, valueUpdate:'afterkeydown'" />
+                                                <!-- /ko -->
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default" data-bind="click: UpdateSimpleMessage, enable: IsTextChanged">
+                                                        @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <!-- /ko -->
+                                            <div class="msg-cmds">
+                                                <a href="#" data-bind="click: ToggleEditing">
+                                                    <!-- ko ifnot: editing -->
+                                                    <span class="ion-edit"></span>
+                                                    <!-- /ko -->
+                                                    <!-- ko if: editing -->
+                                                    <span class="glyphicon glyphicon-ok"></span>
+                                                    <!-- /ko -->
+                                                </a>
+                                            </div>
                                         </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="msg-body" data-bind="html: text"></div>
                                     </td>
                                 </tr>
                                 <!-- ko if: Replies().length > 0 -->
@@ -92,7 +129,7 @@
                         <div class="msg">
                             <table>
                                 <tr>
-                                    <td rowspan="4" class="icon-style">
+                                    <td rowspan="3" class="icon-style">
                                         <a href="#" data-bind="click: ToggleReplyArea">
                                             <!-- ko if: fromObj() == null -->
                                             <span class="ion-android-social-user"></span>
@@ -107,22 +144,22 @@
                                             <!-- /ko -->
                                         </a>
                                     </td>
-                                    <td>
-                                        <div class="msg-sender">
-                                            <a href="#" data-bind="click: ToggleReplyArea"><span class="ion-ios7-undo"></span></a>
-                                            <a data-bind="attr: {name: id}">
-                                                <label data-bind="text: from"></label>
-                                            </a>
-                                            <span class="ion-volume-medium"></span>
+                                    <td class="msg-content">
+                                        <div class="msg-header">
+                                            <div class="msg-sender">
+                                                <a href="#" data-bind="click: ToggleReplyArea"><span class="ion-ios7-undo"></span></a>
+                                                <a data-bind="attr: {name: id}">
+                                                    <label data-bind="text: from"></label>
+                                                </a>
+                                                <span class="ion-volume-medium"></span>
+                                            </div>
+                                            <div class="msg-time">
+                                                <span data-bind="localdatetime: jsonDate"></span>
+                                            </div>
                                         </div>
-                                        <div class="msg-time">
-                                            <span data-bind="localdatetime: jsonDate"></span>
+                                        <div class="msg-body">
+                                            <div class="text" data-bind="html: text"></div>
                                         </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="msg-body" data-bind="html: text"></div>
                                     </td>
                                 </tr>
                                 <!-- ko if: checked -->
@@ -217,6 +254,108 @@
     </div>
 </div>
 <!-- /ko -->
+<!-- ko if: status() == 'NotifyButBlock' -->
+<div class="chat-room">
+    <div class="peers-status-msg well">
+        <p>@ResourceUtils.GetString("f6b81a3f0438e7902dbfa44e4f87e564", "The party may not be able to accept the call at present, but he/she is notified of your intension.")</p>
+        <p>@ResourceUtils.GetString("40929077c5c3d97e5c612c32b5c6c85c", "Please leave a message.")</p>
+    </div>
+    <div class="input-group input-area" style="overflow-y:auto;">
+        <span class="input-group-addon">
+            <a href="#" data-bind="click: ToggleEditor">
+                <!-- ko ifnot: RichEditor -->
+                <span class="ion-compose"></span>
+                <!-- /ko -->
+                <!-- ko if: RichEditor -->
+                <span class="ion-edit"></span>
+                <!-- /ko -->
+            </a>
+        </span>
+        <!-- ko if: RichEditor -->
+        <textarea id="append-editor" data-bind="simpleHtmlEditor: CurrentMessage"></textarea>
+        <!-- /ko -->
+        <!-- ko ifnot: RichEditor -->
+        <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+        <!-- /ko -->
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-bind="click: LeaveSimpleMessage, enable: IsSendReady">
+                @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+            </button>
+        </span>
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+<!-- ko if: status() == 'DoNotDisturb' -->
+<div class="chat-room">
+    <div class="peers-status-msg well">
+        <p>@ResourceUtils.GetString("7611eae2a49c9bf6a1deef15c6edb6f6", "The party does not wish to be disturbed at present.")</p>
+        <p>@ResourceUtils.GetString("40929077c5c3d97e5c612c32b5c6c85c", "Please leave a message.")</p>
+    </div>
+    <div class="input-group input-area" style="overflow-y:auto;">
+        <span class="input-group-addon">
+            <a href="#" data-bind="click: ToggleEditor">
+                <!-- ko ifnot: RichEditor -->
+                <span class="ion-compose"></span>
+                <!-- /ko -->
+                <!-- ko if: RichEditor -->
+                <span class="ion-edit"></span>
+                <!-- /ko -->
+            </a>
+        </span>
+        <!-- ko if: RichEditor -->
+        <textarea id="append-editor" data-bind="simpleHtmlEditor: CurrentMessage"></textarea>
+        <!-- /ko -->
+        <!-- ko ifnot: RichEditor -->
+        <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+        <!-- /ko -->
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-bind="click: LeaveSimpleMessage, enable: IsSendReady">
+                @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+            </button>
+        </span>
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+<!-- ko if: status() == 'LeaveMessage' -->
+<div class="chat-room">
+    <div class="peers-status-msg well">
+        <p>@ResourceUtils.GetString("40929077c5c3d97e5c612c32b5c6c85c", "Please leave a message.")</p>
+    </div>
+    <div class="input-group input-area" style="overflow-y:auto;">
+        <span class="input-group-addon">
+            <a href="#" data-bind="click: ToggleEditor">
+                <!-- ko ifnot: RichEditor -->
+                <span class="ion-compose"></span>
+                <!-- /ko -->
+                <!-- ko if: RichEditor -->
+                <span class="ion-edit"></span>
+                <!-- /ko -->
+            </a>
+        </span>
+        <!-- ko if: RichEditor -->
+        <textarea id="append-editor" data-bind="simpleHtmlEditor: CurrentMessage"></textarea>
+        <!-- /ko -->
+        <!-- ko ifnot: RichEditor -->
+        <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+        <!-- /ko -->
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-bind="click: LeaveSimpleMessage, enable: IsSendReady">
+                @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+            </button>
+        </span>
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+<!-- ko if: status() == 'InBlackList' -->
+<div class="chat-room">
+    <div class="peers-status-msg well">
+        <p>@ResourceUtils.GetString("3cfcc4719b28629177ff46a745e18311", "He/She rejected the invitation.")</p>
+    </div>
+</div>
+<!-- /ko -->
 <!-- ko if: status() == 'Failed' -->
 <table class="wait-block">
     <tr>
@@ -237,13 +376,48 @@
 <!-- /ko -->
             </div>
         </td>
-        <td>
+        <td rowspan="2">
             <h4>@ResourceUtils.GetString("f8d469674c7b664a70cc8b048b7750a6", "Respond Messages")</h4>
             <div class="resp-messages">
                 <ul class="list-group" data-bind="foreach: respondMsgs">
                     <li class="list-group-item"><span data-bind="text: msg"></span></li>
                 </ul>
             </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <!-- ko if: peerState() == 5 -->
+            <div class="chat-room">
+                <div class="peers-status-msg">
+
+                </div>
+                <div class="input-group input-area" style="overflow-y:auto;">
+                    <span class="input-group-addon">
+                        <a href="#" data-bind="click: ToggleEditor">
+                            <!-- ko ifnot: RichEditor -->
+                            <span class="ion-compose"></span>
+                            <!-- /ko -->
+                            <!-- ko if: RichEditor -->
+                            <span class="ion-edit"></span>
+                            <!-- /ko -->
+                        </a>
+                    </span>
+                    <!-- ko if: RichEditor -->
+                    <textarea id="append-editor" data-bind="simpleHtmlEditor: CurrentMessage"></textarea>
+                    <!-- /ko -->
+                    <!-- ko ifnot: RichEditor -->
+                    <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+                    <!-- /ko -->
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-bind="click: LeaveSimpleMessage, enable: IsSendReady">
+                            @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+                        </button>
+                    </span>
+                    <!-- /ko -->
+                </div>
+            </div>
+            <!-- /ko -->
         </td>
     </tr>
 </table>

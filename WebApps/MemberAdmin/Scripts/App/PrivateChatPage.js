@@ -66,6 +66,7 @@ function ChatMessage(data) {
     var self = this;
     self.selected = ko.observable(false);
     self.checked = ko.observable(false);
+    self.editing = ko.observable(false);
     self.id = data.id;
     self.from = data.from;
     self.fromId = data.fromId;
@@ -85,13 +86,21 @@ function ChatMessage(data) {
             self.fromObj(null);
         }
     }
-    self.text = unescape(data.text);
+    self.text0 = unescape(data.text);
+    self.text = ko.observable(self.text0);
     self.score = ko.observable(data.score);
     self.RichEditor = ko.observable(false);
     self.CurrentMessage = ko.observable('');
     self.IsSendReady = ko.computed(function () {
         return self.CurrentMessage().length > 0;
     });
+    self.IsTextChanged = ko.computed(function () {
+        if (userId == self.fromId) {
+            return self.text() != self.text0;
+        } else {
+            return false;
+        }
+    })
     self.Replies = ko.observableArray();
 
     if (typeof data.replies != 'undefined' && data.replies.length > 0) {
@@ -108,6 +117,14 @@ function ChatMessage(data) {
         }
     }
 
+    self.ToggleEditing = function () {
+        if (self.editing()) {
+            self.editing(false);
+        } else {
+            self.editing(true);
+        }
+    }
+
     self.ToggleEditor = function () {
         self.RichEditor(!self.RichEditor());
     }
@@ -118,6 +135,20 @@ function ChatMessage(data) {
         self.CurrentMessage('');
         self.checked(false);
     }
+
+    self.LeaveSimpleMessage = function () {
+        var msg = escape(self.CurrentMessage());
+        self.chatHub.server.leaveSimpleMessage(root.peerId, self.id, { title: "", body: msg });
+        self.CurrentMessage('');
+        self.checked(false);
+    }
+
+    self.UpdateSimpleMessage = function () {
+        var msg = escape(self.text());
+        root.chatHub.server.updateSimpleMessage(root.peerId, self.id, { title: "", body: msg });
+        self.editing(false);
+    }
+
 }
 
 ChatContext = function (uid, pid) {
@@ -169,23 +200,12 @@ ChatContext = function (uid, pid) {
         self.CurrentMessage('');
     }
 
-}
-
-function appendMessage(parents, msg) {
-    for (var i = 0; i < parents().length; i++) {
-        if (msg.replyToId == parents()[i].id) {
-            parents()[i].Replies.push(new ChatMessage(msg));
-            return true;
-        }
+    self.LeaveSimpleMessage = function () {
+        var msg = escape(self.CurrentMessage());
+        self.chatHub.server.leaveSimpleMessage(peerId, null, { title: "", body: msg }, root.recordSession());
+        self.CurrentMessage('');
+        self.checked(false);
     }
-    for (var i = 0; i < parents().length; i++) {
-        if (parents()[i].Replies().length > 0) {
-            if (appendMessage(parents()[i].Replies, msg)) {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 function updateMsgSender(msgList, peer, join) {
@@ -272,6 +292,52 @@ function registerClientMethods(hub) {
             alert(e.message);
         }
     });
+
+    hub.on("messageUpdated", function (user, msgId, msg) {
+        try {
+            var msgObj = JSON.parse(msg);
+            updateMessage(root.Messages, msgId, msgObj);
+        }
+        catch (e) {
+            alert(e.message);
+        }
+    });
+
+    function appendMessage(parents, msg) {
+        for (var i = 0; i < parents().length; i++) {
+            if (msg.replyToId == parents()[i].id) {
+                parents()[i].Replies.push(new ChatMessage(msg));
+                return true;
+            }
+        }
+        for (var i = 0; i < parents().length; i++) {
+            if (parents()[i].Replies().length > 0) {
+                if (appendMessage(parents()[i].Replies, msg)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function updateMessage(parents, msgId, msg) {
+        for (var i = 0; i < parents().length; i++) {
+            if (msgId == parents()[i].id) {
+                parents()[i].text0 = unescape(msg.text);
+                parents()[i].text(parents()[i].text0);
+                return true;
+            }
+        }
+        for (var i = 0; i < parents().length; i++) {
+            if (parents()[i].Replies().length > 0) {
+                if (updateMessage(parents()[i].Replies, msgId, msg)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
 
 var openChatHandler = function (peerId) {
@@ -297,9 +363,12 @@ $(function () {
         //    parent.s_connection = $.connection;
         //}
         //conn = parent.s_connection;
-        conn = $.connection;
+        conn = typeof $.connection == 'undefined' ? null : $.connection;
     } else {
-        conn = $.connection;
+        conn = typeof $.connection == 'undefined' ? null : $.connection;
+    }
+    if (conn == null) {
+        return;
     }
     root.chatHub = conn.privateChatHub;
     registerClientMethods(root.chatHub);
@@ -307,7 +376,7 @@ $(function () {
         root.chatHub.server.userConnected(peerId).done(function (r) {
             if (r.status != 'DeadEnd') {
                 root.status(r.status);
-                if (r.status == 'Notifiable' || r.status == 'MessageSent') {
+                if (r.status == 'Notifiable') {
                     startWaitAnimation('WaitArea', '#353535');
                 } else if (r.status == "Connected") {
                     if (typeof parent != 'undefined' && parent != null && typeof parent.__open_chat_handlers != 'undefined') {
@@ -325,7 +394,7 @@ $(function () {
                 __systemNotifier = parent.__systemNotifier;
             }
             $(window).unload(function () {
-                if (root.status() == 'Notifiable' || root.status() == 'MessageSent') {
+                if (root.status() == 'Notifiable' || root.status() == 'NotifyButBlock') {
                     if (typeof __systemNotifier != 'undefined' && __systemNotifier != null) {
                         __systemNotifier.userCancelInteraction(peerId);
                     }

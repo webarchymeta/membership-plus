@@ -74,6 +74,31 @@ namespace MemberAdminMvc5.SignalRHubs
             }
         }
 
+        public async Task UpdateSimpleMessageToAll(string groupId, string msgId, dynamic msgObj)
+        {
+            var id = Context.Request.User.Identity;
+            try
+            {
+                string msgbody = msgObj.body;
+                var msg = await GroupChatContext.UpdateUserMessage((new NotificationHub()).HubIdentity, HubIdentity, id.GetUserId(), groupId, msgId, msgbody);
+                if (msg == null)
+                    return;
+                var cids = (from d in msg.peers select d.ConnectionID).ToArray();
+                Clients.Clients(cids).messageUpdated(id.Name, msgId, msg.msg);
+                var nhub = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+                if (nhub != null)
+                {
+                    var ncids = (from d in msg.callbacks where !(from x in msg.peers where x.UserID == d.UserID select x).Any() select d.ConnectionID).ToArray();
+                    if (ncids.Length > 0)
+                        nhub.Clients.Clients(ncids).serverNotifications(msg.brief, msg.categ.TypeName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Clients.Caller.sendError(ex.Message);
+            }
+        }
+
         public async Task VoteOnMessage(string groupId, string msgId, string userId, int del)
         {
             try

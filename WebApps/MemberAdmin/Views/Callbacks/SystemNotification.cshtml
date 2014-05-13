@@ -38,7 +38,7 @@
             //function (typeId, msgs, categs) {
             notice.on("serverNotifications", function (typeId, msgs, categs) {
                 if (parent && typeof parent.serverNotifications != 'undefined') {
-                    parent.serverNotifications(typeId, msgs, categs, __chat_invitation_handler);
+                    parent.serverNotifications(typeId, msgs, categs, __chat_invitation_handler, __peer_status_handler);
                 }
             });
             conn().hub.start().done(function () {
@@ -52,6 +52,11 @@
         function __chat_invitation_handler(respType, peerId, connectionId, msg) {
             var chat = conn().privateChatHub;
             chat.server.userConnectResponse(respType, peerId, connectionId, msg);
+        }
+
+        function __peer_status_handler(statusType, peerId) {
+            var chat = conn().privateChatHub;
+            chat.server.togglePeerStatus(statusType, peerId);
         }
     </script>
 }

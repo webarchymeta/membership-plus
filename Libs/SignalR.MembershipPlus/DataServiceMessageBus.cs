@@ -80,7 +80,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
 
         //private IHubProxy hubProxy = null;
         //private HubConnection hubConn = null;
-        private static MembershipPlusServiceProxy svc = null;
+        private static MembershipPlusDuplexServiceProxy svc = null;
         private static InstanceContext _notifier = null;
         private static EventHandler _delClosed = null;
         private static DataServiceMessageBus Current = null;
@@ -127,7 +127,7 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             _notifier.Faulted += _delClosed;
             try
             {
-                svc = new MembershipPlusServiceProxy(_notifier);
+                svc = new MembershipPlusDuplexServiceProxy(_notifier);
                 svc.SubscribeToUpdates(Cntx.CallerID, new EntitySetType[] { EntitySetType.SignalRMessage });
                 _trace.TraceWarning("Subscription done.");
                 CallbackFailed = false;

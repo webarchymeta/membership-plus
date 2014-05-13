@@ -94,47 +94,80 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                 UserServiceProxy usvc = new UserServiceProxy();
                 var u = await usvc.LoadEntityByKeyAsync(cntx, userId);
                 memb.UserRef = u;
-
                 var peerMb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, peerId);
-
                 ConnectionStatus status = new ConnectionStatus();
                 status.me = cbk;
                 MemberCallbackServiceProxy mbcsvc = new MemberCallbackServiceProxy();
+                UserAssociationServiceProxy uasvc = new UserAssociationServiceProxy();
                 var peerCb = await mbcsvc.LoadEntityByKeyAsync(cntx, userId, hubId, AppId, peerId);
                 if (peerCb == null || peerCb.ConnectionID == null || peerCb.IsDisconnected)
                 {
+                    UserAssociation utop = await uasvc.LoadEntityByKeyAsync(cntx, userId, peerId, ApplicationContext.ChatAssocTypeId);
                     MemberNotificationTypeServiceProxy ntsvc = new MemberNotificationTypeServiceProxy();
-                    var ntype = await ntsvc.LoadEntityByKeyAsync(cntx, 3);
+                    var ntype = await ntsvc.LoadEntityByKeyAsync(cntx, ApplicationContext.PrivateChatNoticeTypeId);
                     var notifier = await mbcsvc.LoadEntityByKeyAsync(cntx, "System", noticeHubId, AppId, peerId);
                     if (notifier != null && notifier.ConnectionID != null && !notifier.IsDisconnected)
                     {
-                        status.peerNotifier = notifier;
-                        status.status = PeerStatus.Notifiable;
+                        if (utop != null && utop.NoMessages != null && utop.NoMessages == true)
+                        {
+                            status.status = PeerStatus.InBlackList;
+                        }
+                        else if (utop != null && utop.DoNotNotify != null && utop.DoNotNotify == true)
+                        {
+                            status.status = PeerStatus.DoNotDisturb;
+                        }
+                        else if (utop != null && utop.NotifyButBlock != null && utop.NotifyButBlock == true)
+                        {
+                            status.peerNotifier = notifier;
+                            status.status = PeerStatus.NotifyButBlock;
+                        }
+                        else
+                        {
+                            status.peerNotifier = notifier;
+                            status.status = PeerStatus.Notifiable;
+                        }
+                    }
+                    else
+                    {
+                        if (utop == null || utop.NoMessages == null || utop.NoMessages == false)
+                            status.status = PeerStatus.LeaveMessage;
                     }
                     MemberNotification n = new MemberNotification 
                     {
                         ID = Guid.NewGuid().ToString(),
-                        Title = string.Format(ResourceUtils.GetString("20dc5913998d0e9ed01360475e46a0f9", "{0} invites you to chat, is waiting ...", peerMb.AcceptLanguages), u.Username),
+                        Title = string.Format(ResourceUtils.GetString("20dc5913998d0e9ed01360475e46a0f9", "{0} invites you to chat, is waiting ...", peerMb.AcceptLanguages), ""),
                         CreatedDate = DateTime.UtcNow,
                         PriorityLevel = 0,
                         ReadCount = 0,
                         ApplicationID = AppId,
-                        TypeID = 3,
+                        TypeID = ApplicationContext.PrivateChatNoticeTypeId,
                         UserID = peerId
                     };
-                    n.NoticeMsg = "{ \"peerId\": \"" + userId + "\", \"peer\": \"" + u.Username + "\", \"connectId\": \"" + connectId + "\", \"msg\": \"" + n.Title + "\", \"isCancel\": false }";
+                    bool hasIcon = !string.IsNullOrEmpty(memb.IconMime);
+                    n.NoticeMsg = "{ \"peerId\": \"" + userId + "\", \"peer\": \"" + u.Username + "\", \"connectId\": \"" + connectId + "\", \"hasIcon\": " + (hasIcon ? "true" : "false") + ", \"msg\": \"" + n.Title + "\", \"isCancel\": false, ";
+                    if (utop != null && utop.NoMessages != null && utop.NoMessages == true)
+                        n.NoticeMsg += "\"noMessages\": true, ";
+                    else
+                        n.NoticeMsg += "\"noMessages\": false, ";
+                    if (utop != null && utop.DoNotNotify != null && utop.DoNotNotify == true)
+                        n.NoticeMsg += "\"notDisturb\": true, ";
+                    else
+                        n.NoticeMsg += "\"notDisturb\": false, ";
+                    if (utop != null && utop.NotifyButBlock != null && utop.NotifyButBlock == true)
+                        n.NoticeMsg += "\"keepNotified\": true }";
+                    else
+                        n.NoticeMsg += "\"keepNotified\": false }";
                     n.IsNoticeDataLoaded = true;
                     MemberNotificationServiceProxy nsvc = new MemberNotificationServiceProxy();
                     var r = await nsvc.AddOrUpdateEntitiesAsync(cntx, new MemberNotificationSet(), new MemberNotification[] { n });
                     status.noticeType = ntype.TypeName;
-                    status.noticeMsg = "{ \"peerId\": \"" + userId + "\", \"peer\": \"" + u.Username + "\", \"connectId\": \"" + connectId + "\", \"msg\": \"" + n.Title + "\", \"isCancel\": false }";
+                    status.noticeMsg = n.NoticeMsg;
                     status.noticeRecId = r.ChangedEntities[0].UpdatedItem.ID;
                 }
                 else
                 {
-                    UserAssociationServiceProxy uasvc = new UserAssociationServiceProxy();
-                    UserAssociation utop = await uasvc.LoadEntityByKeyAsync(cntx, userId, peerId, ApplicationContext.ChatAssocTypeId);
                     DateTime dt = DateTime.UtcNow;
+                    UserAssociation utop = await uasvc.LoadEntityByKeyAsync(cntx, userId, peerId, ApplicationContext.ChatAssocTypeId);
                     if (utop == null)
                     {
                         utop = new UserAssociation
@@ -235,6 +268,56 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             return m;
         }
 
+        public static async Task TogglePeerStatus(int statusType, string userId, string peerId)
+        {
+            var cntx = Cntx;
+            UserAssociationServiceProxy uasvc = new UserAssociationServiceProxy();
+            UserAssociation ptou = await uasvc.LoadEntityByKeyAsync(cntx, peerId, userId, ApplicationContext.ChatAssocTypeId);
+            if (ptou != null)
+            {
+                bool changed = true;
+                switch (statusType)
+                {
+                    case 1:
+                        ptou.NotifyButBlock = ptou.NotifyButBlock == null ? true : !ptou.NotifyButBlock.Value;
+                        if (ptou.NotifyButBlock == true)
+                        {
+                            if (ptou.DoNotNotify == true)
+                                ptou.DoNotNotify = false;
+                            if (ptou.NoMessages == true)
+                                ptou.NoMessages = false;
+                        }
+                        break;
+                    case 2:
+                        ptou.DoNotNotify = ptou.DoNotNotify == null ? true : !ptou.DoNotNotify.Value;
+                        if (ptou.DoNotNotify == true)
+                        {
+                            if (ptou.NotifyButBlock == true)
+                                ptou.NotifyButBlock = false;
+                            if (ptou.NoMessages == true)
+                                ptou.NoMessages = false;
+                        }
+                        break;
+                    case 3:
+                        ptou.NoMessages = ptou.NoMessages == null ? true : !ptou.NoMessages.Value;
+                        if (ptou.NoMessages == true)
+                        {
+                            if (ptou.NotifyButBlock == true)
+                                ptou.NotifyButBlock = false;
+                            if (ptou.DoNotNotify == true)
+                                ptou.DoNotNotify = false;
+                        }
+                        break;
+                    default:
+                        changed = false;
+                        break;
+                }
+                if (changed)
+                    await uasvc.AddOrUpdateEntitiesAsync(cntx, new UserAssociationSet(), new UserAssociation[] { ptou });
+            }
+        }
+             
+
         public static async Task<string> LoadUserInfo(string userId, string approot)
         {
             var cntx = Cntx;
@@ -309,6 +392,121 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             MemberCallbackServiceProxy cbsv = new MemberCallbackServiceProxy();
             m.peer = (await cbsv.QueryDatabaseAsync(cntx, new MemberCallbackSet(), qexpr)).SingleOrDefault();          
             return m;
+        }
+
+        public static async Task<PeerShotMessage> UpdateUserMessage(string chatHubId, string userId, string peerId, string msgId, string message)
+        {
+            var cntx = Cntx;
+            UserServiceProxy usvc = new UserServiceProxy();
+            var u = await usvc.LoadEntityByKeyAsync(cntx, userId);
+            var peer = await usvc.LoadEntityByKeyAsync(cntx, peerId);
+            ShortMessageServiceProxy msvc = new ShortMessageServiceProxy();
+            PeerShotMessage m = new PeerShotMessage();
+            ShortMessage msg = await msvc.LoadEntityByKeyAsync(cntx, msgId);
+            if (msg == null || msg.FromID != userId || msg.ToID != peerId)
+                return null;
+            var now = DateTime.UtcNow;
+            msg.MsgText = message;
+            msg.LastModified = now;
+            var r = await msvc.AddOrUpdateEntitiesAsync(cntx, new ShortMessageSet(), new ShortMessage[] { msg });
+            var _msg = r.ChangedEntities[0].UpdatedItem;
+            _msg.User_FromID = u;
+            m.msg = GetJsonMessage(_msg, userId, peer, false);
+            UserAssociationServiceProxy uasvc = new UserAssociationServiceProxy();
+            var utop = await uasvc.LoadEntityByKeyAsync(cntx, userId, peerId, ApplicationContext.ChatAssocTypeId);
+            if (utop != null)
+            {
+                utop.InteractCount = utop.InteractCount == null ? 1 : utop.InteractCount + 1;
+                utop.LastInteract = DateTime.UtcNow;
+                await uasvc.AddOrUpdateEntitiesAsync(cntx, new UserAssociationSet(), new UserAssociation[] { utop });
+            }
+            MembershipPlusServiceProxy svc = new MembershipPlusServiceProxy();
+            DateTime dt = DateTime.UtcNow.AddMinutes(-ApplicationContext.OnlineUserInactiveTime);
+            MemberCallbackServiceProxy mcbsvc = new MemberCallbackServiceProxy();
+            var qexpr = new QueryExpresion();
+            qexpr.OrderTks = new List<QToken>(new QToken[] { 
+                new QToken { TkName = "UserID" },
+                new QToken { TkName = "asc" }
+            });
+            qexpr.FilterTks = new List<QToken>(new QToken[] { 
+                new QToken { TkName = "HubID == \"" + chatHubId + "\" && ChannelID == \"" + userId + "\" && ConnectionID is not null && IsDisconnected == false" },
+                new QToken { TkName = "&&" },
+                new QToken { TkName = "ApplicationID == \"" + AppId + "\" && UserID == \"" + peerId + "\"" },
+                new QToken { TkName = "&&" },
+                new QToken { TkName = "UserAppMemberRef.LastActivityDate > " + svc.FormatRepoDateTime(dt) }
+            });
+            MemberCallbackServiceProxy cbsv = new MemberCallbackServiceProxy();
+            m.peer = (await cbsv.QueryDatabaseAsync(cntx, new MemberCallbackSet(), qexpr)).SingleOrDefault();
+            return m;
+        }
+
+        public static async Task LeaveUserMessage(string chatHubId, string userId, string peerId, string replyId, string message)
+        {
+            var cntx = Cntx;
+            UserServiceProxy usvc = new UserServiceProxy();
+            var u = await usvc.LoadEntityByKeyAsync(cntx, userId);
+            var peer = await usvc.LoadEntityByKeyAsync(cntx, peerId);
+            ShortMessageServiceProxy msvc = new ShortMessageServiceProxy();
+            PeerShotMessage m = new PeerShotMessage();
+            var now = DateTime.UtcNow;
+            ShortMessage msg = new ShortMessage
+            {
+                ID = Guid.NewGuid().ToString(),
+                ApplicationID = AppId,
+                TypeID = 1,
+                GroupID = null,
+                FromID = userId,
+                ToID = peerId,
+                ReplyToID = string.IsNullOrEmpty(replyId) ? null : replyId,
+                CreatedDate = now,
+                LastModified = now,
+                MsgText = message,
+                IsNotReceived = true
+            };
+            await msvc.AddOrUpdateEntitiesAsync(cntx, new ShortMessageSet(), new ShortMessage[] { msg });
+            UserAssociationServiceProxy uasvc = new UserAssociationServiceProxy();
+            DateTime dt = DateTime.UtcNow;
+            List<UserAssociation> lass = new List<UserAssociation>();
+            UserAssociation utop = await uasvc.LoadEntityByKeyAsync(cntx, userId, peerId, ApplicationContext.ChatAssocTypeId);
+            if (utop == null)
+            {
+                utop = new UserAssociation
+                {
+                    TypeID = ApplicationContext.ChatAssocTypeId,
+                    FromUserID = userId,
+                    ToUserID = peerId,
+                    CreateDate = dt,
+                    AssocCount = 0,
+                    LastAssoc = dt,
+                    InteractCount = 1,
+                    Votes = 0
+                };
+            }
+            else
+                utop.InteractCount++;
+            lass.Add(utop);
+            if (!string.IsNullOrEmpty(replyId))
+            {
+                UserAssociation ptou = await uasvc.LoadEntityByKeyAsync(cntx, peerId, userId, ApplicationContext.ChatAssocTypeId);
+                if (ptou == null)
+                {
+                    ptou = new UserAssociation
+                    {
+                        TypeID = ApplicationContext.ChatAssocTypeId,
+                        FromUserID = peerId,
+                        ToUserID = userId,
+                        CreateDate = dt,
+                        AssocCount = 0,
+                        LastAssoc = dt,
+                        InteractCount = 0,
+                        Votes = 0
+                    };
+                }
+                else
+                    ptou.InteractCount++;
+                lass.Add(ptou);
+            }
+            await uasvc.AddOrUpdateEntitiesAsync(cntx, new UserAssociationSet(), lass.ToArray());
         }
 
         public static async Task<MemberCallback> FindPeer(string chatHubId, string userId, string peerId)

@@ -593,6 +593,93 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             return new ShotMessageNotice { msg = GetJsonMessage(msg, userId, g, false), brief = noticeMsg, categ = ntype, peers = peers, callbacks = noteCbks };
         }
 
+        public static async Task<ShotMessageNotice> UpdateUserMessage(string noticeHubId, string chatHubId, string userId, string groupId, string msgId, string message)
+        {
+            var cntx = Cntx;
+            UserGroupServiceProxy gsvc = new UserGroupServiceProxy();
+            var g = await gsvc.LoadEntityByKeyAsync(cntx, groupId);
+            ShortMessageServiceProxy msvc = new ShortMessageServiceProxy();
+            var msg = await msvc.LoadEntityByKeyAsync(cntx, msgId);
+            if (msg == null || msg.FromID != userId)
+                return null;
+            var now = DateTime.UtcNow;
+            msg.MsgText = message;
+            msg.LastModified = now;
+            await msvc.AddOrUpdateEntitiesAsync(cntx, new ShortMessageSet(), new ShortMessage[] { msg });
+            UserServiceProxy usvc = new UserServiceProxy();
+            var u = await usvc.LoadEntityByKeyAsync(cntx, userId);
+            msg.User_FromID = u;
+            UserGroupMemberServiceProxy gmsvc = new UserGroupMemberServiceProxy();
+            var cond = new UserGroupMemberSetConstraints
+            {
+                UserGroupIDWrap = new ForeignKeyData<string> { KeyValue = groupId }
+            };
+            var qexpr = new QueryExpresion();
+            qexpr.OrderTks = new List<QToken>(new QToken[] { new QToken { TkName = "UserID" } });
+            qexpr.FilterTks = new List<QToken>(new QToken[] {
+                new QToken 
+                {
+                    TkName = "SubscribedTo is not null && SubscribedTo == true"
+                }
+            });
+            var gmbs = await gmsvc.ConstraintQueryAsync(cntx, new UserGroupMemberSet(), cond, qexpr);
+            List<MemberNotification> notices = new List<MemberNotification>();
+            List<MemberCallback> noteCbks = new List<MemberCallback>();
+            MemberCallbackServiceProxy mcbsvc = new MemberCallbackServiceProxy();
+            string noticeMsg = "Group message by " + u.Username + " updated in " + g.DistinctString;
+            MemberNotificationTypeServiceProxy ntsvc = new MemberNotificationTypeServiceProxy();
+            var ntype = await ntsvc.LoadEntityByKeyAsync(cntx, 2);
+            foreach (var m in gmbs)
+            {
+                if (m.ActivityNotification.HasValue && m.ActivityNotification.Value)
+                {
+                    var cb = await mcbsvc.LoadEntityByKeyAsync(cntx, groupId, noticeHubId, AppId, m.UserID);
+                    if (cb.ConnectionID != null && !cb.IsDisconnected)
+                    {
+                        cb.UserAppMemberRef = await mcbsvc.MaterializeUserAppMemberRefAsync(cntx, cb);
+                        noteCbks.Add(cb);
+                    }
+                }
+                notices.Add(new MemberNotification
+                {
+                    ID = Guid.NewGuid().ToString(),
+                    Title = noticeMsg,
+                    CreatedDate = now,
+                    PriorityLevel = 0,
+                    ReadCount = 0,
+                    ApplicationID = AppId,
+                    TypeID = 2,
+                    UserID = userId
+                });
+            }
+            var peers = await ListConnectIds(chatHubId, groupId);
+            List<ShortMessageAudience> laud = new List<ShortMessageAudience>();
+            foreach (var peer in peers)
+            {
+                if (peer.UserID != userId)
+                {
+                    var a = new ShortMessageAudience
+                    {
+                        MsgID = msg.ID,
+                        UserID = peer.UserID,
+                        VoteCount = 0
+                    };
+                    laud.Add(a);
+                }
+            }
+            if (laud.Count > 0)
+            {
+                ShortMessageAudienceServiceProxy audsvc = new ShortMessageAudienceServiceProxy();
+                await audsvc.AddOrUpdateEntitiesAsync(cntx, new ShortMessageAudienceSet(), laud.ToArray());
+            }
+            if (notices.Count > 0)
+            {
+                MemberNotificationServiceProxy nsvc = new MemberNotificationServiceProxy();
+                await nsvc.AddOrUpdateEntitiesAsync(cntx, new MemberNotificationSet(), notices.ToArray());
+            }
+            return new ShotMessageNotice { msg = GetJsonMessage(msg, userId, g, false), brief = noticeMsg, categ = ntype, peers = peers, callbacks = noteCbks };
+        }
+
         public static async Task<int> VoteOnMessage(string msgId, string userId, int del)
         {
             var cntx = Cntx;

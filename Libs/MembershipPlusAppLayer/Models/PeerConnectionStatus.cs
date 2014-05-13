@@ -10,7 +10,10 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Models
     public enum PeerStatus
     {
         DeadEnd,
-        MessageSent,
+        InBlackList,
+        LeaveMessage,
+        DoNotDisturb,
+        NotifyButBlock,
         Notifiable,
         Connected
     }
@@ -18,7 +21,9 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Models
     public enum PeerResponse
     {
         Rejected,
+        RejectLeaveMessage,
         Busy,
+        BusyLeaveMessage,
         Wait,
         Connecting,
         Connected

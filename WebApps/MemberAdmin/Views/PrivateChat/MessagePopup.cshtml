@@ -1,0 +1,56 @@
+﻿@using Archymeta.Web.Security.Resources;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatHandshake</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/ionicons")
+</head>
+<body class="popup">
+    <div class="chat-room">
+        <div class="peers-status-msg well">
+            <p>@ResourceUtils.GetString("40929077c5c3d97e5c612c32b5c6c85c", "Please leave a message.")</p>
+        </div>
+        <div class="input-group input-area" style="overflow-y:auto;">
+            <span class="input-group-addon">
+                <a href="#" data-bind="click: ToggleEditor">
+                    <!-- ko ifnot: RichEditor -->
+                    <span class="ion-compose"></span>
+                    <!-- /ko -->
+                    <!-- ko if: RichEditor -->
+                    <span class="ion-edit"></span>
+                    <!-- /ko -->
+                </a>
+            </span>
+            <!-- ko if: RichEditor -->
+            <textarea id="append-editor" data-bind="simpleHtmlEditor: CurrentMessage"></textarea>
+            <!-- /ko -->
+            <!-- ko ifnot: RichEditor -->
+            <input type="text" class="form-control" data-bind="value: CurrentMessage, valueUpdate:'afterkeydown'" />
+            <!-- /ko -->
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" data-bind="click: LeaveSimpleMessage, enable: IsSendReady">
+                    @ResourceUtils.GetString("94966d90747b97d1f0f206c98a8b1ac4", "Send")
+                </button>
+            </span>
+            <!-- /ko -->
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/signalR")
+    <script src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+    <script src="@Url.Content("~/signalr/hubs")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/App/PrivateChatPage.js")"></script>
+    <script type="text/javascript">
+        popupMode = true;
+    </script>
+</body>
+</html>

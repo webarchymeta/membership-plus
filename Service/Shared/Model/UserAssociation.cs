@@ -87,6 +87,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="UserAssociation.AssocMemo" />. Editable; nullable; load delayed; max-length = 500 characters.</description>
     ///    </item>
     ///    <item>
+    ///      <term>DoNotNotify</term>
+    ///      <description>See <see cref="UserAssociation.DoNotNotify" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>InteractCount</term>
     ///      <description>See <see cref="UserAssociation.InteractCount" />. Editable; nullable.</description>
     ///    </item>
@@ -97,6 +101,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>LastInteract</term>
     ///      <description>See <see cref="UserAssociation.LastInteract" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>NoMessages</term>
+    ///      <description>See <see cref="UserAssociation.NoMessages" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>NotifyButBlock</term>
+    ///      <description>See <see cref="UserAssociation.NotifyButBlock" />. Editable; nullable.</description>
     ///    </item>
     ///    <item>
     ///      <term>Votes</term>
@@ -205,12 +217,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     str += "Modified [AssocCount] = " + AssocCount + "\r\n";
                 if (IsAssocMemoModified)
                     str += "Modified [AssocMemo] = " + AssocMemo + "\r\n";
+                if (IsDoNotNotifyModified)
+                    str += "Modified [DoNotNotify] = " + DoNotNotify + "\r\n";
                 if (IsInteractCountModified)
                     str += "Modified [InteractCount] = " + InteractCount + "\r\n";
                 if (IsLastAssocModified)
                     str += "Modified [LastAssoc] = " + LastAssoc + "\r\n";
                 if (IsLastInteractModified)
                     str += "Modified [LastInteract] = " + LastInteract + "\r\n";
+                if (IsNoMessagesModified)
+                    str += "Modified [NoMessages] = " + NoMessages + "\r\n";
+                if (IsNotifyButBlockModified)
+                    str += "Modified [NotifyButBlock] = " + NotifyButBlock + "\r\n";
                 if (IsVotesModified)
                     str += "Modified [Votes] = " + Votes + "\r\n";;
                 return str.Trim();
@@ -506,6 +524,48 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [Editable(true)]
         [DataMember(IsRequired = false)]
+        public System.Nullable<bool> DoNotNotify
+        { 
+            get
+            {
+                return _DoNotNotify;
+            }
+            set
+            {
+                if (_DoNotNotify != value)
+                {
+                    _DoNotNotify = value;
+                    if (StartAutoUpdating)
+                        IsDoNotNotifyModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _DoNotNotify = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="DoNotNotify" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="DoNotNotify" /> only if this is set to true no matter what
+        /// the actual value of <see cref="DoNotNotify" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsDoNotNotifyModified
+        { 
+            get
+            {
+                return _isDoNotNotifyModified;
+            }
+            set
+            {
+                _isDoNotNotifyModified = value;
+            }
+        }
+        private bool _isDoNotNotifyModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
         public System.Nullable<int> InteractCount
         { 
             get
@@ -626,6 +686,90 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isLastInteractModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> NoMessages
+        { 
+            get
+            {
+                return _NoMessages;
+            }
+            set
+            {
+                if (_NoMessages != value)
+                {
+                    _NoMessages = value;
+                    if (StartAutoUpdating)
+                        IsNoMessagesModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _NoMessages = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="NoMessages" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="NoMessages" /> only if this is set to true no matter what
+        /// the actual value of <see cref="NoMessages" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsNoMessagesModified
+        { 
+            get
+            {
+                return _isNoMessagesModified;
+            }
+            set
+            {
+                _isNoMessagesModified = value;
+            }
+        }
+        private bool _isNoMessagesModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> NotifyButBlock
+        { 
+            get
+            {
+                return _NotifyButBlock;
+            }
+            set
+            {
+                if (_NotifyButBlock != value)
+                {
+                    _NotifyButBlock = value;
+                    if (StartAutoUpdating)
+                        IsNotifyButBlockModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _NotifyButBlock = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="NotifyButBlock" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="NotifyButBlock" /> only if this is set to true no matter what
+        /// the actual value of <see cref="NotifyButBlock" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsNotifyButBlockModified
+        { 
+            get
+            {
+                return _isNotifyButBlockModified;
+            }
+            set
+            {
+                _isNotifyButBlockModified = value;
+            }
+        }
+        private bool _isNotifyButBlockModified = false;
 
         /// <summary>
         /// Meta-info: editable; nullable.
@@ -861,6 +1005,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.AssocMemo = from.AssocMemo;
                     to.IsAssocMemoModified = true;
                 }
+                if (from.IsDoNotNotifyModified && !to.IsDoNotNotifyModified)
+                {
+                    to.DoNotNotify = from.DoNotNotify;
+                    to.IsDoNotNotifyModified = true;
+                }
                 if (from.IsInteractCountModified && !to.IsInteractCountModified)
                 {
                     to.InteractCount = from.InteractCount;
@@ -875,6 +1024,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 {
                     to.LastInteract = from.LastInteract;
                     to.IsLastInteractModified = true;
+                }
+                if (from.IsNoMessagesModified && !to.IsNoMessagesModified)
+                {
+                    to.NoMessages = from.NoMessages;
+                    to.IsNoMessagesModified = true;
+                }
+                if (from.IsNotifyButBlockModified && !to.IsNotifyButBlockModified)
+                {
+                    to.NotifyButBlock = from.NotifyButBlock;
+                    to.IsNotifyButBlockModified = true;
                 }
                 if (from.IsVotesModified && !to.IsVotesModified)
                 {
@@ -893,12 +1052,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.IsAssocCountModified = from.IsAssocCountModified;
                 to.AssocMemo = from.AssocMemo;
                 to.IsAssocMemoModified = from.IsAssocMemoModified;
+                to.DoNotNotify = from.DoNotNotify;
+                to.IsDoNotNotifyModified = from.IsDoNotNotifyModified;
                 to.InteractCount = from.InteractCount;
                 to.IsInteractCountModified = from.IsInteractCountModified;
                 to.LastAssoc = from.LastAssoc;
                 to.IsLastAssocModified = from.IsLastAssocModified;
                 to.LastInteract = from.LastInteract;
                 to.IsLastInteractModified = from.IsLastInteractModified;
+                to.NoMessages = from.NoMessages;
+                to.IsNoMessagesModified = from.IsNoMessagesModified;
+                to.NotifyButBlock = from.NotifyButBlock;
+                to.IsNotifyButBlockModified = from.IsNotifyButBlockModified;
                 to.Votes = from.Votes;
                 to.IsVotesModified = from.IsVotesModified;
             }
@@ -925,6 +1090,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsAssocMemoModified = true;
                 cnt++;
             }
+            if (DoNotNotify != newdata.DoNotNotify)
+            {
+                DoNotNotify = newdata.DoNotNotify;
+                IsDoNotNotifyModified = true;
+                cnt++;
+            }
             if (InteractCount != newdata.InteractCount)
             {
                 InteractCount = newdata.InteractCount;
@@ -943,6 +1114,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsLastInteractModified = true;
                 cnt++;
             }
+            if (NoMessages != newdata.NoMessages)
+            {
+                NoMessages = newdata.NoMessages;
+                IsNoMessagesModified = true;
+                cnt++;
+            }
+            if (NotifyButBlock != newdata.NotifyButBlock)
+            {
+                NotifyButBlock = newdata.NotifyButBlock;
+                IsNotifyButBlockModified = true;
+                cnt++;
+            }
             if (Votes != newdata.Votes)
             {
                 Votes = newdata.Votes;
@@ -959,7 +1142,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             StartAutoUpdating = false;
             if (!IsEntityChanged)
-                IsEntityChanged = IsAssocCountModified || IsAssocMemoModified || IsInteractCountModified || IsLastAssocModified || IsLastInteractModified || IsVotesModified;
+                IsEntityChanged = IsAssocCountModified || IsAssocMemoModified || IsDoNotNotifyModified || IsInteractCountModified || IsLastAssocModified || IsLastInteractModified || IsNoMessagesModified || IsNotifyButBlockModified || IsVotesModified;
             if (IsAssocMemoModified && !IsAssocMemoLoaded)
                 IsAssocMemoLoaded = true;
             StartAutoUpdating = true;
@@ -989,6 +1172,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsAssocCountModified = IsAssocCountModified;
             else
                 e.IsAssocCountModified = false;
+            e.DoNotNotify = DoNotNotify;
+            if (preserveState)
+                e.IsDoNotNotifyModified = IsDoNotNotifyModified;
+            else
+                e.IsDoNotNotifyModified = false;
             e.InteractCount = InteractCount;
             if (preserveState)
                 e.IsInteractCountModified = IsInteractCountModified;
@@ -1004,6 +1192,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsLastInteractModified = IsLastInteractModified;
             else
                 e.IsLastInteractModified = false;
+            e.NoMessages = NoMessages;
+            if (preserveState)
+                e.IsNoMessagesModified = IsNoMessagesModified;
+            else
+                e.IsNoMessagesModified = false;
+            e.NotifyButBlock = NotifyButBlock;
+            if (preserveState)
+                e.IsNotifyButBlockModified = IsNotifyButBlockModified;
+            else
+                e.IsNotifyButBlockModified = false;
             e.Votes = Votes;
             if (preserveState)
                 e.IsVotesModified = IsVotesModified;
@@ -1051,6 +1249,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
+  DoNotNotify = " + (DoNotNotify.HasValue ? DoNotNotify.Value.ToString() : "null") + @"");
+            if (IsDoNotNotifyModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
   InteractCount = " + (InteractCount.HasValue ? InteractCount.Value.ToString() : "null") + @"");
             if (IsInteractCountModified)
                 sb.Append(@" (modified)");
@@ -1065,6 +1269,18 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@"
   LastInteract = " + (LastInteract.HasValue ? LastInteract.Value.ToString() : "null") + @"");
             if (IsLastInteractModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  NoMessages = " + (NoMessages.HasValue ? NoMessages.Value.ToString() : "null") + @"");
+            if (IsNoMessagesModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  NotifyButBlock = " + (NotifyButBlock.HasValue ? NotifyButBlock.Value.ToString() : "null") + @"");
+            if (IsNotifyButBlockModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");

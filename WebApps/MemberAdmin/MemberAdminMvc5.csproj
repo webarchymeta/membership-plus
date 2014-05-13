@@ -768,6 +768,9 @@
     <Content Include="Views\PrivateChat\_ChatPartial.cshtml" />
     <Content Include="Views\Contacts\Search.cshtml" />
     <Content Include="Views\Contacts\_MemberDetailsPartial.cshtml" />
+    <Content Include="Views\PrivateChat\MessagePopup.cshtml" />
+    <Content Include="Views\PrivateChat\SearchMessages.cshtml" />
+    <Content Include="Views\PrivateChat\UnreadMessages.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\JavaScript\" />

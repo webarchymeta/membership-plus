@@ -5,7 +5,7 @@
 
     var __systemNotifier = null;
 
-    function serverNotifications(typeId, msgs, categs, callback) {
+    function serverNotifications(typeId, msgs, categs, callback, peerStatusCallback) {
         switch (typeId) {
             case 1:
                 {
@@ -47,28 +47,80 @@
             case 3:
                 {
                     __chat_invitation_handler = callback;
+                    __peer_status_handler = peerStatusCallback;
                     var msg = JSON.parse(msgs);
                     if (!msg.isCancel) {
                         var text = '<div class="chat-invitation">' +
-                                        '<div class="msg"><span>' + msg.msg + '</span</div>' +
-                                        '<div class="action">' +
-                                            '<a id="1" href="#" >' +
-                                               '@ResourceUtils.GetString("c4408d335012a56ff58937d78050efae", "Accept")' +
-                                            '</a>' +
-                                            '<a id="2" href="#" >' +
-                                               '@ResourceUtils.GetString("bcd8db575b47c838e5d551e3973db4ad", "Hold")' +
-                                            '</a>' +
-                                            '<a id="3" href="#" >' +
-                                               '@ResourceUtils.GetString("d8a942ef2b04672adfafef0ad817a408", "Busy")' +
-                                            '</a>' +
-                                            '<a id="4" href="#" >' +
-                                               '@ResourceUtils.GetString("d98ac12774fca5c3cbaffe276840c560", "Reject")' +
-                                            '</a>' +
-                                        '</div>' +
+                                        '<div class="header">';
+                        if (msg.hasIcon) {
+                            text +=
+                                            '<img src="' + appRoot + 'Account/GetMemberIcon?id=' + msg.peerId + '" />'
+                        }
+                        text +=
+                                            '<span class="peer">[ ' + msg.peer + ' ]</span>' +
+                                        '</div>' + 
+                                        '<div class="msg"><span>' + msg.msg + '</span></div>' +
+                                        '<div class="status">';
+                        text +=             
+                                            '<hr/><label>@ResourceUtils.GetString("2ada81c94bd04be4ff7226a46f7122d3", "Future calls from the caller:")</label> ' +
+                                                    '<div>' +
+                                                        '<input type="checkbox" name="options" id="option1" ' + (msg.keepNotified ? 'checked' : '') + '>&nbsp;' +
+                                                        '<span title="@ResourceUtils.GetString("5c38b98a84cb9d3297ed3e92906832d7", "Notify, but I prefer having caller leaving messages ...")">' +
+                                                            '@ResourceUtils.GetString("f5cb0450cec218d4b2644eca684efaef", "Notify only")' +
+                                                        '</span> ' +
+                                                        '<span title="@ResourceUtils.GetString("5c38b98a84cb9d3297ed3e92906832d7", "Notify, but I prefer having caller leaving messages ...")" class="ion-information-circled">' +
+                                                         '</span>' +
+                                                    '</div>';
+                        text +=
+                                                    '<div>' +
+                                                        '<input type="checkbox" name="options" id="option2" ' + (msg.notDisturb ? 'checked' : '') + '>&nbsp;' +
+                                                        '<span title="@ResourceUtils.GetString("44f20df2b8950db0cde4e19c03c11b13", "Do not disturb me, but enable caller leaving messages ...")">' +
+                                                            '@ResourceUtils.GetString("db6974fe40a01785ad775e44d4fba5eb", "Not to be disturbed")' +
+                                                        '</span> ' +
+                                                        '<span title="@ResourceUtils.GetString("44f20df2b8950db0cde4e19c03c11b13", "Do not disturb me, but enable caller leaving messages ...")" class="ion-information-circled">' +
+                                                        '</span>' +
+                                                    '</div>';
+                        text +=
+                                                    '<div>' +
+                                                        '<input type="checkbox" name="options" id="option3" ' + (msg.noMessages ? 'checked' : '') + '>&nbsp;' +
+                                                        '<span title="@ResourceUtils.GetString("e77af9e8c951238ec08569b834e640b8", "I do not wish to have further communications with caller ...")">' +
+                                                            '@ResourceUtils.GetString("c8837cf007d4e9b5cf8fb47b31cff89f", "In black list")' +
+                                                        '</span> ' +
+                                                        '<span title="@ResourceUtils.GetString("e77af9e8c951238ec08569b834e640b8", "I do not wish to have further communications with caller ...")" class="ion-information-circled">' +
+                                                        '</span>' +
+                                                    '</div>';
+                        text +=
+                                        '</div>';
+                        if (!msg.notDisturb && !msg.noMessages) {
+                            text +=
+                                        '<hr/>';
+                            if (!msg.keepNotified) {
+                                text +=
                                         '<div class="response">' + '@ResourceUtils.GetString("eecd2ad4fd2ac35a45a5fc19be25335c", "Any Message:")' +
-                                           '<input id="resp-msg" type="text" />' +
-                                        '</div>' +
-                                   '</div>';
+                                               '<input id="resp-msg" type="text" />' +
+                                        '</div>';
+                            }
+                            text +=
+                                        '<div class="action">' +
+                                                '<a id="1" href="#" >' +
+                                                   '@ResourceUtils.GetString("c4408d335012a56ff58937d78050efae", "Accept")' +
+                                                '</a>';
+                            if (!msg.keepNotified) {
+                                text +=
+                                                '<a id="2" href="#" >' +
+                                                   '@ResourceUtils.GetString("bcd8db575b47c838e5d551e3973db4ad", "Hold")' +
+                                                '</a>' +
+                                                '<a id="3" href="#" >' +
+                                                   '@ResourceUtils.GetString("d8a942ef2b04672adfafef0ad817a408", "Busy")' +
+                                                '</a>' +
+                                                '<a id="4" href="#" >' +
+                                                   '@ResourceUtils.GetString("d98ac12774fca5c3cbaffe276840c560", "Reject")' +
+                                                '</a>';
+                            }
+                            text +=
+                                        '</div>';
+                        }
+                        text +=   '</div>';
                         $.jGrowl(text, {
                             sticky: true,
                             themeState: '',
@@ -98,6 +150,57 @@
                                         chat_invitation_map[o.msgData.peer] = null;
                                     });
                                 });
+                                var opt1 = $(e).find("#option1");
+                                var opt2 = $(e).find("#option2");
+                                var opt3 = $(e).find("#option3");
+                                opt1.click(function () {
+                                    if (peer_status_handler(1, o.msgData.peerId)) {
+                                        msg.keepNotified = !msg.keepNotified;
+                                        opt1.prop("checked", msg.keepNotified);
+                                        if (msg.keepNotified) {
+                                            if (msg.notDisturb) {
+                                                msg.notDisturb = false;
+                                                opt2.prop("checked", false);
+                                            }
+                                            if (msg.noMessages) {
+                                                msg.noMessages = false;
+                                                opt3.prop("checked", false);
+                                            }
+                                        }
+                                    }
+                                });
+                                opt2.click(function () {
+                                    if (peer_status_handler(2, o.msgData.peerId)) {
+                                        msg.notDisturb = !msg.notDisturb;
+                                        opt2.prop("checked", msg.notDisturb);
+                                        if (msg.notDisturb) {
+                                            if (msg.keepNotified) {
+                                                msg.keepNotified = false;
+                                                opt1.prop("checked", false);
+                                            }
+                                            if (msg.noMessages) {
+                                                msg.noMessages = false;
+                                                opt3.prop("checked", false);
+                                            }
+                                        }
+                                    }
+                                });
+                                opt3.click(function () {
+                                    if (peer_status_handler(3, o.msgData.peerId)) {
+                                        msg.noMessages = !msg.noMessages;
+                                        opt3.prop("checked", msg.noMessages);
+                                        if (msg.noMessages) {
+                                            if (msg.keepNotified) {
+                                                msg.keepNotified = false;
+                                                opt1.prop("checked", false);
+                                            }
+                                            if (msg.notDisturb) {
+                                                msg.notDisturb = false;
+                                                opt2.prop("checked", false);
+                                            }
+                                        }
+                                    }
+                                });
                                 var _e = chat_invitation_map[o.msgData.peer];
                                 if (typeof _e != 'undefined' && _e != null) {
                                     $(_e).children('div.jGrowl-close').trigger('click');
@@ -126,6 +229,8 @@
     }
 
     var __chat_invitation_handler = null;
+
+    var __peer_status_handler = null;
 
     var __open_chat_handlers = new Array();
 
@@ -158,6 +263,21 @@
             } catch (ex) {
                 alert(ex.message);
             }
+        }
+    }
+
+    function peer_status_handler(statusType, peerId) {
+        if (__peer_status_handler != null) {
+            try {
+                __peer_status_handler(statusType, peerId);
+                return true;
+            }
+            catch (ex) {
+                alert(ex.message);
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 

@@ -48,41 +48,42 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-    <ItemGroup>
-        <Compile Include="MembershipPlusService.cs" />
-        <Compile Include="AnnouncementDatabase.cs" />
-        <Compile Include="Application_Database.cs" />
-        <Compile Include="CommunicationDatabase.cs" />
-        <Compile Include="CommunicationTypeDatabase.cs" />
-        <Compile Include="EventCalendarDatabase.cs" />
-        <Compile Include="EventCalendarShareCircleDatabase.cs" />
-        <Compile Include="EventTypeDatabase.cs" />
-        <Compile Include="MemberCallbackDatabase.cs" />
-        <Compile Include="MemberNotificationDatabase.cs" />
-        <Compile Include="MemberNotificationTypeDatabase.cs" />
-        <Compile Include="NotificationTaskScheduleDatabase.cs" />
-        <Compile Include="RoleDatabase.cs" />
-        <Compile Include="ShortMessageAttachmentDatabase.cs" />
-        <Compile Include="ShortMessageAudienceDatabase.cs" />
-        <Compile Include="ShortMessageDatabase.cs" />
-        <Compile Include="ShortMessageTypeDatabase.cs" />
-        <Compile Include="SignalRHostStateDatabase.cs" />
-        <Compile Include="SignalRMessageDatabase.cs" />
-        <Compile Include="UserAppMemberDatabase.cs" />
-        <Compile Include="UserAssociationDatabase.cs" />
-        <Compile Include="UserAssociationTypeDatabase.cs" />
-        <Compile Include="UserAssocInvitationDatabase.cs" />
-        <Compile Include="UserDetailDatabase.cs" />
-        <Compile Include="UserGroupAdminRoleDatabase.cs" />
-        <Compile Include="UserGroupMemberDatabase.cs" />
-        <Compile Include="UserGroupDatabase.cs" />
-        <Compile Include="UserGroupTypeDatabase.cs" />
-        <Compile Include="UserProfileDatabase.cs" />
-        <Compile Include="UserProfileTypeDatabase.cs" />
-        <Compile Include="UserDatabase.cs" />
-        <Compile Include="UsersInRoleDatabase.cs" />
-        <Compile Include="UsersRoleHistoryDatabase.cs" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MembershipPlusService.cs" />
+    <Compile Include="AnnouncementDatabase.cs" />
+    <Compile Include="Application_Database.cs" />
+    <Compile Include="CommunicationDatabase.cs" />
+    <Compile Include="CommunicationTypeDatabase.cs" />
+    <Compile Include="EventCalendarDatabase.cs" />
+    <Compile Include="EventCalendarShareCircleDatabase.cs" />
+    <Compile Include="EventTypeDatabase.cs" />
+    <Compile Include="MemberCallbackDatabase.cs" />
+    <Compile Include="MemberNotificationDatabase.cs" />
+    <Compile Include="MemberNotificationTypeDatabase.cs" />
+    <Compile Include="MembershipPlusServiceDuplex.cs" />
+    <Compile Include="NotificationTaskScheduleDatabase.cs" />
+    <Compile Include="RoleDatabase.cs" />
+    <Compile Include="ShortMessageAttachmentDatabase.cs" />
+    <Compile Include="ShortMessageAudienceDatabase.cs" />
+    <Compile Include="ShortMessageDatabase.cs" />
+    <Compile Include="ShortMessageTypeDatabase.cs" />
+    <Compile Include="SignalRHostStateDatabase.cs" />
+    <Compile Include="SignalRMessageDatabase.cs" />
+    <Compile Include="UserAppMemberDatabase.cs" />
+    <Compile Include="UserAssociationDatabase.cs" />
+    <Compile Include="UserAssociationTypeDatabase.cs" />
+    <Compile Include="UserAssocInvitationDatabase.cs" />
+    <Compile Include="UserDetailDatabase.cs" />
+    <Compile Include="UserGroupAdminRoleDatabase.cs" />
+    <Compile Include="UserGroupMemberDatabase.cs" />
+    <Compile Include="UserGroupDatabase.cs" />
+    <Compile Include="UserGroupTypeDatabase.cs" />
+    <Compile Include="UserProfileDatabase.cs" />
+    <Compile Include="UserProfileTypeDatabase.cs" />
+    <Compile Include="UserDatabase.cs" />
+    <Compile Include="UsersInRoleDatabase.cs" />
+    <Compile Include="UsersRoleHistoryDatabase.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\MembershipPlusShared45.csproj">
       <Project>{eee1e75e-4659-9523-a06b-6b7ff308dcb0}</Project>

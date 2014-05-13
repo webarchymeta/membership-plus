@@ -67,6 +67,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="ShortMessage.MsgText" />. Editable; not null.</description>
     ///    </item>
     ///    <item>
+    ///      <term>IsNotReceived</term>
+    ///      <description>See <see cref="ShortMessage.IsNotReceived" />. Editable; nullable.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>LastModified</term>
     ///      <description>See <see cref="ShortMessage.LastModified" />. Editable; nullable.</description>
     ///    </item>
@@ -230,6 +234,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 str += "ID = " + ID + "\r\n";
                 if (IsMsgTextModified)
                     str += "Modified [MsgText] = " + MsgText + "\r\n";
+                if (IsIsNotReceivedModified)
+                    str += "Modified [IsNotReceived] = " + IsNotReceived + "\r\n";
                 if (IsLastModifiedModified)
                     str += "Modified [LastModified] = " + LastModified + "\r\n";
                 if (IsMsgDataModified)
@@ -441,6 +447,48 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isMsgTextModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> IsNotReceived
+        { 
+            get
+            {
+                return _IsNotReceived;
+            }
+            set
+            {
+                if (_IsNotReceived != value)
+                {
+                    _IsNotReceived = value;
+                    if (StartAutoUpdating)
+                        IsIsNotReceivedModified = true;
+                }
+            }
+        }
+        private System.Nullable<bool> _IsNotReceived = default(System.Nullable<bool>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="IsNotReceived" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="IsNotReceived" /> only if this is set to true no matter what
+        /// the actual value of <see cref="IsNotReceived" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsIsNotReceivedModified
+        { 
+            get
+            {
+                return _isIsNotReceivedModified;
+            }
+            set
+            {
+                _isIsNotReceivedModified = value;
+            }
+        }
+        private bool _isIsNotReceivedModified = false;
 
         /// <summary>
         /// Meta-info: editable; nullable.
@@ -1286,6 +1334,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.MsgText = from.MsgText;
                     to.IsMsgTextModified = true;
                 }
+                if (from.IsIsNotReceivedModified && !to.IsIsNotReceivedModified)
+                {
+                    to.IsNotReceived = from.IsNotReceived;
+                    to.IsIsNotReceivedModified = true;
+                }
                 if (from.IsLastModifiedModified && !to.IsLastModifiedModified)
                 {
                     to.LastModified = from.LastModified;
@@ -1324,6 +1377,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.CreatedDate = from.CreatedDate;
                 to.MsgText = from.MsgText;
                 to.IsMsgTextModified = from.IsMsgTextModified;
+                to.IsNotReceived = from.IsNotReceived;
+                to.IsIsNotReceivedModified = from.IsIsNotReceivedModified;
                 to.LastModified = from.LastModified;
                 to.IsLastModifiedModified = from.IsLastModifiedModified;
                 to.MsgData = from.MsgData;
@@ -1358,6 +1413,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 MsgText = newdata.MsgText;
                 IsMsgTextModified = true;
+                cnt++;
+            }
+            if (IsNotReceived != newdata.IsNotReceived)
+            {
+                IsNotReceived = newdata.IsNotReceived;
+                IsIsNotReceivedModified = true;
                 cnt++;
             }
             if (LastModified != newdata.LastModified)
@@ -1424,7 +1485,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             if (FromID == null)
                 FromID = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsMsgTextModified || IsLastModifiedModified || IsMsgDataModified || IsMsgDataLastModifiedModified || IsMsgDataLinkModified || IsMsgDataMimeModified || IsMsgTitleModified;
+                IsEntityChanged = IsMsgTextModified || IsIsNotReceivedModified || IsLastModifiedModified || IsMsgDataModified || IsMsgDataLastModifiedModified || IsMsgDataLinkModified || IsMsgDataMimeModified || IsMsgTitleModified;
             if (IsMsgDataModified && !IsMsgDataLoaded)
                 IsMsgDataLoaded = true;
             StartAutoUpdating = true;
@@ -1452,6 +1513,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsMsgTextModified = IsMsgTextModified;
             else
                 e.IsMsgTextModified = false;
+            e.IsNotReceived = IsNotReceived;
+            if (preserveState)
+                e.IsIsNotReceivedModified = IsIsNotReceivedModified;
+            else
+                e.IsIsNotReceivedModified = false;
             e.LastModified = LastModified;
             if (preserveState)
                 e.IsLastModifiedModified = IsLastModifiedModified;
@@ -1515,6 +1581,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
   CreatedDate = " + CreatedDate + @"
   MsgText = '" + MsgText + @"'");
             if (IsMsgTextModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  IsNotReceived = " + (IsNotReceived.HasValue ? IsNotReceived.Value.ToString() : "null") + @"");
+            if (IsIsNotReceivedModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");
