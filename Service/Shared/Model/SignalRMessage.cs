@@ -460,7 +460,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public SignalRMessage ShallowCopy(bool allData = false, bool preserveState = false)
+        public SignalRMessage ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             SignalRMessage e = new SignalRMessage();
             e.StartAutoUpdating = false;

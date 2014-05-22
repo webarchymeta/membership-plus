@@ -477,6 +477,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _AssocMemo = value;
                     if (StartAutoUpdating)
                         IsAssocMemoModified = true;
+                    if (StartAutoUpdating)
+                        IsAssocMemoLoaded = value != null;
                 }
             }
         }
@@ -1159,7 +1161,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAssociation ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserAssociation ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserAssociation e = new UserAssociation();
             e.StartAutoUpdating = false;
@@ -1209,11 +1211,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsVotesModified = false;
             if (allData)
             {
-                e.AssocMemo = AssocMemo;
+                if (!checkLoadState || IsAssocMemoLoaded)
+                    e.AssocMemo = AssocMemo;
                 if (preserveState)
                     e.IsAssocMemoModified = IsAssocMemoModified;
                 else
                     e.IsAssocMemoModified = false;
+                e.IsAssocMemoLoaded = IsAssocMemoLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

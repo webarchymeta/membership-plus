@@ -137,29 +137,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
-    ///       <term>Delay Loaded Properties</term><description></description>
-    ///    </listheader>
-    ///    <item>
-    ///      <term>Description</term>
-    ///      <description>
-    ///        Properties that are loaded on demand.
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (loading)</term>
-    ///      <description>
-    ///         <see cref="IShortMessageAttachmentService.LoadEntityMsgData" />
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (uploading)</term>
-    ///      <description>
-    ///         <see cref="IShortMessageAttachmentService.UpdateEntityMsgData" />
-    ///      </description>
-    ///    </item>
-    ///  </list>
-    ///  <list type="table">
-    ///    <listheader>
     ///       <term>Upstream Navigation</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -172,6 +149,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>Methods</term>
     ///      <description>
     ///        <see cref="IShortMessageAttachmentService.MaterializeShortMessageRef" />.
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
+    ///       <term>Downstream Navigation</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Load and/or navigates to entity sets that depend on an entity in the current entity set.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods</term>
+    ///      <description>
+    ///        <see cref="IShortMessageAttachmentService.MaterializeShortMessageDataBlocks" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -281,6 +275,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="ShortMessageAttachment.ChangedShortMessageDataBlocks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -331,6 +329,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="ShortMessageAttachment.ShortMessageRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="ShortMessageAttachment.ChangedShortMessageDataBlocks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -513,6 +515,41 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ShortMessage MaterializeShortMessageRef(CallContext cntx, ShortMessageAttachment entity);
 
         /// <summary>
+        ///   Load the set of depending entities "ShortMessageDataBlocks" of type <see cref="ShortMessageDataBlockSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageDataBlockSet" />.
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeShortMessageDataBlocks")]
+        ShortMessageDataBlockSet MaterializeShortMessageDataBlocks(CallContext cntx, ShortMessageAttachment entity);
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessageDataBlocks" of type <see cref="IEnumerable{ShortMessageDataBlock}" /> (T = <see cref="ShortMessageDataBlock" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessageDataBlock}" /> (T = <see cref="ShortMessageDataBlock" />).
+        /// </returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "/MaterializeAllShortMessageDataBlocks")]
+        IEnumerable<ShortMessageDataBlock> MaterializeAllShortMessageDataBlocks(CallContext cntx, ShortMessageAttachment entity);
+
+        /// <summary>
         ///  Load an entity from the entity set having specified primary key(s): { <see cref="ShortMessageAttachment.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -590,43 +627,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "/LoadEntityByNature")]
         List<ShortMessageAttachment> LoadEntityByNature(CallContext cntx, string _ID);
-
-        /// <summary>
-        ///  Load the delay loaded property <see cref="ShortMessageAttachment.MsgData" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="ShortMessageAttachment.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/LoadEntityMsgData")]
-        byte[] LoadEntityMsgData(CallContext cntx, string _ID);
-
-        /// <summary>
-        ///  Update the delay loaded property <see cref="ShortMessageAttachment.MsgData" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="ShortMessageAttachment.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/UpdateEntityMsgData")]
-        void UpdateEntityMsgData(CallContext cntx, string _ID, byte[] data);
 
         /// <summary>
         ///  Given the current sorter expression <paramref name="sorters" />, it returns the next sorter token options. 
@@ -776,29 +776,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
-    ///       <term>Delay Loaded Properties</term><description></description>
-    ///    </listheader>
-    ///    <item>
-    ///      <term>Description</term>
-    ///      <description>
-    ///        Properties that are loaded on demand.
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (loading)</term>
-    ///      <description>
-    ///         <see cref="IShortMessageAttachmentService2.LoadEntityMsgData" />
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term>Methods (uploading)</term>
-    ///      <description>
-    ///         <see cref="IShortMessageAttachmentService2.UpdateEntityMsgData" />
-    ///      </description>
-    ///    </item>
-    ///  </list>
-    ///  <list type="table">
-    ///    <listheader>
     ///       <term>Upstream Navigation</term><description></description>
     ///    </listheader>
     ///    <item>
@@ -811,6 +788,23 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>Methods</term>
     ///      <description>
     ///        <see cref="IShortMessageAttachmentService2.MaterializeShortMessageRef" />.
+    ///      </description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
+    ///       <term>Downstream Navigation</term><description></description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>Description</term>
+    ///      <description>
+    ///        Load and/or navigates to entity sets that depend on an entity in the current entity set.
+    ///      </description>
+    ///    </item>
+    ///    <item>
+    ///      <term>Methods</term>
+    ///      <description>
+    ///        <see cref="IShortMessageAttachmentService2.MaterializeShortMessageDataBlocks" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -951,6 +945,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="ShortMessageAttachment.ChangedShortMessageDataBlocks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -985,6 +983,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="ShortMessageAttachment.ShortMessageRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="ShortMessageAttachment.ChangedShortMessageDataBlocks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -1035,6 +1037,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="ShortMessageAttachment.ChangedShortMessageDataBlocks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
         ///  </para>
         /// </remarks>
@@ -1079,6 +1085,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  <para>
         ///  Clients can set some of the member entities in { <see cref="ShortMessageAttachment.ShortMessageRef" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
+        ///  </para>
+        ///  <para>
+        ///  Clients can also create and add to member collections in { <see cref="ShortMessageAttachment.ChangedShortMessageDataBlocks" /> } entities that depends on an currently added or updated entity. These 
+        ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
         ///  In general, a client can construct an object graph of any complexity following the above rules and have it added or updated to the data source in one step.
@@ -1342,6 +1352,58 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
+        ///   Load the set of depending entities "ShortMessageDataBlocks" of type <see cref="ShortMessageDataBlockSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageDataBlockSet" />.
+        /// </returns>
+        [OperationContract]
+        ShortMessageDataBlockSet MaterializeShortMessageDataBlocks(CallContext cntx, ShortMessageAttachment entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "ShortMessageDataBlocks" of type <see cref="ShortMessageDataBlockSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="ShortMessageDataBlockSet" />.
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<ShortMessageDataBlockSet> MaterializeShortMessageDataBlocksAsync(CallContext cntx, ShortMessageAttachment entity);
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessageDataBlocks" of type <see cref="IEnumerable{ShortMessageDataBlock}" /> (T = <see cref="ShortMessageDataBlock" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessageDataBlock}" /> (T = <see cref="ShortMessageDataBlock" />).
+        /// </returns>
+        [OperationContract]
+        IEnumerable<ShortMessageDataBlock> MaterializeAllShortMessageDataBlocks(CallContext cntx, ShortMessageAttachment entity);
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllShortMessageDataBlocks" of type <see cref="IEnumerable{ShortMessageDataBlock}" /> (T = <see cref="ShortMessageDataBlock" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{ShortMessageDataBlock}" /> (T = <see cref="ShortMessageDataBlock" />).
+        /// </returns>
+        [OperationContract]
+        System.Threading.Tasks.Task<IEnumerable<ShortMessageDataBlock>> MaterializeAllShortMessageDataBlocksAsync(CallContext cntx, ShortMessageAttachment entity);
+#endif
+
+        /// <summary>
         ///  Load an entity from the entity set having specified primary key(s): { <see cref="ShortMessageAttachment.ID" /> }. 
         /// </summary>
         /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
@@ -1470,62 +1532,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<List<ShortMessageAttachment>> LoadEntityByNatureAsync(CallContext cntx, string _ID);
-#endif
-
-        /// <summary>
-        ///  Load the delay loaded property <see cref="ShortMessageAttachment.MsgData" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="ShortMessageAttachment.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        byte[] LoadEntityMsgData(CallContext cntx, string _ID);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///  Load the delay loaded property <see cref="ShortMessageAttachment.MsgData" />. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="ShortMessageAttachment.ID" />.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task<byte[]> LoadEntityMsgDataAsync(CallContext cntx, string _ID);
-#endif
-
-        /// <summary>
-        ///  Update the delay loaded property <see cref="ShortMessageAttachment.MsgData" />. 
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="ShortMessageAttachment.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        void UpdateEntityMsgData(CallContext cntx, string _ID, byte[] data);
-#if SUPPORT_ASYNC
-        /// <summary>
-        ///  Update the delay loaded property <see cref="ShortMessageAttachment.MsgData" />. Awaitable asynchronous version.
-        /// </summary>
-        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
-        /// <param name="_ID">Primary key <see cref="ShortMessageAttachment.ID" />.</param>
-        /// <param name="data">The updated value.</param>
-        /// <remarks>
-        /// </remarks>
-        /// <returns>
-        ///   The value of the property.
-        /// </returns>
-        [OperationContract]
-        System.Threading.Tasks.Task UpdateEntityMsgDataAsync(CallContext cntx, string _ID, byte[] data);
 #endif
 
         /// <summary>

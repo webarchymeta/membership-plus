@@ -166,6 +166,14 @@
         <Compile Include="Model\ShortMessageAudience.cs">
             <DependentUpon>ShortMessageAudiencePage.cs</DependentUpon>
         </Compile>
+        <Compile Include="Interface\IShortMessageDataBlockService.cs" />
+        <Compile Include="Model\ShortMessageDataBlockSet.cs" />
+        <Compile Include="Model\ShortMessageDataBlockPage.cs">
+            <DependentUpon>ShortMessageDataBlockSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\ShortMessageDataBlock.cs">
+            <DependentUpon>ShortMessageDataBlockPage.cs</DependentUpon>
+        </Compile>
         <Compile Include="Interface\IShortMessageService.cs" />
         <Compile Include="Model\ShortMessageSet.cs" />
         <Compile Include="Model\ShortMessagePage.cs">

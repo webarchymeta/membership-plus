@@ -210,40 +210,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 #endif
 
         /// <summary>
-        /// Register a subscription to notification of data source changes.
-        /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
-        /// about all data sets will be sent to the client.</param>
-        [OperationContract]
-        void SubscribeToUpdates(string clientID, EntitySetType[] sets);
-#if SUPPORT_ASYNC
-        /// <summary>
-        /// Register a subscription to notification of data source changes.
-        /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
-        /// about all data sets will be sent to the client.</param>
-        [OperationContract]
-        System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, EntitySetType[] sets);
-#endif
-
-        /// <summary>
-        /// un-register a subscription to data source change notifications.
-        /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        [OperationContract]
-        void UnsubscribeToUpdates(string clientID);
-#if SUPPORT_ASYNC
-        /// <summary>
-        /// un-register a subscription to data source change notifications.
-        /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        [OperationContract]
-        System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(string clientID);
-#endif
-
-        /// <summary>
         ///   Initialize or refresh and check the validity of the caller context information of the caller. 
         /// </summary>
         /// <remarks>
@@ -391,6 +357,40 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     public interface IMembershipPlusService3
     {
         /// <summary>
+        /// Register a subscription to notification of data source changes.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="sets">A list of data sets and optional corresponding entity filters that the server uses to notify client of changes. If it is set to null, then change notifications 
+        /// about all data sets will be sent to the client.</param>
+        [OperationContract]
+        void SubscribeToUpdates(string clientID, SetSubscription[] sets);
+#if SUPPORT_ASYNC
+        /// <summary>
+        /// Register a subscription to notification of data source changes.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="sets">A list of data sets and optional corresponding entity filters that the server uses to notify client of changes. If it is set to null, then change notifications 
+        /// about all data sets will be sent to the client.</param>
+        [OperationContract]
+        System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, SetSubscription[] sets);
+#endif
+
+        /// <summary>
+        /// un-register a subscription to data source change notifications.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        [OperationContract]
+        void UnsubscribeToUpdates(string clientID);
+#if SUPPORT_ASYNC
+        /// <summary>
+        /// un-register a subscription to data source change notifications.
+        /// </summary>
+        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        [OperationContract]
+        System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(string clientID);
+#endif
+
+        /// <summary>
         ///   Sign in the service for relational database "MembershipPlus" and authenticate the identity of the caller. 
         /// Depending on the end points, the authentication may have been delegated to the host. E.g., the end point serving javascript
         /// requests are delegated to Asp.Net website authentication system. For other end points, the caller must provide correct credentials
@@ -427,40 +427,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </returns>
         [OperationContract]
         System.Threading.Tasks.Task<CallContext> SignInServiceAsync(CallContext cntx, CallerCredentials credentials);
-#endif
-
-        /// <summary>
-        /// Register a subscription to notification of data source changes.
-        /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
-        /// about all data sets will be sent to the client.</param>
-        [OperationContract]
-        void SubscribeToUpdates(string clientID, EntitySetType[] sets);
-#if SUPPORT_ASYNC
-        /// <summary>
-        /// Register a subscription to notification of data source changes.
-        /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
-        /// about all data sets will be sent to the client.</param>
-        [OperationContract]
-        System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, EntitySetType[] sets);
-#endif
-
-        /// <summary>
-        /// un-register a subscription to data source change notifications.
-        /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        [OperationContract]
-        void UnsubscribeToUpdates(string clientID);
-#if SUPPORT_ASYNC
-        /// <summary>
-        /// un-register a subscription to data source change notifications.
-        /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        [OperationContract]
-        System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(string clientID);
 #endif
 
         /// <summary>

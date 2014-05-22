@@ -570,7 +570,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public NotificationTaskSchedule ShallowCopy(bool allData = false, bool preserveState = false)
+        public NotificationTaskSchedule ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             NotificationTaskSchedule e = new NotificationTaskSchedule();
             e.StartAutoUpdating = false;

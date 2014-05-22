@@ -66,6 +66,7 @@
     <Compile Include="ShortMessageAttachmentDatabase.cs" />
     <Compile Include="ShortMessageAudienceDatabase.cs" />
     <Compile Include="ShortMessageDatabase.cs" />
+    <Compile Include="ShortMessageDataBlockDatabase.cs" />
     <Compile Include="ShortMessageTypeDatabase.cs" />
     <Compile Include="SignalRHostStateDatabase.cs" />
     <Compile Include="SignalRMessageDatabase.cs" />

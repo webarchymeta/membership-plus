@@ -592,7 +592,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public EventCalendarShareCircle ShallowCopy(bool allData = false, bool preserveState = false)
+        public EventCalendarShareCircle ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             EventCalendarShareCircle e = new EventCalendarShareCircle();
             e.StartAutoUpdating = false;

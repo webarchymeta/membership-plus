@@ -441,7 +441,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public MemberNotificationType ShallowCopy(bool allData = false, bool preserveState = false)
+        public MemberNotificationType ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             MemberNotificationType e = new MemberNotificationType();
             e.StartAutoUpdating = false;

@@ -51,8 +51,37 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
+    ///       <term>None editable properties</term><description>Description</description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>ContentBlockSize</term>
+    ///      <description>See <see cref="ShortMessageAttachment.ContentBlockSize" />. Fixed; not null.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>DataCreateDate</term>
+    ///      <description>See <see cref="ShortMessageAttachment.DataCreateDate" />. Fixed; nullable.</description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
     ///       <term>Editable properties</term><description>Description</description>
     ///    </listheader>
+    ///    <item>
+    ///      <term>CompletedSize</term>
+    ///      <description>See <see cref="ShortMessageAttachment.CompletedSize" />. Editable; not null.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>DataMimeType</term>
+    ///      <description>See <see cref="ShortMessageAttachment.DataMimeType" />. Editable; not null; max-length = 50 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>FileName</term>
+    ///      <description>See <see cref="ShortMessageAttachment.FileName" />. Editable; not null; max-length = 100 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>ContentSize</term>
+    ///      <description>See <see cref="ShortMessageAttachment.ContentSize" />. Editable; nullable.</description>
+    ///    </item>
     ///    <item>
     ///      <term>DataLastModified</term>
     ///      <description>See <see cref="ShortMessageAttachment.DataLastModified" />. Editable; nullable.</description>
@@ -62,12 +91,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="ShortMessageAttachment.DataLink" />. Editable; nullable; max-length = 200 characters.</description>
     ///    </item>
     ///    <item>
-    ///      <term>DataMimeType</term>
-    ///      <description>See <see cref="ShortMessageAttachment.DataMimeType" />. Editable; nullable; max-length = 50 characters.</description>
-    ///    </item>
-    ///    <item>
-    ///      <term>MsgData</term>
-    ///      <description>See <see cref="ShortMessageAttachment.MsgData" />. Editable; nullable; load delayed.</description>
+    ///      <term>RelativePath</term>
+    ///      <description>See <see cref="ShortMessageAttachment.RelativePath" />. Editable; nullable; max-length = 150 characters.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -86,6 +111,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>ShortMessageRef</term>
     ///      <description>See <see cref="ShortMessageAttachment.ShortMessageRef" />, which is a member of the data set "ShortMessages" for <see cref="ShortMessage" />.</description>
+    ///    </item>
+    ///  </list>
+    ///  <list type="table">
+    ///    <listheader>
+    ///       <term>The following entity sets depend on this entity</term><description>Description</description>
+    ///    </listheader>
+    ///    <item>
+    ///      <term>ShortMessageDataBlocks</term>
+    ///      <description>See <see cref="ShortMessageAttachment.ShortMessageDataBlocks" />, which is a sub-set of the data set "ShortMessageDataBlocks" for <see cref="ShortMessageDataBlock" />.</description>
     ///    </item>
     ///  </list>
     /// </remarks>
@@ -150,14 +184,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             {
                 string str = "";
                 str += "ID = " + ID + "\r\n";
+                if (IsCompletedSizeModified)
+                    str += "Modified [CompletedSize] = " + CompletedSize + "\r\n";
+                if (IsDataMimeTypeModified)
+                    str += "Modified [DataMimeType] = " + DataMimeType + "\r\n";
+                if (IsFileNameModified)
+                    str += "Modified [FileName] = " + FileName + "\r\n";
+                if (IsContentSizeModified)
+                    str += "Modified [ContentSize] = " + ContentSize + "\r\n";
                 if (IsDataLastModifiedModified)
                     str += "Modified [DataLastModified] = " + DataLastModified + "\r\n";
                 if (IsDataLinkModified)
                     str += "Modified [DataLink] = " + DataLink + "\r\n";
-                if (IsDataMimeTypeModified)
-                    str += "Modified [DataMimeType] = " + DataMimeType + "\r\n";
-                if (IsMsgDataModified)
-                    str += "Modified [MsgData] = " + MsgData + "\r\n";;
+                if (IsRelativePathModified)
+                    str += "Modified [RelativePath] = " + RelativePath + "\r\n";;
                 return str.Trim();
             }
         }
@@ -274,6 +314,222 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private string _ID = default(string);
 
         /// <summary>
+        /// Meta-info: fixed; not null.
+        /// </summary>
+        [Required]
+        [Editable(false)]
+        [DataMember(IsRequired = true)]
+        public int ContentBlockSize
+        { 
+            get
+            {
+                return _ContentBlockSize;
+            }
+            set
+            {
+                if (_ContentBlockSize != value)
+                {
+                    _ContentBlockSize = value;
+                }
+            }
+        }
+        private int _ContentBlockSize = default(int);
+
+        /// <summary>
+        /// Meta-info: fixed; nullable.
+        /// </summary>
+        [Editable(false)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<DateTime> DataCreateDate
+        { 
+            get
+            {
+                return _DataCreateDate;
+            }
+            set
+            {
+                if (_DataCreateDate != value)
+                {
+                    _DataCreateDate = value;
+                }
+            }
+        }
+        private System.Nullable<DateTime> _DataCreateDate = default(System.Nullable<DateTime>);
+
+        /// <summary>
+        /// Meta-info: editable; not null.
+        /// </summary>
+        [Required]
+        [Editable(true)]
+        [DataMember(IsRequired = true)]
+        public Int64 CompletedSize
+        { 
+            get
+            {
+                return _CompletedSize;
+            }
+            set
+            {
+                if (_CompletedSize != value)
+                {
+                    _CompletedSize = value;
+                    if (StartAutoUpdating)
+                        IsCompletedSizeModified = true;
+                }
+            }
+        }
+        private Int64 _CompletedSize = default(Int64);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="CompletedSize" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="CompletedSize" /> only if this is set to true no matter what
+        /// the actual value of <see cref="CompletedSize" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsCompletedSizeModified
+        { 
+            get
+            {
+                return _isCompletedSizeModified;
+            }
+            set
+            {
+                _isCompletedSizeModified = value;
+            }
+        }
+        private bool _isCompletedSizeModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; not null; max-length = 50 characters.
+        /// </summary>
+        [Required]
+        [Editable(true)]
+        [StringLength(50)]
+        [DataMember(IsRequired = true)]
+        public string DataMimeType
+        { 
+            get
+            {
+                return _DataMimeType;
+            }
+            set
+            {
+                if (_DataMimeType != value)
+                {
+                    _DataMimeType = value;
+                    if (StartAutoUpdating)
+                        IsDataMimeTypeModified = true;
+                }
+            }
+        }
+        private string _DataMimeType = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="DataMimeType" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="DataMimeType" /> only if this is set to true no matter what
+        /// the actual value of <see cref="DataMimeType" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsDataMimeTypeModified
+        { 
+            get
+            {
+                return _isDataMimeTypeModified;
+            }
+            set
+            {
+                _isDataMimeTypeModified = value;
+            }
+        }
+        private bool _isDataMimeTypeModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; not null; max-length = 100 characters.
+        /// </summary>
+        [Required]
+        [Editable(true)]
+        [StringLength(100)]
+        [DataMember(IsRequired = true)]
+        public string FileName
+        { 
+            get
+            {
+                return _FileName;
+            }
+            set
+            {
+                if (_FileName != value)
+                {
+                    _FileName = value;
+                    if (StartAutoUpdating)
+                        IsFileNameModified = true;
+                }
+            }
+        }
+        private string _FileName = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="FileName" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="FileName" /> only if this is set to true no matter what
+        /// the actual value of <see cref="FileName" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsFileNameModified
+        { 
+            get
+            {
+                return _isFileNameModified;
+            }
+            set
+            {
+                _isFileNameModified = value;
+            }
+        }
+        private bool _isFileNameModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<Int64> ContentSize
+        { 
+            get
+            {
+                return _ContentSize;
+            }
+            set
+            {
+                if (_ContentSize != value)
+                {
+                    _ContentSize = value;
+                    if (StartAutoUpdating)
+                        IsContentSizeModified = true;
+                }
+            }
+        }
+        private System.Nullable<Int64> _ContentSize = default(System.Nullable<Int64>);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="ContentSize" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="ContentSize" /> only if this is set to true no matter what
+        /// the actual value of <see cref="ContentSize" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsContentSizeModified
+        { 
+            get
+            {
+                return _isContentSizeModified;
+            }
+            set
+            {
+                _isContentSizeModified = value;
+            }
+        }
+        private bool _isContentSizeModified = false;
+
+        /// <summary>
         /// Meta-info: editable; nullable.
         /// </summary>
         [Editable(true)]
@@ -359,107 +615,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private bool _isDataLinkModified = false;
 
         /// <summary>
-        /// Meta-info: editable; nullable; max-length = 50 characters.
+        /// Meta-info: editable; nullable; max-length = 150 characters.
         /// </summary>
         [Editable(true)]
-        [StringLength(50)]
+        [StringLength(150)]
         [DataMember(IsRequired = false)]
-        public string DataMimeType
+        public string RelativePath
         { 
             get
             {
-                return _DataMimeType;
+                return _RelativePath;
             }
             set
             {
-                if (_DataMimeType != value)
+                if (_RelativePath != value)
                 {
-                    _DataMimeType = value;
+                    _RelativePath = value;
                     if (StartAutoUpdating)
-                        IsDataMimeTypeModified = true;
+                        IsRelativePathModified = true;
                 }
             }
         }
-        private string _DataMimeType = default(string);
+        private string _RelativePath = default(string);
 
         /// <summary>
-        /// Wether or not the value of <see cref="DataMimeType" /> was changed compared to what it was loaded last time. 
-        /// Note: the backend data source updates the changed <see cref="DataMimeType" /> only if this is set to true no matter what
-        /// the actual value of <see cref="DataMimeType" /> is.
+        /// Wether or not the value of <see cref="RelativePath" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="RelativePath" /> only if this is set to true no matter what
+        /// the actual value of <see cref="RelativePath" /> is.
         /// </summary>
         [DataMember]
-        public bool IsDataMimeTypeModified
+        public bool IsRelativePathModified
         { 
             get
             {
-                return _isDataMimeTypeModified;
+                return _isRelativePathModified;
             }
             set
             {
-                _isDataMimeTypeModified = value;
+                _isRelativePathModified = value;
             }
         }
-        private bool _isDataMimeTypeModified = false;
-
-        /// <summary>
-        /// Meta-info: editable; nullable; load delayed.
-        /// </summary>
-        [Editable(true)]
-        [DataMember(IsRequired = false)]
-        public byte[] MsgData
-        { 
-            get
-            {
-                return _MsgData;
-            }
-            set
-            {
-                if (_MsgData != value)
-                {
-                    _MsgData = value;
-                    if (StartAutoUpdating)
-                        IsMsgDataModified = true;
-                }
-            }
-        }
-        private byte[] _MsgData = default(byte[]);
-
-        /// <summary>
-        /// Wether or not the value of <see cref="MsgData" /> was changed compared to what it was loaded last time. 
-        /// Note: the backend data source updates the changed <see cref="MsgData" /> only if this is set to true no matter what
-        /// the actual value of <see cref="MsgData" /> is.
-        /// </summary>
-        [DataMember]
-        public bool IsMsgDataModified
-        { 
-            get
-            {
-                return _isMsgDataModified;
-            }
-            set
-            {
-                _isMsgDataModified = value;
-            }
-        }
-        private bool _isMsgDataModified = false;
-
-        /// <summary>
-        /// Wether or not the value of the delay loaded "MsgData" is Loaded. Clients are responsible for keeping 
-        /// track of loading status of delay loading properties.
-        /// </summary>
-        [DataMember]
-        public bool IsMsgDataLoaded
-        { 
-            get
-            {
-                return _isMsgDataLoaded;
-            }
-            set
-            {
-                _isMsgDataLoaded = value;
-            }
-        }
-        private bool _isMsgDataLoaded = false;
+        private bool _isRelativePathModified = false;
 
         /// <summary>
         /// Meta-info: fixed; not null; foreign key.
@@ -533,6 +729,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
 
 #region Entities that depend on the current one.
 
+        /// <summary>
+        /// Entitity set <see cref="ShortMessageDataBlockSet" /> for data set "ShortMessageDataBlocks" of <see cref="ShortMessageDataBlock" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageDataBlockSet" /> set is { <see cref="ShortMessageDataBlock.AttachmentID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageDataBlockSet ShortMessageDataBlocks
+		{
+			get
+			{
+                if (_ShortMessageDataBlocks == null)
+                    _ShortMessageDataBlocks = new ShortMessageDataBlockSet();
+				return _ShortMessageDataBlocks;
+			}
+            set
+            {
+                _ShortMessageDataBlocks = value;
+            }
+		}
+		private ShortMessageDataBlockSet _ShortMessageDataBlocks = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "ShortMessageDataBlocks" of <see cref="ShortMessageDataBlock" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageDataBlockSet" /> set is { <see cref="ShortMessageDataBlock.AttachmentID" /> }.
+        /// </summary>
+		public IEnumerable<ShortMessageDataBlock> ShortMessageDataBlockEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="ShortMessageDataBlock" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="ShortMessageDataBlockSet" /> set is { <see cref="ShortMessageDataBlock.AttachmentID" /> }.
+        /// </summary>
+        [DataMember]
+		public ShortMessageDataBlock[] ChangedShortMessageDataBlocks
+		{
+			get;
+            set;
+		}
+
 #endregion
 
         /// <summary>
@@ -577,6 +814,26 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             if (to.IsPersisted)
             {
+                if (from.IsCompletedSizeModified && !to.IsCompletedSizeModified)
+                {
+                    to.CompletedSize = from.CompletedSize;
+                    to.IsCompletedSizeModified = true;
+                }
+                if (from.IsDataMimeTypeModified && !to.IsDataMimeTypeModified)
+                {
+                    to.DataMimeType = from.DataMimeType;
+                    to.IsDataMimeTypeModified = true;
+                }
+                if (from.IsFileNameModified && !to.IsFileNameModified)
+                {
+                    to.FileName = from.FileName;
+                    to.IsFileNameModified = true;
+                }
+                if (from.IsContentSizeModified && !to.IsContentSizeModified)
+                {
+                    to.ContentSize = from.ContentSize;
+                    to.IsContentSizeModified = true;
+                }
                 if (from.IsDataLastModifiedModified && !to.IsDataLastModifiedModified)
                 {
                     to.DataLastModified = from.DataLastModified;
@@ -587,29 +844,32 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     to.DataLink = from.DataLink;
                     to.IsDataLinkModified = true;
                 }
-                if (from.IsDataMimeTypeModified && !to.IsDataMimeTypeModified)
+                if (from.IsRelativePathModified && !to.IsRelativePathModified)
                 {
-                    to.DataMimeType = from.DataMimeType;
-                    to.IsDataMimeTypeModified = true;
-                }
-                if (from.IsMsgDataModified && !to.IsMsgDataModified)
-                {
-                    to.MsgData = from.MsgData;
-                    to.IsMsgDataModified = true;
+                    to.RelativePath = from.RelativePath;
+                    to.IsRelativePathModified = true;
                 }
             }
             else
             {
                 to.IsPersisted = from.IsPersisted;
                 to.ID = from.ID;
+                to.ContentBlockSize = from.ContentBlockSize;
+                to.DataCreateDate = from.DataCreateDate;
+                to.CompletedSize = from.CompletedSize;
+                to.IsCompletedSizeModified = from.IsCompletedSizeModified;
+                to.DataMimeType = from.DataMimeType;
+                to.IsDataMimeTypeModified = from.IsDataMimeTypeModified;
+                to.FileName = from.FileName;
+                to.IsFileNameModified = from.IsFileNameModified;
+                to.ContentSize = from.ContentSize;
+                to.IsContentSizeModified = from.IsContentSizeModified;
                 to.DataLastModified = from.DataLastModified;
                 to.IsDataLastModifiedModified = from.IsDataLastModifiedModified;
                 to.DataLink = from.DataLink;
                 to.IsDataLinkModified = from.IsDataLinkModified;
-                to.DataMimeType = from.DataMimeType;
-                to.IsDataMimeTypeModified = from.IsDataMimeTypeModified;
-                to.MsgData = from.MsgData;
-                to.IsMsgDataModified = from.IsMsgDataModified;
+                to.RelativePath = from.RelativePath;
+                to.IsRelativePathModified = from.IsRelativePathModified;
                 to.MessageID = from.MessageID;
             }
         }
@@ -623,6 +883,30 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void UpdateChanges(ShortMessageAttachment newdata)
         {
             int cnt = 0;
+            if (CompletedSize != newdata.CompletedSize)
+            {
+                CompletedSize = newdata.CompletedSize;
+                IsCompletedSizeModified = true;
+                cnt++;
+            }
+            if (DataMimeType != newdata.DataMimeType)
+            {
+                DataMimeType = newdata.DataMimeType;
+                IsDataMimeTypeModified = true;
+                cnt++;
+            }
+            if (FileName != newdata.FileName)
+            {
+                FileName = newdata.FileName;
+                IsFileNameModified = true;
+                cnt++;
+            }
+            if (ContentSize != newdata.ContentSize)
+            {
+                ContentSize = newdata.ContentSize;
+                IsContentSizeModified = true;
+                cnt++;
+            }
             if (DataLastModified != newdata.DataLastModified)
             {
                 DataLastModified = newdata.DataLastModified;
@@ -635,28 +919,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsDataLinkModified = true;
                 cnt++;
             }
-            if (DataMimeType != newdata.DataMimeType)
+            if (RelativePath != newdata.RelativePath)
             {
-                DataMimeType = newdata.DataMimeType;
-                IsDataMimeTypeModified = true;
-                cnt++;
-            }
-            bool bMsgData = MsgData == null && newdata.MsgData != null ||
-                                                         MsgData != null && newdata.MsgData == null ||
-                                                         MsgData != null && newdata.MsgData != null && MsgData.Length != newdata.MsgData.Length;
-            if (!bMsgData && MsgData != null)
-            {
-                for (int i = 0; i < MsgData.Length; i++)
-                {
-                    bMsgData = MsgData[i] != newdata.MsgData[i];
-                    if (bMsgData)
-                        break;
-                }
-            }
-            if (bMsgData)
-            {
-                MsgData = newdata.MsgData;
-                IsMsgDataModified = true;
+                RelativePath = newdata.RelativePath;
+                IsRelativePathModified = true;
                 cnt++;
             }
             IsEntityChanged = cnt > 0;
@@ -668,12 +934,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void NormalizeValues()
         {
             StartAutoUpdating = false;
+            if (DataMimeType == null)
+                DataMimeType = "";
+            if (FileName == null)
+                FileName = "";
             if (MessageID == null)
                 MessageID = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsDataLastModifiedModified || IsDataLinkModified || IsDataMimeTypeModified || IsMsgDataModified;
-            if (IsMsgDataModified && !IsMsgDataLoaded)
-                IsMsgDataLoaded = true;
+                IsEntityChanged = IsCompletedSizeModified || IsDataMimeTypeModified || IsFileNameModified || IsContentSizeModified || IsDataLastModifiedModified || IsDataLinkModified || IsRelativePathModified;
             StartAutoUpdating = true;
         }
 
@@ -688,11 +956,33 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public ShortMessageAttachment ShallowCopy(bool allData = false, bool preserveState = false)
+        public ShortMessageAttachment ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             ShortMessageAttachment e = new ShortMessageAttachment();
             e.StartAutoUpdating = false;
             e.ID = ID;
+            e.ContentBlockSize = ContentBlockSize;
+            e.DataCreateDate = DataCreateDate;
+            e.CompletedSize = CompletedSize;
+            if (preserveState)
+                e.IsCompletedSizeModified = IsCompletedSizeModified;
+            else
+                e.IsCompletedSizeModified = false;
+            e.DataMimeType = DataMimeType;
+            if (preserveState)
+                e.IsDataMimeTypeModified = IsDataMimeTypeModified;
+            else
+                e.IsDataMimeTypeModified = false;
+            e.FileName = FileName;
+            if (preserveState)
+                e.IsFileNameModified = IsFileNameModified;
+            else
+                e.IsFileNameModified = false;
+            e.ContentSize = ContentSize;
+            if (preserveState)
+                e.IsContentSizeModified = IsContentSizeModified;
+            else
+                e.IsContentSizeModified = false;
             e.DataLastModified = DataLastModified;
             if (preserveState)
                 e.IsDataLastModifiedModified = IsDataLastModifiedModified;
@@ -703,20 +993,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsDataLinkModified = IsDataLinkModified;
             else
                 e.IsDataLinkModified = false;
-            e.DataMimeType = DataMimeType;
+            e.RelativePath = RelativePath;
             if (preserveState)
-                e.IsDataMimeTypeModified = IsDataMimeTypeModified;
+                e.IsRelativePathModified = IsRelativePathModified;
             else
-                e.IsDataMimeTypeModified = false;
+                e.IsRelativePathModified = false;
             e.MessageID = MessageID;
-            if (allData)
-            {
-                e.MsgData = MsgData;
-                if (preserveState)
-                    e.IsMsgDataModified = IsMsgDataModified;
-                else
-                    e.IsMsgDataModified = false;
-            }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;
             if (preserveState)
@@ -738,6 +1020,32 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
   ID = '" + ID + @"'");
             sb.Append(@" (natural id)");
             sb.Append(@"
+  ContentBlockSize = " + ContentBlockSize + @"
+  DataCreateDate = " + (DataCreateDate.HasValue ? DataCreateDate.Value.ToString() : "null") + @"
+  CompletedSize = " + CompletedSize + @"");
+            if (IsCompletedSizeModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  DataMimeType = '" + DataMimeType + @"'");
+            if (IsDataMimeTypeModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  FileName = '" + FileName + @"'");
+            if (IsFileNameModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
+  ContentSize = " + (ContentSize.HasValue ? ContentSize.Value.ToString() : "null") + @"");
+            if (IsContentSizeModified)
+                sb.Append(@" (modified)");
+            else
+                sb.Append(@" (unchanged)");
+            sb.Append(@"
   DataLastModified = " + (DataLastModified.HasValue ? DataLastModified.Value.ToString() : "null") + @"");
             if (IsDataLastModifiedModified)
                 sb.Append(@" (modified)");
@@ -750,8 +1058,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             else
                 sb.Append(@" (unchanged)");
             sb.Append(@"
-  DataMimeType = '" + (DataMimeType != null ? DataMimeType : "null") + @"'");
-            if (IsDataMimeTypeModified)
+  RelativePath = '" + (RelativePath != null ? RelativePath : "null") + @"'");
+            if (IsRelativePathModified)
                 sb.Append(@" (modified)");
             else
                 sb.Append(@" (unchanged)");

@@ -473,7 +473,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserGroupType ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserGroupType ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserGroupType e = new UserGroupType();
             e.StartAutoUpdating = false;

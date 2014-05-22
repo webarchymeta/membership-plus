@@ -449,7 +449,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAssociationType ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserAssociationType ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserAssociationType e = new UserAssociationType();
             e.StartAutoUpdating = false;

@@ -2393,7 +2393,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public User ShallowCopy(bool allData = false, bool preserveState = false)
+        public User ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             User e = new User();
             e.StartAutoUpdating = false;

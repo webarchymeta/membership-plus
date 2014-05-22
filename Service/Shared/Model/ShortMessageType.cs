@@ -473,7 +473,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public ShortMessageType ShallowCopy(bool allData = false, bool preserveState = false)
+        public ShortMessageType ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             ShortMessageType e = new ShortMessageType();
             e.StartAutoUpdating = false;

@@ -512,6 +512,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _Comment = value;
                     if (StartAutoUpdating)
                         IsCommentModified = true;
+                    if (StartAutoUpdating)
+                        IsCommentLoaded = value != null;
                 }
             }
         }
@@ -572,6 +574,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _IconImg = value;
                     if (StartAutoUpdating)
                         IsIconImgModified = true;
+                    if (StartAutoUpdating)
+                        IsIconImgLoaded = value != null;
                 }
             }
         }
@@ -1251,7 +1255,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAppMember ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserAppMember ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserAppMember e = new UserAppMember();
             e.StartAutoUpdating = false;
@@ -1304,16 +1308,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsSearchListingModified = false;
             if (allData)
             {
-                e.Comment = Comment;
+                if (!checkLoadState || IsCommentLoaded)
+                    e.Comment = Comment;
                 if (preserveState)
                     e.IsCommentModified = IsCommentModified;
                 else
                     e.IsCommentModified = false;
-                e.IconImg = IconImg;
+                e.IsCommentLoaded = IsCommentLoaded;
+                if (!checkLoadState || IsIconImgLoaded)
+                    e.IconImg = IconImg;
                 if (preserveState)
                     e.IsIconImgModified = IsIconImgModified;
                 else
                     e.IsIconImgModified = false;
+                e.IsIconImgLoaded = IsIconImgLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

@@ -742,7 +742,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public MemberCallback ShallowCopy(bool allData = false, bool preserveState = false)
+        public MemberCallback ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             MemberCallback e = new MemberCallback();
             e.StartAutoUpdating = false;

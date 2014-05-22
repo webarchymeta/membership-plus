@@ -182,9 +182,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// Register a subscription to notification of data source changes.
         /// </summary>
         /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
+        /// <param name="sets">A list of data sets and optional corresponding entity filters that the server uses to notify client of changes. If it is set to null, then change notifications 
         /// about all data sets will be sent to the client.</param>
-        public void SubscribeToUpdates(string clientID, EntitySetType[] sets)
+        public void SubscribeToUpdates(string clientID, SetSubscription[] sets)
         {
             try
             {
@@ -202,9 +202,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// Register a subscription to notification of data source changes.
         /// </summary>
         /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        /// <param name="sets">A list of data sets that the client will receive notifications. If it is set to null, then change notifications 
+        /// <param name="sets">A list of data sets and optional corresponding entity filters that the server uses to notify client of changes. If it is set to null, then change notifications 
         /// about all data sets will be sent to the client.</param>
-        public async System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, EntitySetType[] sets)
+        public async System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, SetSubscription[] sets)
         {
             try
             {

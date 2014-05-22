@@ -189,4 +189,35 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set;
         }
     }
+
+    /// <summary>
+    /// A class used to specify a filtered change notification subscription.
+    /// </summary>
+    [DataContract]
+    public class SetSubscription
+    {
+        /// <summary>
+        /// The type of data set a subscriber subscibes to change notifications.
+        /// </summary>
+        [DataMember]
+        public EntitySetType EntityType
+        {
+            get { return _entityType; }
+            set { _entityType = value; }
+        }
+        private EntitySetType _entityType = EntitySetType.Unknown;
+
+        /// <summary>
+        /// An optional entity filter used by the service to pre-select entities whose changes notifications will be
+        /// sent to the subscriber.
+        /// </summary>
+        [DataMember]
+        public QueryExpresion EntityFilter
+        {
+            get { return _entityFilter; }
+            set { _entityFilter = value; }
+        }
+        private QueryExpresion _entityFilter = null;
+    }
+
 }

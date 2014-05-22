@@ -592,7 +592,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public ShortMessageAudience ShallowCopy(bool allData = false, bool preserveState = false)
+        public ShortMessageAudience ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             ShortMessageAudience e = new ShortMessageAudience();
             e.StartAutoUpdating = false;

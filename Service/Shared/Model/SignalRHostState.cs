@@ -483,7 +483,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public SignalRHostState ShallowCopy(bool allData = false, bool preserveState = false)
+        public SignalRHostState ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             SignalRHostState e = new SignalRHostState();
             e.StartAutoUpdating = false;

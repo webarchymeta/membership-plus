@@ -413,6 +413,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 if (_NoticeMsg != value)
                 {
                     _NoticeMsg = value;
+                    if (StartAutoUpdating)
+                        IsNoticeMsgLoaded = value != null;
                 }
             }
         }
@@ -560,6 +562,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _NoticeData = value;
                     if (StartAutoUpdating)
                         IsNoticeDataModified = true;
+                    if (StartAutoUpdating)
+                        IsNoticeDataLoaded = value != null;
                 }
             }
         }
@@ -1094,7 +1098,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public MemberNotification ShallowCopy(bool allData = false, bool preserveState = false)
+        public MemberNotification ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             MemberNotification e = new MemberNotification();
             e.StartAutoUpdating = false;
@@ -1128,12 +1132,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.UserID = UserID;
             if (allData)
             {
-                e.NoticeMsg = NoticeMsg;
-                e.NoticeData = NoticeData;
+                if (!checkLoadState || IsNoticeMsgLoaded)
+                    e.NoticeMsg = NoticeMsg;
+                e.IsNoticeMsgLoaded = IsNoticeMsgLoaded;
+                if (!checkLoadState || IsNoticeDataLoaded)
+                    e.NoticeData = NoticeData;
                 if (preserveState)
                     e.IsNoticeDataModified = IsNoticeDataModified;
                 else
                     e.IsNoticeDataModified = false;
+                e.IsNoticeDataLoaded = IsNoticeDataLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

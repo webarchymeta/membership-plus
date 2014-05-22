@@ -116,6 +116,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         IEnumerable<ShortMessageAudience> GetShortMessageAudiences();
 
         /// <summary>
+        /// When implemeneted, the <c>ShortMessageDataBlock</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<ShortMessageDataBlock> GetShortMessageDataBlocks();
+
+        /// <summary>
         /// When implemeneted, the <c>ShortMessage</c> enumerator used to fetch the corresponding entities from the data source.
         /// </summary>
         IEnumerable<ShortMessage> GetShortMessages();

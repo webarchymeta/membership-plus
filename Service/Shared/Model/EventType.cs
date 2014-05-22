@@ -441,7 +441,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public EventType ShallowCopy(bool allData = false, bool preserveState = false)
+        public EventType ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             EventType e = new EventType();
             e.StartAutoUpdating = false;

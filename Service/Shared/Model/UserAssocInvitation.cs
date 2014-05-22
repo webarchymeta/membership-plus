@@ -401,6 +401,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _InvitationMessage = value;
                     if (StartAutoUpdating)
                         IsInvitationMessageModified = true;
+                    if (StartAutoUpdating)
+                        IsInvitationMessageLoaded = value != null;
                 }
             }
         }
@@ -708,7 +710,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserAssocInvitation ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserAssocInvitation ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserAssocInvitation e = new UserAssocInvitation();
             e.StartAutoUpdating = false;
@@ -727,11 +729,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 e.IsLastStatusChangeModified = false;
             if (allData)
             {
-                e.InvitationMessage = InvitationMessage;
+                if (!checkLoadState || IsInvitationMessageLoaded)
+                    e.InvitationMessage = InvitationMessage;
                 if (preserveState)
                     e.IsInvitationMessageModified = IsInvitationMessageModified;
                 else
                     e.IsInvitationMessageModified = false;
+                e.IsInvitationMessageLoaded = IsInvitationMessageLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

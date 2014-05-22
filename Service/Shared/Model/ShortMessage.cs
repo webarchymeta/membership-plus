@@ -550,6 +550,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _MsgData = value;
                     if (StartAutoUpdating)
                         IsMsgDataModified = true;
+                    if (StartAutoUpdating)
+                        IsMsgDataLoaded = value != null;
                 }
             }
         }
@@ -1502,7 +1504,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public ShortMessage ShallowCopy(bool allData = false, bool preserveState = false)
+        public ShortMessage ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             ShortMessage e = new ShortMessage();
             e.StartAutoUpdating = false;
@@ -1551,11 +1553,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.ToID = ToID;
             if (allData)
             {
-                e.MsgData = MsgData;
+                if (!checkLoadState || IsMsgDataLoaded)
+                    e.MsgData = MsgData;
                 if (preserveState)
                     e.IsMsgDataModified = IsMsgDataModified;
                 else
                     e.IsMsgDataModified = false;
+                e.IsMsgDataLoaded = IsMsgDataLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

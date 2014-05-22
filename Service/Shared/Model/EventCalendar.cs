@@ -511,6 +511,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _Description = value;
                     if (StartAutoUpdating)
                         IsDescriptionModified = true;
+                    if (StartAutoUpdating)
+                        IsDescriptionLoaded = value != null;
                 }
             }
         }
@@ -1228,7 +1230,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public EventCalendar ShallowCopy(bool allData = false, bool preserveState = false)
+        public EventCalendar ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             EventCalendar e = new EventCalendar();
             e.StartAutoUpdating = false;
@@ -1266,11 +1268,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.UserID = UserID;
             if (allData)
             {
-                e.Description = Description;
+                if (!checkLoadState || IsDescriptionLoaded)
+                    e.Description = Description;
                 if (preserveState)
                     e.IsDescriptionModified = IsDescriptionModified;
                 else
                     e.IsDescriptionModified = false;
+                e.IsDescriptionLoaded = IsDescriptionLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

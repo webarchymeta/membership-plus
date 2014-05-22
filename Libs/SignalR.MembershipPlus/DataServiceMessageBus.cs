@@ -51,8 +51,8 @@ namespace Archymeta.Web.MembershipPlus.SignalR
         private bool CallbackFailed = false;
 
         private BlockingCollection<IList<Message>> MessageQueue = null;
-        
-        public CancellationToken CancelSendOperation = new CancellationToken();
+
+        public CancellationTokenSource CancelSendOperation = new CancellationTokenSource();
 
         public DataServiceMessageBus(IDependencyResolver resolver, DataServiceConfiguration configuration, CallContext clientContext)
             : base(resolver, configuration)
@@ -109,7 +109,8 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             _delClosed = new EventHandler(_notifier_Closed);
             Subscribe();
             MessageQueue = new BlockingCollection<IList<Message>>(new ConcurrentQueue<IList<Message>>(), config.MaxQueueLength);
-            Task.Factory.StartNew(SendMessageThread);
+            Thread t = new Thread(SendMessageThread);
+            t.Start(CancelSendOperation.Token);
             Initialized = true;
             Current = this;
         }
@@ -128,7 +129,21 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             try
             {
                 svc = new MembershipPlusDuplexServiceProxy(_notifier);
-                svc.SubscribeToUpdates(Cntx.CallerID, new EntitySetType[] { EntitySetType.SignalRMessage });
+                var sub = new SetSubscription
+                {
+                    EntityType = EntitySetType.SignalRMessage,
+                    EntityFilter = null
+                };
+                var qexpr = new QueryExpresion
+                {
+                    FilterTks = new List<QToken>()
+                };
+                qexpr.FilterTks.Add(new QToken
+                {
+                    TkName = "ApplicationID == \"" + config.App.ID + "\""
+                });
+                sub.EntityFilter = qexpr;
+                svc.SubscribeToUpdates(Cntx.CallerID, new SetSubscription[] { sub });
                 _trace.TraceWarning("Subscription done.");
                 CallbackFailed = false;
             }
@@ -362,16 +377,17 @@ namespace Archymeta.Web.MembershipPlus.SignalR
             MessageQueue.Add(messages);
         }
 
-        private void SendMessageThread()
+        private void SendMessageThread(object obj)
         {
+            CancellationToken ct = (CancellationToken)obj;
             IList<Message> msgs;
             var cntx = Cntx;
             var set = new SignalRMessageSet();
             var msgsvc = new SignalRMessageServiceProxy();
-            while (!CancelSendOperation.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
-                msgs = MessageQueue.Take(CancelSendOperation);
-                if (msgs != null && !CancelSendOperation.IsCancellationRequested)
+                msgs = MessageQueue.Take(ct);
+                if (msgs != null && !ct.IsCancellationRequested)
                 {
                     SignalRMessage entity = new SignalRMessage
                     {

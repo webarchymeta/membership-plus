@@ -110,6 +110,11 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [EnumMember]
         ShortMessageAudience,
         /// <summary>
+        /// It represents data set <c>ShortMessageDataBlocks</c> (see <see cref="ShortMessageDataBlock" />).
+        /// </summary>
+        [EnumMember]
+        ShortMessageDataBlock,
+        /// <summary>
         /// It represents data set <c>ShortMessages</c> (see <see cref="ShortMessage" />).
         /// </summary>
         [EnumMember]

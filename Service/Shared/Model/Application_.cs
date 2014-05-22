@@ -959,7 +959,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public Application_ ShallowCopy(bool allData = false, bool preserveState = false)
+        public Application_ ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             Application_ e = new Application_();
             e.StartAutoUpdating = false;

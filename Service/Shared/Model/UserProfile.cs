@@ -347,6 +347,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _BinaryValue = value;
                     if (StartAutoUpdating)
                         IsBinaryValueModified = true;
+                    if (StartAutoUpdating)
+                        IsBinaryValueLoaded = value != null;
                 }
             }
         }
@@ -491,6 +493,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _StringValue = value;
                     if (StartAutoUpdating)
                         IsStringValueModified = true;
+                    if (StartAutoUpdating)
+                        IsStringValueLoaded = value != null;
                 }
             }
         }
@@ -954,7 +958,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserProfile ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserProfile ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserProfile e = new UserProfile();
             e.StartAutoUpdating = false;
@@ -980,16 +984,20 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.UserID = UserID;
             if (allData)
             {
-                e.BinaryValue = BinaryValue;
+                if (!checkLoadState || IsBinaryValueLoaded)
+                    e.BinaryValue = BinaryValue;
                 if (preserveState)
                     e.IsBinaryValueModified = IsBinaryValueModified;
                 else
                     e.IsBinaryValueModified = false;
-                e.StringValue = StringValue;
+                e.IsBinaryValueLoaded = IsBinaryValueLoaded;
+                if (!checkLoadState || IsStringValueLoaded)
+                    e.StringValue = StringValue;
                 if (preserveState)
                     e.IsStringValueModified = IsStringValueModified;
                 else
                     e.IsStringValueModified = false;
+                e.IsStringValueLoaded = IsStringValueLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

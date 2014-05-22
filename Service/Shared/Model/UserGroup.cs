@@ -353,6 +353,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _GroupDescription = value;
                     if (StartAutoUpdating)
                         IsGroupDescriptionModified = true;
+                    if (StartAutoUpdating)
+                        IsGroupDescriptionLoaded = value != null;
                 }
             }
         }
@@ -1064,7 +1066,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserGroup ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserGroup ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserGroup e = new UserGroup();
             e.StartAutoUpdating = false;
@@ -1084,11 +1086,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.ParentID = ParentID;
             if (allData)
             {
-                e.GroupDescription = GroupDescription;
+                if (!checkLoadState || IsGroupDescriptionLoaded)
+                    e.GroupDescription = GroupDescription;
                 if (preserveState)
                     e.IsGroupDescriptionModified = IsGroupDescriptionModified;
                 else
                     e.IsGroupDescriptionModified = false;
+                e.IsGroupDescriptionLoaded = IsGroupDescriptionLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

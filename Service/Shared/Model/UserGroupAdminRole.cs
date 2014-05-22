@@ -566,7 +566,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserGroupAdminRole ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserGroupAdminRole ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserGroupAdminRole e = new UserGroupAdminRole();
             e.StartAutoUpdating = false;

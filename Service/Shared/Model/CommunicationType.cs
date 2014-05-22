@@ -441,7 +441,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public CommunicationType ShallowCopy(bool allData = false, bool preserveState = false)
+        public CommunicationType ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             CommunicationType e = new CommunicationType();
             e.StartAutoUpdating = false;

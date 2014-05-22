@@ -342,6 +342,8 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                     _Comment = value;
                     if (StartAutoUpdating)
                         IsCommentModified = true;
+                    if (StartAutoUpdating)
+                        IsCommentLoaded = value != null;
                 }
             }
         }
@@ -707,7 +709,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public Communication ShallowCopy(bool allData = false, bool preserveState = false)
+        public Communication ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             Communication e = new Communication();
             e.StartAutoUpdating = false;
@@ -722,11 +724,13 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.UserID = UserID;
             if (allData)
             {
-                e.Comment = Comment;
+                if (!checkLoadState || IsCommentLoaded)
+                    e.Comment = Comment;
                 if (preserveState)
                     e.IsCommentModified = IsCommentModified;
                 else
                     e.IsCommentModified = false;
+                e.IsCommentLoaded = IsCommentLoaded;
             }
             e.DistinctString = GetDistinctString(true);
             e.IsPersisted = IsPersisted;

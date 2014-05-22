@@ -730,7 +730,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UsersInRole ShallowCopy(bool allData = false, bool preserveState = false)
+        public UsersInRole ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UsersInRole e = new UsersInRole();
             e.StartAutoUpdating = false;

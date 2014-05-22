@@ -450,7 +450,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Internal use
         /// </summary>
-        public UserProfileType ShallowCopy(bool allData = false, bool preserveState = false)
+        public UserProfileType ShallowCopy(bool allData = false, bool preserveState = false, bool checkLoadState = false)
         {
             UserProfileType e = new UserProfileType();
             e.StartAutoUpdating = false;
