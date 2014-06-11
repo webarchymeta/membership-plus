@@ -75,6 +75,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <description>See <see cref="Application_.EventCalendars" />, which is a sub-set of the data set "EventCalendar" for <see cref="EventCalendar" />.</description>
     ///    </item>
     ///    <item>
+    ///      <term>EventLogs</term>
+    ///      <description>See <see cref="Application_.EventLogs" />, which is a sub-set of the data set "EventLogs" for <see cref="EventLog" />.</description>
+    ///    </item>
+    ///    <item>
     ///      <term>MemberNotifications</term>
     ///      <description>See <see cref="Application_.MemberNotifications" />, which is a sub-set of the data set "MemberNotifications" for <see cref="MemberNotification" />.</description>
     ///    </item>
@@ -483,6 +487,47 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// </summary>
         [DataMember]
 		public EventCalendar[] ChangedEventCalendars
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// Entitity set <see cref="EventLogSet" /> for data set "EventLogs" of <see cref="EventLog" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventLogSet" /> set is { <see cref="EventLog.AppID" /> }.
+        /// </summary>
+        [DataMember]
+		public EventLogSet EventLogs
+		{
+			get
+			{
+                if (_EventLogs == null)
+                    _EventLogs = new EventLogSet();
+				return _EventLogs;
+			}
+            set
+            {
+                _EventLogs = value;
+            }
+		}
+		private EventLogSet _EventLogs = null;
+
+        /// <summary>
+        /// Entitites enumeration expression for data set "EventLogs" of <see cref="EventLog" /> that depend on the current entity.
+        /// The corresponding foreign key in <see cref="EventLogSet" /> set is { <see cref="EventLog.AppID" /> }.
+        /// </summary>
+		public IEnumerable<EventLog> EventLogEnum
+		{
+			get;
+            set;
+		}
+
+        /// <summary>
+        /// A list of <see cref="EventLog" /> that is to be added or updated to the data source, together with the current entity.
+        /// The corresponding foreign key in <see cref="EventLogSet" /> set is { <see cref="EventLog.AppID" /> }.
+        /// </summary>
+        [DataMember]
+		public EventLog[] ChangedEventLogs
 		{
 			get;
             set;

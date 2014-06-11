@@ -102,6 +102,30 @@
         <Compile Include="Model\EventCalendarShareCircle.cs">
             <DependentUpon>EventCalendarShareCirclePage.cs</DependentUpon>
         </Compile>
+        <Compile Include="Interface\IEventLocationService.cs" />
+        <Compile Include="Model\EventLocationSet.cs" />
+        <Compile Include="Model\EventLocationPage.cs">
+            <DependentUpon>EventLocationSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\EventLocation.cs">
+            <DependentUpon>EventLocationPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IEventLogService.cs" />
+        <Compile Include="Model\EventLogSet.cs" />
+        <Compile Include="Model\EventLogPage.cs">
+            <DependentUpon>EventLogSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\EventLog.cs">
+            <DependentUpon>EventLogPage.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Interface\IEventStackFrameService.cs" />
+        <Compile Include="Model\EventStackFrameSet.cs" />
+        <Compile Include="Model\EventStackFramePage.cs">
+            <DependentUpon>EventStackFrameSet.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Model\EventStackFrame.cs">
+            <DependentUpon>EventStackFramePage.cs</DependentUpon>
+        </Compile>
         <Compile Include="Interface\IEventTypeService.cs" />
         <Compile Include="Model\EventTypeSet.cs" />
         <Compile Include="Model\EventTypePage.cs">

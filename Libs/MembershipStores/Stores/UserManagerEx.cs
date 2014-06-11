@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using System.Security.Principal;
+using log4net;
 #if MemberPlus
 using CryptoGateway.RDB.Data.MembershipPlus;
 using Archymeta.Web.Security.Resources;
@@ -49,6 +50,12 @@ namespace Archymeta.Web.Security
             get;
             set;
         }
+
+        public string LogMessage
+        {
+            get;
+            set;
+        }
     }
 
     //public static class IdentityExExtensions
@@ -64,6 +71,8 @@ namespace Archymeta.Web.Security
 
     public class UserManagerEx<TUser> : UserManager<TUser> where TUser : User, IApplicationUser, new()
     {
+        private static ILog log = LogManager.GetLogger(typeof(UserStore<TUser>));
+
         public CallContext Cctx
         {
             get { return _cctx; }
@@ -111,7 +120,8 @@ namespace Archymeta.Web.Security
             if (ExternalErrorsHandler != null)
             {
                 ExternalErrorsHandler(error);
-                if (cache && HttpContext.Current != null)
+                if (cache && HttpRuntime.Cache != null)
+                {
                     ExternalErrorsHandler(new AuthFailedEventArg
                     {
                         FailType = AuthFailedTypes.ActionTip,
@@ -121,18 +131,20 @@ namespace Archymeta.Web.Security
                         FailMessage = string.Format("Try to login after {0} seconds.", (Store as UserStore<TUser>).PasswordAttemptWindow)
 #endif
                     });
+                }
             }
-            if (HttpContext.Current != null)
+            if (HttpRuntime.Cache != null)
             {
                 if (cache)
                 {
                     string cacheKey = "userLoginState:" + userName;
                     int cTime = (Store as UserStore<TUser>).PasswordAttemptWindow;
-                    HttpContext.Current.Cache.Add(cacheKey, error, null, DateTime.Now.AddSeconds(cTime),
+                    HttpRuntime.Cache.Add(cacheKey, error, null, DateTime.Now.AddSeconds(cTime),
                                                   System.Web.Caching.Cache.NoSlidingExpiration,
                                                   System.Web.Caching.CacheItemPriority.Normal, null);
                 }
             }
+            log.Error(string.IsNullOrEmpty(error.LogMessage) ? error.FailMessage : error.LogMessage);
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user, string password)
@@ -184,6 +196,7 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.UnknownUser,
+                    LogMessage = "Claimed user \"" + userName + "\" tries to login without an account.",
 #if MemberPlus
                     FailMessage = ResourceUtils.GetString("3488820581565e9098c46152335ebb24", "Your don't have an account in the present system, please register!")
 #else
@@ -199,6 +212,7 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.ApprovalNeeded,
+                    LogMessage = "User \"" + userName + "\" tries to login before account approval.",
 #if MemberPlus
                     FailMessage = ResourceUtils.GetString("3bdf31486d76404d69c73b90c790f9be", "Your account is pending for approval, please wait!")
 #else
@@ -213,6 +227,7 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.UserAccountBlocked,
+                    LogMessage = "User \"" + userName + "\" tries to login, but his/her account status is \"" + u.Status + "\" noew.",
 #if MemberPlus
                     FailMessage = string.Format(ResourceUtils.GetString("0bcd70b0b005df9491a0623280ee1f4d", "Your account is in the state of being [{0}], please contact an administrator!"), u.Status)
 #else
@@ -230,6 +245,7 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.MemberNotFound,
+                    LogMessage = "User \"" + userName + "\" tries to login, but he/she is not a member of application \"" + app.Name + "\" yet.",
 #if MemberPlus
                     FailMessage = string.Format(ResourceUtils.GetString("d084974602e8940a962aad7d00bf7b3e", "You are not currently a member of \"{0}\", please register."), string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName)
 #else
@@ -246,6 +262,7 @@ namespace Archymeta.Web.Security
                     var err = new AuthFailedEventArg
                     {
                         FailType = AuthFailedTypes.MembershipBlocked,
+                        LogMessage = "User \"" + userName + "\" tries to login, but his/her membership status in application \"" + app.Name + "\" is \"" + memb.MemberStatus + "\" noew.",
 #if MemberPlus
                         FailMessage = string.Format(ResourceUtils.GetString("3508707fb8263c95b4c022dd0468235b", "Your membership in \"{0}\" is in the state of being [{1}], please contact an administrator!"), string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName, memb.MemberStatus)
 #else
@@ -264,6 +281,7 @@ namespace Archymeta.Web.Security
                         var err = new AuthFailedEventArg
                         {
                             FailType = AuthFailedTypes.MembershipFrozen,
+                            LogMessage = "User \"" + userName + "\" tried to login and failed repeatedly for times that exceeds maximum allowed one. Account access suspended now.",
 #if MemberPlus
                             FailMessage = string.Format(ResourceUtils.GetString("99529364b5dfda1d15a5859cd49c5a7c", "Maximum login attemps for \"{0}\" exceeded, please try again later!"), string.IsNullOrEmpty(app.DisplayName) ? app.Name : app.DisplayName)
 #else
@@ -283,6 +301,7 @@ namespace Archymeta.Web.Security
                         var err = new AuthFailedEventArg
                         {
                             FailType = AuthFailedTypes.MembershipRecovered,
+                            LogMessage = "User \"" + userName + "\" tried to login and failed repeatedly for times that exceeds maximum allowed one before. Account access is allowed again after a brief suspension.",
 #if MemberPlus
                             FailMessage = ResourceUtils.GetString("8cdaed0e2a0dd2e31c4960412351d4b5", "Your membership status is restored, please try again!")
 #else
@@ -308,6 +327,7 @@ namespace Archymeta.Web.Security
                 var err = new AuthFailedEventArg
                 {
                     FailType = AuthFailedTypes.InvalidCredential,
+                    LogMessage = "User \"" + userName + "\" tries to login with either an invalid user name or a wrong password.",
 #if MemberPlus
                     FailMessage = ResourceUtils.GetString("3a2a06b3a1f05cde765219211bf2e9be", "Invalid username or password.")
 #else
@@ -327,6 +347,7 @@ namespace Archymeta.Web.Security
                 memb.AcceptLanguages = HttpContext.Current.Request.Headers["Accept-Language"];
 #endif
                 await mbsvc.AddOrUpdateEntitiesAsync(cctx, membs, new UserAppMember[] { memb });
+                log.Info("User \"" + userName + "\" logged in.");
             }
             return found;
         }

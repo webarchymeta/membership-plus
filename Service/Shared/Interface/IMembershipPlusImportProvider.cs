@@ -68,6 +68,21 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         IEnumerable<EventCalendarShareCircle> GetEventCalendarShareCircles();
 
         /// <summary>
+        /// When implemeneted, the <c>EventLocation</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<EventLocation> GetEventLocations();
+
+        /// <summary>
+        /// When implemeneted, the <c>EventLog</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<EventLog> GetEventLogs();
+
+        /// <summary>
+        /// When implemeneted, the <c>EventStackFrame</c> enumerator used to fetch the corresponding entities from the data source.
+        /// </summary>
+        IEnumerable<EventStackFrame> GetEventStackFrames();
+
+        /// <summary>
         /// When implemeneted, the <c>EventType</c> enumerator used to fetch the corresponding entities from the data source.
         /// </summary>
         IEnumerable<EventType> GetEventTypes();

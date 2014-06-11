@@ -10,13 +10,13 @@ using System.Security.Cryptography;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using log4net;
 #if MemberPlus
 using CryptoGateway.RDB.Data.MembershipPlus;
 using Archymeta.Web.Security.Resources;
 #else
 using CryptoGateway.RDB.Data.AspNetMember;
 #endif
-
 
 namespace Archymeta.Web.Security
 {
@@ -40,6 +40,8 @@ namespace Archymeta.Web.Security
     /* other interfaces: IUserLoginStore<TUser>, IUserSecurityStampStore<TUser>, */
     public class UserStore<TUser> : IUserStore<TUser>, IUserPasswordStore<TUser>, IUserRoleStore<TUser>, IUserClaimStore<TUser>, IPasswordHasher, IIdentityValidator<string>, IDisposable where TUser : User, IApplicationUser, new()
     {
+        private static ILog log = LogManager.GetLogger(typeof(UserStore<TUser>));
+
         public const string NameProviderId = "Archymeta Membership Service";
 
 #if TEST
@@ -221,6 +223,11 @@ namespace Archymeta.Web.Security
 
         private Exception getException(string id, string err, Exception e = null)
         {
+            if (WriteExceptionsToEventLog)
+            {
+                if (log.IsErrorEnabled)
+                    log.Error(err, e);
+            }
 #if MemberPlus
             return new Exception(ResourceUtils.GetString(id, err), e);
 #else
@@ -295,6 +302,7 @@ namespace Archymeta.Web.Security
                     if (v.ChangedEntities.Length == 1 && IsValidUpdate(v.ChangedEntities[0].OpStatus))
                     {
                         user.UpdateInstance(v.ChangedEntities[0].UpdatedItem);
+                        log.Info("New user: \"" + user.Username + "\" created and membership in App: " + app.Name + " added.");
                         return;
                     }
                     throw getException("7546b51813a82246cd88f6c9c8ff5997", "Add user failed!");
@@ -331,6 +339,7 @@ namespace Archymeta.Web.Security
                         if (v.ChangedEntities.Length == 1 && IsValidUpdate(v.ChangedEntities[0].OpStatus))
                         {
                             user.UpdateInstance(udata);
+                            log.Info("Existing user: \"" + user.Username + "\" authenticated and membership in App: " + app.Name + " added.");
                             return;
                         }
                         throw getException("c12be7bc5f311f434ad4df9fc6774d5c", "Add user membership failed!");
@@ -377,10 +386,6 @@ namespace Archymeta.Web.Security
             }
             catch (Exception e)
             {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "CreateUser");
-                }
                 throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
@@ -428,19 +433,17 @@ namespace Archymeta.Web.Security
                     if (lir.Count() > 0)
                     {
                         await uisvc.DeleteEntitiesAsync(cctx, new UsersInRoleSet(), lir.ToArray());
+                        log.Info("User \"" + u.Username + "\"'s membership in app \"" + app.Name + "\" is removed.");
                     }
                 }
                 else
                 {
                     await usvc.DeleteEntitiesAsync(cctx, new UserSet(), new User[] { u });
+                    log.Info("User \"" + u.Username + "\" is removed from the system.");
                 }
             }
             catch (Exception e)
             {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "DeleteUser");
-                }
                 throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
@@ -661,10 +664,6 @@ namespace Archymeta.Web.Security
             }
             catch (Exception e)
             {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "UpdateFailureCount");
-                }
                 throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
@@ -745,10 +744,6 @@ namespace Archymeta.Web.Security
             }
             catch (Exception e)
             {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "AddUsersToRoles");
-                }
                 throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
@@ -899,10 +894,6 @@ namespace Archymeta.Web.Security
             }
             catch (Exception e)
             {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "RemoveUsersFromRoles");
-                }
                 throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
@@ -1043,10 +1034,6 @@ namespace Archymeta.Web.Security
             }
             catch (Exception e)
             {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "UpdateUser");
-                }
                 throw getException("cb5e100e5a9a3e7f6d1fd97512215283", "error", e);
             }
             finally
@@ -1235,18 +1222,6 @@ namespace Archymeta.Web.Security
             for (int i = 0; i < returnBytes.Length; i++)
                 returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
             return returnBytes;
-        }
-
-        private void WriteToEventLog(Exception e, string action)
-        {
-            string message = "An exception occurred communicating with the data source.\n\n";
-            message += "Action: " + action;
-            Trace.Write(message);
-            Debug.Write(message);
-            /*
-            if (log.IsErrorEnabled)
-                log.Error("[" + cctx.InVokePath + "]: " + message, e);
-            */
         }
 
         public void Dispose()

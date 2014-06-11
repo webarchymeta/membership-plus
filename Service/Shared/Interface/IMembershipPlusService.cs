@@ -359,35 +359,43 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Register a subscription to notification of data source changes.
         /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="cntx">Caller supplied and initialized caller context. If it is null, the service will create an initial one.</param>
+        /// <param name="ownerID">An identifier for a "user" that owns the subscription. An owner can change or un-subscribe an subscription.</param>
+        /// <param name="subscribeID">An identifier that the client use to keep track of its subscriptions.</param>
         /// <param name="sets">A list of data sets and optional corresponding entity filters that the server uses to notify client of changes. If it is set to null, then change notifications 
         /// about all data sets will be sent to the client.</param>
         [OperationContract]
-        void SubscribeToUpdates(string clientID, SetSubscription[] sets);
+        void SubscribeToUpdates(CallContext cntx, string ownerID, string subscribeID, SetSubscription[] sets);
 #if SUPPORT_ASYNC
         /// <summary>
         /// Register a subscription to notification of data source changes.
         /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="cntx">Caller supplied and initialized caller context. If it is null, the service will create an initial one.</param>
+        /// <param name="ownerID">An identifier for a "user" that owns the subscription. An owner can change or un-subscribe an subscription.</param>
+        /// <param name="subscribeID">An identifier that the client use to keep track of its subscriptions.</param>
         /// <param name="sets">A list of data sets and optional corresponding entity filters that the server uses to notify client of changes. If it is set to null, then change notifications 
         /// about all data sets will be sent to the client.</param>
         [OperationContract]
-        System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, SetSubscription[] sets);
+        System.Threading.Tasks.Task SubscribeToUpdatesAsync(CallContext cntx, string ownerID, string subscribeID, SetSubscription[] sets);
 #endif
 
         /// <summary>
         /// un-register a subscription to data source change notifications.
         /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="cntx">Caller supplied and initialized caller context. If it is null, the service will create an initial one.</param>
+        /// <param name="ownerID">An identifier for a "user" that owns the subscription. An owner can change or un-subscribe an subscription.</param>
+        /// <param name="subscribeID">An identifier that the client use to keep track of its subscriptions.</param>
         [OperationContract]
-        void UnsubscribeToUpdates(string clientID);
+        void UnsubscribeToUpdates(CallContext cntx, string ownerID, string subscribeID);
 #if SUPPORT_ASYNC
         /// <summary>
         /// un-register a subscription to data source change notifications.
         /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="cntx">Caller supplied and initialized caller context. If it is null, the service will create an initial one.</param>
+        /// <param name="ownerID">An identifier for a "user" that owns the subscription. An owner can change or un-subscribe an subscription.</param>
+        /// <param name="subscribeID">An identifier that the client use to keep track of its subscriptions.</param>
         [OperationContract]
-        System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(string clientID);
+        System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(CallContext cntx, string ownerID, string subscribeID);
 #endif
 
         /// <summary>
