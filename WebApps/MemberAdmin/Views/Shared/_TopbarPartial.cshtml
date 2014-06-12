@@ -30,13 +30,21 @@
                         <li class="dropdown-submenu">
                             <a href="#">@ResourceUtils.GetString("b54fa74b22da5a748eae3d55ad26419a", "Messaging")</a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>@Html.ActionLink(ResourceUtils.GetString("c41bd4a897a72c15332aa063685bf0a2", "Group Chat"), "Start", "GroupChat")</li>
+                                <li class="dropdown-submenu">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("c41bd4a897a72c15332aa063685bf0a2", "Group Chat")</a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>@Html.ActionLink(ResourceUtils.GetString("63b688de6ab7645387cb12b6e596b85c", "Chat Groups"), "Start", "GroupChat")</li>
+                                        <li>@Html.ActionLink(ResourceUtils.GetString("5d5d7ec6e0b614e9d21f38d06ac90123", "Dialogues & Messages"), "PrevMessages", "GroupPrivateChat")</li>
+                                        <li>@Html.ActionLink(ResourceUtils.GetString("13348442cc6a27032d2b4aa28b75a5d4", "Search"), "SearchGroupMessages", "Query")</li>
+                                    </ul>
+                                </li>
                                 <li class="dropdown-submenu">
                                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">@ResourceUtils.GetString("e9b58070003826eb74265c9ff2815e81", "Private Chat")</a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li>@Html.ActionLink(ResourceUtils.GetString("8dff9be37a347cab463edab00c45f32a", "Search Online Members"), "Search", "PrivateChat")</li>
                                         <li>@Html.ActionLink(ResourceUtils.GetString("f61f233079fec6bd451747c6cdaeb1c7", "Search Contacts"), "Search", "Contacts")</li>
                                         <li>@Html.ActionLink(ResourceUtils.GetString("5d5d7ec6e0b614e9d21f38d06ac90123", "Dialogues & Messages"), "UnreadMessages", "PrivateChat")</li>
+                                        <li>@Html.ActionLink(ResourceUtils.GetString("13348442cc6a27032d2b4aa28b75a5d4", "Search"), "SearchPrivateMessages", "Query")</li>
                                     </ul>
                                 </li>
                             </ul>

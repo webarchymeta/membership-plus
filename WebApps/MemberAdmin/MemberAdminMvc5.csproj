@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -22,6 +23,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -179,6 +181,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ContactsQueryOpts.cs" />
+    <Compile Include="Models\DiscreteValues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalRHubs\GroupChatHub.cs" />
     <Compile Include="SignalRHubs\HubBase.cs" />
@@ -685,6 +688,7 @@
     <Content Include="Scripts\DataService\MemberSearchPage.js" />
     <Content Include="Scripts\DataService\NotificationSearchPage.js" />
     <Content Include="Scripts\DataService\RoleAdminPage.js" />
+    <Content Include="Scripts\DataService\GroupMessageSearchPage.js" />
     <Content Include="Scripts\DataService\UserAdminPage.js" />
     <Content Include="Scripts\DataService\UserDetailsPage.js" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
@@ -771,6 +775,10 @@
     <Content Include="Views\PrivateChat\MessagePopup.cshtml" />
     <Content Include="Views\PrivateChat\SearchMessages.cshtml" />
     <Content Include="Views\PrivateChat\UnreadMessages.cshtml" />
+    <Content Include="Views\Query\SearchGroupMessages.cshtml" />
+    <Content Include="Views\Query\SearchPrivateMessages.cshtml" />
+    <Content Include="Views\Query\_GroupMessageDetailsPartial.cshtml" />
+    <Content Include="Views\Query\_PrivateMessageDetailsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\JavaScript\" />
@@ -812,6 +820,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">

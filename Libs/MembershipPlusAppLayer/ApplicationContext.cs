@@ -11,8 +11,11 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
 {
     public class ApplicationContext
     {
+        public const int ChatShortMsgTypeId = 1;
         public const int ChatAssocTypeId = 12;
+        public const int NewMessageNoticeTypeId = 2;
         public const int PrivateChatNoticeTypeId = 3;
+        public const int ChatGroupTypeID = 7;
 
         internal static object SyncRoot = new object();
 

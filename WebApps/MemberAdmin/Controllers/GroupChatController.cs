@@ -7,7 +7,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Archymeta.Web.MembershipPlus.AppLayer;
-
+using MemberAdminMvc5.Models;
 
 namespace MemberAdminMvc5.Controllers
 {
@@ -109,6 +109,23 @@ namespace MemberAdminMvc5.Controllers
         public async Task<ActionResult> ListConnectedMembers(string id)
         {
             return Json(await GroupChatContext.ListConnectedMembers(HubId, id), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult PrevMessages(string k, int? v)
+        {
+            TimeSpanValueKind kind = k != null ? (TimeSpanValueKind)Enum.Parse(typeof(TimeSpanValueKind), k) : TimeSpanValueKind.Hours;
+
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult Search()
+        {
+
+            return View();
         }
     }
 }

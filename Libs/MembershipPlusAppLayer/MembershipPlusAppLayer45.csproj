@@ -7,7 +7,7 @@
     <ProjectGuid>{DFB293E3-8F2B-4213-885F-E05B52D1559F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Archymeta.Web.Member</RootNamespace>
+    <RootNamespace>Archymeta.Web.MembershipPlus.AppLayer</RootNamespace>
     <AssemblyName>MembershipPlusAppLayer</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.0.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -90,6 +93,7 @@
     <Compile Include="ConnectionContext.cs" />
     <Compile Include="ContactContext.cs" />
     <Compile Include="GroupChatContext.cs" />
+    <Compile Include="GroupChatViewContext.cs" />
     <Compile Include="MemberAdminContext.cs" />
     <Compile Include="MemberViewContext.cs" />
     <Compile Include="MemberRoleContext.cs" />
@@ -105,6 +109,7 @@
     <Compile Include="NotificationContext.cs" />
     <Compile Include="PasswordGenerator.cs" />
     <Compile Include="PrivateChatContext.cs" />
+    <Compile Include="PrivateChatViewContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies\DataServiceProxy.cs" />
     <Compile Include="Configuration\QueryCustomizationCfg.cs" />

@@ -228,7 +228,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             var mbsvc = new UserAppMemberServiceProxy();
             var peerMb = await mbsvc.LoadEntityByKeyAsync(cntx, AppId, peerId);
             MemberNotificationTypeServiceProxy ntsvc = new MemberNotificationTypeServiceProxy();
-            var ntype = await ntsvc.LoadEntityByKeyAsync(cntx, 3);
+            var ntype = await ntsvc.LoadEntityByKeyAsync(cntx, ApplicationContext.PrivateChatNoticeTypeId);
             var peerCb = await mbcsvc.LoadEntityByKeyAsync(cntx, userId, hubId, AppId, peerId);
             string title = string.Format(ResourceUtils.GetString("cdc8520b5121c757e6eb79e098d6baef", "{0} cancelled chatting invitation.", peerMb.AcceptLanguages), u.Username);
             if (peerCb == null || peerCb.ConnectionID == null || peerCb.IsDisconnected)
@@ -241,7 +241,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     PriorityLevel = 0,
                     ReadCount = 0,
                     ApplicationID = AppId,
-                    TypeID = 3,
+                    TypeID = ApplicationContext.PrivateChatNoticeTypeId,
                     UserID = peerId
                 };
                 n.NoticeMsg = "{ \"peerId\": \"" + userId + "\", \"peer\": \"" + u.Username + "\", \"connectId\": \"" + connectId + "\", \"msg\": \"" + title + "\", \"isCancel\": true, \"isDisconnect\": false }";
@@ -345,7 +345,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             {
                 ID = Guid.NewGuid().ToString(),
                 ApplicationID = AppId,
-                TypeID = 1,
+                TypeID = ApplicationContext.ChatShortMsgTypeId,
                 GroupID = null,
                 FromID = userId,
                 ToID = peerId,
@@ -453,7 +453,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             {
                 ID = Guid.NewGuid().ToString(),
                 ApplicationID = AppId,
-                TypeID = 1,
+                TypeID = ApplicationContext.ChatShortMsgTypeId,
                 GroupID = null,
                 FromID = userId,
                 ToID = peerId,
@@ -542,7 +542,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             var cond = new ShortMessageSetConstraints
             {
                 ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = AppId },
-                TypeIDWrap = new ForeignKeyData<int> { KeyValue = 1 },
+                TypeIDWrap = new ForeignKeyData<int> { KeyValue = ApplicationContext.ChatShortMsgTypeId },
                 GroupIDWrap = new ForeignKeyData<string> { KeyValue = null }
             };
             var qexpr = new QueryExpresion();
@@ -603,6 +603,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             json += @"""replyToId"": """ + (msg.ReplyToID == null ? "" : msg.ReplyToID) + @""", ";
             json += @"""date"": " + GroupChatContext.getUnixJsonTime(msg.CreatedDate) + @", ";
             json += @"""self"": false, ";
+            json += @"""lead"": """ + GroupChatContext.GetLeadText(msg.MsgText).Replace("\"", "\\\"") + @""", ";
             json += @"""text"": """ + msg.MsgText.Replace("\"", "\\\"") + @"""";
             if (dialog)
             {

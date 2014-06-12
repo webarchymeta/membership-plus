@@ -8,6 +8,8 @@ using System.ServiceModel.Activation;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Web.Script.Serialization;
+using Microsoft.AspNet.Identity;
+using Archymeta.Web.Security.Resources;
 using Archymeta.Web.Search.Proxies;
 using Archymeta.Web.MembershipPlus.AppLayer.Models;
 using CryptoGateway.RDB.Data.MembershipPlus;
@@ -49,6 +51,46 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                     case EntitySetType.MemberNotification:
                         {
                             MemberNotificationServiceProxy svc = new MemberNotificationServiceProxy();
+                            var si = await svc.GetSetInfoAsync(ApplicationContext.ClientContext, filter);
+                            JavaScriptSerializer ser = new JavaScriptSerializer();
+                            string json = ser.Serialize(new { EntityCount = si.EntityCount, Sorters = si.Sorters });
+                            return json;
+                        }
+                    case EntitySetType.ShortMessage:
+                        {
+                            if (filter == null)
+                                throw new Exception("The page is not properly parameterized!");
+                            else
+                            {
+                                Func<string, string, int> count = (s, p) =>
+                                {
+                                    int _cnt = 0;
+                                    int i = 0;
+                                    while ((i = s.IndexOf(p, i)) != -1)
+                                    {
+                                        _cnt++;
+                                        i += p.Length;
+                                    }
+                                    return _cnt;
+                                };
+                                if (filter.Contains("ToID is null") && filter.Contains("___usergroups___") && count(filter, "||") == 0)
+                                {
+                                    string[] mbgrpIds = await GroupChatViewContext.UserGroupChatMembers(System.Web.HttpContext.Current.User.Identity.GetUserId());
+                                    if (mbgrpIds == null || mbgrpIds.Length == 0)
+                                        throw new Exception(ResourceUtils.GetString("234038e6185f013e25d0213c06f5a0e9", "You are not a member of any chat group."));
+                                    string groupexpr = "";
+                                    foreach (var gid in mbgrpIds)
+                                        groupexpr += (groupexpr != "" ? " || " : "") + "GroupID == \"" + gid + "\"";
+                                    filter = filter.Replace("___usergroups___", groupexpr);
+                                }
+                                else if (filter.EndsWith("&& ToID is not null && GroupID is null && ( ToID == \"{0}\" || FromID == \"{0}\" )") && count(filter, "||") == 1)
+                                {
+                                    filter = string.Format(filter, System.Web.HttpContext.Current.User.Identity.GetUserId());
+                                }
+                                else
+                                    throw new Exception("The page is not properly parameterized!");
+                            }
+                            ShortMessageServiceProxy svc = new ShortMessageServiceProxy();
                             var si = await svc.GetSetInfoAsync(ApplicationContext.ClientContext, filter);
                             JavaScriptSerializer ser = new JavaScriptSerializer();
                             string json = ser.Serialize(new { EntityCount = si.EntityCount, Sorters = si.Sorters });
@@ -114,6 +156,22 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                             string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
                             return json;
                         }
+                    case EntitySetType.ShortMessage:
+                        {
+                            var ser1 = new DataContractJsonSerializer(typeof(List<QToken>));
+                            var ser2 = new DataContractJsonSerializer(typeof(TokenOptions));
+                            System.IO.MemoryStream strm = new System.IO.MemoryStream();
+                            byte[] sbf = System.Text.Encoding.UTF8.GetBytes(sorters);
+                            strm.Write(sbf, 0, sbf.Length);
+                            strm.Position = 0;
+                            var _sorters = ser1.ReadObject(strm) as List<QToken>;
+                            var svc = new ShortMessageServiceProxy();
+                            var result = await svc.GetNextSorterOpsAsync(ApplicationContext.ClientContext, _sorters);
+                            strm = new System.IO.MemoryStream();
+                            ser2.WriteObject(strm, result);
+                            string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
+                            return json;
+                        }
                 }
             }
             return null;
@@ -144,8 +202,8 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                         }
                     case EntitySetType.Role:
                         {
-                            DataContractJsonSerializer ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
-                            DataContractJsonSerializer ser2 = new DataContractJsonSerializer(typeof(TokenOptions));
+                            var ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
+                            var ser2 = new DataContractJsonSerializer(typeof(TokenOptions));
                             System.IO.MemoryStream strm = new System.IO.MemoryStream();
                             byte[] sbf = System.Text.Encoding.UTF8.GetBytes(qexpr);
                             strm.Write(sbf, 0, sbf.Length);
@@ -160,14 +218,30 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                         }
                     case EntitySetType.MemberNotification:
                         {
-                            DataContractJsonSerializer ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
-                            DataContractJsonSerializer ser2 = new DataContractJsonSerializer(typeof(TokenOptions));
+                            var ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
+                            var ser2 = new DataContractJsonSerializer(typeof(TokenOptions));
                             System.IO.MemoryStream strm = new System.IO.MemoryStream();
                             byte[] sbf = System.Text.Encoding.UTF8.GetBytes(qexpr);
                             strm.Write(sbf, 0, sbf.Length);
                             strm.Position = 0;
                             var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
                             MemberNotificationServiceProxy svc = new MemberNotificationServiceProxy();
+                            var result = await svc.GetNextFilterOpsAsync(ApplicationContext.ClientContext, _qexpr, "");
+                            strm = new System.IO.MemoryStream();
+                            ser2.WriteObject(strm, result);
+                            string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
+                            return json;
+                        }
+                    case EntitySetType.ShortMessage:
+                        {
+                            var ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
+                            var ser2 = new DataContractJsonSerializer(typeof(TokenOptions));
+                            System.IO.MemoryStream strm = new System.IO.MemoryStream();
+                            byte[] sbf = System.Text.Encoding.UTF8.GetBytes(qexpr);
+                            strm.Write(sbf, 0, sbf.Length);
+                            strm.Position = 0;
+                            var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
+                            var svc = new ShortMessageServiceProxy();
                             var result = await svc.GetNextFilterOpsAsync(ApplicationContext.ClientContext, _qexpr, "");
                             strm = new System.IO.MemoryStream();
                             ser2.WriteObject(strm, result);
@@ -274,6 +348,69 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                 strm.Write(sbf, 0, sbf.Length);
                                 strm.Position = 0;
                                 _prevlast = ser2.ReadObject(strm) as MemberNotification;
+                            }
+                            var result = await svc.NextPageBlockAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
+                            strm = new System.IO.MemoryStream();
+                            ser3.WriteObject(strm, result);
+                            string json = System.Text.Encoding.UTF8.GetString(strm.ToArray());
+                            return json;
+                        }
+                    case EntitySetType.ShortMessage:
+                        {
+                            DataContractJsonSerializer ser1 = new DataContractJsonSerializer(typeof(QueryExpresion));
+                            DataContractJsonSerializer ser2 = new DataContractJsonSerializer(typeof(ShortMessage));
+                            DataContractJsonSerializer ser3 = new DataContractJsonSerializer(typeof(ShortMessagePageBlock));
+                            System.IO.MemoryStream strm = new System.IO.MemoryStream();
+                            byte[] sbf = System.Text.Encoding.UTF8.GetBytes(qexpr);
+                            strm.Write(sbf, 0, sbf.Length);
+                            strm.Position = 0;
+                            var _qexpr = ser1.ReadObject(strm) as QueryExpresion;
+                            var svc = new ShortMessageServiceProxy();
+                            var _set = new ShortMessageSet();
+                            _set.PageBlockSize = int.Parse(sobj["pageBlockSize"]);
+                            _set.PageSize_ = int.Parse(sobj["pageSize"]);
+                            if (!sobj.ContainsKey("setFilter"))
+                                throw new Exception("The page is not properly parameterized!");
+                            else
+                            {
+                                Func<string, string, int> count = (s,p) =>
+                                {
+                                    int _cnt = 0;
+                                    int i = 0;
+                                    while ((i = s.IndexOf(p, i)) != -1)
+                                    {
+                                        _cnt++;
+                                        i += p.Length;
+                                    }
+                                    return _cnt;
+                                };
+                                string filter = sobj["setFilter"];
+                                if (filter.Contains("ToID is null") && filter.Contains("___usergroups___") && count(filter,"||") == 0)
+                                {
+                                    string[] mbgrpIds = await GroupChatViewContext.UserGroupChatMembers(System.Web.HttpContext.Current.User.Identity.GetUserId());
+                                    if (mbgrpIds == null || mbgrpIds.Length == 0)
+                                        throw new Exception(ResourceUtils.GetString("234038e6185f013e25d0213c06f5a0e9", "You are not a member of any chat group."));
+                                    string groupexpr = "";
+                                    foreach (var gid in mbgrpIds)
+                                        groupexpr += (groupexpr != "" ? " || " : "") + "GroupID == \"" + gid + "\"";
+                                    _set.SetFilter = filter.Replace("___usergroups___", groupexpr);
+                                }
+                                else if (filter.EndsWith("&& ToID is not null && GroupID is null && ( ToID == \"{0}\" || FromID == \"{0}\" )") && count(filter,"||") == 1)
+                                {
+                                    filter = string.Format(filter, System.Web.HttpContext.Current.User.Identity.GetUserId());
+                                    _set.SetFilter = filter;
+                                }
+                                else
+                                    throw new Exception("The page is not properly parameterized!");
+                            }
+                            ShortMessage _prevlast = null;
+                            if (!string.IsNullOrEmpty(prevlast))
+                            {
+                                strm = new System.IO.MemoryStream();
+                                sbf = System.Text.Encoding.UTF8.GetBytes(prevlast);
+                                strm.Write(sbf, 0, sbf.Length);
+                                strm.Position = 0;
+                                _prevlast = ser2.ReadObject(strm) as ShortMessage;
                             }
                             var result = await svc.NextPageBlockAsync(ApplicationContext.ClientContext, _set, _qexpr, _prevlast);
                             strm = new System.IO.MemoryStream();

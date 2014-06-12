@@ -47,5 +47,47 @@ namespace MemberAdminMvc5.Controllers
             var data = await MemberViewContext.GetBriefMemberDetails(id);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult SearchGroupMessages()
+        {
+            ViewBag.AppName = Startup.App.Name;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> GetGroupMessages(string set, string qexpr, string prevlast)
+        {
+            var hub = new SignalRHubs.NotificationHub();
+            var msgs = await GroupChatViewContext.GetMessages(hub.HubIdentity, User.Identity.GetUserId(), set, qexpr, prevlast);
+            return Json(msgs);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> LoadGroupMessageDetails(string groupId, string userId, string msgId)
+        {
+            var hub = new SignalRHubs.NotificationHub();
+            var msg = await GroupChatViewContext.LoadGroupMessageDetails(hub.HubIdentity, groupId, User.Identity.GetUserId(), msgId);
+            return Json(msg);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult SearchPrivateMessages()
+        {
+            ViewBag.AppName = Startup.App.Name;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> GetPrivateMessages(string set, string qexpr, string prevlast)
+        {
+            string data = await PrivateChatViewContext.GetMessages(User.Identity.GetUserId(), set, qexpr, prevlast);
+            return Json(data);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Configuration;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Web.Script.Serialization;
+using HtmlAgilityPack;
 using CryptoGateway.RDB.Data.MembershipPlus;
 using Archymeta.Web.Security.Resources;
 using Archymeta.Web.MembershipPlus.AppLayer.Models;
@@ -78,7 +80,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                 new QToken { TkName = "GroupName" }
             });
             qexpr.FilterTks = new List<QToken>(new QToken[] { 
-                new QToken { TkName = "GroupTypeID == 7 && ParentID is null" }
+                new QToken { TkName = "GroupTypeID == " + ApplicationContext.ChatGroupTypeID + " && ParentID is null" }
             });
             m.TopRooms = new List<EntityAbs<UserGroup>>();
             var roots = await gsvc.QueryDatabaseAsync(cntx, new UserGroupSet(), qexpr);
@@ -94,7 +96,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                 new QToken { TkName = "UserID" }
             });
             qexpr.FilterTks = new List<QToken>(new QToken[] { 
-                new QToken { TkName = "UserGroupRef.GroupTypeID == 7 && UserID == \"" + uId + "\""  }
+                new QToken { TkName = "UserGroupRef.GroupTypeID == " + ApplicationContext.ChatGroupTypeID + " && UserID == \"" + uId + "\""  }
             });
             var recs = await uigsvc.QueryDatabaseAsync(cntx, new UserGroupMemberSet(), qexpr);
             if (recs.Count() > 0)
@@ -198,7 +200,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     var cond = new ShortMessageSetConstraints
                     {
                         ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = AppId },
-                        TypeIDWrap = new ForeignKeyData<int> { KeyValue = 1 },
+                        TypeIDWrap = new ForeignKeyData<int> { KeyValue = ApplicationContext.ChatShortMsgTypeId },
                         GroupIDWrap = new ForeignKeyData<string> { KeyValue = groupId }
                     };
                     UserGroupMemberServiceProxy uigsvc = new UserGroupMemberServiceProxy();
@@ -271,7 +273,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             var cond = new ShortMessageSetConstraints
             {
                 ApplicationIDWrap = new ForeignKeyData<string> { KeyValue = AppId },
-                TypeIDWrap = new ForeignKeyData<int> { KeyValue = 1 },
+                TypeIDWrap = new ForeignKeyData<int> { KeyValue = ApplicationContext.ChatShortMsgTypeId },
                 GroupIDWrap = new ForeignKeyData<string> { KeyValue = groupId },
                 ToIDWrap = new ForeignKeyData<string> { KeyValue = null }
             };
@@ -509,13 +511,14 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             {
                 ID = Guid.NewGuid().ToString(),
                 ApplicationID = AppId,
-                TypeID = 1,
+                TypeID = ApplicationContext.ChatShortMsgTypeId,
                 GroupID = groupId,
                 FromID = userId,
                 ToID = null,
                 ReplyToID = string.IsNullOrEmpty(replyId) ? null : replyId,
                 CreatedDate = now,
                 LastModified = now,
+                MsgTitle = GetLeadText(message),
                 MsgText = message
             };
             await msvc.AddOrUpdateEntitiesAsync(cntx, new ShortMessageSet(), new ShortMessage[] { msg });
@@ -541,7 +544,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             MemberCallbackServiceProxy mcbsvc = new MemberCallbackServiceProxy();
             string noticeMsg = "Group message by " + u.Username + " in " + g.DistinctString;
             MemberNotificationTypeServiceProxy ntsvc = new MemberNotificationTypeServiceProxy();
-            var ntype = await ntsvc.LoadEntityByKeyAsync(cntx,2);
+            var ntype = await ntsvc.LoadEntityByKeyAsync(cntx, ApplicationContext.NewMessageNoticeTypeId);
             foreach (var m in gmbs)
             {
                 if (m.ActivityNotification.HasValue && m.ActivityNotification.Value)
@@ -561,7 +564,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     PriorityLevel = 0,
                     ReadCount = 0,
                     ApplicationID = AppId,
-                    TypeID = 2,
+                    TypeID = ApplicationContext.NewMessageNoticeTypeId,
                     UserID = userId
                 });
             }
@@ -602,7 +605,10 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             var msg = await msvc.LoadEntityByKeyAsync(cntx, msgId);
             if (msg == null || msg.FromID != userId)
                 return null;
+            if (msg.MsgText == message)
+                return null;
             var now = DateTime.UtcNow;
+            msg.MsgTitle = GetLeadText(message);
             msg.MsgText = message;
             msg.LastModified = now;
             await msvc.AddOrUpdateEntitiesAsync(cntx, new ShortMessageSet(), new ShortMessage[] { msg });
@@ -628,7 +634,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             MemberCallbackServiceProxy mcbsvc = new MemberCallbackServiceProxy();
             string noticeMsg = "Group message by " + u.Username + " updated in " + g.DistinctString;
             MemberNotificationTypeServiceProxy ntsvc = new MemberNotificationTypeServiceProxy();
-            var ntype = await ntsvc.LoadEntityByKeyAsync(cntx, 2);
+            var ntype = await ntsvc.LoadEntityByKeyAsync(cntx, ApplicationContext.NewMessageNoticeTypeId);
             foreach (var m in gmbs)
             {
                 if (m.ActivityNotification.HasValue && m.ActivityNotification.Value)
@@ -648,7 +654,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     PriorityLevel = 0,
                     ReadCount = 0,
                     ApplicationID = AppId,
-                    TypeID = 2,
+                    TypeID = ApplicationContext.NewMessageNoticeTypeId,
                     UserID = userId
                 });
             }
@@ -703,9 +709,12 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
 
         private static DateTime unix0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
-        public static string getUnixJsonTime(DateTime dt)
+        public static string getUnixJsonTime(DateTime? dt)
         {
-            return @"""/Date(" + (dt.ToUniversalTime() - unix0).Ticks/10000 + @")/""";
+            if (dt.HasValue)
+                return @"""/Date(" + (dt.Value.ToUniversalTime() - unix0).Ticks / 10000 + @")/""";
+            else
+                return "??";
         }
 
         public static string GetJsonPeer(MemberCallback peer)
@@ -735,6 +744,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             json += @"""replyToId"": """ + (msg.ReplyToID == null ? "" : msg.ReplyToID) + @""", ";
             json += @"""date"": " + getUnixJsonTime(msg.CreatedDate) + @", ";
             json += @"""self"": " + (msg.FromID == userId ? "true" : "false") + @", ";
+            json += @"""lead"": """ + GetLeadText(msg.MsgText).Replace("\"", "\\\"") + @""", ";
             json += @"""text"": """ + msg.MsgText.Replace("\"", "\\\"") + @""", ";
             json += @"""score"": ";
             if (msg.ChangedShortMessageAudiences != null)
@@ -760,6 +770,49 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             }
             json += " }";
             return json;
+        }
+
+        public static string GetLeadText(string html)
+        {
+            html = HttpUtility.UrlDecode(html);
+            int maxLenght = 15;
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+            StringBuilder sb = new StringBuilder();
+            getText(doc.DocumentNode, sb, maxLenght);
+            if (sb.Length > maxLenght)
+                sb = sb.Remove(maxLenght, sb.Length - maxLenght);
+            return sb.ToString().TrimEnd() + "...";
+        }
+
+        private static void getText(HtmlNode n, StringBuilder sb, int? maxLength)
+        {
+            if (n.NodeType == HtmlNodeType.Text)
+            {
+                string[] lines = n.InnerText.Split('\n');
+                bool done = false;
+                for (int i = 0; i < lines.Length && !done;i++ )
+                {
+                    if (!string.IsNullOrWhiteSpace(lines[i]))
+                    {
+                        var line = Regex.Replace(lines[i].TrimEnd('\r'), @"\t+", " ");
+                        line = Regex.Replace(line, @"\s{2,}", " ");
+                        done = maxLength.HasValue && sb.Length + line.Length >= maxLength.Value;
+                        if (done)
+                            line = line.Substring(0, line.Length - sb.Length);
+                        sb.Append(line + " ");
+                    }
+                }
+            }
+            else
+            {
+                foreach (var c in n.ChildNodes)
+                {
+                    getText(c, sb, maxLength);
+                    if (maxLength.HasValue && sb.Length >= maxLength.Value)
+                        break;
+                }
+            }
         }
 
         /// <summary>

@@ -279,10 +279,7 @@ function registerClientMethods(hub) {
                 appendMessage(root.Messages, msgObj);
                 //var div = $("#" + msgObj.replyToId)[0];
                 //div.scrollIntoView();
-                var str = unescape(msgObj.text);
-                if (str.length > 15) {
-                    str = str.substr(0, 15) + '...';
-                }
+                var str = unescape(msgObj.lead);
                 root.MessageLinks.push(new ChatMsgLink(msgObj.id, '[' + msgObj.from + ']: ' + str));
             }
             beep(10, 2, function () {
@@ -298,10 +295,7 @@ function registerClientMethods(hub) {
         try {
             var msgObj = JSON.parse(msg);
             updateMessage(root.Messages, msgId, msgObj);
-            var str = unescape(msgObj.text);
-            if (str.length > 15) {
-                str = str.substr(0, 15) + '...';
-            }
+            var str = unescape(msgObj.lead);
             root.MessageLinks.push(new ChatMsgLink(msgObj.id, '[' + msgObj.from + ']: ' + str));
             //beep(10, 2, function () {
 

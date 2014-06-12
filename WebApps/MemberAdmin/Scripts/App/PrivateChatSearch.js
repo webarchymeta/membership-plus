@@ -4,7 +4,10 @@ function startPrivateChat(data, event) {
     var panel = $("#privateChatPopup");
     var userName = $("#userName");
     var content = $("#chatPage");
-    userName.text(data.data.Username);
+    if (typeof data.data != 'undefined')
+        userName.text(data.data.Username);
+    else if (typeof data.from != 'undefined')
+        userName.text(data.from.name);
     if (!modalInitialized) {
         panel.modal({ keyboard: false, backdrop: "static" });
         panel.on("hidden.bs.modal", function () {
@@ -14,7 +17,10 @@ function startPrivateChat(data, event) {
         modalInitialized = true;
     }
     panel.modal('show');
-    content[0].src = appRoot + 'PrivateChat/ChatPopup?toId=' + data.data.ID; 
+    if (typeof data.data != 'undefined')
+        content[0].src = appRoot + 'PrivateChat/ChatPopup?toId=' + data.data.ID;
+    else if (typeof data.from != 'undefined')
+        content[0].src = appRoot + 'PrivateChat/ChatPopup?toId=' + data.from.id;
     event.stopPropagation();
     return false;
 }
@@ -23,7 +29,10 @@ function startPrivateMessage(data, event) {
     var panel = $("#privateChatPopup");
     var userName = $("#userName");
     var content = $("#chatPage");
-    userName.text(data.data.Username);
+    if (typeof data.data != 'undefined')
+        userName.text(data.data.Username);
+    else if (typeof data.from != 'undefined')
+        userName.text(data.from.name);
     if (!modalInitialized) {
         panel.modal({ keyboard: false, backdrop: "static" });
         panel.on("hidden.bs.modal", function () {
@@ -33,7 +42,10 @@ function startPrivateMessage(data, event) {
         modalInitialized = true;
     }
     panel.modal('show');
-    content[0].src = appRoot + 'PrivateChat/MessagePopup?toId=' + data.data.ID;
+    if (typeof data.data != 'undefined')
+        content[0].src = appRoot + 'PrivateChat/MessagePopup?toId=' + data.data.ID;
+    else if (typeof data.from != 'undefined')
+        content[0].src = appRoot + 'PrivateChat/MessagePopup?toId=' + data.from.id;
     event.stopPropagation();
     return false;
 }
