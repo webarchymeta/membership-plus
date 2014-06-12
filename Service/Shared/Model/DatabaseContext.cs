@@ -70,6 +70,21 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         [EnumMember]
         EventCalendarShareCircle,
         /// <summary>
+        /// It represents data set <c>EventLocations</c> (see <see cref="EventLocation" />).
+        /// </summary>
+        [EnumMember]
+        EventLocation,
+        /// <summary>
+        /// It represents data set <c>EventLogs</c> (see <see cref="EventLog" />).
+        /// </summary>
+        [EnumMember]
+        EventLog,
+        /// <summary>
+        /// It represents data set <c>EventStackFrames</c> (see <see cref="EventStackFrame" />).
+        /// </summary>
+        [EnumMember]
+        EventStackFrame,
+        /// <summary>
         /// It represents data set <c>EventTypes</c> (see <see cref="EventType" />).
         /// </summary>
         [EnumMember]
@@ -274,9 +289,9 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     [Serializable]
     public class EntitySetRelation
     {
-    /// <summary>
-    /// A set in question.
-    /// </summary>
+        /// <summary>
+        /// A set in question.
+        /// </summary>
         [DataMember]
         public EntitySetType SetType
         {
@@ -284,15 +299,26 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             set;
         }
 
-    /// <summary>
-    /// A list of related sets.
-    /// </summary>
+        /// <summary>
+        /// A list of related sets.
+        /// </summary>
         [DataMember]
         public EntitySetType[] RelatedSets
         {
             get;
             set;
         }
+
+        /// <summary>
+        /// Whether or not to take precedence when there are exclusion rules for this set. The default is false.
+        /// </summary>
+        [DataMember]
+        public bool TakePrecedence
+        {
+            get { return _takePrecedence; }
+            set { _takePrecedence = value; }
+        }
+        private bool _takePrecedence = false;
 
     }
 

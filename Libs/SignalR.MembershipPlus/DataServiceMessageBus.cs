@@ -143,7 +143,8 @@ namespace Archymeta.Web.MembershipPlus.SignalR
                     TkName = "ApplicationID == \"" + config.App.ID + "\""
                 });
                 sub.EntityFilter = qexpr;
-                svc.SubscribeToUpdates(Cntx.CallerID, new SetSubscription[] { sub });
+                var cntx = Cntx;
+                svc.SubscribeToUpdates(cntx, cntx.CallerID, cntx.CallerID, new SetSubscription[] { sub });
                 _trace.TraceWarning("Subscription done.");
                 CallbackFailed = false;
             }

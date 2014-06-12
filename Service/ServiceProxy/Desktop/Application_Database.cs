@@ -132,7 +132,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///    <item>
     ///      <term>Methods</term>
     ///      <description>
-    ///        <see cref="Application_ServiceProxy.MaterializeAnnouncements" />, <see cref="Application_ServiceProxy.MaterializeCommunications" />, <see cref="Application_ServiceProxy.MaterializeEventCalendars" />, <see cref="Application_ServiceProxy.MaterializeMemberNotifications" />, <see cref="Application_ServiceProxy.MaterializeRoles" />, <see cref="Application_ServiceProxy.MaterializeShortMessages" />, <see cref="Application_ServiceProxy.MaterializeSignalRHostStates" />, <see cref="Application_ServiceProxy.MaterializeSignalRMessages" />, <see cref="Application_ServiceProxy.MaterializeUserAppMembers" />, <see cref="Application_ServiceProxy.MaterializeUserDetails" />, <see cref="Application_ServiceProxy.MaterializeUserGroups" />, <see cref="Application_ServiceProxy.MaterializeUserProfiles" />.
+    ///        <see cref="Application_ServiceProxy.MaterializeAnnouncements" />, <see cref="Application_ServiceProxy.MaterializeCommunications" />, <see cref="Application_ServiceProxy.MaterializeEventCalendars" />, <see cref="Application_ServiceProxy.MaterializeEventLogs" />, <see cref="Application_ServiceProxy.MaterializeMemberNotifications" />, <see cref="Application_ServiceProxy.MaterializeRoles" />, <see cref="Application_ServiceProxy.MaterializeShortMessages" />, <see cref="Application_ServiceProxy.MaterializeSignalRHostStates" />, <see cref="Application_ServiceProxy.MaterializeSignalRMessages" />, <see cref="Application_ServiceProxy.MaterializeUserAppMembers" />, <see cref="Application_ServiceProxy.MaterializeUserDetails" />, <see cref="Application_ServiceProxy.MaterializeUserGroups" />, <see cref="Application_ServiceProxy.MaterializeUserProfiles" />.
     ///      </description>
     ///    </item>
     ///  </list>
@@ -257,7 +257,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedEventLogs" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -304,7 +304,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  not set to <c>true</c>. 
         ///  </para>
         ///  <para>
-        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
+        ///  Clients can also create and add to member collections in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedEventLogs" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } entities that depends on an currently added or updated entity. These 
         ///  additional entities will be add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -362,7 +362,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedEventLogs" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -418,7 +418,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         ///  proceeding to the next steps.
         ///  </para>
         ///  <para>
-        ///  Clients can set some of the member entities in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } that an currently added or updated entity depends upon. These additional entities will be 
+        ///  Clients can set some of the member entities in { <see cref="Application_.ChangedAnnouncements" />, <see cref="Application_.ChangedCommunications" />, <see cref="Application_.ChangedEventCalendars" />, <see cref="Application_.ChangedEventLogs" />, <see cref="Application_.ChangedMemberNotifications" />, <see cref="Application_.ChangedRoles" />, <see cref="Application_.ChangedShortMessages" />, <see cref="Application_.ChangedSignalRHostStates" />, <see cref="Application_.ChangedSignalRMessages" />, <see cref="Application_.ChangedUserAppMembers" />, <see cref="Application_.ChangedUserDetails" />, <see cref="Application_.ChangedUserGroups" />, <see cref="Application_.ChangedUserProfiles" /> } that an currently added or updated entity depends upon. These additional entities will be 
         ///  add or updated to the data source following the same logic, all the object relationships will be properly setup if the operation is successful.
         ///  </para>
         ///  <para>
@@ -1027,6 +1027,100 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             try
             {
                 return (await Channel.MaterializeAllEventCalendarsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the set of depending entities "EventLogs" of type <see cref="EventLogSet" /> of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="EventLogSet" />.
+        /// </returns>
+        public EventLogSet MaterializeEventLogs(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return Channel.MaterializeEventLogs(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the set of depending entities "EventLogs" of type <see cref="EventLogSet" /> of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <remarks>
+        ///  The set returned is a filtered subset whose members are all depending on the entity.
+        /// </remarks>
+        /// <returns>
+        ///   An entity of type <see cref="EventLogSet" />.
+        /// </returns>
+        public async System.Threading.Tasks.Task<EventLogSet> MaterializeEventLogsAsync(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return await Channel.MaterializeEventLogsAsync(cntx, entity.ShallowCopy());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        ///   Load the collection of depending entities "AllEventLogs" of type <see cref="IEnumerable{EventLog}" /> (T = <see cref="EventLog" />) of the entity. 
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{EventLog}" /> (T = <see cref="EventLog" />).
+        /// </returns>
+        public IEnumerable<EventLog> MaterializeAllEventLogs(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return Channel.MaterializeAllEventLogs(cntx, entity.ShallowCopy()).Select(d => { d.StartAutoUpdating = true; return d; });
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+                return null;
+            }
+        }
+
+#if SUPPORT_ASYNC
+        /// <summary>
+        ///   Load the collection of depending entities "AllEventLogs" of type <see cref="IEnumerable{EventLog}" /> (T = <see cref="EventLog" />) of the entity. Awaitable asynchronous version.
+        /// </summary>
+        /// <param name="cntx">Authenticated caller context object. If cannot be null.</param>
+        /// <param name="entity">The entity.</param>
+        /// <returns>
+        ///   An collecton of type <see cref="IEnumerable{EventLog}" /> (T = <see cref="EventLog" />).
+        /// </returns>
+        public async System.Threading.Tasks.Task<IEnumerable<EventLog>> MaterializeAllEventLogsAsync(CallContext cntx, Application_ entity)
+        {
+            try
+            {
+                return (await Channel.MaterializeAllEventLogsAsync(cntx, entity.ShallowCopy())).Select(d => { d.StartAutoUpdating = true; return d; });
             }
             catch (Exception ex)
             {

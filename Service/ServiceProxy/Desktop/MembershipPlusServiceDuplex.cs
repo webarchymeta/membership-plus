@@ -181,14 +181,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Register a subscription to notification of data source changes.
         /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="cntx">Caller supplied and initialized caller context. If it is null, the service will create an initial one.</param>
+        /// <param name="ownerID">An identifier for a "user" that owns the subscription. An owner can change or un-subscribe an subscription.</param>
+        /// <param name="subscribeID">An identifier that the client use to keep track of its subscriptions.</param>
         /// <param name="sets">A list of data sets and optional corresponding entity filters that the server uses to notify client of changes. If it is set to null, then change notifications 
         /// about all data sets will be sent to the client.</param>
-        public void SubscribeToUpdates(string clientID, SetSubscription[] sets)
+        public void SubscribeToUpdates(CallContext cntx, string userID, string subscribeID, SetSubscription[] sets)
         {
             try
             {
-                Channel.SubscribeToUpdates(clientID, sets);
+                Channel.SubscribeToUpdates(cntx, userID, subscribeID, sets);
             }
             catch (Exception ex)
             {
@@ -201,14 +203,16 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// Register a subscription to notification of data source changes.
         /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
+        /// <param name="cntx">Caller supplied and initialized caller context. If it is null, the service will create an initial one.</param>
+        /// <param name="ownerID">An identifier for a "user" that owns the subscription. An owner can change or un-subscribe an subscription.</param>
+        /// <param name="subscribeID">An identifier that the client use to keep track of its subscriptions.</param>
         /// <param name="sets">A list of data sets and optional corresponding entity filters that the server uses to notify client of changes. If it is set to null, then change notifications 
         /// about all data sets will be sent to the client.</param>
-        public async System.Threading.Tasks.Task SubscribeToUpdatesAsync(string clientID, SetSubscription[] sets)
+        public async System.Threading.Tasks.Task SubscribeToUpdatesAsync(CallContext cntx, string ownerID, string subscribeID, SetSubscription[] sets)
         {
             try
             {
-                await Channel.SubscribeToUpdatesAsync(clientID, sets);
+                await Channel.SubscribeToUpdatesAsync(cntx, ownerID, subscribeID, sets);
             }
             catch (Exception ex)
             {
@@ -221,12 +225,14 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// un-register a subscription to data source change notifications.
         /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        public void UnsubscribeToUpdates(string clientID)
+        /// <param name="cntx">Caller supplied and initialized caller context. If it is null, the service will create an initial one.</param>
+        /// <param name="ownerID">An identifier for a "user" that owns the subscription. An owner can change or un-subscribe an subscription.</param>
+        /// <param name="subscribeID">An identifier that the client use to keep track of its subscriptions.</param>
+        public void UnsubscribeToUpdates(CallContext cntx, string ownerID, string subscribeID)
         {
             try
             {
-                Channel.UnsubscribeToUpdates(clientID);
+                Channel.UnsubscribeToUpdates(cntx, ownerID, subscribeID);
             }
             catch (Exception ex)
             {
@@ -239,13 +245,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         /// <summary>
         /// un-register a subscription to data source change notifications.
         /// </summary>
-        /// <param name="clientID">An identifier that the client is assigned during signin/initialization stage.</param>
-        public async System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(string clientID)
+        /// <param name="cntx">Caller supplied and initialized caller context. If it is null, the service will create an initial one.</param>
+        /// <param name="ownerID">An identifier for a "user" that owns the subscription. An owner can change or un-subscribe an subscription.</param>
+        /// <param name="subscribeID">An identifier that the client use to keep track of its subscriptions.</param>
+        public async System.Threading.Tasks.Task UnsubscribeToUpdatesAsync(CallContext cntx, string ownerID, string subscribeID)
         {
 
             try
             {
-                await Channel.UnsubscribeToUpdatesAsync(clientID);
+                await Channel.UnsubscribeToUpdatesAsync(cntx, ownerID, subscribeID);
             }
             catch (Exception ex)
             {
