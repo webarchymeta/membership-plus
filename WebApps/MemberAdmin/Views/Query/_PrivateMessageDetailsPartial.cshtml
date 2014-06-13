@@ -1,1 +1,115 @@
-﻿
+﻿@using Archymeta.Web.Security.Resources;
+<script id="selfMsgTempl" type="text/html">
+    <table>
+        <tr>
+            <td rowspan="2" class="icon-style">
+                <!-- ko if: from.icon -->
+                <img data-bind="attr: {src: fromIconUrl}" />
+                <!-- /ko -->
+                <!-- ko ifnot: from.icon -->
+                <span class="ion-android-contact"></span>
+                <!-- /ko -->
+            </td>
+            <td class="msg-content">
+                <div class="msg-header">
+                    <div class="msg-sender">
+                        <a data-bind="attr: {name: id}"><label>@ResourceUtils.GetString("ab86a1e1ef70dff97959067b723c5c25", "me")</label></a>
+                        <span class="ion-android-volume"></span>
+                    </div>
+                    <div class="msg-time">
+                        <span data-bind="localdatetime: date"></span>
+                        <span class="glyphicon glyphicon-heart"></span>
+                        <span data-bind="text: score"></span>
+                    </div>
+                </div>
+                <!-- ko ifnot: isMatch -->
+                <div class="msg-body">
+                    <div class="text" data-bind="html: text"></div>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: isMatch -->
+                <div class="msg-body match-msg-body">
+                    <div class="text" data-bind="html: text"></div>
+                </div>
+                <!-- /ko -->
+            </td>
+        </tr>
+        <!-- ko if: Replies().length > 0 -->
+        <tr>
+            <td>
+                <div class="reply-message-list" data-bind="attr: {id: id}">
+                    <table>
+                        <tbody data-bind="template: {name: 'msgListTempl', foreach: Replies}"></tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <!-- /ko -->
+    </table>
+</script>
+<script id="msgTempl" type="text/html">
+    <table>
+        <tr>
+            <td rowspan="3" class="icon-style">
+                <!-- ko if: from.icon -->
+                <img data-bind="attr: {src: fromIconUrl}" />
+                <!-- /ko -->
+                <!-- ko ifnot: from.icon -->
+                <span class="ion-android-contact"></span>
+                <!-- /ko -->
+            </td>
+            <td class="msg-content">
+                <div class="msg-header">
+                    <div class="msg-sender">
+                        <a data-bind="attr: {name: id}">
+                            <label data-bind="text: from.name"></label>
+                        </a>
+                        <span class="ion-android-volume"></span>
+                    </div>
+                    <div class="msg-time">
+                        <span data-bind="localdatetime: date"></span>
+                        <span class="glyphicon glyphicon-heart"></span>
+                        <span data-bind="text: score"></span>
+                    </div>
+                </div>
+                <!-- ko ifnot: isMatch -->
+                <div class="msg-body">
+                    <div class="text" data-bind="html: text"></div>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: isMatch -->
+                <div class="msg-body match-msg-body">
+                    <div class="text" data-bind="html: text"></div>
+                </div>
+                <!-- /ko -->
+            </td>
+        </tr>
+        <!-- ko if: Replies().length > 0 -->
+        <tr>
+            <td>
+                <div class="reply-message-list" data-bind="attr: {id: id}">
+                    <table>
+                        <tbody data-bind="template: {name: 'msgListTempl', foreach: Replies}"></tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <!-- /ko -->
+    </table>
+</script>
+<script id="msgListTempl" type="text/html">
+    <!-- ko if: self -->
+    <tr class="self">
+        <td>
+            <div class="msg" data-bind="template: {name:'selfMsgTempl', with: $data}"></div>
+        </td>
+    </tr>
+    <!-- /ko -->
+    <!-- ko ifnot: self -->
+    <tr>
+        <td>
+            <div class="msg" data-bind="template: {name: 'msgTempl', with: $data}"></div>
+        </td>
+    </tr>
+    <!-- /ko -->
+</script>

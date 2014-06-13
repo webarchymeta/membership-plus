@@ -167,7 +167,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             return ar.ToArray();
         }
 
-        public static async Task<string> LoadGroupMessageDetails(string noteHubId, string groupId, string userId, string msgId)
+        public static async Task<string> LoadMessageDetails(string noteHubId, string groupId, string userId, string msgId)
         {
             var cntx = Cntx;
             var gsvc = new UserGroupServiceProxy();
@@ -218,7 +218,20 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
             string json = "{ ";
             json += @"""id"": """ + msg.ID + @""", ";
             json += @"""from"": " + GetJsonUser(msg.User_FromID) + @", ";
-            json += @"""group"": """ + g.DistinctString + @""", ";
+            json += @"""groupNodes"": [ ";
+            string grp = "";
+            string path = "";
+            foreach (var gn in g.DistinctString.Split('/'))
+            {
+                if (gn.Trim().Length > 0)
+                {
+                    path += (path == "" ? "" : "/") + gn;
+                    grp += @"{ ""name"": """ + gn + @""", ""path"": """ + path + @""" }, ";
+                }
+            }
+            if (grp != "")
+                json += grp.TrimEnd(" ,".ToCharArray()) + " ";
+            json +=  "], ";
             json += @"""groupId"": """ + g.ID + @""", ";
             json += @"""replyToId"": """ + (msg.ReplyToID == null ? "" : msg.ReplyToID) + @""", ";
             json += @"""date"": " + GroupChatContext.getUnixJsonTime(msg.CreatedDate) + @", ";
@@ -244,9 +257,9 @@ namespace Archymeta.Web.MembershipPlus.AppLayer
                     string subjson = "";
                     foreach (var r in from d in msg.ChangedShortMessages orderby d.CreatedDate ascending select d)
                         subjson += GetJsonMessage(r, userId, g, true, matchId) + ", ";
-                    json += subjson.TrimEnd(" ,".ToCharArray());
+                    json += subjson.TrimEnd(" ,".ToCharArray()) + " ";
                 }
-                json += " ]";
+                json += "]";
             }
             json += " }";
             return json;

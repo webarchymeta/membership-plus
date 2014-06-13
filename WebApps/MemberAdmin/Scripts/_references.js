@@ -245,3 +245,4 @@
 /// <reference path="ckeditor/plugins/specialchar/dialogs/lang/zh.js" />
 /// <reference path="ckeditor/samples/plugins/dialog/assets/my_dialog.js" />
 /// <reference path="ckeditor/samples/plugins/htmlwriter/assets/outputforflash/swfobject.js" />
+/// <reference path="dataservice/privatemessagesearchpage.js" />

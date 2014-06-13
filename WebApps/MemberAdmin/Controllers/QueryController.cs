@@ -67,10 +67,10 @@ namespace MemberAdminMvc5.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> LoadGroupMessageDetails(string groupId, string userId, string msgId)
+        public async Task<ActionResult> LoadGroupMessageDetails(string groupId, string msgId)
         {
             var hub = new SignalRHubs.NotificationHub();
-            var msg = await GroupChatViewContext.LoadGroupMessageDetails(hub.HubIdentity, groupId, User.Identity.GetUserId(), msgId);
+            var msg = await GroupChatViewContext.LoadMessageDetails(hub.HubIdentity, groupId, User.Identity.GetUserId(), msgId);
             return Json(msg);
         }
 
@@ -86,8 +86,18 @@ namespace MemberAdminMvc5.Controllers
         [Authorize]
         public async Task<ActionResult> GetPrivateMessages(string set, string qexpr, string prevlast)
         {
-            string data = await PrivateChatViewContext.GetMessages(User.Identity.GetUserId(), set, qexpr, prevlast);
-            return Json(data);
+            var hub = new SignalRHubs.NotificationHub();
+            var msgs = await PrivateChatViewContext.GetMessages(hub.HubIdentity, User.Identity.GetUserId(), set, qexpr, prevlast);
+            return Json(msgs);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> LoadPrivateMessageDetails(string msgId)
+        {
+            var hub = new SignalRHubs.NotificationHub();
+            var msg = await PrivateChatViewContext.LoadMessageDetails(hub.HubIdentity, User.Identity.GetUserId(), msgId);
+            return Json(msg);
         }
     }
 }

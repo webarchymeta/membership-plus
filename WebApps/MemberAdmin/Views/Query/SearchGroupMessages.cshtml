@@ -89,7 +89,7 @@
     <table class="gridview table-hover table-striped table-bordered">
         <thead>
             <tr>
-                <th colspan="2">
+                <th>
                     @ResourceUtils.GetString("5da618e8e4b89c66fe86e32cdafde143", "From")
                 </th>
                 <th>
@@ -98,7 +98,7 @@
                 <th>
                     @ResourceUtils.GetString("44749712dbec183e983dcd78a7736c42", "Date")
                 </th>
-                <th>
+                <th colspan="2">
                     @ResourceUtils.GetString("03937134cedab9078be39a77ee3a48a1", "Group");
                 </th>
             </tr>
@@ -114,6 +114,15 @@
                     <!-- /ko -->
                     <span data-bind="text: from.name"></span>
                 </td>
+                <td>
+                    <div data-bind="html: text"></div>
+                </td>
+                <td>
+                    <span data-bind="localdatetime: date"></span>
+                </td>
+                <td>
+                    <div class="group-path" data-bind="html: group"></div>
+                </td>
                 <td style="width:52px;text-wrap:none">
                     <!-- ko ifnot: self -->
                     <!-- ko if: from.active -->
@@ -125,15 +134,6 @@
                         <span class="ion-android-mail" title="@ResourceUtils.GetString("87b8aee35e0a49485138b747b29b8a35", "Leave a private message ...")"></span>
                     </a>
                     <!-- /ko -->
-                </td>
-                <td>
-                    <div data-bind="html: text"></div>
-                </td>
-                <td>
-                    <span data-bind="localdatetime: date"></span>
-                </td>
-                <td>
-                    <span data-bind="text: group"></span>
                 </td>
             </tr>
         </tbody>

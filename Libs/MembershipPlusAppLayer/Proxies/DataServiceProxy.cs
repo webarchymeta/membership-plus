@@ -373,7 +373,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                 throw new Exception("The page is not properly parameterized!");
                             else
                             {
-                                Func<string, string, int> count = (s,p) =>
+                                Func<string, string, int> count = (s, p) =>
                                 {
                                     int _cnt = 0;
                                     int i = 0;
@@ -385,7 +385,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                     return _cnt;
                                 };
                                 string filter = sobj["setFilter"];
-                                if (filter.Contains("ToID is null") && filter.Contains("___usergroups___") && count(filter,"||") == 0)
+                                if (filter.Contains("ToID is null") && filter.Contains("___usergroups___") && count(filter, "||") == 0)
                                 {
                                     string[] mbgrpIds = await GroupChatViewContext.UserGroupChatMembers(System.Web.HttpContext.Current.User.Identity.GetUserId());
                                     if (mbgrpIds == null || mbgrpIds.Length == 0)
@@ -395,7 +395,7 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Proxies
                                         groupexpr += (groupexpr != "" ? " || " : "") + "GroupID == \"" + gid + "\"";
                                     _set.SetFilter = filter.Replace("___usergroups___", groupexpr);
                                 }
-                                else if (filter.EndsWith("&& ToID is not null && GroupID is null && ( ToID == \"{0}\" || FromID == \"{0}\" )") && count(filter,"||") == 1)
+                                else if (filter.EndsWith("&& ToID is not null && GroupID is null && ( ToID == \"{0}\" || FromID == \"{0}\" )") && count(filter, "||") == 1)
                                 {
                                     filter = string.Format(filter, System.Web.HttpContext.Current.User.Identity.GetUserId());
                                     _set.SetFilter = filter;

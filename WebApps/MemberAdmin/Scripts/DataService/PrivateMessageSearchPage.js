@@ -50,15 +50,9 @@ function ShortMessage(data) {
     self.editing = ko.observable(false);
     self.id = data.id;
     self.from = data.from;
-    self.group = '';
-    for (var i = 0; i < data.groupNodes.length; i++) {
-        var g = data.groupNodes[i];
-        self.group += '<a class="groupNode" href="#">' + g.name + '</a>';
-        if (i < data.groupNodes.length - 1)
-            self.group += ' <span class="glyphicon glyphicon-chevron-right"></span> ';
-    }
-    self.groupId = data.groupId;
+    self.to = data.to;
     self.replyToId = data.replyToId;
+    self.isOffline = data.isOffline;
     self.date = data.date;
     self.self = userId == data.from.id;
     self.text0 = unescape(data.text);
@@ -79,13 +73,13 @@ function ShortMessage(data) {
             return "";
         }
     });
-    self.IsTextChanged = ko.computed(function () {
-        if (userId == self.from.id) {
-            return self.text() != self.text0;
+    self.toIconUrl = ko.computed(function () {
+        if (self.from.icon) {
+            return appRoot + 'Account/GetMemberIcon?id=' + self.to.id;
         } else {
-            return false;
+            return "";
         }
-    })
+    });
     self.Replies = ko.observableArray();
     if (typeof data.replies != 'undefined' && data.replies.length > 0) {
         for (var i = 0; i < data.replies.length; i++) {
@@ -97,12 +91,11 @@ function ShortMessage(data) {
             callback(true);
         }
         $.ajax({
-            url: appRoot + "Query/LoadGroupMessageDetails",
+            url: appRoot + "Query/LoadPrivateMessageDetails",
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
-                groupId: self.groupId,
                 msgId: self.id
             }),
             success: function (content) {
@@ -157,11 +150,21 @@ function ShortMessagePage(data) {
             }
         }
         $.ajax({
-            url: appRoot + "Query/GetGroupMessages",
+            url: appRoot + "Query/GetPrivateMessages",
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ set: JSON.stringify({ set: setName, pageBlockSize: s.PageBlockSize(), pageSize: s.PageSize_(), setFilter: s.SetFilter, appName: appName }), qexpr: JSON.stringify(qexpr), prevlast: lastItem == null ? null : JSON.stringify(lastItem) }),
+            data: JSON.stringify({
+                set: JSON.stringify({
+                    set: setName,
+                    pageBlockSize: s.PageBlockSize(),
+                    pageSize: s.PageSize_(),
+                    setFilter: s.SetFilter,
+                    appName: appName
+                }),
+                qexpr: JSON.stringify(qexpr),
+                prevlast: lastItem == null ? null : JSON.stringify(lastItem)
+            }),
             beforeSend: function () {
                 self.Items.removeAll();
             },
@@ -421,7 +424,17 @@ function ShortMessageSet(dataServiceUrl) {
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ sourceId: dataSourceId, set: JSON.stringify({ set: setName, pageBlockSize: self.PageBlockSize(), pageSize: self.PageSize_(), setFilter: self.SetFilter }), qexpr: JSON.stringify(qexpr), prevlast: last == null ? null : JSON.stringify(last) }),
+            data: JSON.stringify({
+                sourceId: dataSourceId,
+                set: JSON.stringify({
+                    set: setName,
+                    pageBlockSize: self.PageBlockSize(),
+                    pageSize: self.PageSize_(),
+                    setFilter: self.SetFilter
+                }),
+                qexpr: JSON.stringify(qexpr),
+                prevlast: last == null ? null : JSON.stringify(last)
+            }),
             beforeSend: function () {
             },
             success: function (content) {

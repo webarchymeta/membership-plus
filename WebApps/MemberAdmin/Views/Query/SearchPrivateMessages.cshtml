@@ -1,6 +1,7 @@
 ﻿@using Archymeta.Web.Security.Resources;
 @using Archymeta.Web.MembershipPlus.AppLayer;
 @using MemberAdminMvc5;
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = ResourceUtils.GetString("2f76b1a7c0a4a5b6216cc80cbff3e5bf", "Private Message Search");
 }
@@ -12,13 +13,15 @@
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/knockout")
     <script src="@Url.Content("~/JavaScript/QueryCustomization?src=")"></script>
-    <script src="@Url.Content("~/Scripts/DataService/ShortMessageSearchPage.js")"></script>
+    <script src="@Url.Content("~/Scripts/DataService/PrivateMessageSearchPage.js")"></script>
+    <script src="@Url.Content("~/Scripts/App/PrivateChatSearch.js")"></script>
     <script type="text/javascript">
         appRoot = '@Url.Content("~/")';
         serviceUrl = appRoot + 'Services/DataService/DataServiceProxy.svc';
         dataSourceId = '';
         setName = 'ShortMessage';
         appName = '@ViewBag.AppName';
+        userId = '@User.Identity.GetUserId()';
         $(function () {
             window.onerror = function () {
                 window.status = '@ResourceUtils.GetString("f4df67025ce1852c05bc18cb1a9d27df", "There were errors getting this page. Try refreshing this page.")';
@@ -85,49 +88,72 @@
     <table class="gridview table-hover table-striped table-bordered">
         <thead>
             <tr>
-                @*<th colspan="2">
-                        @ResourceUtils.GetString("987dce661afca3372aa3e05702fb1d07", "User name")
-                    </th>
-                    <th>
-                        <span class="ion-android-mail"></span>&nbsp;@ResourceUtils.GetString("ce8ae9da5b7cd6c3df2929543a9af92e", "Email")
-                    </th>
-                    <th>
-                        @ResourceUtils.GetString("136494b7688c10b70cd6126c93d375df", "Member Status")
-                    </th>
-                    <th>
-                        @ResourceUtils.GetString("32829ce3587fc0e82056bc8f6b971605", "Last Login")
-                    </th>
-                    <th>
-                        @ResourceUtils.GetString("b32a44eacdc49c3939c6a61405d25651", "Last Active")
-                    </th>*@
+                <th>&nbsp;</th>
+                <th>
+                    @ResourceUtils.GetString("5da618e8e4b89c66fe86e32cdafde143", "From")
+                </th>
+                <th>
+                    @ResourceUtils.GetString("f15c1cae7882448b3fb0404682e17e62", "Content")
+                </th>
+                <th>
+                    @ResourceUtils.GetString("44749712dbec183e983dcd78a7736c42", "Date")
+                </th>
+                <th colspan="2">
+                    @ResourceUtils.GetString("e12167aa0a7698e6ebc92b4ce3909b54", "To")
+                </th>
             </tr>
         </thead>
         <tbody data-bind="foreach: CurrentPage().Items">
-            <tr data-bind="css: {selected: IsEntitySelected()}, click: function(data, event) { selectUser(data, event); }">
-                @*<td>
-                        <!-- ko if: hasIcon -->
-                        <img data-bind="attr: {src: iconUrl}" style="height: 18px; display:inline" />
-                        <!-- /ko -->
-                        <!-- ko ifnot: hasIcon -->
-                        <span class="ion-person"></span>&nbsp;
-                        <!-- /ko -->
-                        <span data-bind="text: data.Username"></span>
-                    </td>
-                    <td style="width:25px; white-space:nowrap;">
-                        <a href="#" data-bind="click: function(data, event) { ShowUser(data, event); }" title="@ResourceUtils.GetString("348fcc78fbf38f4ac0d7fa3e31000ed0", "Show user attributes ...")"><span class="ion-navicon"></span></a>
-                    </td>
-                    <td>
-                        <span data-bind="text: member.Email"></span>
-                    </td>
-                    <td>
-                        <span data-bind="text: member.MemberStatus"></span>
-                    </td>
-                    <td>
-                        <span data-bind="localdatetime: data.LastLoginDate"></span>
-                    </td>
-                    <td>
-                        <span data-bind="localdatetime: member.LastActivityDate"></span>
-                    </td>*@
+            <tr data-bind="css: {selected: IsEntitySelected()}, click: function(data, event) { selectMessage(data, event); }">
+                <td style="width:1px;text-wrap:none">
+                    <!-- ko ifnot: isOffline -->
+                    <span class="ion-link"></span>
+                    <!-- /ko -->
+                    <!-- ko if: isOffline -->
+                    <!-- ko if: self -->
+                    <span class="ion-android-volume msg-unread" title="@ResourceUtils.GetString("5690bd3d52970a1f29b4b0c5fab8fa2d", "This is an offline message ...")"></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot: self -->
+                    <span class="ion-ios7-email-outline msg-unread" title="@ResourceUtils.GetString("5690bd3d52970a1f29b4b0c5fab8fa2d", "This is an offline message ...")"></span>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                </td>
+                <td>
+                    <!-- ko if: from.icon -->
+                    <img data-bind="attr: {src: fromIconUrl}" style="height: 18px; display:inline" />
+                    <!-- /ko -->
+                    <!-- ko ifnot: from.icon -->
+                    <span class="ion-person"></span>&nbsp;
+                    <!-- /ko -->
+                    <span data-bind="text: from.name"></span>
+                </td>
+                <td>
+                    <div data-bind="html: text"></div>
+                </td>
+                <td>
+                    <span data-bind="localdatetime: date"></span>
+                </td>
+                <td>
+                    <!-- ko if: to.icon -->
+                    <img data-bind="attr: {src: toIconUrl}" style="height: 18px; display:inline" />
+                    <!-- /ko -->
+                    <!-- ko ifnot: to.icon -->
+                    <span class="ion-person"></span>&nbsp;
+                    <!-- /ko -->
+                    <span data-bind="text: to.name"></span>
+                </td>
+                <td style="width:52px;text-wrap:none">
+                    <!-- ko ifnot: self -->
+                    <!-- ko if: from.active -->
+                    <a href="#" data-bind="click: function(data,event) { startPrivateChat(data, event) }" title="@ResourceUtils.GetString("9f1c1dc68860a044552c943ac3c426bb", "Start a private chat ...")">
+                        <span class="glyphicon glyphicon-earphone" title="@ResourceUtils.GetString("9f1c1dc68860a044552c943ac3c426bb", "Start a private chat ...")"></span>
+                    </a>
+                    <!-- /ko -->
+                    <a href="#" data-bind="click: function(data,event) { startPrivateMessage(data, event) }">
+                        <span class="ion-android-mail" title="@ResourceUtils.GetString("87b8aee35e0a49485138b747b29b8a35", "Leave a private message ...")"></span>
+                    </a>
+                    <!-- /ko -->
+                </td>
             </tr>
         </tbody>
     </table>
@@ -174,9 +200,28 @@
 <div id="user-details" data-bind="with: CurrentPage">
     <!-- ko if: typeof CurrentItem != 'undefined' -->
     <!-- ko if: CurrentItem() != null -->
-    <div class="user-details" data-bind="with: CurrentItem">
-        @*@Html.Partial("_MemberDetailsPartial")*@
+    @Html.Partial("_PrivateMessageDetailsPartial")
+    <div class="chat-room" data-bind="with: CurrentItem">
+        <!-- ko if: self -->
+        <div class="msg" data-bind="template: {name:'selfMsgTempl', with: $data}"></div>
+        <!-- /ko -->
+        <!-- ko ifnot: self -->
+        <div class="msg" data-bind="template: {name: 'msgTempl', with: $data}"></div>
+        <!-- /ko -->
     </div>
     <!-- /ko -->
     <!-- /ko -->
+</div>
+<div id="privateChatPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><span id="userName"></span></h4>
+            </div>
+            <div class="modal-body">
+                <iframe id="chatPage" style="width: 560px; height: 500px; border:none" scrolling="auto"></iframe>
+            </div>
+        </div>
+    </div>
 </div>
