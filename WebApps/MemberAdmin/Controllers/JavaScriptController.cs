@@ -37,14 +37,21 @@ namespace MemberAdminMvc5.Controllers
         }
 
         [HttpGet]
-        public ActionResult QueryCustomization(string src)
+        public ActionResult QueryCustomization(string src, string type)
         {
             if (QueryTokenMap == null || !QueryTokenMap.ConfigExists)
                 return new HttpStatusCodeResult(404, "Not Found");
             StringBuilder sb = new StringBuilder();
             if (string.IsNullOrEmpty(src))
                 src = ConfigurationManager.AppSettings["DefaultDataSource"];
-            _queryCustomization(sb, src, QueryTokenMap.GetAppFilters);
+            if (type == null)
+                _queryCustomization(sb, src, QueryTokenMap.GetAppFilters);
+            else
+            {
+                _queryCustomization(sb, src, (_src, _set) => {
+                    return QueryTokenMap.GetFilters(_src, type, _set);
+                });
+            }
             return ReturnJavascript(sb.ToString());
         }
 
@@ -124,9 +131,9 @@ function tokenNameMap(tk, entity, isquery) {");
                         break;
                     case TokenMatchKind.EndsWith:
                         if (!filter.IsCaseSensitive)
-                            sb.Append("tk.TkName.toLowerCase().indexOf('" + filter.FilterExpr + "'.toLowerCase()) == tk.TkName.length - '" + filter.FilterExpr + "'.length");
+                            sb.Append("tk.TkName.length >= '" + filter.FilterExpr + "'.length && tk.TkName.toLowerCase().indexOf('" + filter.FilterExpr + "'.toLowerCase()) == tk.TkName.length - '" + filter.FilterExpr + "'.length");
                         else
-                            sb.Append("tk.TkName.indexOf('" + filter.FilterExpr + "') == tk.TkName.length - '" + filter.FilterExpr + "'.length");
+                            sb.Append("tk.TkName.length >= '" + filter.FilterExpr + "'.length && tk.TkName.indexOf('" + filter.FilterExpr + "') == tk.TkName.length - '" + filter.FilterExpr + "'.length");
                         break;
                     case TokenMatchKind.Expression:
                         sb.Append(string.Format(filter.FilterExpr, "tk.TkName"));

@@ -110,9 +110,35 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Configuration
     public class DataSourceRec
     {
         public Dictionary<string, Dictionary<string, TokenMapRec>> TokenMaps = new Dictionary<string, Dictionary<string, TokenMapRec>>();
-        public Dictionary<string, SetFilters> TokenAdminFilters = new Dictionary<string, SetFilters>();
-        public Dictionary<string, SetFilters> TokenAppFilters = new Dictionary<string, SetFilters>();
+        public Dictionary<string, SetFilters> TokenAdminFilters
+        {
+            get
+            {
+                Dictionary<string, SetFilters> rec = null;
+                if (!TokenFiltersMap.TryGetValue("admin", out rec))
+                {
+                    rec = new Dictionary<string, SetFilters>();
+                    TokenFiltersMap.Add("admin", rec);
+                }
+                return rec;
+            }
+        }
 
+        public Dictionary<string, SetFilters> TokenAppFilters
+        {
+            get
+            {
+                Dictionary<string, SetFilters> rec = null;
+                if (!TokenFiltersMap.TryGetValue("app", out rec))
+                {
+                    rec = new Dictionary<string, SetFilters>();
+                    TokenFiltersMap.Add("app", rec);
+                }
+                return rec;
+            }
+        }
+
+        public Dictionary<string, Dictionary<string, SetFilters>> TokenFiltersMap = new Dictionary<string, Dictionary<string, SetFilters>>();
     }
 
     public class QueryCustomization
@@ -183,27 +209,19 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Configuration
                             maps.Add(xmap.Attributes["from"].Value, new TokenMapRec { ToID = toid });
                     }
                     //
-                    var xadminfilters = xset.SelectSingleNode("filters[@type='admin']");
-                    SetFilters setadminflts = new SetFilters();
-                    setadminflts.AllowImplied = xadminfilters.Attributes["allow-implied"] == null || xadminfilters.Attributes["allow-implied"].Value.ToLower() == "true" ? true : false;
-                    List<TokenFilter> l = new List<TokenFilter>();
-                    foreach (XmlNode n in xadminfilters.SelectNodes("filter"))
+                    var lfilters = xset.SelectNodes("filters");
+                    foreach (XmlNode nfiters in lfilters)
                     {
-                        l.Add(getFilter(n, setadminflts.AllowImplied));
+                        SetFilters setadminflts = new SetFilters();
+                        setadminflts.AllowImplied = nfiters.Attributes["allow-implied"] == null || nfiters.Attributes["allow-implied"].Value.ToLower() == "true" ? true : false;
+                        List<TokenFilter> l = new List<TokenFilter>();
+                        foreach (XmlNode n in nfiters.SelectNodes("filter"))
+                            l.Add(getFilter(n, setadminflts.AllowImplied));
+                        setadminflts.Filters = l.ToArray();
+                        var setfilters = new Dictionary<string, SetFilters>();
+                        setfilters.Add(set, setadminflts);
+                        rec.TokenFiltersMap.Add(nfiters.Attributes["type"].Value, setfilters);
                     }
-                    setadminflts.Filters = l.ToArray();
-                    rec.TokenAdminFilters.Add(set, setadminflts);
-                    //
-                    var xappfilters = xset.SelectSingleNode("filters[@type='app']");
-                    SetFilters setappflts = new SetFilters();
-                    setappflts.AllowImplied = xappfilters.Attributes["allow-implied"] == null || xappfilters.Attributes["allow-implied"].Value.ToLower() == "true" ? true : false;
-                    l = new List<TokenFilter>();
-                    foreach (XmlNode n in xappfilters.SelectNodes("filter"))
-                    {
-                        l.Add(getFilter(n, setappflts.AllowImplied));
-                    }
-                    setappflts.Filters = l.ToArray();
-                    rec.TokenAppFilters.Add(set, setappflts);
                 }
             }
         }
@@ -272,6 +290,21 @@ namespace Archymeta.Web.MembershipPlus.AppLayer.Configuration
             DataSourceRec rec;
             if (MapTable.TryGetValue(src, out rec))
                 return rec.TokenAppFilters.ContainsKey(set) ? rec.TokenAppFilters[set] : null;
+            else
+                return null;
+        }
+
+        public SetFilters GetFilters(string src, string type, string set)
+        {
+            DataSourceRec rec;
+            if (MapTable.TryGetValue(src, out rec))
+            {
+                Dictionary<string, SetFilters> dic;
+                if (rec.TokenFiltersMap.TryGetValue(type, out dic))
+                    return dic.ContainsKey(set) ? dic[set] : null;
+                else
+                    return null;
+            }
             else
                 return null;
         }
