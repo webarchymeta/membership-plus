@@ -35,9 +35,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\ExternalSources\log4net-1.2.13\build\bin\net\2.0\debug\log4net.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\..\Assemblies\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
