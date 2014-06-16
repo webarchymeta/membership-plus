@@ -4,12 +4,15 @@ using Microsoft.Owin;
 using Owin;
 using Microsoft.AspNet.SignalR;
 using Archymeta.Web.MembershipPlus.SignalR;
+using log4net;
 
 [assembly: OwinStartupAttribute(typeof(MemberAdminMvc5.Startup))]
 namespace MemberAdminMvc5
 {
     public partial class Startup
     {
+        private static ILog log = LogManager.GetLogger(typeof(Startup));
+
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
@@ -30,6 +33,7 @@ namespace MemberAdminMvc5
                 }
                 app.MapSignalR();
             }
+            log.Info("System start up");
         }
     }
 }

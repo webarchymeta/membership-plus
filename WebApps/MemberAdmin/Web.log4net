@@ -1,0 +1,46 @@
+<log4net>
+  <appender name="TraceAppender" type="log4net.Appender.TraceAppender" >
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+    </layout>
+  </appender>
+  <appender name="DebugAppender" type="log4net.Appender.DebugAppender" >
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+    </layout>
+  </appender>
+  <appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender">
+    <file value="log\application-log.txt" />
+    <appendToFile value="true" />
+    <rollingStyle value="Size" />
+    <maxSizeRollBackups value="10" />
+    <maximumFileSize value="10MB" />
+    <staticLogFileName value="true" />
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+    </layout>
+  </appender>
+  <appender name="DataServiceLogAppender" type="Archymeta.Web.Logging.DataServiceAppender, MembershipPlusLogAppender">
+    <maxQueueLength value="5000" />
+    <maxUpdateBlockSize value="10" />
+    <recordStackFrames value="true" />
+    <userStackFramesOnly value="true" />
+    <maxStackFramesUp value="10" />
+    <lossy value="false" />
+    <!-- parameters for the appender as a client of the log data service -->
+    <loggerServiceUrl value="" />
+    <maxReceivedMessageSize value="65536000" />
+    <maxBufferPoolSize value="65536000" />
+    <maxBufferSize value="65536000" />
+    <maxArrayLength value="104857600" />
+    <maxBytesPerRead value="4096" />
+    <maxDepth value="64" />
+    <maxNameTableCharCount value="16384" />
+    <maxStringContentLength value="181920" />
+  </appender>
+  <root>
+    <level value="OFF" />
+    <appender-ref ref="DataServiceLogAppender" />
+    <appender-ref ref="RollingLogFileAppender" />
+  </root>
+</log4net>

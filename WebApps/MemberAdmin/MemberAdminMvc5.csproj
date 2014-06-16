@@ -47,6 +47,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Assemblies\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -182,6 +186,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ContactsQueryOpts.cs" />
     <Compile Include="Models\DiscreteValues.cs" />
+    <Compile Include="Models\HttpContextInfoProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalRHubs\GroupChatHub.cs" />
     <Compile Include="SignalRHubs\HubBase.cs" />
@@ -780,6 +785,7 @@
     <Content Include="Views\Query\SearchPrivateMessages.cshtml" />
     <Content Include="Views\Query\_GroupMessageDetailsPartial.cshtml" />
     <Content Include="Views\Query\_PrivateMessageDetailsPartial.cshtml" />
+    <Content Include="Web.log4net" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\JavaScript\" />
@@ -791,6 +797,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libs\Log4NetServiceAppender\Appender\MembershipPlusLogAppender.csproj">
+      <Project>{e2b09c7b-511d-4737-b47b-809ba876d095}</Project>
+      <Name>MembershipPlusLogAppender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libs\MembershipStores\Stores\ArchymetaMembershipPlusStores.csproj">
       <Project>{b462f29e-410b-e948-a6f9-047dd6b104dd}</Project>
       <Name>ArchymetaMembershipPlusStores</Name>

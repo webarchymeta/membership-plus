@@ -61,6 +61,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///      <term>DataCreateDate</term>
     ///      <description>See <see cref="ShortMessageAttachment.DataCreateDate" />. Fixed; nullable.</description>
     ///    </item>
+    ///    <item>
+    ///      <term>IsDataVirtual</term>
+    ///      <description>See <see cref="ShortMessageAttachment.IsDataVirtual" />. Fixed; nullable.</description>
+    ///    </item>
     ///  </list>
     ///  <list type="table">
     ///    <listheader>
@@ -355,6 +359,27 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private System.Nullable<DateTime> _DataCreateDate = default(System.Nullable<DateTime>);
+
+        /// <summary>
+        /// Meta-info: fixed; nullable.
+        /// </summary>
+        [Editable(false)]
+        [DataMember(IsRequired = false)]
+        public System.Nullable<bool> IsDataVirtual
+        { 
+            get
+            {
+                return _IsDataVirtual;
+            }
+            set
+            {
+                if (_IsDataVirtual != value)
+                {
+                    _IsDataVirtual = value;
+                }
+            }
+        }
+        private System.Nullable<bool> _IsDataVirtual = default(System.Nullable<bool>);
 
         /// <summary>
         /// Meta-info: editable; not null.
@@ -856,6 +881,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.ID = from.ID;
                 to.ContentBlockSize = from.ContentBlockSize;
                 to.DataCreateDate = from.DataCreateDate;
+                to.IsDataVirtual = from.IsDataVirtual;
                 to.CompletedSize = from.CompletedSize;
                 to.IsCompletedSizeModified = from.IsCompletedSizeModified;
                 to.DataMimeType = from.DataMimeType;
@@ -963,6 +989,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             e.ID = ID;
             e.ContentBlockSize = ContentBlockSize;
             e.DataCreateDate = DataCreateDate;
+            e.IsDataVirtual = IsDataVirtual;
             e.CompletedSize = CompletedSize;
             if (preserveState)
                 e.IsCompletedSizeModified = IsCompletedSizeModified;
@@ -1022,6 +1049,7 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             sb.Append(@"
   ContentBlockSize = " + ContentBlockSize + @"
   DataCreateDate = " + (DataCreateDate.HasValue ? DataCreateDate.Value.ToString() : "null") + @"
+  IsDataVirtual = " + (IsDataVirtual.HasValue ? IsDataVirtual.Value.ToString() : "null") + @"
   CompletedSize = " + CompletedSize + @"");
             if (IsCompletedSizeModified)
                 sb.Append(@" (modified)");

@@ -10,6 +10,7 @@ using System.Security.Principal;
 using Microsoft.IdentityModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using log4net;
 using CryptoGateway.RDB.Data.MembershipPlus;
 using Archymeta.Web.Security;
 using Archymeta.Web.Security.Resources;
@@ -22,6 +23,8 @@ namespace MemberAdminMvc5.Controllers
     [Authorize]
     public class AccountController : BaseController
     {
+        private static ILog log = LogManager.GetLogger(typeof(AccountController));
+
         public AccountController()
             : this(new UserManagerEx<ApplicationUser>(new UserStore<ApplicationUser>(Startup.ClientContext, Startup.App), Startup.ClientContext, Startup.App))
         {
@@ -95,7 +98,9 @@ namespace MemberAdminMvc5.Controllers
                     }
                 }
             }
+            string user = User.Identity.Name;
             AuthenticationManager.SignOut();
+            log.Info("\"" + user + "\" log off.");
             return RedirectToAction("Index", "Home");
         }
 

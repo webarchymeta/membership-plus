@@ -75,12 +75,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
     ///       <term>Editable properties</term><description>Description</description>
     ///    </listheader>
     ///    <item>
-    ///      <term>DataBlock</term>
-    ///      <description>See <see cref="ShortMessageDataBlock.DataBlock" />. Editable; not null; load delayed.</description>
-    ///    </item>
-    ///    <item>
     ///      <term>DataHash</term>
     ///      <description>See <see cref="ShortMessageDataBlock.DataHash" />. Editable; not null; max-length = 64 characters.</description>
+    ///    </item>
+    ///    <item>
+    ///      <term>DataBlock</term>
+    ///      <description>See <see cref="ShortMessageDataBlock.DataBlock" />. Editable; nullable; load delayed.</description>
     ///    </item>
     ///  </list>
     ///  <list type="table">
@@ -164,10 +164,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 string str = "";
                 str += "SeqID = " + SeqID + "\r\n";
                 str += "AttachmentID = " + AttachmentID + "\r\n";
-                if (IsDataBlockModified)
-                    str += "Modified [DataBlock] = " + DataBlock + "\r\n";
                 if (IsDataHashModified)
-                    str += "Modified [DataHash] = " + DataHash + "\r\n";;
+                    str += "Modified [DataHash] = " + DataHash + "\r\n";
+                if (IsDataBlockModified)
+                    str += "Modified [DataBlock] = " + DataBlock + "\r\n";;
                 return str.Trim();
             }
         }
@@ -351,11 +351,54 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         private Int64 _StartByte = default(Int64);
 
         /// <summary>
-        /// Meta-info: editable; not null; load delayed.
+        /// Meta-info: editable; not null; max-length = 64 characters.
         /// </summary>
         [Required]
         [Editable(true)]
+        [StringLength(64)]
         [DataMember(IsRequired = true)]
+        public string DataHash
+        { 
+            get
+            {
+                return _DataHash;
+            }
+            set
+            {
+                if (_DataHash != value)
+                {
+                    _DataHash = value;
+                    if (StartAutoUpdating)
+                        IsDataHashModified = true;
+                }
+            }
+        }
+        private string _DataHash = default(string);
+
+        /// <summary>
+        /// Wether or not the value of <see cref="DataHash" /> was changed compared to what it was loaded last time. 
+        /// Note: the backend data source updates the changed <see cref="DataHash" /> only if this is set to true no matter what
+        /// the actual value of <see cref="DataHash" /> is.
+        /// </summary>
+        [DataMember]
+        public bool IsDataHashModified
+        { 
+            get
+            {
+                return _isDataHashModified;
+            }
+            set
+            {
+                _isDataHashModified = value;
+            }
+        }
+        private bool _isDataHashModified = false;
+
+        /// <summary>
+        /// Meta-info: editable; nullable; load delayed.
+        /// </summary>
+        [Editable(true)]
+        [DataMember(IsRequired = false)]
         public byte[] DataBlock
         { 
             get
@@ -412,50 +455,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
             }
         }
         private bool _isDataBlockLoaded = false;
-
-        /// <summary>
-        /// Meta-info: editable; not null; max-length = 64 characters.
-        /// </summary>
-        [Required]
-        [Editable(true)]
-        [StringLength(64)]
-        [DataMember(IsRequired = true)]
-        public string DataHash
-        { 
-            get
-            {
-                return _DataHash;
-            }
-            set
-            {
-                if (_DataHash != value)
-                {
-                    _DataHash = value;
-                    if (StartAutoUpdating)
-                        IsDataHashModified = true;
-                }
-            }
-        }
-        private string _DataHash = default(string);
-
-        /// <summary>
-        /// Wether or not the value of <see cref="DataHash" /> was changed compared to what it was loaded last time. 
-        /// Note: the backend data source updates the changed <see cref="DataHash" /> only if this is set to true no matter what
-        /// the actual value of <see cref="DataHash" /> is.
-        /// </summary>
-        [DataMember]
-        public bool IsDataHashModified
-        { 
-            get
-            {
-                return _isDataHashModified;
-            }
-            set
-            {
-                _isDataHashModified = value;
-            }
-        }
-        private bool _isDataHashModified = false;
 
 #endregion
 
@@ -553,15 +552,15 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         {
             if (to.IsPersisted)
             {
-                if (from.IsDataBlockModified && !to.IsDataBlockModified)
-                {
-                    to.DataBlock = from.DataBlock;
-                    to.IsDataBlockModified = true;
-                }
                 if (from.IsDataHashModified && !to.IsDataHashModified)
                 {
                     to.DataHash = from.DataHash;
                     to.IsDataHashModified = true;
+                }
+                if (from.IsDataBlockModified && !to.IsDataBlockModified)
+                {
+                    to.DataBlock = from.DataBlock;
+                    to.IsDataBlockModified = true;
                 }
             }
             else
@@ -571,10 +570,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 to.AttachmentID = from.AttachmentID;
                 to.EndByte = from.EndByte;
                 to.StartByte = from.StartByte;
-                to.DataBlock = from.DataBlock;
-                to.IsDataBlockModified = from.IsDataBlockModified;
                 to.DataHash = from.DataHash;
                 to.IsDataHashModified = from.IsDataHashModified;
+                to.DataBlock = from.DataBlock;
+                to.IsDataBlockModified = from.IsDataBlockModified;
             }
         }
 
@@ -587,6 +586,12 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void UpdateChanges(ShortMessageDataBlock newdata)
         {
             int cnt = 0;
+            if (DataHash != newdata.DataHash)
+            {
+                DataHash = newdata.DataHash;
+                IsDataHashModified = true;
+                cnt++;
+            }
             bool bDataBlock = DataBlock == null && newdata.DataBlock != null ||
                                                          DataBlock != null && newdata.DataBlock == null ||
                                                          DataBlock != null && newdata.DataBlock != null && DataBlock.Length != newdata.DataBlock.Length;
@@ -605,12 +610,6 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
                 IsDataBlockModified = true;
                 cnt++;
             }
-            if (DataHash != newdata.DataHash)
-            {
-                DataHash = newdata.DataHash;
-                IsDataHashModified = true;
-                cnt++;
-            }
             IsEntityChanged = cnt > 0;
         }
 
@@ -620,12 +619,10 @@ namespace CryptoGateway.RDB.Data.MembershipPlus
         public void NormalizeValues()
         {
             StartAutoUpdating = false;
-            if (DataBlock == null)
-                DataBlock = new byte[] { };
             if (DataHash == null)
                 DataHash = "";
             if (!IsEntityChanged)
-                IsEntityChanged = IsDataBlockModified || IsDataHashModified;
+                IsEntityChanged = IsDataHashModified || IsDataBlockModified;
             if (IsDataBlockModified && !IsDataBlockLoaded)
                 IsDataBlockLoaded = true;
             StartAutoUpdating = true;
